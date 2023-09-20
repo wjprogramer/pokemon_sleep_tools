@@ -23,11 +23,43 @@ class PokemonBasicProfile {
     this.types = const [],
     this.assetPath,
     this.evolutionId,
+    required this.evolutionMaxCount,
     required this.helpInterval,
     required this.fruit,
     required this.sleepType,
     required this.mainSkill,
+    required this.boxCount,
+    required this.ingredient1,
+    required this.ingredientCount1,
   });
+
+  factory PokemonBasicProfile.from(
+      int id,
+      int boxNo,
+      String nameI18nKey,
+      int helpInterval,
+      Fruit fruit,
+      PokemonSleepType sleepType,
+      MainSkill mainSkill,
+      int evolutionMaxCount, // 最終進化階段
+      int boxCount,
+      Ingredient ingredient1,
+      int ingredientCount1,
+      ) {
+    return PokemonBasicProfile(
+      id: id,
+      boxNo: boxNo,
+      nameI18nKey: nameI18nKey,
+      helpInterval: helpInterval,
+      fruit: fruit,
+      sleepType: sleepType,
+      mainSkill: mainSkill,
+      evolutionMaxCount: evolutionMaxCount,
+      boxCount: boxCount,
+      ingredient1: ingredient1,
+      ingredientCount1: ingredientCount1,
+    );
+  }
 
   /// Custom id from this app
   final int id;
@@ -57,6 +89,9 @@ class PokemonBasicProfile {
   /// [PokemonEvolution.id]
   final int? evolutionId;
 
+  /// 先暫時不用 [evolutionId]
+  final int evolutionMaxCount;
+
   /// Pokemon Sleep, 最終幫忙間隔(秒)
   final int helpInterval;
 
@@ -68,6 +103,15 @@ class PokemonBasicProfile {
 
   /// Pokemon Sleep, 主技能
   final MainSkill mainSkill;
+
+  /// Pokemon Sleep, 格子
+  final int boxCount;
+
+  /// Pokemon Sleep, 食材一
+  final Ingredient ingredient1;
+
+  /// Pokemon Sleep, 食材一數量
+  final int ingredientCount1;
 }
 
 class PokemonProfile {
@@ -103,7 +147,23 @@ class PokemonProfile {
   final Ingredient ingredient3;
   final int ingredientCount3;
 
+  List<SubSkill> get subSkills => [
+    subSkillLv10,
+    subSkillLv25,
+    subSkillLv50,
+    subSkillLv75,
+    subSkillLv100,
+  ];
+
   String info() {
+    final fruitCount = calcFruitCount();
+    final fruitEnergy = fruitCount * basicProfile.fruit.energyIn60;
+
+    final ingredientEnergy1 = ingredient1.energy * ingredientCount1;
+    final ingredientEnergy2 = ingredient2.energy * ingredientCount2;
+    final ingredientEnergy3 = ingredient3.energy * ingredientCount3;
+    final ingredientEnergyAvg = ((ingredientEnergy1 + ingredientEnergy2 + ingredientEnergy3) / 3).round();
+
     var result = '性格: ${character.name}\n'
         '副技能:\n'
         '    Lv 10: ${subSkillLv10.name}\n'
@@ -116,11 +176,56 @@ class PokemonProfile {
         '    ${ingredient2.nameI18nKey} (${ingredientCount2})\n'
         '    ${ingredient3.nameI18nKey} (${ingredientCount3})\n'
         '幫忙均能: TBD\n'
-        '類型: ${basicProfile.sleepType.name} (${basicProfile.fruit.nameI18nKey})';
+        '類型: ${basicProfile.sleepType.name} (${basicProfile.fruit.nameI18nKey}) \n'
+        '數量: ${fruitCount}'
+        '幫忙間隔: TBD\n'
+        '幫忙均能/次: TBD\n'
+        '類型: TBD\n'
+        '樹果: TBD\n'
+        '數量: TBD\n'
+        '幫忙間隔: TBD\n'
+        '樹果能量: $fruitEnergy\n'
+        '食材1能量: $ingredientEnergy1\n'
+        '食材2能量: $ingredientEnergy2\n'
+        '食材3能量: $ingredientEnergy3\n'
+        '食材均能: $ingredientEnergyAvg\n'
+        '幫手獎勵: TBD\n'
+        '幫忙速度S: TBD\n'
+        '幫忙速度M: TBD\n'
+        '食材機率: TBD\n'
+        '技能等級: TBD\n'
+        '主技能速度參數: TBD\n'
+        '持有上限溢出數: TBD\n'
+        '持有上限溢出能量: TBD\n'
+        '性格速度: TBD\n'
+        '活力加速: TBD\n'
+        '睡眠EXP獎勵: TBD\n'
+        '夢之碎片獎勵: TBD\n'
+        '主技能: TBD\n'
+        '主技能能量: TBD\n'
+        '主技活力加速: TBD\n'
+    ;
 
 
     return result;
   }
+
+  int calcFruitCount() {
+    var res = 1;
+
+    if (basicProfile.sleepType == PokemonSleepType.t3) {
+      res++;
+    }
+
+    for (final subSkill in subSkills) {
+      if (subSkill == SubSkill.s1) {
+        res++;
+      }
+    }
+
+    return res;
+  }
+
 }
 
 class PokemonEvolution {
@@ -321,7 +426,14 @@ void main() {
     fruit: Fruit.f4,
     sleepType: PokemonSleepType.t3,
     mainSkill: MainSkill.m1,
+    evolutionMaxCount: 3,
+    boxCount: 31,
+    ingredient1: Ingredient.i5,
+    ingredientCount1: 1,
   );
+
+
+  PokemonBasicProfile.from(-1, -1);
 
   final profile = PokemonProfile(
     basicProfile: pokemon1,
