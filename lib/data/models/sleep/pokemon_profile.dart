@@ -63,7 +63,7 @@ class PokemonProfile {
         '    ${ingredient3.nameI18nKey} (${ingredientCount3})\n'
         '幫忙均能: TBD\n'
         '類型: ${basicProfile.sleepType.name} (${basicProfile.fruit.nameI18nKey}) \n'
-        '數量: ${fruitCount}'
+        '數量: ${fruitCount}\n'
         '幫忙間隔: TBD\n'
         '幫忙均能/次: TBD\n'
         '類型: TBD\n'
