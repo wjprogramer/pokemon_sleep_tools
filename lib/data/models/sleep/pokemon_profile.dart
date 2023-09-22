@@ -75,9 +75,9 @@ class PokemonProfile {
         // '食材2能量: $ingredientEnergy2\n'
         // '食材3能量: $ingredientEnergy3\n'
         // '食材均能: $ingredientEnergyAvg\n'
-        '幫手獎勵: ${calcHelperBonus()}\n'
-        '幫忙速度S: TBD\n'
-        '幫忙速度M: TBD\n'
+        // '幫手獎勵: ${calcHelperBonus()}\n'
+        // '幫忙速度S: ${calcTotalHelpSpeedS()}\n'
+        // '幫忙速度M: ${calcTotalHelpSpeedM()}\n'
         '食材機率: TBD\n'
         '技能等級: TBD\n'
         '主技能速度參數: TBD\n'
@@ -96,17 +96,14 @@ class PokemonProfile {
     return result;
   }
 
-  int calcHelperBonus() {
-    var res = 0;
+  int calcHelperBonus() =>
+      15 * _getSubSkillsCountWhereValue(SubSkill.s2);
 
-    for (final subSkill in subSkills) {
-      if (subSkill == SubSkill.s2) {
-        res += 15;
-      }
-    }
+  double calcTotalHelpSpeedS() =>
+      0.07 * _getSubSkillsCountWhereValue(SubSkill.s4);
 
-    return res;
-  }
+  double calcTotalHelpSpeedM() =>
+      0.14 * _getSubSkillsCountWhereValue(SubSkill.s3);
 
   int calcFruitCount() {
     var res = 1;
@@ -114,14 +111,15 @@ class PokemonProfile {
     if (basicProfile.sleepType == PokemonSleepType.t3) {
       res++;
     }
-
-    for (final subSkill in subSkills) {
-      if (subSkill == SubSkill.s1) {
-        res++;
-      }
-    }
+    res += _getSubSkillsCountWhereValue(SubSkill.s1);
 
     return res;
+  }
+
+  int _getSubSkillsCountWhereValue(SubSkill targetValue) {
+    return subSkills
+        .where((skill) => skill == targetValue)
+        .length;
   }
 
 }
