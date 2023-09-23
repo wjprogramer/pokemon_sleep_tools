@@ -20,7 +20,8 @@ enum MainSkill {
 }
 
 extension MainSkillX on MainSkill {
-  List<double> get values {
+  /// Return Lv. 1 to Lv. 6 basic energy list
+  List<double> get basicValues {
     switch (this) {
       case MainSkill.m1: return [400, 569, 785, 1083, 1496, 2066, ];
       case MainSkill.m2: return [880, 1251, 1726, 2383, 3290, 4546, ];
@@ -34,6 +35,32 @@ extension MainSkillX on MainSkill {
       case MainSkill.m10: return [6, 8, 11, 14, 17, 21, ];
       case MainSkill.m11: return [7, 10, 12, 17, 22, 27, ];
       case MainSkill.m12: return [0, 0, 0, 0, 0, 0, ];
+    }
+  }
+
+  List<double> calcEnergyList() {
+    switch (this) {
+      case MainSkill.m1: return MainSkill.m1.basicValues;
+      case MainSkill.m2: return MainSkill.m2.basicValues;
+      case MainSkill.m3: return MainSkill.m3.basicValues.map((e) => e * 25).toList();
+      case MainSkill.m4: return MainSkill.m4.basicValues.map((e) => e / 2).toList();
+      case MainSkill.m5: return MainSkill.m5.basicValues;
+      case MainSkill.m6: return MainSkill.m6.basicValues.map((e) => e * 25).toList();
+      case MainSkill.m7: return MainSkill.m7.basicValues.map((e) => e / 2).toList();
+      case MainSkill.m8: return MainSkill.m8.basicValues.map((e) => e * 5 / 3).toList();
+      case MainSkill.m9: return MainSkill.m9.basicValues.map((e) => e * 222.6).toList();
+      case MainSkill.m10: return MainSkill.m10.basicValues.map((e) => e * 110).toList();
+      case MainSkill.m11: return MainSkill.m11.basicValues.map((e) => e * 110).toList();
+      case MainSkill.m12:
+        final v1 = MainSkill.m1.calcEnergyList();
+        final v2 = MainSkill.m2.calcEnergyList();
+        final v5 = MainSkill.m5.calcEnergyList();
+        final v9 = MainSkill.m9.calcEnergyList();
+        final v10 = MainSkill.m10.calcEnergyList();
+        final v11 = MainSkill.m11.calcEnergyList();
+
+        return List.generate(6, (i) =>
+        (v1[i] + v2[i] + v5[i] + v9[i] + v10[i] + v11[i]) / 6);
     }
   }
 }
