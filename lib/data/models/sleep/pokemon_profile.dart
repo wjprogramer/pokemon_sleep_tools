@@ -50,23 +50,23 @@ class PokemonProfile {
     final ingredientEnergyAvg = ((ingredientEnergy1 + ingredientEnergy2 + ingredientEnergy3) / 3).round();
 
     var result = '${basicProfile.nameI18nKey}\n'
-        // '性格: ${character.name}\n'
-        // '副技能:\n'
-        // '    Lv 10: ${subSkillLv10.name}\n'
-        // '    Lv 25: ${subSkillLv25.name}\n'
-        // '    Lv 50: ${subSkillLv50.name}\n'
-        // '    Lv 75: ${subSkillLv75.name}\n'
-        // '    Lv 100: ${subSkillLv100.name} \n'
-        // '食材:\n'
-        // '    ${ingredient1.nameI18nKey} (${ingredientCount1})\n'
-        // '    ${ingredient2.nameI18nKey} (${ingredientCount2})\n'
-        // '    ${ingredient3.nameI18nKey} (${ingredientCount3})\n'
-        // '類型: ${basicProfile.sleepType.name} (${basicProfile.fruit.nameI18nKey}) \n'
-        // '數量: ${fruitCount}\n'
+        '性格: ${character.name}\n'
+        '副技能:\n'
+        '    Lv 10: ${subSkillLv10.name}\n'
+        '    Lv 25: ${subSkillLv25.name}\n'
+        '    Lv 50: ${subSkillLv50.name}\n'
+        '    Lv 75: ${subSkillLv75.name}\n'
+        '    Lv 100: ${subSkillLv100.name} \n'
+        '食材:\n'
+        '    ${ingredient1.nameI18nKey} (${ingredientCount1})\n'
+        '    ${ingredient2.nameI18nKey} (${ingredientCount2})\n'
+        '    ${ingredient3.nameI18nKey} (${ingredientCount3})\n'
+        '類型: ${basicProfile.sleepType.name} (${basicProfile.fruit.nameI18nKey}) \n'
+        '數量: ${fruitCount}\n'
         '幫忙均能/次: ${calcHelpPerAvgEnergy()}\n'
-        // '類型: ${basicProfile.sleepType.name}\n'
-        // '樹果: ${basicProfile.fruit.nameI18nKey}\n'
-        // '數量: ${fruitCount}\n'
+        '類型: ${basicProfile.sleepType.name}\n'
+        '樹果: ${basicProfile.fruit.nameI18nKey}\n'
+        '數量: ${fruitCount}\n'
         '幫忙間隔: ${calcHelpInterval()}\n'
         '樹果能量: $fruitEnergy\n'
         '食材1能量: $ingredientEnergy1\n'
@@ -89,7 +89,6 @@ class PokemonProfile {
         '主技能能量: ${calcMainSkillTotalEnergy()}\n'
         '主技活力加速: ${calcMainSkillAccelerateVitality()}\n'
     ;
-
 
     return result;
   }
@@ -149,6 +148,7 @@ class PokemonProfile {
     return res;
   }
 
+  /// 持有上限溢出數
   double calcMaxOverflowHoldCount() {
     var res = 0.0;
     final ingredientRate = calcIngredientRate();
@@ -172,11 +172,6 @@ class PokemonProfile {
   double calcOverflowHoldEnergy() {
     var res = 0.0;
 
-    // IF(AO3*Y3>0,AO3*(AL3/5),0)
-    // AO = calcMaxOverflowHoldCount
-    // Y = calcHelpPerAvgEnergy()
-    // AL = 食材機率 = calcIngredientRate()
-
     final maxOverflowHoldCount = calcMaxOverflowHoldCount();
     final helpPerAvgEnergy = calcHelpPerAvgEnergy();
     final ingredientRate = calcIngredientRate();
@@ -198,7 +193,7 @@ class PokemonProfile {
     final x = calcHelperBonus() +
         calcTotalHelpSpeedS() +
         calcTotalHelpSpeedM() +
-         // TODO: 性格速度
+        calcCharacterSpeed() +
         calcAccelerateVitality() +
         calcMainSkillAccelerateVitality();
     final y = 1 - (x + 59 * 0.002);
@@ -218,14 +213,6 @@ class PokemonProfile {
     final fruitEnergy = fruitCount * basicProfile.fruit.energyIn60;
 
     final ingredientRate = calcIngredientRate();
-
-    // =ROUND(
-    //      AH3*AL3+AD3*(5-AL3)
-    // ) / 5
-
-    // AH 食材均能 = ingredientEnergyAvg
-    // AL 食材機率 = calcIngredientRate()
-    // AD 樹果能量 = fruitEnergy
 
     return (ingredientEnergyAvg * ingredientRate + fruitEnergy * (5 - ingredientRate)) / 5;
   }
