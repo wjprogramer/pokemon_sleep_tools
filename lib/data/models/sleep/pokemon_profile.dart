@@ -15,6 +15,8 @@ class PokemonProfile {
     required this.ingredientCount3,
   });
 
+  // TODO:
+  final int id = -1;
   final int basicProfileId;
   late PokemonBasicProfile basicProfile;
   final PokemonCharacter character;

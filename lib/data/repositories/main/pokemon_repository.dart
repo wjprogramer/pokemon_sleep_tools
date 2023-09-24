@@ -1,6 +1,6 @@
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-class PokemonRepository {
+class PokemonBasicProfileRepository {
 
   List<PokemonBasicProfile> findAll() {
     final x = [..._allPokemonMapping.entries.map((e) => e.value)];

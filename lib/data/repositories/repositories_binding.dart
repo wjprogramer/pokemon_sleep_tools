@@ -5,5 +5,5 @@ void setupRepositoriesDependencies() {
   const lazy = registerLazySingleton;
 
   lazy<PokemonProfileRepository>(() => PokemonProfileRepository());
-  lazy<PokemonRepository>(() => PokemonRepository());
+  lazy<PokemonBasicProfileRepository>(() => PokemonBasicProfileRepository());
 }
