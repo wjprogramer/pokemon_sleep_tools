@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
-import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -18,13 +19,13 @@ class HomePage extends StatelessWidget {
         children: [
           TextButton(
             onPressed: () {
-              context.go(MyStorybook.route);
+              context.nav.push(MyStorybookPage.route);
             },
             child: const Text('Storybook'),
           ),
           TextButton(
             onPressed: () {
-              context.go(MyStorybook.route);
+              context.nav.push(PokemonBoxPage.route);
             },
             child: const Text('Pokemon Box'),
           ),
