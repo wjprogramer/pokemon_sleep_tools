@@ -16,7 +16,7 @@ class PokemonProfile {
   });
 
   // TODO:
-  final int id = -1;
+  int id = -1;
   final int basicProfileId;
   late PokemonBasicProfile basicProfile;
   final PokemonCharacter character;
@@ -60,15 +60,15 @@ class PokemonProfile {
         '    Lv 75: ${subSkillLv75.name}\n'
         '    Lv 100: ${subSkillLv100.name} \n'
         '食材:\n'
-        '    ${ingredient1.nameI18nKey} (${ingredientCount1})\n'
-        '    ${ingredient2.nameI18nKey} (${ingredientCount2})\n'
-        '    ${ingredient3.nameI18nKey} (${ingredientCount3})\n'
+        '    ${ingredient1.nameI18nKey} ($ingredientCount1)\n'
+        '    ${ingredient2.nameI18nKey} ($ingredientCount2)\n'
+        '    ${ingredient3.nameI18nKey} ($ingredientCount3)\n'
         '類型: ${basicProfile.sleepType.name} (${basicProfile.fruit.nameI18nKey}) \n'
-        '數量: ${fruitCount}\n'
+        '數量: $fruitCount\n'
         '幫忙均能/次: ${calcHelpPerAvgEnergy()}\n'
         '類型: ${basicProfile.sleepType.name}\n'
         '樹果: ${basicProfile.fruit.nameI18nKey}\n'
-        '數量: ${fruitCount}\n'
+        '數量: $fruitCount\n'
         '幫忙間隔: ${calcHelpInterval()}\n'
         '樹果能量: $fruitEnergy\n'
         '食材1能量: $ingredientEnergy1\n'

@@ -19,10 +19,12 @@ extension MyContextNavigatorX on MyContextNavigator {
     );
   }
 
-  Future<R?> replaceWithoutAnimation<T extends Object?, R extends Object?>(MyPageRoute<T> route) async {
+  Future<R?> replaceWithoutAnimation<T extends Object?, R extends Object?>(MyPageRoute<T> route, {
+    T? arguments,
+  }) async {
     return _navigator.pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (ctx, animation1, animation2) => route.builder(ctx),
+        pageBuilder: (ctx, animation1, animation2) => route.builder(arguments),
         transitionDuration: Duration.zero,
         reverseTransitionDuration: Duration.zero,
       ),

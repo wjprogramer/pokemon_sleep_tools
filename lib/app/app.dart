@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 final _navigatorKey = GlobalKey<NavigatorState>();
 
 class _MyAppState extends State<MyApp> {
-  late Map<String, MyRouteBuilder> _routes;
+  late Map<String, MyRouteBuilder<Object?>> _routes;
   final _initRoute = SplashPage.route;
 
   @override

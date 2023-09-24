@@ -4,10 +4,17 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:provider/provider.dart';
 
+class PokemonBoxPageArgs {
+}
+
 class PokemonBoxPage extends StatefulWidget {
   const PokemonBoxPage({super.key});
 
-  static MyPageRoute route = ('/PokemonBoxPage', (_) => const PokemonBoxPage());
+  static const MyPageRoute<PokemonBoxPageArgs> route = ('/PokemonBoxPage', _builder);
+  static Widget _builder(dynamic args) {
+
+    return const PokemonBoxPage();
+  }
 
   @override
   State<PokemonBoxPage> createState() => _PokemonBoxPageState();
@@ -39,7 +46,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
             mainViewModel.create(payload);
           },
-          child: Text('Hi'),
+          child: const Text('Hi'),
         ),
       ),
     );
