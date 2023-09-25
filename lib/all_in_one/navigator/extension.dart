@@ -30,4 +30,8 @@ extension MyContextNavigatorX on MyContextNavigator {
       ),
     );
   }
+
+  void pop<T extends Object?>([ T? result ]) {
+    _navigator.pop(result);
+  }
 }

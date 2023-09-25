@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -18,6 +19,13 @@ class HomePage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              't_hello'.xTr,
+              textAlign: TextAlign.center,
+            ),
+          ),
           TextButton(
             onPressed: () {
               context.nav.push(MyStorybookPage.route);
@@ -32,9 +40,7 @@ class HomePage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.nav.push(
-                SubSkillPickerPage.route, arguments: SubSkillPickerPageArgs(),
-              );
+              SubSkillPickerPage.go(context);
             },
             child: const Text('SubSkill Picker'),
           ),

@@ -12,7 +12,7 @@ class PokemonBoxPage extends StatefulWidget {
 
   static const MyPageRoute<PokemonBoxPageArgs> route = ('/PokemonBoxPage', _builder);
   static Widget _builder(dynamic args) {
-
+    args = args as PokemonBoxPageArgs;
     return const PokemonBoxPage();
   }
 
