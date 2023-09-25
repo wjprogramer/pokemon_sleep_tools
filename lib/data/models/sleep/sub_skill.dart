@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 enum SubSkill {
@@ -38,5 +39,10 @@ enum SubSkill {
     }
     return greyColor;
   }
+
+  static const maxCount = 5;
+
+  /// length is [maxCount]
+  static List<int> levelList = [10, 25, 50, 75, 100];
 
 }

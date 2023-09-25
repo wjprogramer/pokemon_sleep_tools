@@ -33,7 +33,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  collection: ^1.17.2
   drift: ^2.11.1
+  gap: ^3.0.1
   get: ^4.6.6
   get_it: ^7.6.4
   shared_preferences: ^2.2.1

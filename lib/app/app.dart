@@ -19,7 +19,7 @@ class MyApp extends StatefulWidget {
 final _navigatorKey = GlobalKey<NavigatorState>();
 
 class _MyAppState extends State<MyApp> {
-  late Map<String, MyRouteBuilder<Object?>> _routes;
+  late MyRoutesMapping _routes;
   late Iterable<Locale> _locales;
   final _initRoute = SplashPage.route;
 

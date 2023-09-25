@@ -3,6 +3,7 @@ import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/sub_skill_picker/sub_skill_picker_page.dart';
 
@@ -10,23 +11,29 @@ typedef MyRouteBuilder<T extends Object?> = Widget Function(dynamic args);
 
 typedef MyPageRoute<T extends Object?> = (String, MyRouteBuilder<T>);
 
-// typedef X<T> = Function(T);
+typedef MyRoutesMapping = Map<String, MyRouteBuilder>;
+// Map<Type, Map<String, MyRouteBuilder>>
 
-Map<String, MyRouteBuilder<Object?>> generateRoutes() {
-  // final xx = <X<int>>[
-  //       (num _) {},
-  //       (int _) {},
-  // ];
-
+MyRoutesMapping generateRoutes() {
   final routes = <MyPageRoute>[
     // dev
     MyStorybookPage.route,
     // main
     HomePage.route,
+    ...PokemonMaintainProfilePage.routes,
     PokemonBoxPage.route,
     SplashPage.route,
     SubSkillPickerPage.route,
   ];
+
+  // final Map<Type, Map<String, MyRouteBuilder>> x = {
+  //   Null: {}
+  // };
+
+  // for (final route in routes) {
+  //   x[route.getArgsType] = (x[route.getArgsType] ?? {});
+  //   x[route.getArgsType]![route.name] = route.builder as MyRouteBuilder;
+  // }
 
   return routes.toMap(
         (e) => e.name,
@@ -34,9 +41,14 @@ Map<String, MyRouteBuilder<Object?>> generateRoutes() {
   );
 }
 
-extension MyPageRouteX<T extends Object?> on MyPageRoute<T> {
+extension MyRouteBuilderX<T> on MyRouteBuilder<T> {
+  Type get getArgsType => T;
+}
+
+extension MyPageRouteX<T> on MyPageRoute<T> {
   String get name => this.$1;
   MyRouteBuilder<T> get builder => this.$2;
+  Type get getArgsType => builder.getArgsType;
 
   // MapEntry get mapEntry => MapEntry($1, $2);
 }
