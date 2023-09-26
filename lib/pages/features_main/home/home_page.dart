@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
-import 'package:pokemon_sleep_tools/pages/sub_skill_picker/sub_skill_picker_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,7 +24,7 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              't_hello'.xTr,
+              't_pokemon'.xTr,
               textAlign: TextAlign.center,
             ),
           ),
@@ -46,13 +48,15 @@ class HomePage extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
+              PokemonBasicProfilePicker.go(context);
             },
-            child: const Text(''),
+            child: const Text('Pokemon Basic Profile Picker'),
           ),
           TextButton(
             onPressed: () {
+              PokemonMaintainProfilePage.goCreate(context);
             },
-            child: const Text(''),
+            child: const Text('Create Pokemon Profile'),
           ),
           TextButton(
             onPressed: () {

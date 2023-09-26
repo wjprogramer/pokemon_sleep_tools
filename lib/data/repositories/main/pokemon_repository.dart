@@ -2,7 +2,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 class PokemonBasicProfileRepository {
 
-  List<PokemonBasicProfile> findAll() {
+  Future<List<PokemonBasicProfile>> findAll() async {
     final x = [..._allPokemonMapping.entries.map((e) => e.value)];
     x.sort((a, b) => a.id - b.id);
     return x;

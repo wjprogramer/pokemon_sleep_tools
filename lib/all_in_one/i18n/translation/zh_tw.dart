@@ -4,5 +4,9 @@ Map<String, String> getZhTwTrText() {
     't_confirm': '確定',
     't_incomplete': '未完整',
     't_failed': '失敗',
+    't_none': '無',
+    't_create': '建立',
+    't_edit': '編輯',
+    't_pokemon': '寶可夢',
   };
 }

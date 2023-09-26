@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/main/gap.dart';
 import 'package:pokemon_sleep_tools/widgets/main/my_app_bar.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 
 class SubSkillPickerPageArgs {
 }
@@ -95,29 +96,12 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
                     ),
                   )).toList(),
                 ),
+                Gap.sm,
               ],
             ),
           ),
-          SafeArea(
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8, horizontal: 16,
-              ),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: Divider.createBorderSide(context),
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: _submit,
-                    child: Text('t_confirm'.xTr),
-                  ),
-                ],
-              ),
-            ),
+          BottomBarWithConfirmButton(
+            submit: _submit,
           ),
         ],
       ),
