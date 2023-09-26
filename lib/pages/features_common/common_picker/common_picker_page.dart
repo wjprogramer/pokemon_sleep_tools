@@ -11,11 +11,13 @@ class CommonPickerPageArgs<T> {
     this.initialValue,
     required this.options,
     required this.textBuilder,
+    this.withConfirmButton = false,
   });
 
   final T? initialValue;
   final List<T> options;
   final CommonPickerOptionTextBuilder<T> textBuilder;
+  final bool withConfirmButton;
   // TODO: valueAccessor
 }
 
@@ -68,31 +70,40 @@ class _CommonPickerPageState<T> extends State<CommonPickerPage<T>> {
         padding: const EdgeInsets.symmetric(horizontal: HORIZON_PADDING),
         children: [
           Gap.xl,
-          ...widget.args.options.map((e) => ElevatedButton(
-            onPressed: () {
-              widget._popResult(context, e);
-            },
-            child: _args.textBuilder(context, e),
+          ...widget.args.options.map((item) => ElevatedButton(
+            onPressed: () => _onItemTap(item),
+            child: _args.textBuilder(context, item),
           )),
           Gap.xl,
         ],
       ),
-      // bottomNavigationBar: BottomBarWithConfirmButton(
-      //   submit: _submit,
-      // ),
+      bottomNavigationBar: !_args.withConfirmButton ? null : BottomBarWithConfirmButton(
+        submit: _submit,
+      ),
     );
   }
 
-  // void _submit() {
-  //   final currValue = _currValue;
-  //   if (currValue == null) {
-  //     DialogUtility.text(
-  //       context,
-  //       title: Text('t_failed'.xTr),
-  //       content: Text('t_incomplete'.xTr),
-  //     );
-  //     return;
-  //   }
-  //   widget._popResult(context, currValue);
-  // }
+  void _onItemTap(T item) {
+    if (!_args.withConfirmButton) {
+      widget._popResult(context, item);
+      return;
+    }
+
+    setState(() {
+      _currValue = item;
+    });
+  }
+
+  void _submit() {
+    final currValue = _currValue;
+    if (currValue == null) {
+      DialogUtility.text(
+        context,
+        title: Text('t_failed'.xTr),
+        content: Text('t_incomplete'.xTr),
+      );
+      return;
+    }
+    widget._popResult(context, currValue);
+  }
 }

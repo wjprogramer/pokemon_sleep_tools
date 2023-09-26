@@ -1,10 +1,13 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/form/validation/validation.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/common_picker/common_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -65,19 +68,62 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
   // Form
   late FormGroup _form;
+  final _ingredient1DisplayTextController = TextEditingController();
 
   // Form Field
   late FormControl<PokemonBasicProfile> _basicProfileField;
   late FormControl<PokemonCharacter> _characterField;
+  late FormControl<List<SubSkill>> _subSkillsField;
+
+  late FormControl<Ingredient> _ingredient2Field;
+  late FormControl<Ingredient> _ingredient3Field;
+
+  late FormControl<int> _ingredient1CountField;
+  late FormControl<int> _ingredient2CountField;
+  late FormControl<int> _ingredient3CountField;
 
   @override
   void initState() {
     super.initState();
+    _initForm();
+
+    _basicProfileField.valueChanges.listen((basicProfile) {
+      _ingredient1DisplayTextController.text =
+          Display.text(basicProfile?.ingredient1.nameI18nKey);
+    });
+  }
+
+  @override
+  void dispose() {
+    _ingredient1DisplayTextController.dispose();
+    super.dispose();
+  }
+
+  void _initForm() {
     _basicProfileField = FormControl(
       validators: [ Validators.required ],
     );
     _characterField = FormControl(
       validators: [ Validators.required ],
+    );
+    _subSkillsField = FormControl(
+      validators: [
+        Validators.required,
+        MyValidators.iterableLength(SubSkill.maxCount),
+      ],
+    );
+
+    _ingredient2Field = FormControl(validators: [ Validators.required ]);
+    _ingredient3Field = FormControl(validators: [ Validators.required ]);
+
+    _ingredient1CountField = FormControl(
+      validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
+    );
+    _ingredient2CountField = FormControl(
+      validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
+    );
+    _ingredient3CountField = FormControl(
+      validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
     );
 
     _form = FormGroup({});
@@ -124,11 +170,11 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                 return GestureDetector(
                   onTap: () async {
                     final result = await CommonPickerPage.go<PokemonCharacter>(
-                      context,
-                      options: PokemonCharacter.values,
-                      optionBuilder: (context, character) {
-                        return Text(character.name);
-                      }
+                        context,
+                        options: PokemonCharacter.values,
+                        optionBuilder: (context, character) {
+                          return Text(character.name);
+                        }
                     );
                     if (result == null) {
                       return;
@@ -141,6 +187,83 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                   ),
                 );
               },
+            ),
+            Gap.xl,
+            ReactiveMyTextField<List<SubSkill>>(
+              label: 't_sub_skills'.xTr,
+              formControl: _subSkillsField,
+              fieldWidget: ReactiveValueListenableBuilder(
+                formControl: _subSkillsField,
+                builder: (context, field, child) {
+                  final List<SubSkill?> subSkills = _subSkillsField.value ??
+                      List.generate(SubSkill.maxCount, (index) => null);
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Gap.xl,
+                      ...subSkills.mapIndexed((index, subSkill) {
+                        final level = SubSkill.levelList[index];
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${index + 1}. ${Display.text(subSkill?.name)}',
+                                ),
+                              ),
+                              Text(
+                                'Lv. $level',
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                  );
+                },
+              ),
+            ),
+            Gap.md,
+            Row(
+              children: [
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () async {
+                    final result = await SubSkillPickerPage.go(context);
+                    if (result == null) {
+                      return;
+                    }
+                    _subSkillsField.value = result;
+                  },
+                  child: Text('t_edit'.xTr),
+                ),
+              ],
+            ),
+            Gap.xl,
+            ...ReactiveMyTextField.labelField(
+              label: Text('t_ingredient'.xTr),
+              field: Column(
+                children: [
+                  Gap.xl,
+                  ..._buildIngredientField(
+                    index: 0,
+                    countField: _ingredient1CountField,
+                  ),
+                  ..._buildIngredientField(
+                    index: 1,
+                    countField: _ingredient2CountField,
+                    ingredientField: _ingredient2Field,
+                  ),
+                  ..._buildIngredientField(
+                    index: 2,
+                    countField: _ingredient3CountField,
+                    ingredientField: _ingredient3Field,
+                  ),
+                ],
+              )
             ),
             Gap.trailing,
           ],
@@ -162,8 +285,97 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     }
   }
 
-  void _submit() {
+  List<Widget> _buildIngredientField({
+    required int index,
+    required FormControl<int> countField,
+    FormControl<Ingredient>? ingredientField,
+  }) {
+    _basicProfileField;
 
+    Widget field;
+
+    if (index == 0) {
+      field = TextField(
+        controller: _ingredient1DisplayTextController,
+        enabled: false,
+      );
+    } else if (ingredientField != null) {
+      field = ReactiveMyTextField<Ingredient>(
+        formControl: ingredientField,
+        wrapFieldBuilder: (context, fieldWidget) {
+          return GestureDetector(
+            onTap: () async {
+              final result = await CommonPickerPage.go<Ingredient>(
+                context,
+                options: Ingredient.values,
+                optionBuilder: (context, character) {
+                  return Text(character.nameI18nKey);
+                },
+              );
+              if (result == null) {
+                return;
+              }
+              ingredientField.value = result;
+            },
+            behavior: HitTestBehavior.opaque,
+            child: IgnorePointer(
+              child: fieldWidget,
+            ),
+          );
+        },
+      );
+    } else {
+      field = Container();
+    }
+
+    return [
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              const AnimatedOpacity(
+                opacity: 0,
+                duration: Duration.zero,
+                child: IgnorePointer(
+                  child: SizedBox(
+                    width: 30,
+                    child: TextField(),
+                  ),
+                ),
+              ),
+              Positioned.fill(
+                child: Align(
+                  alignment: const Alignment(-1, 0.2),
+                  child: Text(
+                    '${index + 1}',
+                    textAlign: TextAlign.start,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            flex: 2,
+            child: field,
+          ),
+          Gap.xl,
+          Expanded(
+            flex: 1,
+            child: ReactiveMyTextField(
+              formControl: countField,
+            ),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  void _submit() {
+    if (!_form.valid) {
+      _form.markAllAsTouched();
+      return;
+    }
   }
 }
 

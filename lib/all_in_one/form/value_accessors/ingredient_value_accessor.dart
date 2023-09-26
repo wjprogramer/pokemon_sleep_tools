@@ -16,7 +16,7 @@ class IngredientValueAccessor extends ControlValueAccessor<Ingredient, String> {
       return '';
     }
     _cache.add(modelValue);
-    return modelValue.name;
+    return modelValue.nameI18nKey;
   }
 
   @override
