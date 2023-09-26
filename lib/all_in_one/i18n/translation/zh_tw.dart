@@ -8,5 +8,6 @@ Map<String, String> getZhTwTrText() {
     't_create': '建立',
     't_edit': '編輯',
     't_pokemon': '寶可夢',
+    't_character': '性格',
   };
 }

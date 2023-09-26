@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/common_picker/common_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
@@ -17,6 +18,7 @@ typedef MyRoutesMapping = Map<String, MyRouteBuilder>;
 
 MyRoutesMapping generateRoutes() {
   final routes = <MyPageRoute>[
+    // common
     // dev
     MyStorybookPage.route,
     // main

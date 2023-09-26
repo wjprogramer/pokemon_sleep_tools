@@ -19,6 +19,14 @@ extension MyContextNavigatorX on MyContextNavigator {
     );
   }
 
+  Future<T?> pushWidget<T extends Object?>(Widget page) async {
+    return _navigator.push<T>(
+      MaterialPageRoute(
+        builder: (context) => page,
+      ),
+    );
+  }
+
   Future<R?> replaceWithoutAnimation<T extends Object?, R extends Object?>(MyPageRoute<T> route, {
     T? arguments,
   }) async {

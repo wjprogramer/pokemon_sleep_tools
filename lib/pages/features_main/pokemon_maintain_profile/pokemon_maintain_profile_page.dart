@@ -3,6 +3,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/common_picker/common_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
@@ -67,11 +68,15 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
   // Form Field
   late FormControl<PokemonBasicProfile> _basicProfileField;
+  late FormControl<PokemonCharacter> _characterField;
 
   @override
   void initState() {
     super.initState();
-    _basicProfileField = FormControl<PokemonBasicProfile>(
+    _basicProfileField = FormControl(
+      validators: [ Validators.required ],
+    );
+    _characterField = FormControl(
       validators: [ Validators.required ],
     );
 
@@ -103,6 +108,32 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                       return;
                     }
                     _basicProfileField.value = baseProfile;
+                  },
+                  behavior: HitTestBehavior.opaque,
+                  child: IgnorePointer(
+                    child: fieldWidget,
+                  ),
+                );
+              },
+            ),
+            Gap.xl,
+            ReactiveMyTextField<PokemonCharacter>(
+              label: 't_character'.xTr,
+              formControl: _characterField,
+              wrapFieldBuilder: (context, fieldWidget) {
+                return GestureDetector(
+                  onTap: () async {
+                    final result = await CommonPickerPage.go<PokemonCharacter>(
+                      context,
+                      options: PokemonCharacter.values,
+                      optionBuilder: (context, character) {
+                        return Text(character.name);
+                      }
+                    );
+                    if (result == null) {
+                      return;
+                    }
+                    _characterField.value = result;
                   },
                   behavior: HitTestBehavior.opaque,
                   child: IgnorePointer(
