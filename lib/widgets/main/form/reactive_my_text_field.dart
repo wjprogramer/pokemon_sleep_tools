@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
-import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
-import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 
 typedef CommonPickerOptionTextBuilder<T> = Widget Function(BuildContext context, T value);
+
+typedef CommonPickerFilter<T> = bool Function(T value, String keyword);
 
 class CommonPickerPageArgs<T> {
   CommonPickerPageArgs({
@@ -12,12 +13,14 @@ class CommonPickerPageArgs<T> {
     required this.options,
     required this.textBuilder,
     this.withConfirmButton = false,
+    this.itemFilter,
   });
 
   final T? initialValue;
   final List<T> options;
   final CommonPickerOptionTextBuilder<T> textBuilder;
   final bool withConfirmButton;
+  final CommonPickerFilter<T>? itemFilter;
   // TODO: valueAccessor
 }
 
@@ -28,6 +31,7 @@ class CommonPickerPage<T> extends StatefulWidget {
     T? initialValue,
     required List<T> options,
     required CommonPickerOptionTextBuilder<T> optionBuilder,
+    CommonPickerFilter<T>? itemFilter,
   }) async {
     final res = await context.nav.pushWidget(
       CommonPickerPage<T>._(
@@ -35,6 +39,7 @@ class CommonPickerPage<T> extends StatefulWidget {
           initialValue: initialValue,
           options: options,
           textBuilder: optionBuilder,
+          itemFilter: itemFilter,
         ),
       ),
     );
@@ -55,30 +60,90 @@ class _CommonPickerPageState<T> extends State<CommonPickerPage<T>> {
   CommonPickerPageArgs<T> get _args => widget.args;
 
   T? _currValue;
+  late List<T> _allOptions;
+  var _evaluatedOptions = <T>[];
+  final _keywordController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _currValue = widget.args.initialValue;
+    _currValue = _args.initialValue;
+    _updateAllOptions();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateAllOptions();
+
+    _keywordController.addListener(() {
+      _filterOptions();
+
+      setState(() { });
+    });
+  }
+
+  @override
+  void dispose() {
+    _keywordController.dispose();
+    super.dispose();
+  }
+
+  void _updateAllOptions() {
+    _allOptions = _args.options;
+
+    if (_args.itemFilter == null) {
+      _evaluatedOptions = [..._allOptions];
+    } else {
+      _filterOptions();
+    }
+  }
+
+  void _filterOptions() {
+    if (_args.itemFilter == null) {
+      return;
+    }
+
+    _evaluatedOptions = _allOptions
+        .where((item) => _args.itemFilter!(item, _keywordController.text))
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: buildListView(
-        padding: const EdgeInsets.symmetric(horizontal: HORIZON_PADDING),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Gap.xl,
-          ...widget.args.options.map((item) => ElevatedButton(
-            onPressed: () => _onItemTap(item),
-            child: _args.textBuilder(context, item),
-          )),
-          Gap.xl,
+          if (_args.itemFilter != null)
+            _buildSearchBar(),
+          Expanded(
+            child: buildListView(
+              padding: const EdgeInsets.symmetric(horizontal: HORIZON_PADDING),
+              children: [
+                Gap.xl,
+                ..._evaluatedOptions.map((item) => ElevatedButton(
+                  onPressed: () => _onItemTap(item),
+                  child: _args.textBuilder(context, item),
+                )),
+                Gap.xl,
+              ],
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: !_args.withConfirmButton ? null : BottomBarWithConfirmButton(
         submit: _submit,
+      ),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      child: TextField(
+        controller: _keywordController,
       ),
     );
   }

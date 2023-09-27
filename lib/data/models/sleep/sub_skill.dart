@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 enum SubSkill {
@@ -22,10 +21,10 @@ enum SubSkill {
   s16(16, '研究EXP獎勵', '透過睡眠研究獲得的研究EXP都會增加6%', 3),
   s17(17, '夢之碎片獎勵', '透過睡眠研究獲得的夢之碎片會增加6%', 3);
 
-  const SubSkill(this.id, this.name, this.intro, this.level);
+  const SubSkill(this.id, this.nameI18nKey, this.intro, this.level);
 
   final int id;
-  final String name;
+  final String nameI18nKey;
   final String intro;
 
   /// 自己設定的

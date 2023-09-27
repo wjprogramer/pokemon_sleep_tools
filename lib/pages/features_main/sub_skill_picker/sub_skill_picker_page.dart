@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
-import 'package:pokemon_sleep_tools/widgets/main/gap.dart';
-import 'package:pokemon_sleep_tools/widgets/main/my_app_bar.dart';
-import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 
 class SubSkillPickerPageArgs {
@@ -92,7 +90,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
                       onPressed: () => _pickSubSkill(subSkill),
                       style: ElevatedButton.styleFrom(
                       ),
-                      child: Text(subSkill.name),
+                      child: Text(subSkill.nameI18nKey),
                     ),
                   )).toList(),
                 ),
@@ -152,7 +150,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
               ),
             ),
             child: Text(
-              _subSkillFields[index]?.name ?? '-',
+              _subSkillFields[index]?.nameI18nKey ?? '-',
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,

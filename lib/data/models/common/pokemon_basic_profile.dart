@@ -19,6 +19,9 @@ class PokemonBasicProfile {
     required this.boxCount,
     required this.ingredient1,
     required this.ingredientCount1,
+    this.ingredientOptions2 = const [],
+    this.ingredientOptions3 = const [],
+    required this.ingredientChainId,
   });
 
   factory PokemonBasicProfile.from(
@@ -33,6 +36,7 @@ class PokemonBasicProfile {
       int boxCount,
       Ingredient ingredient1,
       int ingredientCount1,
+      int ingredientChainId,
       ) {
     return PokemonBasicProfile(
       id: id,
@@ -46,6 +50,7 @@ class PokemonBasicProfile {
       boxCount: boxCount,
       ingredient1: ingredient1,
       ingredientCount1: ingredientCount1,
+      ingredientChainId: ingredientChainId,
     );
   }
 
@@ -100,4 +105,13 @@ class PokemonBasicProfile {
 
   /// Pokemon Sleep, 食材一數量
   final int ingredientCount1;
+
+  /// Pokemon Sleep, 食材二的可能性
+  List<(Ingredient, int)> ingredientOptions2;
+
+  /// Pokemon Sleep, 食材三的可能性
+  List<(Ingredient, int)> ingredientOptions3;
+
+  final int ingredientChainId;
+
 }

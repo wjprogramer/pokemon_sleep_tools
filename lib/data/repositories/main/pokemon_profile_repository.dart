@@ -5,7 +5,7 @@ import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_repository.da
 class PokemonProfileRepository {
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
 
-  create(CreatePokemonProfilePayload payload) {
+  PokemonProfile create(CreatePokemonProfilePayload payload) {
     final profile = PokemonProfile(
       basicProfileId: payload.basicProfileId,
       character: payload.character,
@@ -26,6 +26,37 @@ class PokemonProfileRepository {
     return profile;
   }
 
+  PokemonProfile getDemoProfile() {
+    final profile = PokemonProfile(
+      basicProfileId: 18,
+      character: PokemonCharacter.restrained,
+      subSkillLv10: SubSkill.s6,
+      subSkillLv25: SubSkill.s4,
+      subSkillLv50: SubSkill.s13,
+      subSkillLv75: SubSkill.s17,
+      subSkillLv100: SubSkill.s12,
+      ingredient2: Ingredient.i11,
+      ingredientCount2: 2,
+      ingredient3: Ingredient.i11,
+      ingredientCount3: 3,
+    );
 
+    final basicProfile = _basicProfileRepo.getBasicProfile(profile.basicProfileId)!;
+    profile.basicProfile = basicProfile;
+
+    return profile;
+  }
+
+  List<PokemonProfile> getDemoProfiles() {
+    final results = getAllDemoProfiles();
+
+    for (final result in results) {
+      final basicProfile = _basicProfileRepo.getBasicProfile(result.basicProfileId)!;
+      result.basicProfile = basicProfile;
+    }
+
+
+    return results;
+  }
 
 }

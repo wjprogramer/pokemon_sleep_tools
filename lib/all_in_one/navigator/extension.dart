@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pokemon_sleep_tools/all_in_one/navigator/navigator.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 

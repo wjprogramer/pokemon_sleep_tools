@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/form/validation/validation.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
-import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_profile_repository.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/common_picker/common_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
@@ -64,6 +65,8 @@ class PokemonMaintainProfilePage extends StatefulWidget {
 }
 
 class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage> {
+  PokemonProfileRepository get _pokemonProfileRepository => getIt();
+
   bool get _isMutate => widget._pageType.isMutate;
 
   // Form
@@ -126,7 +129,16 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
     );
 
-    _form = FormGroup({});
+    _form = FormGroup({
+      '_basicProfile': _basicProfileField,
+      '_character': _characterField,
+      '_subSkills': _subSkillsField,
+      '_ingredient2': _ingredient2Field,
+      '_ingredient3': _ingredient3Field,
+      '_ingredient1Count': _ingredient1CountField,
+      '_ingredient2Count': _ingredient2CountField,
+      '_ingredient3Count': _ingredient3CountField,
+    });
   }
 
   @override
@@ -211,7 +223,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                             children: [
                               Expanded(
                                 child: Text(
-                                  '${index + 1}. ${Display.text(subSkill?.name)}',
+                                  '${index + 1}. ${Display.text(subSkill?.nameI18nKey)}',
                                 ),
                               ),
                               Text(
@@ -308,8 +320,11 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
               final result = await CommonPickerPage.go<Ingredient>(
                 context,
                 options: Ingredient.values,
-                optionBuilder: (context, character) {
-                  return Text(character.nameI18nKey);
+                optionBuilder: (context, item) {
+                  return Text(item.nameI18nKey);
+                },
+                itemFilter: (item, keyword) {
+                  return item.nameI18nKey.contains(keyword);
                 },
               );
               if (result == null) {
@@ -376,6 +391,18 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       _form.markAllAsTouched();
       return;
     }
+
+    final pokemon = _pokemonProfileRepository.create(CreatePokemonProfilePayload(
+      basicProfileId: _basicProfileField.value!.id,
+      character: _characterField.value!,
+      subSkills: _subSkillsField.value!,
+      ingredient2: _ingredient2Field.value!,
+      ingredientCount2: _ingredient2CountField.value!,
+      ingredient3: _ingredient3Field.value!,
+      ingredientCount3: _ingredient3CountField.value!,
+    ));
+
+    debugPrint(pokemon.getConstructorCode());
   }
 }
 

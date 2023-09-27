@@ -1,6 +1,5 @@
 import 'dart:collection';
 
-import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

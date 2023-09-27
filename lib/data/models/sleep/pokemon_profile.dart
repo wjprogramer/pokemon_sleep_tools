@@ -42,6 +42,23 @@ class PokemonProfile {
     subSkillLv100,
   ];
 
+  String getConstructorCode() {
+    return
+      'PokemonProfile(\n'
+          '   basicProfileId: $basicProfileId,\n'
+          '   character: $character,\n'
+          '   subSkillLv10: $subSkillLv10,\n'
+          '   subSkillLv25: $subSkillLv25,\n'
+          '   subSkillLv50: $subSkillLv50,\n'
+          '   subSkillLv75: $subSkillLv75,\n'
+          '   subSkillLv100: $subSkillLv100,\n'
+          '   ingredient2: $ingredient2,\n'
+          '   ingredientCount2: $ingredientCount2,\n'
+          '   ingredient3: $ingredient3,\n'
+          '   ingredientCount3: $ingredientCount3,\n'
+          ')';
+  }
+
   String info() {
     final fruitCount = calcFruitCount();
     final fruitEnergy = fruitCount * basicProfile.fruit.energyIn60;
@@ -54,11 +71,11 @@ class PokemonProfile {
     var result = '${basicProfile.nameI18nKey}\n'
         '性格: ${character.name}\n'
         '副技能:\n'
-        '    Lv 10: ${subSkillLv10.name}\n'
-        '    Lv 25: ${subSkillLv25.name}\n'
-        '    Lv 50: ${subSkillLv50.name}\n'
-        '    Lv 75: ${subSkillLv75.name}\n'
-        '    Lv 100: ${subSkillLv100.name} \n'
+        '    Lv 10: ${subSkillLv10.nameI18nKey}\n'
+        '    Lv 25: ${subSkillLv25.nameI18nKey}\n'
+        '    Lv 50: ${subSkillLv50.nameI18nKey}\n'
+        '    Lv 75: ${subSkillLv75.nameI18nKey}\n'
+        '    Lv 100: ${subSkillLv100.nameI18nKey} \n'
         '食材:\n'
         '    ${ingredient1.nameI18nKey} ($ingredientCount1)\n'
         '    ${ingredient2.nameI18nKey} ($ingredientCount2)\n'
