@@ -9,7 +9,9 @@ import 'package:pokemon_sleep_tools/persistent/local_storage/models/base_local_f
 import 'package:pokemon_sleep_tools/persistent/local_storage/models/stored_pokemon_profiles.dart';
 
 export 'models/app_meta.dart';
+export 'models/base_local_file.dart';
 export 'models/stored_pokemon_profiles.dart';
+export 'models/stored_pokemon_teams.dart';
 
 class MyLocalStorage implements MyInjectable {
   MyCacheManager get _cache => getIt();

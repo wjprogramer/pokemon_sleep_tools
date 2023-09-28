@@ -43,10 +43,9 @@ class SubSkillPickerPage extends StatefulWidget {
 }
 
 class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
-  static const _subSkillsSpacing = 12.0;
-
   var _theme = ThemeData();
   double _subSkillButtonWidth = 100;
+  double _subSkillButtonSpacing = 0;
 
   var _subSkillsItems = <_SubSkillItem>[];
 
@@ -141,8 +140,9 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
 
-    final size = MediaQuery.of(context).size;
-    _subSkillButtonWidth = _calcButtonWidth(size);
+    final buttonWidthResults = UiUtility.getCommonWidthInRowBy(context);
+    _subSkillButtonWidth = buttonWidthResults.childWidth;
+    _subSkillButtonSpacing = buttonWidthResults.spacing;
 
     return Scaffold(
       appBar: buildAppBar(
@@ -219,13 +219,13 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
           ),
           if (otherSkills != null && otherSkills.isNotEmpty)
             Wrap(
-              spacing: _subSkillsSpacing,
-              runSpacing: _subSkillsSpacing,
+              spacing: _subSkillButtonSpacing,
+              runSpacing: _subSkillButtonSpacing,
               children: otherSkills.map((e) => e.value).map((subSkill) => Container(
                 constraints: BoxConstraints.tightFor(
                   width: _subSkillButtonWidth,
                 ),
-                child: ElevatedButton(
+                child: MyElevatedButton(
                   onPressed: () => _pickSubSkill(subSkill),
                   style: ElevatedButton.styleFrom(
                   ),
@@ -250,16 +250,6 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
         ),
         child: Text(code),
       ),
-    );
-  }
-
-  double _calcButtonWidth(Size screenSize) {
-    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
-
-    return UiUtility.getChildWidthInRowBy(
-      baseChildWidth: 150.0,
-      containerWidth: mainWidth,
-      spacing: _subSkillsSpacing,
     );
   }
 

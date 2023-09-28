@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 
 class BottomBarWithConfirmButton extends StatelessWidget {
   const BottomBarWithConfirmButton({
@@ -27,7 +28,7 @@ class BottomBarWithConfirmButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ...?childrenAtStart,
-            ElevatedButton(
+            MyElevatedButton(
               onPressed: submit,
               child: Text('t_confirm'.xTr),
             ),

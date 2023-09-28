@@ -26,7 +26,7 @@ class PokemonSliderDetailsPage extends StatefulWidget {
     args: args as _PokemonSliderDetailsPageArgs,
   ));
 
-  static go(BuildContext context, {
+  static void go(BuildContext context, {
     int? initialProfileId,
   }) {
     context.nav.push(
@@ -44,6 +44,8 @@ class PokemonSliderDetailsPage extends StatefulWidget {
 }
 
 class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
+  _PokemonSliderDetailsPageArgs get _args => widget._args;
+
   late PageController _pageController;
 
   @override
@@ -51,10 +53,25 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     super.initState();
     _pageController = PageController();
 
-    scheduleMicrotask(() {
+    scheduleMicrotask(() async {
       final mainViewModel = context.read<MainViewModel>();
-      mainViewModel.loadProfiles();
+      await mainViewModel.loadProfiles();
+
+      if (_args.initialProfileId != null) {
+        final profiles = mainViewModel.profiles;
+        final index = profiles.indexOrNullWhere((e) => e.id == _args.initialProfileId);
+
+        if (index != null) {
+          _pageController.jumpToPage(index);
+        }
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -80,14 +97,30 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 class _PokemonDetailsView extends StatelessWidget {
   const _PokemonDetailsView({
     super.key,
-    required this.profile
+    required this.profile,
   });
 
   final PokemonProfile profile;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return buildListView(
+      children: _buildListItems(),
+    );
+  }
+
+  List<Widget> _buildListItems() {
+    return [
+      Gap.xl,
+      ...Hp.list(
+        children: [
+          Text(
+            profile.basicProfile.nameI18nKey,
+          ),
+        ],
+      ),
+      Gap.trailing,
+    ];
   }
 }
 

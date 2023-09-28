@@ -11,5 +11,17 @@ Map<String, String> getZhTwTrText() {
     't_character': '性格',
     't_ingredient': '食材',
     't_fruit': '樹果',
+    't_developing': '開發中',
+    't_food': '料理',
+    't_recipes': '食譜',
+    't_recipes_view': '食譜一覽',
+    't_main_menu': '主選單',
+    't_sub_menu': '副選單',
+    't_packet': '包包',
+    '': '進化道具',
+    '': '地圖',
+    '': '研究筆記',
+    '': '睡姿圖鑑',
+    '': '',
   };
 }

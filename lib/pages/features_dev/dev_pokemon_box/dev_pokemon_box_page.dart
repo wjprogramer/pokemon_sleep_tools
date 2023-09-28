@@ -42,10 +42,10 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
             '幫手獎勵: ${statistics.helperBonus}\n'
             '幫忙速度S: ${statistics.totalHelpSpeedS}\n'
             '幫忙速度M: ${statistics.totalHelpSpeedM}\n'
-            '食材機率: ${statistics}\n'
-            '技能等級: ${statistics}\n'
-            '主技能速度參數: ${statistics}\n'
-            '持有上限溢出數: ${statistics}\n'
+            // '食材機率: ${statistics}\n'
+            // '技能等級: ${statistics}\n'
+            // '主技能速度參數: ${statistics}\n'
+            // '持有上限溢出數: ${statistics}\n'
             '-----------------\n'
             '';
       }

@@ -3,28 +3,61 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 import 'package:provider/provider.dart';
 
-class PokemonBoxPageArgs {
+enum _PageType {
+  readonly,
+  picker,
+}
+
+class _PokemonBoxPageArgs {
+  _PokemonBoxPageArgs({
+    required this.pageType,
+  });
+
+  final _PageType pageType;
 }
 
 class PokemonBoxPage extends StatefulWidget {
-  const PokemonBoxPage({super.key});
+  const PokemonBoxPage._(_PokemonBoxPageArgs args): _args = args;
 
-  static const MyPageRoute<PokemonBoxPageArgs> route = ('/PokemonBoxPage', _builder);
+  static const MyPageRoute route = ('/PokemonBoxPage', _builder);
   static Widget _builder(dynamic args) {
-    args = args as PokemonBoxPageArgs?;
-    return const PokemonBoxPage();
+    args = args as _PokemonBoxPageArgs;
+    return PokemonBoxPage._(args);
   }
+
+  static void go(BuildContext context) {
+    context.nav.push(
+      route,
+      arguments: _PokemonBoxPageArgs(
+        pageType: _PageType.readonly,
+      ),
+    );
+  }
+
+  static void pick(BuildContext context) {
+    context.nav.push(
+      route,
+      arguments: _PokemonBoxPageArgs(
+        pageType: _PageType.picker,
+      ),
+    );
+  }
+
+  final _PokemonBoxPageArgs _args;
 
   @override
   State<PokemonBoxPage> createState() => _PokemonBoxPageState();
 }
 
 class _PokemonBoxPageState extends State<PokemonBoxPage> {
+  _PokemonBoxPageArgs get _args => widget._args;
+
   @override
   void initState() {
     super.initState();
@@ -39,14 +72,14 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
-    const pokemonCardSpacing = 12.0;
+    const cardSpacing = 12.0;
 
-    final pokemonCardWidth = UiUtility.getChildWidthInRowBy(
+    final cardWidth = UiUtility.getChildWidthInRowBy(
       baseChildWidth: 70,
       containerWidth: mainWidth,
-      spacing: pokemonCardSpacing,
+      spacing: cardSpacing,
     );
-    final pokemonCardHeight = pokemonCardWidth * 1.318;
+    final cardHeight = cardWidth * 1.318;
 
     return Scaffold(
       appBar: buildAppBar(
@@ -69,16 +102,24 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
             ),
             children: [
               Wrap(
-                spacing: pokemonCardSpacing,
-                children: profiles.map((e) => Container(
-                  width: pokemonCardWidth,
-                  alignment: Alignment.center,
-                  constraints: BoxConstraints(
-                    maxWidth: pokemonCardWidth,
-                    minHeight: pokemonCardHeight,
-                  ),
-                  child: Text(
-                    e.basicProfile.nameI18nKey,
+                spacing: cardSpacing,
+                children: profiles.map((e) => InkWell(
+                  onTap: () {
+                    PokemonSliderDetailsPage.go(
+                      context,
+                      initialProfileId: e.id,
+                    );
+                  },
+                  child: Container(
+                    width: cardWidth,
+                    alignment: Alignment.center,
+                    constraints: BoxConstraints(
+                      maxWidth: cardWidth,
+                      minHeight: cardHeight,
+                    ),
+                    child: Text(
+                      e.basicProfile.nameI18nKey,
+                    ),
                   ),
                 )).toList(),
               ),

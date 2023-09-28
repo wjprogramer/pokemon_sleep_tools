@@ -252,7 +252,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
             Row(
               children: [
                 const Spacer(),
-                ElevatedButton(
+                MyElevatedButton(
                   onPressed: () async {
                     final result = await SubSkillPickerPage.go(
                       context,

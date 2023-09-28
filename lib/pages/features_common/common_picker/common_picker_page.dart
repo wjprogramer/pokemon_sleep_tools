@@ -124,7 +124,7 @@ class _CommonPickerPageState<T> extends State<CommonPickerPage<T>> {
               padding: const EdgeInsets.symmetric(horizontal: HORIZON_PADDING),
               children: [
                 Gap.xl,
-                ..._evaluatedOptions.map((item) => ElevatedButton(
+                ..._evaluatedOptions.map((item) => MyElevatedButton(
                   onPressed: () => _onItemTap(item),
                   child: _args.textBuilder(context, item),
                 )),

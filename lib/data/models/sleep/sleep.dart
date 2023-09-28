@@ -6,4 +6,5 @@ export 'pokemon_character.dart';
 export 'pokemon_profile.dart';
 export 'pokemon_profile_statics.dart';
 export 'pokemon_sleep_type.dart';
+export 'pokemon_team.dart';
 export 'sub_skill.dart';

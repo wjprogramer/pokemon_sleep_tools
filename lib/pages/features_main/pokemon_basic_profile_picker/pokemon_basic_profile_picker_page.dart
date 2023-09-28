@@ -118,7 +118,7 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
                   ),
                   children: [
                     Gap.sm,
-                    ...basicProfiles.map((basicProfile) => ElevatedButton(
+                    ...basicProfiles.map((basicProfile) => MyElevatedButton(
                       onPressed: () => _pickBasicProfile(basicProfile),
                       child: Text(basicProfile.nameI18nKey),
                     )),
@@ -147,10 +147,8 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
   }
 
   Widget _buildSearchBar() {
-    return Container(
-      child: TextField(
-        controller: _keywordController,
-      ),
+    return TextField(
+      controller: _keywordController,
     );
   }
 

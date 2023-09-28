@@ -17,8 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  PokemonProfileRepository get _pokemonProfileRepository => getIt();
-
   late PageController _pageController;
   late List<_Fragment> _fragments;
 
