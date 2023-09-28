@@ -1,91 +1,105 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
-import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_profile_repository.dart';
-import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/home/fragments/home_fragment/home_fragment.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/home/fragments/pokemon_box_fragment/pokemon_box_fragment.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/home/fragments/sleep_fragment/sleep_fragment.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   static MyPageRoute route = ('/', (_) => const HomePage());
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   PokemonProfileRepository get _pokemonProfileRepository => getIt();
+
+  late PageController _pageController;
+  late List<_Fragment> _fragments;
+
+  @override
+  void initState() {
+    super.initState();
+    _fragments = _initFragments();
+
+    _pageController = PageController(
+      keepPage: true,
+      initialPage: _fragments.indexOrNullWhere((element) => false) ?? 0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  List<_Fragment> _initFragments() {
+    return [
+      _Fragment(
+        builder: (context) => const PokemonBoxFragment(),
+        labelTextBuilder: () => 'Pokemon',
+        iconData: Icons.add,
+      ),
+      _Fragment(
+        builder: (context) => const HomeFragment(),
+        labelTextBuilder: () => 'Home',
+        iconData: Icons.add,
+      ),
+      _Fragment(
+        builder: (context) => const SleepFragment(),
+        labelTextBuilder: () => 'Sleep',
+        iconData: Icons.add,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              't_pokemon'.xTr,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              context.nav.push(MyStorybookPage.route);
-            },
-            child: const Text('Storybook'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.nav.push(PokemonBoxPage.route);
-            },
-            child: const Text('Pokemon Box'),
-          ),
-          TextButton(
-            onPressed: () {
-              SubSkillPickerPage.go(context);
-            },
-            child: const Text('SubSkill Picker'),
-          ),
-          TextButton(
-            onPressed: () {
-              PokemonBasicProfilePicker.go(context);
-            },
-            child: const Text('Pokemon Basic Profile Picker'),
-          ),
-          TextButton(
-            onPressed: () {
-              PokemonMaintainProfilePage.goCreate(context);
-            },
-            child: const Text('Create Pokemon Profile'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.nav.push(DevPokemonBoxPage.route);
-            },
-            child: const Text('Dev / Pokemon Box'),
-          ),
-          TextButton(
-            onPressed: () {
-              // debugPrint(_pokemonProfileRepository.getDemoProfile().info());
-              debugPrint(_pokemonProfileRepository.getDemoProfile().getConstructorCode());
-            },
-            child: const Text('Dev / Single Pokemon Profile'),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: const Text(''),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: const Text(''),
-          ),
-        ],
+      body: PageView(
+        controller: _pageController,
+        children: _fragments.map((fragment) => fragment.builder(context)).toList(),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _getCurrIndex(),
+        items: _fragments.mapIndexed((index, fragment) => BottomNavigationBarItem(
+          icon: Icon(fragment.iconData),
+          label: fragment.labelTextBuilder(),
+        )).toList(),
+        onTap: (index) {
+          _pageController.jumpToPage(index);
+          setState(() { });
+        },
       ),
     );
   }
+
+  int _getCurrIndex() {
+    if (!_pageController.hasClients) {
+      return 0;
+    }
+    return _pageController.page?.toInt() ?? 0;
+  }
+}
+
+class _Fragment {
+  _Fragment({
+    required this.builder,
+    required this.labelTextBuilder,
+    required this.iconData,
+  });
+
+  final WidgetBuilder builder;
+  final String Function() labelTextBuilder;
+  final IconData iconData;
 }

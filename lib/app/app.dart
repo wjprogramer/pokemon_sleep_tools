@@ -1,12 +1,16 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/support_lang.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/translations.dart';
 import 'package:pokemon_sleep_tools/app/app_dependencies.dart';
+import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -18,6 +22,10 @@ class MyApp extends StatefulWidget {
 final _navigatorKey = GlobalKey<NavigatorState>();
 
 class _MyAppState extends State<MyApp> {
+  PokemonBasicProfileRepository get _pokemonBasicProfileRepository => getIt();
+  MyLocalStorage get _localStorage => getIt();
+  MyCacheManager get _cache => getIt();
+
   late MyRoutesMapping _routes;
   late Iterable<Locale> _locales;
   final _initRoute = SplashPage.route;
@@ -34,6 +42,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> _init(Duration timeStamp) async {
     setupDependencies();
     setupI18n();
+    await _initDataPersistent();
+    await _initData();
 
     _afterInitialized();
   }
@@ -41,6 +51,13 @@ class _MyAppState extends State<MyApp> {
   void _afterInitialized() {
     final navContext = _navigatorKey.currentContext!;
     navContext.nav.replaceWithoutAnimation(HomePage.route);
+  }
+
+  Future<void> _initDataPersistent() async {
+    await _localStorage.init();
+  }
+
+  Future<void> _initData() async {
   }
 
   @override
@@ -51,6 +68,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      builder: BotToastInit(),
       // i18n
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

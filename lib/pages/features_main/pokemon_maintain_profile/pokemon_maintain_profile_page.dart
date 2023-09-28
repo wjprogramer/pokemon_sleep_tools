@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/form/validation/validation.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
@@ -10,7 +9,9 @@ import 'package:pokemon_sleep_tools/pages/features_common/common_picker/common_p
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 enum _PageType {
@@ -66,12 +67,13 @@ class PokemonMaintainProfilePage extends StatefulWidget {
 
 class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage> {
   PokemonProfileRepository get _pokemonProfileRepository => getIt();
+  MainViewModel get _mainViewModel => context.read<MainViewModel>();
 
   bool get _isMutate => widget._pageType.isMutate;
 
   // Form
   late FormGroup _form;
-  final _ingredient1DisplayTextController = TextEditingController();
+  final _ingredientDisplayTextControllers = List.generate(3, (index) => TextEditingController());
 
   // Form Field
   late FormControl<PokemonBasicProfile> _basicProfileField;
@@ -91,14 +93,19 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     _initForm();
 
     _basicProfileField.valueChanges.listen((basicProfile) {
-      _ingredient1DisplayTextController.text =
+      _ingredientDisplayTextControllers[0].text =
           Display.text(basicProfile?.ingredient1.nameI18nKey);
+      _ingredient1CountField.value = basicProfile?.ingredientCount1;
+
+      setState(() { });
     });
   }
 
   @override
   void dispose() {
-    _ingredient1DisplayTextController.dispose();
+    for (var controller in _ingredientDisplayTextControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -116,17 +123,20 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       ],
     );
 
-    _ingredient2Field = FormControl(validators: [ Validators.required ]);
-    _ingredient3Field = FormControl(validators: [ Validators.required ]);
+    _ingredient2Field = FormControl(validators: [ Validators.required ], disabled: true);
+    _ingredient3Field = FormControl(validators: [ Validators.required ], disabled: true);
 
     _ingredient1CountField = FormControl(
       validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
+      disabled: true,
     );
     _ingredient2CountField = FormControl(
       validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
+      disabled: true,
     );
     _ingredient3CountField = FormControl(
       validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
+      disabled: true,
     );
 
     _form = FormGroup({
@@ -244,7 +254,10 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () async {
-                    final result = await SubSkillPickerPage.go(context);
+                    final result = await SubSkillPickerPage.go(
+                      context,
+                      initialValue: _subSkillsField.value,
+                    );
                     if (result == null) {
                       return;
                     }
@@ -302,40 +315,29 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     required FormControl<int> countField,
     FormControl<Ingredient>? ingredientField,
   }) {
-    _basicProfileField;
-
+    final basicProfile = _basicProfileField.value;
+    List<(Ingredient, int)>? ingredientOptions;
     Widget field;
+
+    if (basicProfile != null) {
+      if (index == 1) {
+        ingredientOptions = basicProfile.ingredientOptions2;
+      } else if (index == 2) {
+        ingredientOptions = basicProfile.ingredientOptions3;
+      }
+    }
 
     if (index == 0) {
       field = TextField(
-        controller: _ingredient1DisplayTextController,
+        controller: _ingredientDisplayTextControllers[index],
         enabled: false,
       );
     } else if (ingredientField != null) {
       field = ReactiveMyTextField<Ingredient>(
         formControl: ingredientField,
         wrapFieldBuilder: (context, fieldWidget) {
-          return GestureDetector(
-            onTap: () async {
-              final result = await CommonPickerPage.go<Ingredient>(
-                context,
-                options: Ingredient.values,
-                optionBuilder: (context, item) {
-                  return Text(item.nameI18nKey);
-                },
-                itemFilter: (item, keyword) {
-                  return item.nameI18nKey.contains(keyword);
-                },
-              );
-              if (result == null) {
-                return;
-              }
-              ingredientField.value = result;
-            },
-            behavior: HitTestBehavior.opaque,
-            child: IgnorePointer(
-              child: fieldWidget,
-            ),
+          return IgnorePointer(
+            child: fieldWidget,
           );
         },
       );
@@ -372,13 +374,40 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
           ),
           Expanded(
             flex: 2,
-            child: field,
-          ),
-          Gap.xl,
-          Expanded(
-            flex: 1,
-            child: ReactiveMyTextField(
-              formControl: countField,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: field,
+                    ),
+                    Gap.xl,
+                    Expanded(
+                      flex: 1,
+                      child: IgnorePointer(
+                        child: ReactiveMyTextField(
+                          formControl: countField,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (ingredientOptions != null)
+                  ...ingredientOptions.map((ingredientAndCount) => InkWell(
+                    onTap: () {
+                      ingredientField?.value = ingredientAndCount.$1;
+                      countField.value = ingredientAndCount.$2;
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Text(
+                        '${ingredientAndCount.$1.nameI18nKey} x${ingredientAndCount.$2}',
+                      ),
+                    ),
+                  )),
+              ],
             ),
           ),
         ],
@@ -386,13 +415,13 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     ];
   }
 
-  void _submit() {
+  void _submit() async {
     if (!_form.valid) {
       _form.markAllAsTouched();
       return;
     }
 
-    final pokemon = _pokemonProfileRepository.create(CreatePokemonProfilePayload(
+    final pokemon = await _mainViewModel.createProfile(CreatePokemonProfilePayload(
       basicProfileId: _basicProfileField.value!.id,
       character: _characterField.value!,
       subSkills: _subSkillsField.value!,

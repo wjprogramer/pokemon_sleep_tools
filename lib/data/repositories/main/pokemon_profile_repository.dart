@@ -1,11 +1,15 @@
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_repository.dart';
+import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 
-class PokemonProfileRepository {
+class PokemonProfileRepository implements MyInjectable {
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
+  MyLocalStorage get _localStorage => getIt();
+  MyCacheManager get _cache => getIt();
 
-  PokemonProfile create(CreatePokemonProfilePayload payload) {
+  Future<PokemonProfile> create(CreatePokemonProfilePayload payload) async {
     final profile = PokemonProfile(
       basicProfileId: payload.basicProfileId,
       character: payload.character,
@@ -19,14 +23,23 @@ class PokemonProfileRepository {
       ingredient3: payload.ingredient3,
       ingredientCount3: payload.ingredientCount3,
     );
+    await _postProcessProfile(profile);
 
-    final basicProfile = _basicProfileRepo.getBasicProfile(profile.basicProfileId)!;
-    profile.basicProfile = basicProfile;
+    await _localStorage.use(_cache.storedPokemonProfilesXXX, (stored) async {
+      await stored.insert(profile);
+      await _localStorage.writePokemonProfiles(stored);
+    });
 
     return profile;
   }
 
-  PokemonProfile getDemoProfile() {
+  Future<List<PokemonProfile>> findAll() async {
+    final stored = await _localStorage.readPokemonFile();
+    await _postProcessProfiles(stored.profiles);
+    return stored.profiles;
+  }
+
+  Future<PokemonProfile> getDemoProfile() async {
     final profile = PokemonProfile(
       basicProfileId: 18,
       character: PokemonCharacter.restrained,
@@ -40,23 +53,25 @@ class PokemonProfileRepository {
       ingredient3: Ingredient.i11,
       ingredientCount3: 3,
     );
-
-    final basicProfile = _basicProfileRepo.getBasicProfile(profile.basicProfileId)!;
-    profile.basicProfile = basicProfile;
-
+    await _postProcessProfile(profile);
     return profile;
   }
 
-  List<PokemonProfile> getDemoProfiles() {
-    final results = getAllDemoProfiles();
+  Future<List<PokemonProfile>> getDemoProfiles() async {
+    final profiles = getAllDemoProfiles();
+    await _postProcessProfiles(profiles);
+    return profiles;
+  }
 
-    for (final result in results) {
-      final basicProfile = _basicProfileRepo.getBasicProfile(result.basicProfileId)!;
-      result.basicProfile = basicProfile;
+  Future<void> _postProcessProfiles(List<PokemonProfile> profiles) async {
+    for (final profile in profiles) {
+      await _postProcessProfile(profile);
     }
+  }
 
-
-    return results;
+  Future<void> _postProcessProfile(PokemonProfile profile) async {
+    final basicProfile = (await _basicProfileRepo.getBasicProfile(profile.basicProfileId))!;
+    profile.basicProfile = basicProfile;
   }
 
 }

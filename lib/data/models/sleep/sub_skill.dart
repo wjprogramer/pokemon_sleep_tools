@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 enum SubSkill {
-  s1(1, '樹果s', '一次撿來的樹果數量會增加1個', 3),
+  s1(1, '樹果數量s', '一次撿來的樹果數量會增加1個', 3),
   s2(2, '幫手獎勵', '全隊成員的幫忙間隔都會縮短5%', 3),
   s3(3, '幫忙速度M', '幫忙間隔會縮短14%', 2),
   s4(4, '幫忙速度S', '幫忙間隔會縮短7%', 1),

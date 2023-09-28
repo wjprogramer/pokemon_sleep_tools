@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 
-T getIt<T extends Object>({
+abstract class MyInjectable {}
+
+T getIt<T extends MyInjectable>({
   dynamic param1,
   dynamic param2,
   String? instanceName,
@@ -9,7 +11,7 @@ T getIt<T extends Object>({
   return GetIt.I.get<T>();
 }
 
-T registerSingleton<T extends Object>(
+T registerSingleton<T extends MyInjectable>(
   T instance, {
   String? instanceName,
   bool? signalsReady,
@@ -23,7 +25,7 @@ T registerSingleton<T extends Object>(
   );
 }
 
-void registerLazySingleton<T extends Object>(
+void registerLazySingleton<T extends MyInjectable>(
   FactoryFunc<T> factoryFunc, {
   String? instanceName,
   DisposingFunc<T>? dispose,

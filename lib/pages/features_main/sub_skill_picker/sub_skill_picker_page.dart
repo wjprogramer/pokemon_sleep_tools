@@ -6,21 +6,28 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 
 class SubSkillPickerPageArgs {
+  SubSkillPickerPageArgs({
+    this.initialValue,
+  });
+
+  final List<SubSkill>? initialValue;
 }
 
 class SubSkillPickerPage extends StatefulWidget {
-  const SubSkillPickerPage({super.key});
+  const SubSkillPickerPage({super.key, required this.args});
 
   static const MyPageRoute<SubSkillPickerPageArgs> route = ('/SubSkillPickerPage', _builder);
   static Widget _builder(dynamic args) {
-    args = args as SubSkillPickerPageArgs?;
-    return const SubSkillPickerPage();
+    args = args as SubSkillPickerPageArgs;
+    return SubSkillPickerPage(args: args);
   }
 
-  static Future<List<SubSkill>?> go(BuildContext context) async {
+  static Future<List<SubSkill>?> go(BuildContext context, {
+    List<SubSkill>? initialValue,
+  }) async {
     final res = await context.nav.push(
       SubSkillPickerPage.route,
-      arguments: SubSkillPickerPageArgs(),
+      arguments: SubSkillPickerPageArgs(initialValue: initialValue),
     );
     return res as List<SubSkill>?;
   }
@@ -28,6 +35,8 @@ class SubSkillPickerPage extends StatefulWidget {
   void _popResult(BuildContext context, List<SubSkill>? subSkills) {
     context.nav.pop(subSkills);
   }
+
+  final SubSkillPickerPageArgs args;
 
   @override
   State<SubSkillPickerPage> createState() => _SubSkillPickerPageState();
@@ -37,16 +46,103 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
   static const _subSkillsSpacing = 12.0;
 
   var _theme = ThemeData();
+  double _subSkillButtonWidth = 100;
+
+  var _subSkillsItems = <_SubSkillItem>[];
 
   int? _currPickIndex = 0;
   final List<SubSkill?> _subSkillFields = List.generate(SubSkill.maxCount, (index) => null);
+
+  @override
+  void initState() {
+    super.initState();
+    _initSubSkillItems();
+
+    final initialValue = widget.args.initialValue ?? [];
+
+    for (int i = 0; i < initialValue.length; i++) {
+      _subSkillFields[i] = initialValue[i];
+    }
+  }
+
+  void _initSubSkillItems() {
+    final subSkills = [...SubSkill.values];
+
+    SubSkill getSubSkill(SubSkill subSkill) {
+      subSkills.remove(subSkill);
+      return subSkill;
+    }
+
+    _subSkillsItems = [
+      _SubSkillGroupItem(
+        name: '樹果數量',
+        skillS: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s1),
+        ),
+      ),
+      _SubSkillGroupItem(
+        name: '食材機率',
+        skillM: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s5),
+        ),
+        skillS: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s6),
+        ),
+      ),
+      _SubSkillGroupItem(
+        name: '幫忙速度',
+        skillM: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s3),
+        ),
+        skillS: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s4),
+        ),
+      ),
+      _SubSkillGroupItem(
+        name: '技能等級',
+        skillM: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s7),
+        ),
+        skillS: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s8),
+        ),
+      ),
+      _SubSkillGroupItem(
+        name: '技能機率',
+        skillM: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s9),
+        ),
+        skillS: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s10),
+        ),
+      ),
+      _SubSkillGroupItem(
+        name: '持有上限',
+        skillL: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s11),
+        ),
+        skillM: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s12),
+        ),
+        skillS: _SubSkillValueItem(
+          value: getSubSkill(SubSkill.s13),
+        ),
+      ),
+      _SubSkillGroupItem(
+        name: '其他',
+        otherSubSkills: subSkills.map((subSkill) => _SubSkillValueItem(
+          value: subSkill,
+        )).toList(),
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
 
     final size = MediaQuery.of(context).size;
-    final subSkillButtonWidth = _calcButtonWidth(size);
+    _subSkillButtonWidth = _calcButtonWidth(size);
 
     return Scaffold(
       appBar: buildAppBar(
@@ -79,21 +175,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
               ),
               children: [
                 Gap.sm,
-                Wrap(
-                  spacing: _subSkillsSpacing,
-                  runSpacing: _subSkillsSpacing,
-                  children: SubSkill.values.map((subSkill) => Container(
-                    constraints: BoxConstraints.tightFor(
-                      width: subSkillButtonWidth,
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () => _pickSubSkill(subSkill),
-                      style: ElevatedButton.styleFrom(
-                      ),
-                      child: Text(subSkill.nameI18nKey),
-                    ),
-                  )).toList(),
-                ),
+                ..._subSkillsItems.map(_buildSubSkillItems).expand((e) => e),
                 Gap.sm,
               ],
             ),
@@ -106,20 +188,82 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
     );
   }
 
-  double _calcButtonWidth(Size screenSize) {
-    const baseWidth = 150.0;
+  List<Widget> _buildSubSkillItems(_SubSkillItem subSkillItem) {
+    final results = <Widget>[];
 
-    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
+    switch (subSkillItem) {
+      case _SubSkillGroupItem():
+        final skillS = subSkillItem.skillS;
+        final skillM = subSkillItem.skillM;
+        final skillL = subSkillItem.skillL;
+        final otherSkills = subSkillItem.otherSubSkills;
 
-    // mainWidth = count * realWidth + spacing * (count - 1)
-    // => mainWidth =  count * (realWidth + spacing) - spacing
-    // => count = (mainWidth + spacing) / (realWidth + spacing)
-    final count = (mainWidth + _subSkillsSpacing) ~/ (baseWidth + _subSkillsSpacing);
+        results.addAll([
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  constraints: const BoxConstraints.tightFor(
+                    width: 100,
+                  ),
+                  child: Text(subSkillItem.name),
+                ),
+                if (skillS != null) _buildLeveledSubSkillItem(skillS.value, 'S'),
+                if (skillM != null) _buildLeveledSubSkillItem(skillM.value, 'M'),
+                if (skillL != null) _buildLeveledSubSkillItem(skillL.value, 'L'),
+              ],
+            ),
+          ),
+          if (otherSkills != null && otherSkills.isNotEmpty)
+            Wrap(
+              spacing: _subSkillsSpacing,
+              runSpacing: _subSkillsSpacing,
+              children: otherSkills.map((e) => e.value).map((subSkill) => Container(
+                constraints: BoxConstraints.tightFor(
+                  width: _subSkillButtonWidth,
+                ),
+                child: ElevatedButton(
+                  onPressed: () => _pickSubSkill(subSkill),
+                  style: ElevatedButton.styleFrom(
+                  ),
+                  child: Text(subSkill.nameI18nKey),
+                ),
+              )).toList(),
+            ),
+        ]);
+      case _SubSkillValueItem():
+    }
 
-    final remainWidth = mainWidth - (count * baseWidth + (count - 1) * _subSkillsSpacing);
-    return baseWidth + (remainWidth / count);
+    return results;
   }
 
+  Widget _buildLeveledSubSkillItem(SubSkill subSkill, String code) {
+    return InkWell(
+      onTap: () => _pickSubSkill(subSkill),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(),
+        ),
+        child: Text(code),
+      ),
+    );
+  }
+
+  double _calcButtonWidth(Size screenSize) {
+    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
+
+    return UiUtility.getChildWidthInRowBy(
+      baseChildWidth: 150.0,
+      containerWidth: mainWidth,
+      spacing: _subSkillsSpacing,
+    );
+  }
+
+  // TODO: 要在選中的技能上標注目前對應的數字 (index)
   Widget _buildSubSkillField(int index) {
     final isSelected = _currPickIndex == index;
 
@@ -143,6 +287,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
               minHeight: 50,
             ),
             decoration: BoxDecoration(
+              color: isSelected ? _theme.primaryColorLight : null,
               border: Border.all(
                 color: isSelected
                     ? _theme.primaryColor
@@ -187,5 +332,38 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
 
     widget._popResult(context, subSkills.toList());
   }
+}
 
+sealed class _SubSkillItem {
+  _SubSkillItem({
+    required this.name,
+  });
+
+  final String name;
+}
+
+class _SubSkillGroupItem extends _SubSkillItem {
+  _SubSkillGroupItem({
+    required super.name,
+    this.skillL,
+    this.skillM,
+    this.skillS,
+    this.otherSubSkills,
+  });
+
+  List<_SubSkillValueItem> get items => [];
+
+  _SubSkillValueItem? skillL;
+  _SubSkillValueItem? skillM;
+  _SubSkillValueItem? skillS;
+  List<_SubSkillValueItem>? otherSubSkills;
+
+}
+
+class _SubSkillValueItem extends _SubSkillItem {
+  _SubSkillValueItem({
+    required this.value,
+  }) : super(name: value.nameI18nKey);
+
+  SubSkill value;
 }

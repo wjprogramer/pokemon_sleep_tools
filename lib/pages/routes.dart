@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 
@@ -27,6 +28,7 @@ MyRoutesMapping generateRoutes() {
     PokemonBasicProfilePicker.route,
     ...PokemonMaintainProfilePage.routes,
     PokemonBoxPage.route,
+    PokemonSliderDetailsPage.route,
     SplashPage.route,
     SubSkillPickerPage.route,
   ];

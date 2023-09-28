@@ -1,6 +1,15 @@
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-class PokemonBasicProfileRepository {
+class PokemonBasicProfileRepository implements MyInjectable {
+  PokemonBasicProfileRepository() {
+    for (final entry in _allPokemonMapping.entries) {
+      final pokemonId = entry.key;
+      final basicProfile = entry.value;
+
+      basicProfile.ingredientChain = _ingredientChainMap[basicProfile.ingredientChainId]!;
+    }
+  }
 
   Future<List<PokemonBasicProfile>> findAll() async {
     final x = [..._allPokemonMapping.entries.map((e) => e.value)];
@@ -8,7 +17,7 @@ class PokemonBasicProfileRepository {
     return x;
   }
 
-  PokemonBasicProfile? getBasicProfile(int basicProfileId) {
+  Future<PokemonBasicProfile?> getBasicProfile(int basicProfileId) async {
     return _allPokemonMapping[basicProfileId];
   }
 
@@ -121,5 +130,59 @@ class PokemonBasicProfileRepository {
     106: PokemonBasicProfile.from(106, 122, '魔牆人偶', 2800, Fruit.f11, PokemonSleepType.t2, MainSkill.m1, 2, 22, Ingredient.i12, 2, 439),
   };
 
-  final _ingredientChainMap = {};
+  final _ingredientChainMap = <int, IngredientChain>{
+    3: IngredientChain(3, [(Ingredient.i9, 5),(Ingredient.i12, 4)], [(Ingredient.i4, 6),(Ingredient.i9, 7),(Ingredient.i12, 7)]),
+    6: IngredientChain(6, [(Ingredient.i7, 5),(Ingredient.i11, 4)], [(Ingredient.i6, 6),(Ingredient.i7, 7),(Ingredient.i11, 7)]),
+    9: IngredientChain(9, [(Ingredient.i8, 5),(Ingredient.i13, 3)], [(Ingredient.i7, 7),(Ingredient.i8, 7),(Ingredient.i13, 5)]),
+    12: IngredientChain(12, [(Ingredient.i9, 2),(Ingredient.i12, 2)], [(Ingredient.i9, 4),(Ingredient.i12, 3),(Ingredient.i15, 4)]),
+    20: IngredientChain(20, [(Ingredient.i5, 2),(Ingredient.i15, 2)], [(Ingredient.i5, 4),(Ingredient.i7, 3),(Ingredient.i15, 3)]),
+    24: IngredientChain(24, [(Ingredient.i3, 2),(Ingredient.i7, 2)], [(Ingredient.i3, 3),(Ingredient.i6, 3),(Ingredient.i7, 4)]),
+    26: IngredientChain(26, [(Ingredient.i5, 2),(Ingredient.i11, 2)], [(Ingredient.i3, 3),(Ingredient.i5, 4),(Ingredient.i11, 3)]),
+    40: IngredientChain(40, [(Ingredient.i9, 2),(Ingredient.i10, 2)], [(Ingredient.i9, 4),(Ingredient.i10, 3),(Ingredient.i13, 2)]),
+    51: IngredientChain(51, [(Ingredient.i1, 3),(Ingredient.i12, 5)], [(Ingredient.i1, 4),(Ingredient.i12, 7),(Ingredient.i15, 8)]),
+    53: IngredientChain(53, [(Ingredient.i7, 2),(Ingredient.i8, 2)], [(Ingredient.i7, 3),(Ingredient.i8, 4)]),
+    55: IngredientChain(55, [(Ingredient.i5, 4),(Ingredient.i13, 2)], [(Ingredient.i5, 6),(Ingredient.i7, 5),(Ingredient.i13, 4)]),
+    57: IngredientChain(57, [(Ingredient.i2, 1),(Ingredient.i7, 2)], [(Ingredient.i2, 2),(Ingredient.i7, 4),(Ingredient.i9, 4)]),
+    59: IngredientChain(59, [(Ingredient.i6, 2),(Ingredient.i7, 3)], [(Ingredient.i6, 4),(Ingredient.i7, 5),(Ingredient.i8, 5)]),
+    71: IngredientChain(71, [(Ingredient.i4, 4),(Ingredient.i12, 5)], [(Ingredient.i1, 4),(Ingredient.i4, 6),(Ingredient.i12, 7)]),
+    76: IngredientChain(76, [(Ingredient.i4, 4),(Ingredient.i15, 5)], [(Ingredient.i2, 4),(Ingredient.i4, 6),(Ingredient.i15, 7)]),
+    80: IngredientChain(80, [(Ingredient.i13, 2),(Ingredient.i14, 1)], [(Ingredient.i12, 5),(Ingredient.i13, 4),(Ingredient.i14, 2)]),
+    85: IngredientChain(85, [(Ingredient.i13, 1),(Ingredient.i15, 2)], [(Ingredient.i7, 3),(Ingredient.i13, 2),(Ingredient.i15, 4)]),
+    94: IngredientChain(94, [(Ingredient.i2, 4),(Ingredient.i6, 5)], [(Ingredient.i2, 6),(Ingredient.i6, 7),(Ingredient.i10, 8)]),
+    105: IngredientChain(105, [(Ingredient.i11, 2),(Ingredient.i13, 2)], [(Ingredient.i11, 4),(Ingredient.i13, 3)]),
+    115: IngredientChain(115, [(Ingredient.i4, 4),(Ingredient.i11, 5)], [(Ingredient.i4, 6),(Ingredient.i11, 7),(Ingredient.i15, 8)]),
+    127: IngredientChain(127, [(Ingredient.i5, 5),(Ingredient.i9, 5)], [(Ingredient.i5, 8),(Ingredient.i7, 7),(Ingredient.i9, 7)]),
+    132: IngredientChain(132, [(Ingredient.i1, 3),(Ingredient.i10, 5)], [(Ingredient.i1, 5),(Ingredient.i10, 7),(Ingredient.i14, 3)]),
+    133: IngredientChain(133, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    134: IngredientChain(134, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    135: IngredientChain(135, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    136: IngredientChain(136, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    154: IngredientChain(154, [(Ingredient.i9, 3),(Ingredient.i13, 2)], [(Ingredient.i1, 3),(Ingredient.i9, 5),(Ingredient.i13, 4)]),
+    157: IngredientChain(157, [(Ingredient.i6, 2),(Ingredient.i11, 2)], [(Ingredient.i6, 3),(Ingredient.i10, 3),(Ingredient.i11, 4)]),
+    160: IngredientChain(160, [(Ingredient.i7, 2),(Ingredient.i10, 2)], [(Ingredient.i7, 4),(Ingredient.i10, 3)]),
+    173: IngredientChain(173, [(Ingredient.i1, 1)], [(Ingredient.i1, 1)]),
+    181: IngredientChain(181, [(Ingredient.i3, 3),(Ingredient.i6, 2)], [(Ingredient.i3, 4),(Ingredient.i6, 4)]),
+    185: IngredientChain(185, [(Ingredient.i12, 2),(Ingredient.i15, 2)], [(Ingredient.i2, 2),(Ingredient.i12, 4),(Ingredient.i15, 4)]),
+    196: IngredientChain(196, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    197: IngredientChain(197, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    199: IngredientChain(199, [(Ingredient.i13, 2),(Ingredient.i14, 1)], [(Ingredient.i12, 5),(Ingredient.i13, 4),(Ingredient.i14, 2)]),
+    202: IngredientChain(202, [(Ingredient.i2, 1),(Ingredient.i5, 2)], [(Ingredient.i2, 2),(Ingredient.i5, 4),(Ingredient.i10, 3)]),
+    214: IngredientChain(214, [(Ingredient.i2, 1),(Ingredient.i9, 2)], [(Ingredient.i2, 2),(Ingredient.i7, 4),(Ingredient.i9, 4)]),
+    229: IngredientChain(229, [(Ingredient.i6, 2),(Ingredient.i11, 3)], [(Ingredient.i1, 3),(Ingredient.i6, 4),(Ingredient.i11, 4)]),
+    248: IngredientChain(248, [(Ingredient.i11, 5),(Ingredient.i15, 5)], [(Ingredient.i7, 8),(Ingredient.i11, 7),(Ingredient.i15, 8)]),
+    289: IngredientChain(289, [(Ingredient.i9, 2),(Ingredient.i12, 2)], [(Ingredient.i5, 4),(Ingredient.i9, 4),(Ingredient.i12, 4)]),
+    302: IngredientChain(302, [(Ingredient.i2, 2),(Ingredient.i10, 2)], [(Ingredient.i2, 3),(Ingredient.i10, 4),(Ingredient.i13, 3)]),
+    317: IngredientChain(317, [(Ingredient.i2, 1),(Ingredient.i15, 2)], [(Ingredient.i2, 2),(Ingredient.i9, 4),(Ingredient.i15, 4)]),
+    334: IngredientChain(334, [(Ingredient.i3, 2),(Ingredient.i15, 3)], [(Ingredient.i3, 4),(Ingredient.i5, 5),(Ingredient.i15, 4)]),
+    359: IngredientChain(359, [(Ingredient.i5, 8),(Ingredient.i13, 5)], [(Ingredient.i2, 7),(Ingredient.i5, 12),(Ingredient.i13, 7)]),
+    365: IngredientChain(365, [(Ingredient.i7, 3),(Ingredient.i10, 2)], [(Ingredient.i7, 4),(Ingredient.i10, 4),(Ingredient.i11, 4)]),
+    439: IngredientChain(439, [(Ingredient.i4, 4),(Ingredient.i12, 5)], [(Ingredient.i1, 4),(Ingredient.i4, 6),(Ingredient.i12, 7)]),
+    448: IngredientChain(448, [(Ingredient.i4, 2),(Ingredient.i10, 2)], [(Ingredient.i3, 4),(Ingredient.i4, 4),(Ingredient.i10, 4)]),
+    454: IngredientChain(454, [(Ingredient.i7, 5),(Ingredient.i10, 5)], [(Ingredient.i7, 8),(Ingredient.i10, 7)]),
+    462: IngredientChain(462, [(Ingredient.i6, 2),(Ingredient.i10, 2)], [(Ingredient.i6, 3),(Ingredient.i10, 4)]),
+    468: IngredientChain(468, [(Ingredient.i3, 2),(Ingredient.i11, 2)], [(Ingredient.i3, 4),(Ingredient.i11, 4),(Ingredient.i13, 3)]),
+    470: IngredientChain(470, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    471: IngredientChain(471, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)]),
+    700: IngredientChain(700, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)])
+  };
 }

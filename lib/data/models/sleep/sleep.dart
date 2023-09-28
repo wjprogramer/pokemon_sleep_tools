@@ -1,7 +1,9 @@
 export 'fruit.dart';
 export 'ingredient.dart';
+export 'ingredient_chain.dart';
 export 'main_skill.dart';
 export 'pokemon_character.dart';
 export 'pokemon_profile.dart';
+export 'pokemon_profile_statics.dart';
 export 'pokemon_sleep_type.dart';
 export 'sub_skill.dart';

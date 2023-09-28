@@ -114,4 +114,9 @@ class PokemonBasicProfile {
 
   final int ingredientChainId;
 
+  set ingredientChain(IngredientChain v) {
+    ingredientOptions2 = v.ingredientOptions2;
+    ingredientOptions3 = v.ingredientOptions3;
+  }
+
 }
