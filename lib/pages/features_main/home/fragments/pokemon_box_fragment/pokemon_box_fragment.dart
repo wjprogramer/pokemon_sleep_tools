@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_profile_repository.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
-import 'package:pokemon_sleep_tools/widgets/main/gap.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 
 class PokemonBoxFragment extends StatelessWidget {
@@ -25,25 +27,42 @@ class PokemonBoxFragment extends StatelessWidget {
         horizontal: HORIZON_PADDING
       ),
       children: [
-        const Text(
-          '常用',
+        MainMenuSubtitle(
+          paddingTop: 0,
+          icon: const Iconify(Carbon.sub_volume, size: 16),
+          title: Text(
+            '常用'.xTr,
+          ),
         ),
-        MyElevatedButton(
+        MyOutlinedButton(
+          color: color1,
           onPressed: () {
             PokemonTeamsPage.go(context);
           },
-          child: const Text('Pokemon Teams'),
+          iconBuilder: (color, size) {
+            return Iconify(Bi.boxes, color: color, size: size,);
+          },
+          builder: MyOutlinedButton.builderUnboundWidth,
+          child: Text('t_form_team'.xTr),
         ),
-        MyElevatedButton(
+        Gap.md,
+        MyOutlinedButton(
+          color: color1,
           onPressed: () {
             PokemonBoxPage.go(context);
           },
-          child: const Text('Pokemon Box'),
+          iconBuilder: (color, size) {
+            return Iconify(Bi.box_seam, color: color, size: size,);
+          },
+          builder: MyOutlinedButton.builderUnboundWidth,
+          child: Text('t_pokemon_box'.xTr),
         ),
         if (kDebugMode) ...[
-          Gap.xl,
-          const Text(
-            '開發中',
+          MainMenuSubtitle(
+            icon: const Icon(Icons.bug_report_outlined, size: 16,),
+            title: Text(
+              't_developing'.xTr,
+            ),
           ),
           MyElevatedButton(
             onPressed: () {

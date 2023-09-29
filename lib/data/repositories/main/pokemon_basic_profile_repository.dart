@@ -128,6 +128,10 @@ class PokemonBasicProfileRepository implements MyInjectable {
     104: PokemonBasicProfile.from(104, 454, '毒骷蛙', 3400, Fruit.f8, PokemonSleepType.t2, MainSkill.m1, 2, 19, Ingredient.i10, 2, 454),
     105: PokemonBasicProfile.from(105, 439, '魔尼尼', 2800, Fruit.f11, PokemonSleepType.t2, MainSkill.m1, 2, 22, Ingredient.i12, 2, 439),
     106: PokemonBasicProfile.from(106, 122, '魔牆人偶', 2800, Fruit.f11, PokemonSleepType.t2, MainSkill.m1, 2, 22, Ingredient.i12, 2, 439),
+    // TODO: (註解的 ID 之後要照著設定，避免出錯)
+    // 107 皮皮 boxNo: 35
+    // 108 皮可西 boxNo: 36
+    // 109 皮寶寶 boxNo: 173
   };
 
   final _ingredientChainMap = <int, IngredientChain>{

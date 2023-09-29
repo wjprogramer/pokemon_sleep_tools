@@ -7,10 +7,12 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/support_lang.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/translations.dart';
 import 'package:pokemon_sleep_tools/app/app_dependencies.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/persistent/persistent.dart';
+import 'package:pokemon_sleep_tools/styles/styles.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -64,10 +66,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: generateTempTheme(),
       builder: BotToastInit(),
       // i18n
       localizationsDelegates: const [
@@ -82,7 +81,10 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: _navigatorKey,
       onGenerateRoute: (settings) {
         return MaterialPageRoute(
-          builder: (_) => _routes[settings.name]!(settings.arguments),
+          builder: (_) {
+            return _routes[settings.name]?.call(settings.arguments)
+                ?? NotFoundRoutePage(settings: settings,);
+          },
         );
       },
       routes: {

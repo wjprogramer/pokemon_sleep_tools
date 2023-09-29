@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
@@ -10,6 +14,8 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_recipes/pok
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/sleep_illustrated_book/sleep_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 
@@ -23,11 +29,15 @@ typedef MyRoutesMapping = Map<String, MyRouteBuilder>;
 MyRoutesMapping generateRoutes() {
   final routes = <MyPageRoute>[
     // common
+    NotFoundRoutePage.route,
     // dev
+    DevIconsPage.route,
     DevPokemonBoxPage.route,
     MyStorybookPage.route,
     // main
+    BagPage.route,
     HomePage.route,
+    MapPage.route,
     PokemonBasicProfilePicker.route,
     ...PokemonMaintainProfilePage.routes,
     PokemonBoxPage.route,
@@ -35,6 +45,8 @@ MyRoutesMapping generateRoutes() {
     PokemonFoodRecipesPage.route,
     PokemonSliderDetailsPage.route,
     PokemonTeamsPage.route,
+    ResearchNotesPage.route,
+    SleepIllustratedBookPage.route,
     SplashPage.route,
     SubSkillPickerPage.route,
   ];

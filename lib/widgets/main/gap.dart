@@ -8,6 +8,7 @@ class Gap {
   static const md = gap.Gap(12);
   static const lg = gap.Gap(16);
   static const xl = gap.Gap(20);
+  static const xxl = gap.Gap(24);
 
   static const trailing = gap.Gap(60);
 }

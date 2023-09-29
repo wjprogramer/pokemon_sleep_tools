@@ -39,6 +39,7 @@ dependencies:
   gap: ^3.0.1
   get: ^4.6.6
   get_it: ^7.6.4
+  iconify_flutter: ^0.0.5
   shared_preferences: ^2.2.1
   storybook_flutter: ^0.14.0
   path: ^1.8.3
