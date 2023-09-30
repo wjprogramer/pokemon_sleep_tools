@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
@@ -11,6 +12,8 @@ import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 import 'package:provider/provider.dart';
 
+typedef PokemonBoxSubmitCallback = dynamic Function(List<PokemonProfile?> profiles);
+
 enum _PageType {
   readonly,
   picker,
@@ -19,9 +22,15 @@ enum _PageType {
 class _PokemonBoxPageArgs {
   _PokemonBoxPageArgs({
     required this.pageType,
+    this.onConfirm,
+    this.initialTeam,
+    this.initialIndex,
   });
 
   final _PageType pageType;
+  final PokemonBoxSubmitCallback? onConfirm;
+  final PokemonTeam? initialTeam;
+  final int? initialIndex;
   // TODO: initValues, initialIndex (一開始會優先選中當個)
 }
 
@@ -43,11 +52,18 @@ class PokemonBoxPage extends StatefulWidget {
     );
   }
 
-  static Future<List<PokemonProfile?>?> pick(BuildContext context) async {
+  static Future<List<PokemonProfile?>?> pick(BuildContext context, {
+    PokemonTeam? initialTeam,
+    PokemonBoxSubmitCallback? onConfirm,
+    int? initialIndex,
+  }) async {
     final res = await context.nav.push(
       route,
       arguments: _PokemonBoxPageArgs(
         pageType: _PageType.picker,
+        onConfirm: onConfirm,
+        initialTeam: initialTeam,
+        initialIndex: initialIndex,
       ),
     );
     return res is List<PokemonProfile?>
@@ -83,19 +99,40 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   void initState() {
     super.initState();
 
-    scheduleMicrotask(() {
+    scheduleMicrotask(() async {
       _indexToProfileId = List
           .generate(MAX_TEAM_POKEMON_COUNT, (index) => index)
           .toMap((i) => i, (i) => -1);
+      _currPickIndex = _args.initialIndex ?? _currPickIndex;
 
       final mainViewModel = context.read<MainViewModel>();
-      mainViewModel.loadProfiles();
+      await mainViewModel.loadProfiles();
+
+      final profileIdList = _args.initialTeam?.profileIdList;
+      if (profileIdList != null) {
+        final profiles = mainViewModel.profiles;
+        final profileOf = profiles.toMap((e) => e.id, (e) => e);
+        final teamProfiles = profileIdList.map((e) => e == null ? null : profileOf[e]).toList();
+
+        teamProfiles.forEachIndexed((index, profile) {
+          if (profile == null) {
+            return;
+          }
+          _profilesField[index] = profile;
+          _indexToProfileId[index] = profile.id;
+          _profileIdToIndex[profile.id] = index;
+        });
+      }
+
+      setState(() {  });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
+
+    // TODO: Consumer2, for teams, readonly, 若有在 teams 中，要顯示「正在隊中」;
 
     final screenSize = MediaQuery.of(context).size;
     final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
@@ -310,8 +347,9 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
     );
   }
 
-  void _submit() {
-    final profiles = _profilesField.nonNulls;
+  /// Only for [_PageType.picker]
+  Future<void> _submit() async {
+    final profiles = _profilesField.nonNulls.toList();
 
     if (profiles.isEmpty) {
       DialogUtility.text(
@@ -324,7 +362,21 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
     // TODO: 需驗證沒有被刪除?
 
-    widget._popResult(context, profiles.toList());
+    final onConfirm = _args.onConfirm;
+    if (onConfirm == null) {
+      widget._popResult(context, _profilesField);
+      return;
+    }
+
+    try {
+      final res = onConfirm(_profilesField);
+      if (res is Future) {
+        await res;
+      }
+      // TODO: show loading
+    } catch (e) {
+      // TODO: error handling
+    }
   }
 
 }

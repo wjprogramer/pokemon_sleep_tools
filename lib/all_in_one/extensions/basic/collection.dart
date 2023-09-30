@@ -12,4 +12,8 @@ extension ListX<E> on List<E> {
     final i = indexWhere(test);
     return i == -1 ? null : i;
   }
+
+  int? get lastIndex {
+    return isEmpty ? null : length - 1;
+  }
 }

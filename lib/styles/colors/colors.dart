@@ -3,6 +3,7 @@ import 'dart:ui';
 const color1 = Color(0xFFFE6B4E);
 
 const greyColor = Color(0xFFE8EAED);
+const greyColor2 = Color(0xFFC8C8C8);
 const blueColor = Color(0xFFC6E0F4);
 const yellowColor = Color(0xFFFBE6A8);
 const potColor = Color(0xFFA38E7E);

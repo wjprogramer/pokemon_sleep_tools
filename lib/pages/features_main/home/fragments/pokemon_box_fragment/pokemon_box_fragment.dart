@@ -10,6 +10,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
+import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -71,7 +72,7 @@ class PokemonBoxFragment extends StatelessWidget {
             onPressed: () {
               context.nav.push(DevPokemonBoxPage.route);
             },
-            child: const Text('Dev / Pokemon Box'),
+            child: const Text('Pokemon Box'),
           ),
           MyElevatedButton(
             onPressed: () async {
@@ -79,7 +80,7 @@ class PokemonBoxFragment extends StatelessWidget {
               debugPrint((await _pokemonProfileRepository.getDemoProfile()).getConstructorCode());
 
             },
-            child: const Text('Dev / Single Pokemon Profile'),
+            child: const Text('Single Pokemon Profile'),
           ),
           MyElevatedButton(
             onPressed: () async {
@@ -101,7 +102,7 @@ class PokemonBoxFragment extends StatelessWidget {
               }
               debugPrint('Done');
             },
-            child: const Text('Dev / 建立所有測試資料'),
+            child: const Text('建立測試資料：寶可夢'),
           ),
         ],
         Gap.trailing,

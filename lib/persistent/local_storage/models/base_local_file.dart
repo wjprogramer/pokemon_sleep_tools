@@ -1,1 +1,3 @@
-abstract class BaseLocalFile {}
+part of '../local_storage.dart';
+
+sealed class BaseLocalFile {}

@@ -1,6 +1,5 @@
 Map<String, String> getZhTwTrText() {
   return {
-    't_sub_skills': '副技能',
     't_incomplete': '未完整',
     't_failed': '失敗',
     't_none': '無',
@@ -23,16 +22,22 @@ Map<String, String> getZhTwTrText() {
     't_research_notes': '研究筆記',
     't_sleep_illustrated_book': '睡姿圖鑑',
     't_pokemon_box': '寶可夢盒',
+    't_help_ability': '幫忙能力',
     '': '',
 
     // region # Common
+    't_slash': '／',
     // endregion
 
     // region # Team
     't_form_team': '編組隊伍',
+    't_helper_team': '幫手隊伍',
+    't_auto_form_team': '自動組隊',
     // endregion
 
-    // region
+    // region # Skill
+    't_main_skill': '主技能',
+    't_sub_skills': '副技能',
     // endregion
 
     // region

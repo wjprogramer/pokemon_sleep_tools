@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
@@ -15,6 +16,14 @@ class PokemonBasicProfileRepository implements MyInjectable {
     final x = [..._allPokemonMapping.entries.map((e) => e.value)];
     x.sort((a, b) => a.id - b.id);
     return x;
+  }
+
+  Future<List<PokemonBasicProfile>> findInIdList({
+    required List<int> idList,
+  }) async {
+    final tmp = await Future.wait(idList.map((e) => getBasicProfile(e)));
+    final profiles = tmp.whereNotNull().toList();
+    return profiles;
   }
 
   Future<PokemonBasicProfile?> getBasicProfile(int basicProfileId) async {

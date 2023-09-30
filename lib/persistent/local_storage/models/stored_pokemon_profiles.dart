@@ -1,7 +1,6 @@
-import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/persistent/local_storage/models/base_local_file.dart';
+part of '../local_storage.dart';
 
-class StoredPokemonProfiles implements BaseLocalFile {
+final class StoredPokemonProfiles implements BaseLocalFile {
   StoredPokemonProfiles({
     int? lastIndex,
     List<PokemonProfile>? profiles,

@@ -5,6 +5,7 @@ import 'package:iconify_flutter/icons/zondicons.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_profile_repository.dart';
+import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
@@ -147,6 +148,21 @@ class _HomeFragmentState extends State<HomeFragment> {
                     context.nav.push(DevIconsPage.route);
                   },
                   child: const Text('Icons'),
+                ),
+                MyElevatedButton(
+                  onPressed: () {
+                    final teamRepo = getIt<PokemonTeamRepository>();
+                    teamRepo.findAll();
+                  },
+                  child: const Text('Temp'),
+                ),
+                MyElevatedButton(
+                  onPressed: () {},
+                  child: const Text(''),
+                ),
+                MyElevatedButton(
+                  onPressed: () {},
+                  child: const Text(''),
                 ),
                 MyElevatedButton(
                   onPressed: () {},

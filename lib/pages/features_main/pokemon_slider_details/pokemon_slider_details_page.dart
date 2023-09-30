@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -52,6 +55,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   final _cache = ListQueue<PokemonProfileStatistics>(5);
   var _previousPage = 0;
+  var _currIndex = 0;
 
   @override
   void initState() {
@@ -71,6 +75,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
           _pageController.jumpToPage(index);
         }
 
+        _currIndex = index ?? 0;
         _loadData(index ?? 0, mainViewModel.profiles);
         if (mounted) {
           setState(() { });
@@ -87,34 +92,38 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(
-        actions: [
-          TextButton(
-            onPressed: () {
-            },
-            child: const Text('X'),
-          ),
-        ],
-      ),
-      body: Consumer<MainViewModel>(
-        builder: (context, viewModel, child) {
-          final profiles = viewModel.profiles;
+    return Consumer<MainViewModel>(
+      builder: (context, viewModel, child) {
+        final profiles = viewModel.profiles;
 
-          return PageView(
+        return Scaffold(
+          appBar: buildAppBar(
+            titleText: profiles[_currIndex].basicProfile.nameI18nKey.xTr,
+            actions: [
+              TextButton(
+                onPressed: () {
+                },
+                child: const Text('X'),
+              ),
+            ],
+          ),
+          body: PageView(
             controller: _pageController,
             onPageChanged: (page) => _onPageChanged(page, profiles),
             children: profiles.map((profile) => _PokemonDetailsView(
               profile: profile,
               statistics: _getStatistics(profile),
             )).toList(),
-          );
-        }
-      ),
+          ),
+        );
+      }
     );
   }
 
   void _onPageChanged(int page, List<PokemonProfile> profiles) {
+    _currIndex = page;
+    setState(() { });
+
     scheduleMicrotask(() {
       _loadData(page, profiles);
     });
@@ -182,17 +191,48 @@ class _PokemonDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return buildListView(
-      children: _buildListItems(),
+      children: _buildListItems(context),
     );
   }
 
-  List<Widget> _buildListItems() {
+  List<Widget> _buildListItems(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final leadingWidth = math.min(screenSize.width * 0.4, 200.0);
+
+    Widget buildWithLabel({
+      required String text,
+    }) {
+      return Row(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 12),
+            constraints: BoxConstraints.tightFor(width: leadingWidth),
+            child: MyLabel(
+              text: text,
+            ),
+          ),
+        ],
+      );
+    }
+
     return [
       Gap.xl,
       ...Hp.list(
         children: [
           Text(
             profile.basicProfile.nameI18nKey,
+          ),
+          MySubHeader(
+            text: 't_help_ability'.xTr,
+          ),
+          buildWithLabel(
+            text: 't_fruit'.xTr,
+          ),
+          MySubHeader(
+            text: '${'t_main_skill'.xTr}${'t_slash'.xTr}${'t_sub_skills'.xTr}',
+          ),
+          Text(
+            profile.basicProfile.mainSkill.name.xTr,
           ),
           Text(
             statistics?.rank ?? '',
@@ -202,6 +242,7 @@ class _PokemonDetailsView extends StatelessWidget {
       Gap.trailing,
     ];
   }
+
 }
 
 
