@@ -23,10 +23,21 @@ Map<String, String> getZhTwTrText() {
     't_sleep_illustrated_book': '睡姿圖鑑',
     't_pokemon_box': '寶可夢盒',
     't_help_ability': '幫忙能力',
+    't_others': '其他',
+    't_exp_and_candies': '經驗值 & 糖果',
+    't_special_exp_format_hint': '經驗計算與一般寶可夢不同',
     '': '',
 
     // region # Common
+    // region ## Sign
     't_slash': '／',
+    't_separator': '、',
+    // endregion
+    // endregion
+
+    // region # Pokemon
+    't_pokemon_illustrated_book': '寶可夢圖鑑',
+    't_other_pokemon': '其他寶可夢',
     // endregion
 
     // region # Team

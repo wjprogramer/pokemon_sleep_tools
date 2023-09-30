@@ -5,12 +5,14 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_recipes/pokemon_food_recipes_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
@@ -36,6 +38,7 @@ MyRoutesMapping generateRoutes() {
     MyStorybookPage.route,
     // main
     BagPage.route,
+    ExpCalculatorPage.route,
     HomePage.route,
     MapPage.route,
     PokemonBasicProfilePicker.route,
@@ -43,6 +46,7 @@ MyRoutesMapping generateRoutes() {
     PokemonBoxPage.route,
     PokemonFoodMenuPage.route,
     PokemonFoodRecipesPage.route,
+    PokemonIllustratedBookPage.route,
     PokemonSliderDetailsPage.route,
     PokemonTeamsPage.route,
     ResearchNotesPage.route,

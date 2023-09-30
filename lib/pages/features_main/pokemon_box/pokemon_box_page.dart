@@ -91,9 +91,11 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   // Picker mode properties
   var _currPickIndex = 0;
   final List<PokemonProfile?> _profilesField = List.generate(MAX_TEAM_POKEMON_COUNT, (index) => null);
-
   var _indexToProfileId = <int, int>{};
   final _profileIdToIndex = <int, int>{};
+
+  // Filter properties
+  // TODO:
 
   @override
   void initState() {
@@ -188,8 +190,32 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
           );
         },
       ),
-      bottomNavigationBar: !_confirmButtonVisible() ? null : BottomBarWithConfirmButton(
-        submit: _submit,
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8, horizontal: 16,
+        ),
+        decoration: BoxDecoration(
+          border: Border(
+            top: Divider.createBorderSide(context),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // TODO: 篩選器、排序
+            if (_confirmButtonVisible())
+              MyElevatedButton(
+                onPressed: _submit,
+                child: Text('t_confirm'.xTr),
+              ),
+          ],
+        ),
       ),
     );
   }

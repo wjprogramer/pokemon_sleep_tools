@@ -174,6 +174,10 @@ class _HomeFragmentState extends State<HomeFragment> {
           Gap.xl,
           const Wrap(
             children: [
+              Iconify(Charm.candy, color: Colors.blue),
+              Iconify(Arcticons.candy_crush_saga, color: Colors.blue),
+
+
               Iconify(AntDesign.gold_filled, color: Colors.blue),
               Iconify(Bi.apple, color: Colors.blue),
               Iconify(Bi.box_arrow_down, color: Colors.blue),

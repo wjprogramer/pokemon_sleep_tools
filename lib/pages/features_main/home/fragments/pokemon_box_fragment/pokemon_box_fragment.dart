@@ -6,7 +6,9 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_profile_repository.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
@@ -14,13 +16,25 @@ import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 import 'package:provider/provider.dart';
 
-class PokemonBoxFragment extends StatelessWidget {
+class PokemonBoxFragment extends StatefulWidget {
   const PokemonBoxFragment({super.key});
 
+  @override
+  State<PokemonBoxFragment> createState() => _PokemonBoxFragmentState();
+}
+
+class _PokemonBoxFragmentState extends State<PokemonBoxFragment> {
   PokemonProfileRepository get _pokemonProfileRepository => getIt();
+
+  double _menuButtonWidth = 100;
+  double _menuButtonSpacing = 0;
 
   @override
   Widget build(BuildContext context) {
+    final menuItemWidthResults = UiUtility.getCommonWidthInRowBy(context);
+    _menuButtonWidth = menuItemWidthResults.childWidth;
+    _menuButtonSpacing = menuItemWidthResults.spacing;
+
     // TODO:
     // 常用
     // 編組隊伍
@@ -60,6 +74,42 @@ class PokemonBoxFragment extends StatelessWidget {
           },
           builder: MyOutlinedButton.builderUnboundWidth,
           child: Text('t_pokemon_box'.xTr),
+        ),
+        MainMenuSubtitle(
+          icon: const Iconify(Bx.grid_alt, size: 16,),
+          title: Text(
+            't_others'.xTr,
+          ),
+        ),
+        Wrap(
+            spacing: _menuButtonSpacing,
+            runSpacing: _menuButtonSpacing,
+            children: _wrapMenuItems(
+              children: [
+                MyOutlinedButton(
+                  color: color1,
+                  onPressed: () {
+                    PokemonIllustratedBookPage.go(context);
+                  },
+                  iconBuilder: (color, size) {
+                    return Icon(Icons.camera_alt_outlined, color: color, size: size,);
+                  },
+                  builder: MyOutlinedButton.builderUnboundWidth,
+                  child: Text('t_pokemon_illustrated_book'.xTr),
+                ),
+                MyOutlinedButton(
+                  color: pinkColor,
+                  onPressed: () {
+                    ExpCalculatorPage.go(context);
+                  },
+                  iconBuilder: (color, size) {
+                    return Iconify(Mdi.candy, color: color, size: size,);
+                  },
+                  builder: MyOutlinedButton.builderUnboundWidth,
+                  child: Text('t_exp_and_candies'.xTr),
+                ),
+              ],
+            ),
         ),
         if (kDebugMode) ...[
           MainMenuSubtitle(
@@ -107,6 +157,21 @@ class PokemonBoxFragment extends StatelessWidget {
         ],
         Gap.trailing,
       ],
+    );
+  }
+
+  List<Widget> _wrapMenuItems({ required List<Widget> children }) {
+    return children
+        .map((e) => _wrapMenuItemContainer(child: e))
+        .toList();
+  }
+
+  Widget _wrapMenuItemContainer({ required Widget child }) {
+    return Container(
+      constraints: BoxConstraints.tightFor(
+        width: _menuButtonWidth,
+      ),
+      child: child,
     );
   }
 }
