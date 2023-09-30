@@ -54,6 +54,7 @@ class PokemonProfile {
     }
 
     return PokemonProfile(
+      id: json['id'],
       basicProfileId: json['basicProfileId'],
       character: PokemonCharacter.values
           .firstWhere((e) => e.id == json['characterId']),

@@ -69,6 +69,8 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
   PokemonProfileRepository get _pokemonProfileRepository => getIt();
   MainViewModel get _mainViewModel => context.read<MainViewModel>();
 
+  late ThemeData _theme;
+
   bool get _isMutate => widget._pageType.isMutate;
 
   // Form
@@ -109,6 +111,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     super.dispose();
   }
 
+  /// TODO: 加上 disabled: true, 會導致 errors 永遠為空
   void _initForm() {
     _basicProfileField = FormControl(
       validators: [ Validators.required ],
@@ -123,20 +126,17 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       ],
     );
 
-    _ingredient2Field = FormControl(validators: [ Validators.required ], disabled: true);
-    _ingredient3Field = FormControl(validators: [ Validators.required ], disabled: true);
+    _ingredient2Field = FormControl(validators: [ Validators.required ]);
+    _ingredient3Field = FormControl(validators: [ Validators.required ]);
 
     _ingredient1CountField = FormControl(
       validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
-      disabled: true,
     );
     _ingredient2CountField = FormControl(
       validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
-      disabled: true,
     );
     _ingredient3CountField = FormControl(
       validators: [ Validators.required, Validators.min(1), Validators.max(99) ],
-      disabled: true,
     );
 
     _form = FormGroup({
@@ -153,6 +153,8 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: _getTitleText(),
@@ -243,6 +245,14 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                           ),
                         );
                       }),
+                      if (_subSkillsField.hasErrors && _subSkillsField.touched)
+                        Text(
+                          _subSkillsField.getAnyErrorKey() ?? '',
+                          // TODO: style 要決定
+                          style: TextStyle(
+                            color: _theme.colorScheme.error,
+                          ),
+                        ),
                     ],
                   );
                 },
@@ -418,6 +428,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
   void _submit() async {
     if (!_form.valid) {
       _form.markAllAsTouched();
+      setState(() { });
       return;
     }
 

@@ -1,4 +1,3 @@
-import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 class PokemonProfileStatistics {
@@ -10,8 +9,10 @@ class PokemonProfileStatistics {
 
   void init() {
     final xFruitCount = _calcFruitCount();
+    fruitCount = xFruitCount;
     final xFruitEnergy = xFruitCount * basicProfile.fruit.energyIn60;
     fruitEnergy = xFruitEnergy;
+    final xMainSkillEnergy = _getMainSkillEnergy();
 
     final xIngredientEnergy1 = ingredient1.energy * ingredientCount1;
     ingredientEnergy1 = xIngredientEnergy1;
@@ -25,22 +26,35 @@ class PokemonProfileStatistics {
 
     final xIngredientRate = _calcIngredientRate();
     ingredientRate = xIngredientRate;
-
     final xTotalHelpSpeedS = _calcTotalHelpSpeedS();
     totalHelpSpeedS = xTotalHelpSpeedS;
     final xTotalHelpSpeedM = _calcTotalHelpSpeedM();
     totalHelpSpeedM = xTotalHelpSpeedM;
     final xCharacterSpeed = _calcCharacterSpeed();
     characterSpeed = xCharacterSpeed;
+    final xMainSkillSpeedParameter = _calcMainSkillSpeedParameter();
+    mainSkillSpeedParameter = xMainSkillSpeedParameter;
+
+    double calcMainSkillAccelerateVitality() {
+      if (_isMainSkillIn(['活力填充S', '活力療癒S', '活力全體療癒S'])) {
+        return (0.015 * xMainSkillEnergy) * (1 + xMainSkillSpeedParameter);
+      }
+
+      return 0.0;
+    }
 
     final xHelpPerAvgEnergy = (xIngredientEnergyAvg * xIngredientRate + xFruitEnergy * (5 - xIngredientRate)) / 5;
     helpPerAvgEnergy = xHelpPerAvgEnergy;
     final xHelperBonus = _calcHelperBonus();
     helperBonus = xHelperBonus;
     final xSleepExpBonus = _calcSleepExpBonus();
+    sleepExpBonus = xSleepExpBonus;
     final xAccelerateVitality = _calcAccelerateVitality();
+    accelerateVitality = xAccelerateVitality;
     final xSkillLevel = _calcSkillLevel();
-    final xMainSkillAccelerateVitality = _calcMainSkillAccelerateVitality();
+    skillLevel = xSkillLevel;
+    final xMainSkillAccelerateVitality = calcMainSkillAccelerateVitality();
+    mainSkillAccelerateVitality = xMainSkillAccelerateVitality;
 
     double calcHelpInterval() {
       final x = xHelperBonus +
@@ -55,26 +69,28 @@ class PokemonProfileStatistics {
       return z.clamp(0, double.infinity);
     }
     final xHelpInterval = calcHelpInterval();
+    helpInterval = xHelpInterval;
 
     double calcMaxOverflowHoldCount() {
       var res = 0.0;
 
       final x = ((ingredientCount1 + ingredientCount2 + ingredientCount3) * xIngredientRate) / 3 +
-          ((5 - xIngredientRate) * _calcFruitCount());
+          ((5 - xIngredientRate) * xFruitCount);
       final y = (30600 / xHelpInterval).round();
       res += x * y;
 
       res -= (
           basicProfile.boxCount +
-              6 * _getSubSkillsCountMatch(SubSkill.s13) +
-              12 * _getSubSkillsCountMatch(SubSkill.s12) +
-              18 * _getSubSkillsCountMatch(SubSkill.s11)
+              6 * _getSubSkillsCountMatch(SubSkill.holdMaxS) +
+              12 * _getSubSkillsCountMatch(SubSkill.holdMaxM) +
+              18 * _getSubSkillsCountMatch(SubSkill.holdMaxL)
       );
 
       return res;
     }
 
     final xMaxOverflowHoldCount = calcMaxOverflowHoldCount();
+    maxOverflowHoldCount = xMaxOverflowHoldCount;
 
     double calcOverflowHoldEnergy() {
       var overflowHoldEnergy = 0.0;
@@ -89,56 +105,67 @@ class PokemonProfileStatistics {
       return overflowHoldEnergy.roundToDouble();
     }
 
-    final xMainSkillSpeedParameter = _calcMainSkillSpeedParameter();
+    double calcMainSkillTotalEnergy() {
+      if (_isMainSkillIn(['活力填充S', '活力療癒S', '活力全體療癒S'])) {
+        return 0;
+      }
+      return xMainSkillEnergy * (1 + xMainSkillSpeedParameter);
+    }
 
-    final res = {
-      '幫手獎勵': xHelperBonus,
-      '幫忙速度S': xTotalHelpSpeedS,
-      '幫忙速度M': xTotalHelpSpeedM,
-      '食材機率': xIngredientRate,
-      '技能等級': _calcSkillLevel(),
-      '主技能速度參數': xMainSkillSpeedParameter,
-      '持有上限溢出數': xMaxOverflowHoldCount,
-      '持有上限溢出能量': calcOverflowHoldEnergy(),
-      '性格速度': xCharacterSpeed,
-      '活力加速': xAccelerateVitality,
-      '睡眠EXP獎勵': xSleepExpBonus,
-      '夢之碎片獎勵': _calcDreamChipsBonus(),
-      '主技能': basicProfile.mainSkill.name,
-      '主技能能量': _calcMainSkillTotalEnergy(),
-      '主技活力加速': xMainSkillAccelerateVitality,
-    };
+    final xDreamChipsBonus = _calcDreamChipsBonus();
+    dreamChipsBonus = xDreamChipsBonus;
+    final xOverflowHoldEnergy = calcOverflowHoldEnergy();
+    overflowHoldEnergy = xOverflowHoldEnergy;
 
-    var result = '${basicProfile.nameI18nKey}\n'
-        '性格: ${character.name}\n'
-        '食材:\n'
-        '    ${ingredient1.nameI18nKey} ($ingredientCount1)\n'
-        '    ${ingredient2.nameI18nKey} ($ingredientCount2)\n'
-        '    ${ingredient3.nameI18nKey} ($ingredientCount3)\n'
-        '類型: ${basicProfile.sleepType.name} (${basicProfile.fruit.nameI18nKey}) \n'
-        '數量: $xFruitCount\n'
-        '幫忙均能/次: $xHelpPerAvgEnergy\n'
-        '類型: ${basicProfile.sleepType.name}\n'
-        '樹果: ${basicProfile.fruit.nameI18nKey}\n'
-        '數量: $xFruitCount\n'
-        '幫忙間隔: $xHelpInterval\n'
-        '樹果能量: $xFruitEnergy\n'
-        '食材均能: $xIngredientEnergyAvg\n';
+    final xMainSkillTotalEnergy = calcMainSkillTotalEnergy().round();
+    mainSkillTotalEnergy = xMainSkillTotalEnergy;
 
+    final xEnergyScore = (60000 / xHelpInterval) * helpPerAvgEnergy +
+        xMainSkillTotalEnergy - xOverflowHoldEnergy + xSleepExpBonus + xDreamChipsBonus;
+    energyScore = xEnergyScore.round();
+
+
+
+    rank = xEnergyScore < 6000 ? 'E'
+        : xEnergyScore < 7000 ? 'D'
+        : xEnergyScore < 8000 ? 'C'
+        : xEnergyScore < 9000 ? 'B'
+        : xEnergyScore < 10000 ? 'A'
+        : xEnergyScore < 12000 ? 'S'
+        : xEnergyScore < 14000 ? 'SS'
+        : 'SSS';
+
+    if (basicProfile.mainSkill == MainSkill.dreamChipS || basicProfile.mainSkill == MainSkill.energyFillSn) {
+      rank = '夢$rank';
+    }
+
+    rank;
   }
 
+  int fruitCount = 0;
+  double helpInterval = 0;
   double ingredientRate = 0;
   int ingredientEnergy1 = 0;
   int ingredientEnergy2 = 0;
   int ingredientEnergy3 = 0;
   int ingredientEnergyAvg = 0;
-  int xIngredientEnergyAvg = 0;
   double helpPerAvgEnergy = 0.0;
   int fruitEnergy = 0;
   int helperBonus = 0;
   double totalHelpSpeedS = 0;
   double totalHelpSpeedM = 0;
   double characterSpeed = 0;
+  int skillLevel = 0;
+  double mainSkillSpeedParameter = 0;
+  int sleepExpBonus = 0;
+  double accelerateVitality = 0;
+  int dreamChipsBonus = 0;
+  int mainSkillTotalEnergy = 0;
+  double mainSkillAccelerateVitality = 0;
+  double maxOverflowHoldCount = 0;
+  double overflowHoldEnergy = 0;
+  int energyScore = 0;
+  String rank = '';
 
   final PokemonProfile profile;
   PokemonBasicProfile get basicProfile => profile.basicProfile;
@@ -157,33 +184,33 @@ class PokemonProfileStatistics {
   SubSkill get subSkillLv100 => profile.subSkillLv100;
 
   int _calcFruitCount() =>
-      1 + _getSubSkillsCountMatch(SubSkill.s1) +
+      1 + _getSubSkillsCountMatch(SubSkill.berryCountS) +
           _getOneIfSleepTypeIs(PokemonSleepType.t3);
 
   int _calcHelperBonus() =>
-      15 * _getSubSkillsCountMatch(SubSkill.s2);
+      15 * _getSubSkillsCountMatch(SubSkill.helperBonus);
 
   double _calcTotalHelpSpeedS() =>
-      0.07 * _getSubSkillsCountMatch(SubSkill.s4);
+      0.07 * _getSubSkillsCountMatch(SubSkill.helpSpeedS);
 
   double _calcTotalHelpSpeedM() =>
-      0.14 * _getSubSkillsCountMatch(SubSkill.s3);
+      0.14 * _getSubSkillsCountMatch(SubSkill.helpSpeedM);
 
   double _calcIngredientRate() =>
-      1.0 + 0.18 * _getSubSkillsCountMatch(SubSkill.s6)
-          + 0.36 * _getSubSkillsCountMatch(SubSkill.s5)
+      1.0 + 0.18 * _getSubSkillsCountMatch(SubSkill.ingredientRateS)
+          + 0.36 * _getSubSkillsCountMatch(SubSkill.ingredientRateM)
           + 0.2 * _getOneIf(character.positive == '食材發現')
           - 0.2 * _getOneIf(character.negative == '食材發現');
 
   int _calcSkillLevel() =>
-      _getSubSkillsCountMatch(SubSkill.s8)
-          + 2 * _getSubSkillsCountMatch(SubSkill.s7);
+      _getSubSkillsCountMatch(SubSkill.skillLevelS)
+          + 2 * _getSubSkillsCountMatch(SubSkill.skillLevelM);
 
   double _calcMainSkillSpeedParameter() =>
       0.0 + 0.2 * _getOneIf(character.positive == '主技能')
           - 0.2 * _getOneIf(character.negative == '主技能')
-          + 0.18 * _getSubSkillsCountMatch(SubSkill.s10)
-          + 0.36 * _getSubSkillsCountMatch(SubSkill.s9);
+          + 0.18 * _getSubSkillsCountMatch(SubSkill.skillRateS)
+          + 0.36 * _getSubSkillsCountMatch(SubSkill.skillRateM);
 
   /// 性格速度
   double _calcCharacterSpeed() => 0.1 * _getOneIf(character.positive == '幫忙速度')
@@ -191,37 +218,17 @@ class PokemonProfileStatistics {
 
   /// 活力加速
   /// FIXME: 需確認 1.12? 1.02? (試算表公式是用 0.02)
-  double _calcAccelerateVitality() => 0.02 * _getSubSkillsCountMatch(SubSkill.s14)
+  double _calcAccelerateVitality() => 0.02 * _getSubSkillsCountMatch(SubSkill.energyRecoverBonus)
       + 0.1 * _getOneIf(character.positive == '活力回復')
       - 0.1 * _getOneIf(character.negative == '活力回復');
 
   /// 睡眠EXP獎勵
   int _calcSleepExpBonus() =>
-      1000 * _getSubSkillsCountMatch(SubSkill.s15);
+      1000 * _getSubSkillsCountMatch(SubSkill.sleepExpBonus);
 
   /// 夢之碎片獎勵
   int _calcDreamChipsBonus() =>
-      500 * _getSubSkillsCountMatch(SubSkill.s17);
-
-  double _calcMainSkillAccelerateVitality() {
-    var res = 0.0;
-
-    if (_isMainSkillIn(['活力填充S', '活力療癒S', '活力全體療癒S'])) {
-      res += (0.015 * _getMainSkillEnergy()) *
-          (1 + _calcMainSkillSpeedParameter());
-    }
-
-    return res;
-  }
-
-  int _calcMainSkillTotalEnergy() {
-    if (_isMainSkillIn(['活力填充S', '活力療癒S', '活力全體療癒S'])) {
-      return 0;
-    }
-
-    final res = _getMainSkillEnergy() * (1 + _calcMainSkillSpeedParameter());
-    return res.round();
-  }
+      500 * _getSubSkillsCountMatch(SubSkill.dreamChipBonus);
 
   // region Utils
   double _getMainSkillEnergy() {

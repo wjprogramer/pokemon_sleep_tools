@@ -49,7 +49,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
 
   var _subSkillsItems = <_SubSkillItem>[];
 
-  int? _currPickIndex = 0;
+  int _currPickIndex = 0;
   final List<SubSkill?> _subSkillFields = List.generate(SubSkill.maxCount, (index) => null);
 
   @override
@@ -76,55 +76,55 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
       _SubSkillGroupItem(
         name: '樹果數量',
         skillS: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s1),
+          value: getSubSkill(SubSkill.berryCountS),
         ),
       ),
       _SubSkillGroupItem(
         name: '食材機率',
         skillM: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s5),
+          value: getSubSkill(SubSkill.ingredientRateM),
         ),
         skillS: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s6),
+          value: getSubSkill(SubSkill.ingredientRateS),
         ),
       ),
       _SubSkillGroupItem(
         name: '幫忙速度',
         skillM: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s3),
+          value: getSubSkill(SubSkill.helpSpeedM),
         ),
         skillS: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s4),
+          value: getSubSkill(SubSkill.helpSpeedS),
         ),
       ),
       _SubSkillGroupItem(
         name: '技能等級',
         skillM: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s7),
+          value: getSubSkill(SubSkill.skillLevelM),
         ),
         skillS: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s8),
+          value: getSubSkill(SubSkill.skillLevelS),
         ),
       ),
       _SubSkillGroupItem(
         name: '技能機率',
         skillM: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s9),
+          value: getSubSkill(SubSkill.skillRateM),
         ),
         skillS: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s10),
+          value: getSubSkill(SubSkill.skillRateS),
         ),
       ),
       _SubSkillGroupItem(
         name: '持有上限',
         skillL: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s11),
+          value: getSubSkill(SubSkill.holdMaxL),
         ),
         skillM: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s12),
+          value: getSubSkill(SubSkill.holdMaxM),
         ),
         skillS: _SubSkillValueItem(
-          value: getSubSkill(SubSkill.s13),
+          value: getSubSkill(SubSkill.holdMaxS),
         ),
       ),
       _SubSkillGroupItem(
@@ -180,10 +180,10 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
               ],
             ),
           ),
-          BottomBarWithConfirmButton(
-            submit: _submit,
-          ),
         ],
+      ),
+      bottomNavigationBar: BottomBarWithConfirmButton(
+        submit: _submit,
       ),
     );
   }
@@ -297,14 +297,9 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
   }
 
   void _pickSubSkill(SubSkill value) {
-    final pickIndex = _currPickIndex;
-    if (pickIndex == null) {
-      return;
-    }
-
     setState(() {
-      _subSkillFields[pickIndex] = value;
-      _currPickIndex = (pickIndex + 1) % SubSkill.maxCount;
+      _subSkillFields[_currPickIndex] = value;
+      _currPickIndex = (_currPickIndex + 1) % SubSkill.maxCount;
     });
   }
 

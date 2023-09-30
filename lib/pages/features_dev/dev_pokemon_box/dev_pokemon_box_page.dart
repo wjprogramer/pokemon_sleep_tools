@@ -34,6 +34,8 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
         statistics.init();
         _statisticsOf[pokemon.id] = '統計\n'
             '幫忙均能/次: ${statistics.helpPerAvgEnergy.toStringAsFixed(2)}\n'
+            '數量: ${statistics.fruitCount}\n'
+            '幫忙間隔: ${statistics.helpInterval}\n'
             '樹果能量: ${statistics.fruitEnergy}\n'
             '食材1能量: ${statistics.ingredientEnergy1}\n'
             '食材2能量: ${statistics.ingredientEnergy2}\n'
@@ -42,12 +44,22 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
             '幫手獎勵: ${statistics.helperBonus}\n'
             '幫忙速度S: ${statistics.totalHelpSpeedS}\n'
             '幫忙速度M: ${statistics.totalHelpSpeedM}\n'
-            // '食材機率: ${statistics}\n'
-            // '技能等級: ${statistics}\n'
-            // '主技能速度參數: ${statistics}\n'
-            // '持有上限溢出數: ${statistics}\n'
+            '食材機率: ${statistics.ingredientRate}\n'
+            '技能等級: ${statistics.skillLevel}\n'
+            '主技能速度參數: ${statistics.mainSkillSpeedParameter}\n'
+            '持有上限溢出數: ${statistics.maxOverflowHoldCount}\n'
+            '持有上限溢出能量: ${statistics.overflowHoldEnergy}\n'
+            '性格速度: ${statistics.characterSpeed}\n'
+            '活力加速: ${statistics.accelerateVitality}\n'
+            '睡眠EXP獎勵: ${statistics.sleepExpBonus}\n'
+            '夢之碎片獎勵: ${statistics.dreamChipsBonus}\n'
+            '主技能: ${pokemon.basicProfile.nameI18nKey}\n'
+            '主技能能量: ${statistics.mainSkillTotalEnergy}\n'
+            '主技活力加速: ${statistics.mainSkillAccelerateVitality}\n'
             '-----------------\n'
-            '';
+            '總結:\n'
+            '能量積分: ${statistics.energyScore}\n'
+            '總評價: ${statistics.rank}\n';
       }
 
       if (mounted) {
@@ -87,6 +99,11 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
                             '-----------------\n'
                             '食材: \n'
                             '$ingredients\n'
+                            '-----------------\n'
+                            '其他:\n'
+                            '類型: ${pokemon.basicProfile.sleepType.name} (${pokemon.basicProfile.fruit.nameI18nKey})\n'
+                            '主技能: ${pokemon.basicProfile.mainSkill.name}\n'
+                            '\n'
                     ),
                   ),
                   Expanded(
