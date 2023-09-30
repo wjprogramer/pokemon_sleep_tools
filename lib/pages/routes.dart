@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokem
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calculator_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp_caculator_result_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
@@ -39,6 +40,7 @@ MyRoutesMapping generateRoutes() {
     // main
     BagPage.route,
     ExpCalculatorPage.route,
+    ExpCalculatorResultPage.route,
     HomePage.route,
     MapPage.route,
     PokemonBasicProfilePicker.route,

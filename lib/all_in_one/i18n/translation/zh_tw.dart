@@ -26,6 +26,15 @@ Map<String, String> getZhTwTrText() {
     't_others': '其他',
     't_exp_and_candies': '經驗值 & 糖果',
     't_special_exp_format_hint': '經驗計算與一般寶可夢不同',
+    't_calculate_result': '計算結果',
+    't_other_settings': '其他設定',
+    't_need_exp_next_level_prefix': '距離下一個等級還需要',
+    't_level': '等級',
+    't_hold_candies': '擁有糖果',
+    't_candy_unit': '顆',
+    't_set_level': '設定等級',
+    't_candies_info_text': '1. 萬能糖果S可以產生3個指定寶可夢的一般糖果',
+    't_candies': '糖果',
     '': '',
 
     // region # Common
@@ -38,6 +47,7 @@ Map<String, String> getZhTwTrText() {
     // region # Pokemon
     't_pokemon_illustrated_book': '寶可夢圖鑑',
     't_other_pokemon': '其他寶可夢',
+    't_select_pokemon': '選擇寶可夢',
     // endregion
 
     // region # Team

@@ -1,11 +1,12 @@
 class ExpSleepUtility {
+  ExpSleepUtility._();
 
   /// 回傳 [level] - 1 升級到 [level] 所需的經驗
   ///
   /// [isLarvitarAndParent] 為 true
   /// 使用「班基拉斯、沙基拉斯、又基拉斯」計算公式（其經驗所需較多）
   /// (Larvitar, Pupitar, Tyranitar)
-  int getNeedExp(int level, {
+  static int getNeedExp(int level, {
     bool isLarvitarAndParent = false,
   }) {
     assert(level >= 1 && level <= 100);
@@ -16,7 +17,7 @@ class ExpSleepUtility {
   }
 
   /// 回傳從等級 1 升級到 [level] 所需的經驗
-  int getAccumulateExp(int level, {
+  static int getAccumulateExp(int level, {
     bool isLarvitarAndParent = false,
   }) {
     assert(level >= 1 && level <= 100);
