@@ -7,6 +7,8 @@ typedef CommonPickerOptionTextBuilder<T> = Widget Function(BuildContext context,
 
 typedef CommonPickerFilter<T> = bool Function(T value, String keyword);
 
+typedef CommonPickerItemBuilder<T> = Widget Function(T value, void Function(T item) onTap);
+
 class CommonPickerPageArgs<T> {
   CommonPickerPageArgs({
     this.initialValue,
@@ -14,6 +16,8 @@ class CommonPickerPageArgs<T> {
     required this.textBuilder,
     this.withConfirmButton = false,
     this.itemFilter,
+    this.itemBuilder,
+    this.padding,
   });
 
   final T? initialValue;
@@ -21,6 +25,8 @@ class CommonPickerPageArgs<T> {
   final CommonPickerOptionTextBuilder<T> textBuilder;
   final bool withConfirmButton;
   final CommonPickerFilter<T>? itemFilter;
+  final CommonPickerItemBuilder<T>? itemBuilder;
+  final EdgeInsetsGeometry? padding;
   // TODO: valueAccessor
 }
 
@@ -32,6 +38,8 @@ class CommonPickerPage<T> extends StatefulWidget {
     required List<T> options,
     required CommonPickerOptionTextBuilder<T> optionBuilder,
     CommonPickerFilter<T>? itemFilter,
+    CommonPickerItemBuilder<T>? itemBuilder,
+    EdgeInsetsGeometry? padding = const EdgeInsets.symmetric(horizontal: HORIZON_PADDING),
   }) async {
     final res = await context.nav.pushWidget(
       CommonPickerPage<T>._(
@@ -40,6 +48,8 @@ class CommonPickerPage<T> extends StatefulWidget {
           options: options,
           textBuilder: optionBuilder,
           itemFilter: itemFilter,
+          itemBuilder: itemBuilder,
+          padding: padding,
         ),
       ),
     );
@@ -121,13 +131,16 @@ class _CommonPickerPageState<T> extends State<CommonPickerPage<T>> {
             _buildSearchBar(),
           Expanded(
             child: buildListView(
-              padding: const EdgeInsets.symmetric(horizontal: HORIZON_PADDING),
+              padding: _args.padding,
               children: [
                 Gap.xl,
-                ..._evaluatedOptions.map((item) => MyElevatedButton(
-                  onPressed: () => _onItemTap(item),
-                  child: _args.textBuilder(context, item),
-                )),
+                /// itemBuilder
+                ..._evaluatedOptions.map((item) {
+                  return _args.itemBuilder?.call(item, _onItemTap) ?? MyElevatedButton(
+                    onPressed: () => _onItemTap(item),
+                    child: _args.textBuilder(context, item),
+                  );
+                }),
                 Gap.xl,
               ],
             ),

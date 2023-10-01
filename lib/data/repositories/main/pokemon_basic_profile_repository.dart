@@ -30,6 +30,7 @@ class PokemonBasicProfileRepository implements MyInjectable {
     return _allPokemonMapping[basicProfileId];
   }
 
+  /// - 幫忙間隔都是以最高階計算
   final _allPokemonMapping = {
     1: PokemonBasicProfile.from(1, 1, '妙蛙種子', 2800, Fruit.f5, PokemonSleepType.t2, MainSkill.ingredientS, 3, 27, Ingredient.i9, 2, 3),
     2: PokemonBasicProfile.from(2, 2, '妙蛙草', 2800, Fruit.f5, PokemonSleepType.t2, MainSkill.ingredientS, 3, 27, Ingredient.i9, 2, 3),
@@ -137,10 +138,9 @@ class PokemonBasicProfileRepository implements MyInjectable {
     104: PokemonBasicProfile.from(104, 454, '毒骷蛙', 3400, Fruit.f8, PokemonSleepType.t2, MainSkill.energyFillS, 2, 19, Ingredient.i10, 2, 454),
     105: PokemonBasicProfile.from(105, 439, '魔尼尼', 2800, Fruit.f11, PokemonSleepType.t2, MainSkill.energyFillS, 2, 22, Ingredient.i12, 2, 439),
     106: PokemonBasicProfile.from(106, 122, '魔牆人偶', 2800, Fruit.f11, PokemonSleepType.t2, MainSkill.energyFillS, 2, 22, Ingredient.i12, 2, 439),
-    // TODO: (註解的 ID 之後要照著設定，避免出錯)
-    // 107 皮皮 boxNo: 35
-    // 108 皮可西 boxNo: 36
-    // 109 皮寶寶 boxNo: 173
+    107: PokemonBasicProfile.from(107, 35, '皮皮', 2800, Fruit.f18, PokemonSleepType.t3, MainSkill.finger, 3, 24, Ingredient.i5, 1, 36),
+    108: PokemonBasicProfile.from(108, 36, '皮可西', 2800, Fruit.f18, PokemonSleepType.t3, MainSkill.finger, 3, 24, Ingredient.i5, 1, 36),
+    109: PokemonBasicProfile.from(109, 173, '皮寶寶', 2800, Fruit.f18, PokemonSleepType.t3, MainSkill.finger, 3, 24, Ingredient.i5, 1, 36),
   };
 
   final _ingredientChainMap = <int, IngredientChain>{
@@ -151,6 +151,7 @@ class PokemonBasicProfileRepository implements MyInjectable {
     20: IngredientChain(20, [(Ingredient.i5, 2),(Ingredient.i15, 2)], [(Ingredient.i5, 4),(Ingredient.i7, 3),(Ingredient.i15, 3)]),
     24: IngredientChain(24, [(Ingredient.i3, 2),(Ingredient.i7, 2)], [(Ingredient.i3, 3),(Ingredient.i6, 3),(Ingredient.i7, 4)]),
     26: IngredientChain(26, [(Ingredient.i5, 2),(Ingredient.i11, 2)], [(Ingredient.i3, 3),(Ingredient.i5, 4),(Ingredient.i11, 3)]),
+    36: IngredientChain(36, [(Ingredient.i5, 2),(Ingredient.i9, 2)], [(Ingredient.i5, 4),(Ingredient.i9, 3),(Ingredient.i15, 3)]),
     40: IngredientChain(40, [(Ingredient.i9, 2),(Ingredient.i10, 2)], [(Ingredient.i9, 4),(Ingredient.i10, 3),(Ingredient.i13, 2)]),
     51: IngredientChain(51, [(Ingredient.i1, 3),(Ingredient.i12, 5)], [(Ingredient.i1, 4),(Ingredient.i12, 7),(Ingredient.i15, 8)]),
     53: IngredientChain(53, [(Ingredient.i7, 2),(Ingredient.i8, 2)], [(Ingredient.i7, 3),(Ingredient.i8, 4)]),

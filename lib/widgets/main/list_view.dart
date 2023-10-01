@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget buildListView({
   required List<Widget> children,
-  EdgeInsetsGeometry? padding
+  EdgeInsetsGeometry? padding,
 }) {
   return ListView.builder(
     padding: padding,

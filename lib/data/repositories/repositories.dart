@@ -1,3 +1,4 @@
 export 'main/pokemon_basic_profile_repository.dart';
 export 'main/pokemon_profile_repository.dart';
 export 'main/pokemon_team_repository.dart';
+export 'main/sleep_face_repository.dart';

@@ -9,11 +9,15 @@ import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_illustrated_book/sleep_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/main/gap.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
@@ -114,13 +118,71 @@ class _HomeFragmentState extends State<HomeFragment> {
               MyOutlinedButton(
                 color: primaryColor,
                 onPressed: () {
-                  MapPage.go(context);
+                  MapsPage.go(context);
                 },
                 iconBuilder: (color, size) {
                   return Icon(Icons.map, color: color, size: size,);
                 },
                 builder: MyOutlinedButton.builderUnboundWidth,
                 child: Text('t_map'.xTr),
+              ),
+            ],
+          ),
+        ),
+        MainMenuSubtitle(
+          icon: const Iconify(Bx.grid_alt, size: 16,),
+          title: Text(
+            't_others'.xTr,
+          ),
+        ),
+        Wrap(
+          spacing: _menuButtonSpacing,
+          runSpacing: _menuButtonSpacing,
+          children: _wrapMenuItems(
+            children: [
+              MyOutlinedButton(
+                color: tmpColorSkill,
+                onPressed: () {
+                  MainSkillsCharacterIllustratedBookPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Icon(Icons.thunderstorm, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_main_skills'.xTr),
+              ),
+              MyOutlinedButton(
+                color: tmpColorSkill,
+                onPressed: () {
+                  SubSkillsCharacterIllustratedBookPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Icon(Icons.thunderstorm_outlined, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_sub_skills'.xTr),
+              ),
+              MyOutlinedButton(
+                color: tmpColorCharacter,
+                onPressed: () {
+                  CharactersIllustratedBookPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Icon(Icons.face, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_character'.xTr),
+              ),
+              MyOutlinedButton(
+                color: color1,
+                onPressed: () {
+                  IngredientsIllustratedBookPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Iconify(Bi.apple, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_ingredients'.xTr),
               ),
             ],
           ),
@@ -174,12 +236,25 @@ class _HomeFragmentState extends State<HomeFragment> {
           Gap.xl,
           const Wrap(
             children: [
+              Iconify(AntDesign.function_outlined, color: Colors.blue),
+              Iconify(AntDesign.fund_filled, color: Colors.blue),
+              Iconify(AntDesign.fund_outlined, color: Colors.blue),
+              Iconify(AntDesign.fund_projection_screen_outlined, color: Colors.blue),
+              Iconify(AntDesign.fund_twotone, color: Colors.blue),
+              Iconify(AntDesign.fund_view_outlined, color: Colors.blue),
+              Iconify(AntDesign.funnel_plot_filled, color: Colors.blue),
+              Iconify(AntDesign.funnel_plot_outlined, color: Colors.blue),
+              Iconify(AntDesign.funnel_plot_twotone, color: Colors.blue),
+              Iconify(AntDesign.gateway_outlined, color: Colors.blue),
+              Iconify(AntDesign.gif_outlined, color: Colors.blue),
+              Iconify(AntDesign.gift_filled, color: Colors.blue),
+              Iconify(AntDesign.gift_outlined, color: Colors.blue),
+              Iconify(AntDesign.gift_twotone, color: Colors.blue),
+
               Iconify(Charm.candy, color: Colors.blue),
               Iconify(Arcticons.candy_crush_saga, color: Colors.blue),
 
-
               Iconify(AntDesign.gold_filled, color: Colors.blue),
-              Iconify(Bi.apple, color: Colors.blue),
               Iconify(Bi.box_arrow_down, color: Colors.blue),
               Iconify(Bi.box_arrow_down_left, color: Colors.blue),
               Iconify(Bi.box_arrow_down_right, color: Colors.blue),

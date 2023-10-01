@@ -10,12 +10,12 @@ import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 import 'package:provider/provider.dart';
 
-class MapPage extends StatefulWidget {
-  const MapPage._();
+class CharactersIllustratedBookPage extends StatefulWidget {
+  const CharactersIllustratedBookPage._();
 
-  static const MyPageRoute route = ('/MapPage', _builder);
+  static const MyPageRoute route = ('/CharactersIllustratedBookPage', _builder);
   static Widget _builder(dynamic args) {
-    return const MapPage._();
+    return const CharactersIllustratedBookPage._();
   }
 
   static void go(BuildContext context) {
@@ -25,15 +25,15 @@ class MapPage extends StatefulWidget {
   }
 
   @override
-  State<MapPage> createState() => _MapPageState();
+  State<CharactersIllustratedBookPage> createState() => _CharactersIllustratedBookPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _CharactersIllustratedBookPageState extends State<CharactersIllustratedBookPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(
-        titleText: ''.xTr,
+        titleText: 't_character'.xTr,
       ),
     );
   }

@@ -9,6 +9,7 @@ Map<String, String> getZhTwTrText() {
     't_pokemon': '寶可夢',
     't_character': '性格',
     't_ingredient': '食材',
+    't_ingredients': '食材',
     't_fruit': '樹果',
     't_developing': '開發中',
     't_food': '料理',
@@ -35,6 +36,8 @@ Map<String, String> getZhTwTrText() {
     't_set_level': '設定等級',
     't_candies_info_text': '1. 萬能糖果S可以產生3個指定寶可夢的一般糖果',
     't_candies': '糖果',
+    't_simple': '簡易',
+    't_details': '詳細',
     '': '',
 
     // region # Common
@@ -58,6 +61,7 @@ Map<String, String> getZhTwTrText() {
 
     // region # Skill
     't_main_skill': '主技能',
+    't_main_skills': '主技能',
     't_sub_skills': '副技能',
     // endregion
 

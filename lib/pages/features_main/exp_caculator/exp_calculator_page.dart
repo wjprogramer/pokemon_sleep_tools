@@ -59,8 +59,9 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
   final _characterField = FormControl<PokemonCharacter>(
     validators: [ ],
   );
-  var _currLevel = 1;
+  var _currLevel = 2;
   var _larvitarChainProfiles = <PokemonBasicProfile>[];
+  int get _currLevelNeedExp => ExpSleepUtility.getNeedExp(_currLevel);
 
   // Skill Level Timer
   int _skillLevelIncrement = 1;
@@ -70,7 +71,11 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
   @override
   void initState() {
     super.initState();
-    ExpSleepUtility;
+    _remainExpToNextLevelField.valueChanges.listen((v) {
+      if (v != null && v > _currLevelNeedExp) {
+        _remainExpToNextLevelField.value = _currLevelNeedExp;
+      }
+    });
 
     scheduleMicrotask(() async {
       _larvitarChainProfiles = (await Future.wait([86, 87, 88].map((basicProfileId) =>
@@ -178,7 +183,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
       CheckboxListTile(
         value: _isLarvitar,
         onChanged: (v) {
-          if (v == null) {
+          if (v == null || !v) {
             return;
           }
           _isLarvitar = v;
@@ -215,8 +220,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           Slider(
             value: _currLevel.toDouble(),
             onChanged: (v) {
-              _currLevel = v.toInt();
-              setState(() { });
+              _changeLevel(v.toInt());
             },
             divisions: 99,
             min: 1,
@@ -270,6 +274,9 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           otherLabel('t_need_exp_next_level_prefix'.xTr),
           ReactiveMyTextField(
             formControl: _remainExpToNextLevelField,
+            decoration: InputDecoration(
+              suffix: Text('/ $_currLevelNeedExp'),
+            ),
           ),
           Gap.sm,
           otherPostLabel('EXP'),
@@ -286,16 +293,43 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           otherLabel('t_character'.xTr),
           ReactiveMyTextField(
             formControl: _characterField,
+            // TODO: suffixIcon 放按鈕會點不了 （GestureDetector 和 Button 都一樣）
+            // 不知為何 (之前用都可以，應該 flutter 版本問題？需確認)
+            // decoration: InputDecoration(
+            //   suffixIcon: 清除按鈕
+            // ),
             wrapFieldBuilder: (context, fieldWidget) {
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () async {
                   final result = await CommonPickerPage.go<PokemonCharacter>(
-                      context,
-                      options: PokemonCharacter.values,
-                      optionBuilder: (context, character) {
-                        return Text(character.name);
+                    context,
+                    options: PokemonCharacter.values,
+                    optionBuilder: (context, character) {
+                      return Text(character.nameI18nKey);
+                    },
+                    itemBuilder: (item, onItemTap) {
+                      Color? color;
+
+                      if (item.positive == 'EXP') {
+                        color = positiveColor;
+                      } else if (item.negative == 'EXP') {
+                        color = dangerColor;
                       }
+
+                      return ListTile(
+                        title: Text(item.nameI18nKey.xTr),
+                        subtitle: Text(
+                          '+ ${Display.text(item.positive)}, - ${Display.text(item.negative)}',
+                          style: TextStyle(
+                            color: color,
+                            fontWeight: color != null ? FontWeight.bold : null,
+                          ),
+                        ),
+                        onTap: () => onItemTap(item),
+                      );
+                    },
+                    padding: EdgeInsets.zero,
                   );
                   if (result == null) {
                     return;
@@ -390,12 +424,15 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
 
   void _changeLevel(int delta) {
     _currLevel = (_currLevel + delta).clamp(1, 100);
+
+    final fieldValue = _remainExpToNextLevelField.value;
+    if (fieldValue != null && fieldValue > _currLevelNeedExp) {
+      _remainExpToNextLevelField.value = _currLevelNeedExp;
+    }
+
     setState(() { });
   }
 
-  void _onLongPressToChangeLevel(int delta) {
-    _changeLevel(delta);
-  }
 }
 
 

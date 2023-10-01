@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
 import 'package:provider/provider.dart';
@@ -66,12 +68,13 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
 
   String get _titleText => 't_exp_and_candies'.xTr;
 
+  late ThemeData _theme;
   var _initialized = false;
 
   /// 精簡模式，顯示較少資料
   var _simpleMode = true;
 
-  final _levels = [10, 25, 30, 50, 60, 75, 100];
+  var _shortLevels = [10, 25, 30, 50, 60, 75, 100];
 
   @override
   void initState() {
@@ -79,6 +82,17 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
 
     scheduleMicrotask(() {
       try {
+        int? lastNeedDeletedLevelIndex;
+        for (int i = 0; i < _shortLevels.length; i++) {
+          if (_args.currLevel >= _shortLevels[i]) {
+            lastNeedDeletedLevelIndex = i;
+          } else {
+            break;
+          }
+        }
+        if (lastNeedDeletedLevelIndex != null) {
+          _shortLevels = _shortLevels.sublist(lastNeedDeletedLevelIndex + 1);
+        }
 
       } catch (e) {
         // TODO:
@@ -94,9 +108,11 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (!_initialized) {
-    //   return const LoadingView();
-    // }
+    _theme = Theme.of(context);
+
+    if (!_initialized) {
+      return const LoadingView();
+    }
 
     return Scaffold(
       appBar: buildAppBar(
@@ -105,12 +121,25 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
       body: buildListView(
         children: _buildListItems(context),
       ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
   List<Widget> _buildListItems(BuildContext context) {
-    _levels;
-    ;
+    final currLevelNeedExp = ExpSleepUtility.getNeedExp(_args.currLevel, isLarvitarAndParent: _args.isLarvitar);
+    final currSingleLevelAccumulateExp = currLevelNeedExp - _args.remainExpToNextLevel;
+    final character = _args.character;
+    var candyExpEffect = 1.0;
+    var candyExp = 25 * candyExpEffect;
+
+    if (character?.positive == 'EXP') {
+      candyExpEffect = 1.2;
+    } else if (character?.negative == 'EXP') {
+      candyExpEffect = 0.8;
+    }
+
+    final currAccumulateExp = ExpSleepUtility.getAccumulateExp(_args.currLevel, isLarvitarAndParent: _args.isLarvitar) + currSingleLevelAccumulateExp;
+    final levels = _getLevels();
 
     return [
       SingleChildScrollView(
@@ -125,28 +154,99 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
             DataColumn(label: Text('萬能糖果L')),
           ],
           rows: [
-            ..._levels.map((level) {
-              final totalExp = ExpSleepUtility.getAccumulateExp(level);
-              final normalCandyNeedCount = (totalExp / 25.0).ceil();
+            ...levels.map((level) {
+              final totalExp = ExpSleepUtility.getAccumulateExp(level, isLarvitarAndParent: _args.isLarvitar) - currAccumulateExp;
+              final normalCandyNeedCount = (totalExp / candyExp).ceil();
               final candySCount = (normalCandyNeedCount / 3.0).ceil();
               final candyMCount = (normalCandyNeedCount / 20.0).ceil();
               final candyLCount = (normalCandyNeedCount / 100.0).ceil();
+              final bagCandiesCount = _args.bagCandiesCount;
+
+              final values = [
+                normalCandyNeedCount,
+                candySCount,
+                candyMCount,
+                candyLCount,
+              ];
 
               return DataRow(
                 cells: [
                   DataCell(Text(level.toString())),
-                  DataCell(Text(totalExp.toString())),
-                  DataCell(Text(Display.numInt(normalCandyNeedCount))),
-                  DataCell(Text(Display.numInt(candySCount))),
-                  DataCell(Text(Display.numInt(candyMCount))),
-                  DataCell(Text(Display.numInt(candyLCount))),
+                  DataCell(Text(Display.numInt(totalExp))),
+                  if (bagCandiesCount < normalCandyNeedCount)
+                    ...values.map((e) => DataCell(Text(Display.numInt(e))))
+                  else
+                    ...List.generate(values.length, (index) => const DataCell(
+                      Icon(Icons.check, color: primaryColor),
+                    )),
                 ],
               );
             }),
           ],
         ),
       ),
+      Gap.trailing,
     ];
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: Divider.createBorderSide(context),
+          )
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: 8, horizontal: 16,
+        ),
+        child: Row(
+          children: [
+            // 't_simple': '簡易',
+            // 't_details': '詳細',
+            MyElevatedButton(
+              onPressed: () {
+                _simpleMode = !_simpleMode;
+                setState(() { });
+              },
+              child: Row(
+                children: [
+                  Builder(
+                    builder: (context) {
+                      final iconTheme = IconTheme.of(context);
+
+                      return Iconify(
+                        _simpleMode
+                            ? AntDesign.fullscreen_exit_outlined
+                            : AntDesign.fullscreen_outlined,
+                        color: iconTheme.color,
+                        size: 18,
+                      );
+                    }
+                  ),
+                  Gap.md,
+                  Text(
+                    _simpleMode ? 't_simple'.xTr : 't_details'.xTr,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<int> _getLevels() {
+    if (_simpleMode) {
+      return _shortLevels;
+    }
+
+    final start = (_args.currLevel + 1).clamp(1, 100);
+    const end = MAX_POKEMON_LEVEL;
+    final length = end - start + 1;
+
+    return List.generate(length, (index) => start + index);
   }
 }
 

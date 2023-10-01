@@ -13,7 +13,7 @@ class ExpSleepUtility {
     final needExpOf = (
         isLarvitarAndParent ? _larvitarNeedExp : _needExp
     );
-    return needExpOf[level] ?? 0;
+    return needExpOf[(level + 1).clamp(1, 100)] ?? 0;
   }
 
   /// 回傳從等級 1 升級到 [level] 所需的經驗

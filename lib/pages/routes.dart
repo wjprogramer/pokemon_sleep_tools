@@ -5,10 +5,13 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp_caculator_result_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
@@ -21,6 +24,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_illustrated_book/sleep_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
 
 typedef MyRouteBuilder<T extends Object?> = Widget Function(dynamic args);
 
@@ -39,10 +43,13 @@ MyRoutesMapping generateRoutes() {
     MyStorybookPage.route,
     // main
     BagPage.route,
+    CharactersIllustratedBookPage.route,
     ExpCalculatorPage.route,
     ExpCalculatorResultPage.route,
     HomePage.route,
-    MapPage.route,
+    IngredientsIllustratedBookPage.route,
+    MainSkillsCharacterIllustratedBookPage.route,
+    MapsPage.route,
     PokemonBasicProfilePicker.route,
     ...PokemonMaintainProfilePage.routes,
     PokemonBoxPage.route,
@@ -55,6 +62,7 @@ MyRoutesMapping generateRoutes() {
     SleepIllustratedBookPage.route,
     SplashPage.route,
     SubSkillPickerPage.route,
+    SubSkillsCharacterIllustratedBookPage.route,
   ];
 
   // final Map<Type, Map<String, MyRouteBuilder>> x = {

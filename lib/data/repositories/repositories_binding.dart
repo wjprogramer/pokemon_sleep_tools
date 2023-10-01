@@ -7,4 +7,6 @@ void setupRepositoriesDependencies() {
   bind<PokemonProfileRepository>(PokemonProfileRepository());
   bind<PokemonBasicProfileRepository>(PokemonBasicProfileRepository());
   bind<PokemonTeamRepository>(PokemonTeamRepository());
+  bind<SleepFaceRepository>(SleepFaceRepository());
+
 }

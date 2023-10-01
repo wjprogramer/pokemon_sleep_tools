@@ -15,3 +15,10 @@ const pinkColor = Colors.pink;
 const greenColor = Color(0xFF24BE56);
 
 const warningColor = Color(0xFFF5B14F);
+const dangerColor = Colors.red;
+const positiveColor = Colors.blue;
+
+// 自己隨便訂的顏色
+const tmpColorSkill = Colors.purple;
+final tmpColorCharacter = Colors.cyan.shade600;
+

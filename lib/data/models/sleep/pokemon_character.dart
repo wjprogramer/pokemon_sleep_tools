@@ -28,10 +28,10 @@ enum PokemonCharacter {
   c24(24, '浮躁', null, null),
   c25(25, '認真', null, null);
 
-  const PokemonCharacter(this.id, this.name, this.positive, this.negative);
+  const PokemonCharacter(this.id, this.nameI18nKey, this.positive, this.negative);
 
   final int id;
-  final String name;
+  final String nameI18nKey;
   final String? positive;
   final String? negative;
 }

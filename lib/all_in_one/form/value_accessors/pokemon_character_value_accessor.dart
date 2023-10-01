@@ -15,7 +15,7 @@ class PokemonCharacterValueAccessor extends ControlValueAccessor<PokemonCharacte
       return '';
     }
     _cache.add(modelValue);
-    return modelValue.name;
+    return modelValue.nameI18nKey;
   }
 
   @override
@@ -26,6 +26,6 @@ class PokemonCharacterValueAccessor extends ControlValueAccessor<PokemonCharacte
     }
 
     return _cache
-        .lastWhere((element) => element.name == trimmedViewValue);
+        .lastWhere((element) => element.nameI18nKey == trimmedViewValue);
   }
 }

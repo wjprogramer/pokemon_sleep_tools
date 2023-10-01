@@ -197,7 +197,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                         context,
                         options: PokemonCharacter.values,
                         optionBuilder: (context, character) {
-                          return Text(character.name);
+                          return Text(character.nameI18nKey);
                         }
                     );
                     if (result == null) {
