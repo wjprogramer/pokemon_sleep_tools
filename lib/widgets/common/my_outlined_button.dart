@@ -27,7 +27,7 @@ class MyOutlinedButton extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (icon != null) icon,
-        Gap.xl,
+        Gap.lg,
         Expanded(child: child),
       ],
     );
@@ -69,8 +69,19 @@ class MyOutlinedButton extends StatelessWidget {
         ),
       ),
       child: DefaultTextStyle(
-        style: TextStyle(color: textColor),
-        child: buttonChild,
+        style: TextStyle(
+          color: textColor,
+        ),
+        maxLines: 2,
+        child: Stack(
+          children: [
+            const Visibility(
+              visible: false,
+              child: Text('Place\nPlace'),
+            ),
+            buttonChild,
+          ],
+        ),
       ),
     );
   }

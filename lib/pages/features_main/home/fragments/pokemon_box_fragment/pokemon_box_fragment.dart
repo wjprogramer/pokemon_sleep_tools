@@ -82,34 +82,38 @@ class _PokemonBoxFragmentState extends State<PokemonBoxFragment> {
           ),
         ),
         Wrap(
-            spacing: _menuButtonSpacing,
-            runSpacing: _menuButtonSpacing,
-            children: _wrapMenuItems(
-              children: [
-                MyOutlinedButton(
-                  color: color1,
-                  onPressed: () {
-                    PokemonIllustratedBookPage.go(context);
-                  },
-                  iconBuilder: (color, size) {
-                    return Icon(Icons.camera_alt_outlined, color: color, size: size,);
-                  },
-                  builder: MyOutlinedButton.builderUnboundWidth,
-                  child: Text('t_pokemon_illustrated_book'.xTr),
-                ),
-                MyOutlinedButton(
-                  color: pinkColor,
-                  onPressed: () {
-                    ExpCalculatorPage.go(context);
-                  },
-                  iconBuilder: (color, size) {
-                    return Iconify(Mdi.candy, color: color, size: size,);
-                  },
-                  builder: MyOutlinedButton.builderUnboundWidth,
-                  child: Text('t_exp_and_candies'.xTr),
-                ),
-              ],
-            ),
+          spacing: _menuButtonSpacing,
+          runSpacing: _menuButtonSpacing,
+          alignment: WrapAlignment.start, // default: WrapAlignment.start,
+          runAlignment: WrapAlignment.start, // default: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.start, // default: WrapCrossAlignment.start,
+          verticalDirection: VerticalDirection.down, // default: VerticalDirection.down,
+          children: _wrapMenuItems(
+            children: [
+              MyOutlinedButton(
+                color: color1,
+                onPressed: () {
+                  PokemonIllustratedBookPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Icon(Icons.camera_alt_outlined, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_pokemon_illustrated_book'.xTr),
+              ),
+              MyOutlinedButton(
+                color: pinkColor,
+                onPressed: () {
+                  ExpCalculatorPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Iconify(Mdi.candy, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_exp_and_candies'.xTr),
+              ),
+            ],
+          ),
         ),
         if (kDebugMode) ...[
           MainMenuSubtitle(

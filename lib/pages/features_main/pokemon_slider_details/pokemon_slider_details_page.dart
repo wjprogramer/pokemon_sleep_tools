@@ -185,27 +185,37 @@ class _PokemonDetailsView extends StatelessWidget {
   final PokemonProfile profile;
   final PokemonProfileStatistics? statistics;
 
+  PokemonBasicProfile get basicProfile => profile.basicProfile;
+
   @override
   Widget build(BuildContext context) {
     return buildListView(
-      children: _buildListItems(context),
+      children: _buildListItems(context, statistics),
     );
   }
 
-  List<Widget> _buildListItems(BuildContext context) {
+  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics? statistics) {
     final screenSize = MediaQuery.of(context).size;
-    final leadingWidth = math.min(screenSize.width * 0.4, 200.0);
+    final leadingWidth = math.min(screenSize.width * 0.3, 150.0);
 
     Widget buildWithLabel({
       required String text,
+      required Widget child,
     }) {
       return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             margin: const EdgeInsets.only(right: 12),
             constraints: BoxConstraints.tightFor(width: leadingWidth),
             child: MyLabel(
               text: text,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: MyLabel.verticalPaddingValue),
+              child: child,
             ),
           ),
         ],
@@ -216,28 +226,102 @@ class _PokemonDetailsView extends StatelessWidget {
       Gap.xl,
       ...Hp.list(
         children: [
-          Text(
-            profile.basicProfile.nameI18nKey,
-          ),
           MyElevatedButton(
             onPressed: () {
               /// TODO: 如果是「班基拉斯、沙基拉斯、又基拉斯」要將 _isLarvitar 設為 true
               ExpCalculatorPage.go(context);
             },
-            child: Text('提升等級'),
+            child: const Text('提升等級'),
           ),
+          Gap.xl,
+          MySubHeader(
+            titleText: 't_review'.xTr,
+          ),
+          Gap.xl,
+          if (statistics == null)
+            Text('t_none'.xTr)
+          else ...[
+            Text('能量積分: ${statistics.energyScore}\n'
+                '總評價: ${statistics.rank}'),
+          ],
+          Gap.xl,
           MySubHeader(
             titleText: 't_help_ability'.xTr,
           ),
+          Gap.xl,
           buildWithLabel(
             text: 't_fruit'.xTr,
+            child: Text(
+              basicProfile.fruit.nameI18nKey.xTr,
+            ),
           ),
+          Gap.xl,
+          buildWithLabel(
+            text: 't_ingredients'.xTr,
+            child: Text(
+              '${basicProfile.ingredient1.nameI18nKey} x${basicProfile.ingredientCount1}\n'
+                  '${profile.ingredient2.nameI18nKey} x${profile.ingredientCount2}\n'
+                  '${profile.ingredient1.nameI18nKey} x${profile.ingredientCount3}\n',
+            ),
+          ),
+          Gap.xl,
+          buildWithLabel(
+            text: '幫忙間隔'.xTr,
+            child: Text(
+              '${basicProfile.helpInterval}\n',
+            ),
+          ),
+          Gap.xl,
+          buildWithLabel(
+            text: '持有上限'.xTr,
+            child: Text(
+              '-- 個\n', // TODO:
+            ),
+          ),
+          Gap.xl,
           MySubHeader(
             titleText: '${'t_main_skill'.xTr}${'t_slash'.xTr}${'t_sub_skills'.xTr}',
           ),
+          Gap.xl,
           Text(
             profile.basicProfile.mainSkill.nameI18nKey.xTr,
           ),
+          Gap.xl,
+          Text(
+              profile.subSkills.mapIndexed((index, subSkill) => 'Lv. ${SubSkill.levelList[index]} ${subSkill.nameI18nKey.xTr}').join('\n')
+          ),
+          MySubHeader(
+            titleText: 't_analysis'.xTr,
+          ),
+          Gap.xl,
+          if (statistics == null)
+            Center(child: Text('t_none'.xTr),)
+          else ...[
+            Text(
+                '幫忙均能/次: ${statistics.helpPerAvgEnergy.toStringAsFixed(2)}\n'
+                  '數量: ${statistics.fruitCount}\n'
+                  '幫忙間隔: ${statistics.helpInterval}\n'
+                  '樹果能量: ${statistics.fruitEnergy}\n'
+                  '食材1能量: ${statistics.ingredientEnergy1}\n'
+                  '食材2能量: ${statistics.ingredientEnergy2}\n'
+                  '食材3能量: ${statistics.ingredientEnergy3}\n'
+                  '食材均能: ${statistics.ingredientEnergyAvg}\n'
+                  '幫手獎勵: ${statistics.helperBonus}\n'
+                  '幫忙速度S: ${statistics.totalHelpSpeedS}\n'
+                  '幫忙速度M: ${statistics.totalHelpSpeedM}\n'
+                  '食材機率: ${statistics.ingredientRate}\n'
+                  '技能等級: ${statistics.skillLevel}\n'
+                  '主技能速度參數: ${statistics.mainSkillSpeedParameter}\n'
+                  '持有上限溢出數: ${statistics.maxOverflowHoldCount}\n'
+                  '持有上限溢出能量: ${statistics.overflowHoldEnergy}\n'
+                  '性格速度: ${statistics.characterSpeed}\n'
+                  '活力加速: ${statistics.accelerateVitality}\n'
+                  '睡眠EXP獎勵: ${statistics.sleepExpBonus}\n'
+                  '夢之碎片獎勵: ${statistics.dreamChipsBonus}\n'
+                  '主技能能量: ${statistics.mainSkillTotalEnergy}\n'
+                  '主技活力加速: ${statistics.mainSkillAccelerateVitality}\n'
+            ),
+          ],
           Text(
             statistics?.rank ?? '',
           ),

@@ -75,36 +75,39 @@ class _SliderWithButtonsState extends State<SliderWithButtons> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
 
+    final absMax = math.max(_min.abs(), _max);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        /// FIXME: 模擬器的滑動有點問題
-        Slider(
-          value: widget.value.toDouble(),
-          onChanged: (v) {
-            _changeLevel(v);
-          },
-          divisions: 99,
-          min: _min,
-          max: 100,
-        ),
+        /// FIXME: 模擬器和實體機的滑動有問題、先隱藏
+        if (kDebugMode)
+          Slider(
+            value: widget.value.toDouble(),
+            onChanged: (v) {
+              _changeLevel(v);
+            },
+            divisions: 99,
+            min: _min,
+            max: 100,
+          ),
         Row(
           children: [
             Expanded(child: _buildLevelButton(value: -10)),
             Expanded(child: _buildLevelButton(value: -1)),
             Stack(
               children: [
-                const Opacity(
+                Opacity(
                   opacity: 0,
                   child: Padding(
-                    padding: EdgeInsets.all(4.0),
-                    child: Text('100'),
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(absMax.toString()),
                   ),
                 ),
                 Positioned.fill(
                   child: Center(
                     child: Text(
-                      _value.toString(),
+                      _value.toInt().toString(),
                       textAlign: TextAlign.center,
                     ),
                   ),

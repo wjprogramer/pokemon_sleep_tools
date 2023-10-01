@@ -37,6 +37,10 @@ Map<String, String> getZhTwTrText() {
     't_candies': '糖果',
     't_simple': '簡易',
     't_details': '詳細',
+    't_review': '評價',
+    't_analysis': '分析',
+    '': '',
+    '': '',
     '': '',
 
     // region # Common

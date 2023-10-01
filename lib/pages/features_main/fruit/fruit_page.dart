@@ -9,6 +9,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/p
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class _FruitsPageArgs {
@@ -46,6 +47,23 @@ class _FruitPageState extends State<FruitPage> {
     return Scaffold(
       appBar: buildAppBar(
         titleText: _fruit.nameI18nKey.xTr,
+      ),
+      body: buildListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: HORIZON_PADDING,
+        ),
+        children: [
+          Row(
+            children: [
+              EnergyIcon(),
+              Gap.sm,
+              Text(
+                '${Display.numInt(_fruit.energyIn1)} ~ ${Display.numInt(_fruit.energyIn60)}',
+              ),
+            ],
+          ),
+          Gap.trailing,
+        ],
       ),
     );
   }

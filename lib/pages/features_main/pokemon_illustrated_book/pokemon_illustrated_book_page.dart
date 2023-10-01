@@ -35,15 +35,19 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
   SleepFaceRepository get _sleepFaceRepo => getIt();
 
-  late Map<int, PokemonBasicProfile> _basicProfileOf;
-  late Map<int, Map<int, String>> _sleepFacesOf;
+  // UI
+  late ThemeData _theme;
+
+  // Data
+  var _basicProfiles = <PokemonBasicProfile>[];
+  var _sleepFacesOf = <int, Map<int, String>>{};
 
   @override
   void initState() {
     super.initState();
 
     scheduleMicrotask(() async {
-      _basicProfileOf = await _basicProfileRepo.findAllMapping();
+      _basicProfiles = await _basicProfileRepo.findAll();
       _sleepFacesOf = await _sleepFaceRepo.findAll();
 
       if (mounted) {
@@ -54,6 +58,8 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
 
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: 't_pokemon_illustrated_book'.xTr,
@@ -63,9 +69,25 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
           horizontal: HORIZON_PADDING,
         ),
         children: [
+          ..._basicProfiles.map((e) => Padding(
+            padding: const EdgeInsets.only(bottom: Gap.lgV),
+            child: _buildBasicProfile(e),
+          )),
           Gap.trailing,
         ],
       ),
+    );
+  }
+
+  Widget _buildBasicProfile(PokemonBasicProfile basicProfile) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          '#${basicProfile.boxNo} ${basicProfile.nameI18nKey.xTr}',
+          style: _theme.textTheme.bodyLarge,
+        ),
+      ],
     );
   }
 }

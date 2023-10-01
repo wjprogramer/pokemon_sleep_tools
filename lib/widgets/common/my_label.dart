@@ -12,13 +12,15 @@ class MyLabel extends StatelessWidget {
   final String text;
   final Color? color;
 
+  static const verticalPaddingValue = 2.0;
+
   @override
   Widget build(BuildContext context) {
     final bgColor = color ?? primaryColor;
 
     return Container(
       padding: const EdgeInsets.symmetric(
-        vertical: 2,
+        vertical: verticalPaddingValue,
       ),
       alignment: Alignment.center,
       decoration: BoxDecoration(

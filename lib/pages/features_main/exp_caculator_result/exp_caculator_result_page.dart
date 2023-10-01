@@ -172,16 +172,30 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
                 candyLCount,
               ];
 
+              final enoughCount = bagCandiesCount >= normalCandyNeedCount;
+
               return DataRow(
                 cells: [
                   DataCell(Text(level.toString())),
                   DataCell(Text(Display.numInt(totalExp))),
-                  if (bagCandiesCount < normalCandyNeedCount)
-                    ...values.map((e) => DataCell(Text(Display.numInt(e))))
-                  else
-                    ...List.generate(values.length, (index) => const DataCell(
-                      Icon(Icons.check, color: primaryColor),
-                    )),
+                  ...values.map((e) => DataCell(
+                    Row(
+                      children: [
+                        Text(
+                          Display.numInt(e),
+                          style: TextStyle(
+                            color: enoughCount ? primaryColor : null,
+                            fontWeight: enoughCount ? FontWeight.bold : null,
+                          ),
+                        ),
+                        if (enoughCount)
+                          Padding(
+                            padding: const EdgeInsets.only(left: Gap.mdV),
+                            child: Icon(Icons.check, color: primaryColor.withOpacity(.7)),
+                          )
+                      ],
+                    ),
+                  ))
                 ],
               );
             }),
