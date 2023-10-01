@@ -11,6 +11,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
@@ -97,6 +98,16 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     return Consumer<MainViewModel>(
       builder: (context, viewModel, child) {
         final profiles = viewModel.profiles;
+        _currIndex = _currIndex.clamp(0, profiles.lastIndex ?? 0);
+
+        if (profiles.isEmpty) {
+          return Scaffold(
+            appBar: buildAppBar(),
+            body: Center(
+              child: Text('t_none'.xTr),
+            ),
+          );
+        }
 
         return Scaffold(
           appBar: buildAppBar(
@@ -110,6 +121,9 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
             children: profiles.map((profile) => _PokemonDetailsView(
               profile: profile,
               statistics: _getStatistics(profile),
+              onDeletedSuccess: () {
+                _currIndex -= 1;
+              },
             )).toList(),
           ),
         );
@@ -180,10 +194,12 @@ class _PokemonDetailsView extends StatelessWidget {
   const _PokemonDetailsView({
     required this.profile,
     this.statistics,
+    required this.onDeletedSuccess,
   });
 
   final PokemonProfile profile;
   final PokemonProfileStatistics? statistics;
+  final Function() onDeletedSuccess;
 
   PokemonBasicProfile get basicProfile => profile.basicProfile;
 
@@ -299,32 +315,54 @@ class _PokemonDetailsView extends StatelessWidget {
           else ...[
             Text(
                 '幫忙均能/次: ${statistics.helpPerAvgEnergy.toStringAsFixed(2)}\n'
-                  '數量: ${statistics.fruitCount}\n'
-                  '幫忙間隔: ${statistics.helpInterval}\n'
-                  '樹果能量: ${statistics.fruitEnergy}\n'
-                  '食材1能量: ${statistics.ingredientEnergy1}\n'
-                  '食材2能量: ${statistics.ingredientEnergy2}\n'
-                  '食材3能量: ${statistics.ingredientEnergy3}\n'
-                  '食材均能: ${statistics.ingredientEnergyAvg}\n'
-                  '幫手獎勵: ${statistics.helperBonus}\n'
-                  '幫忙速度S: ${statistics.totalHelpSpeedS}\n'
-                  '幫忙速度M: ${statistics.totalHelpSpeedM}\n'
-                  '食材機率: ${statistics.ingredientRate}\n'
-                  '技能等級: ${statistics.skillLevel}\n'
-                  '主技能速度參數: ${statistics.mainSkillSpeedParameter}\n'
-                  '持有上限溢出數: ${statistics.maxOverflowHoldCount}\n'
-                  '持有上限溢出能量: ${statistics.overflowHoldEnergy}\n'
-                  '性格速度: ${statistics.characterSpeed}\n'
-                  '活力加速: ${statistics.accelerateVitality}\n'
-                  '睡眠EXP獎勵: ${statistics.sleepExpBonus}\n'
-                  '夢之碎片獎勵: ${statistics.dreamChipsBonus}\n'
-                  '主技能能量: ${statistics.mainSkillTotalEnergy}\n'
-                  '主技活力加速: ${statistics.mainSkillAccelerateVitality}\n'
+                    '數量: ${statistics.fruitCount}\n'
+                    '幫忙間隔: ${statistics.helpInterval}\n'
+                    '樹果能量: ${statistics.fruitEnergy}\n'
+                    '食材1能量: ${statistics.ingredientEnergy1}\n'
+                    '食材2能量: ${statistics.ingredientEnergy2}\n'
+                    '食材3能量: ${statistics.ingredientEnergy3}\n'
+                    '食材均能: ${statistics.ingredientEnergyAvg}\n'
+                    '幫手獎勵: ${statistics.helperBonus}\n'
+                    '幫忙速度S: ${statistics.totalHelpSpeedS}\n'
+                    '幫忙速度M: ${statistics.totalHelpSpeedM}\n'
+                    '食材機率: ${statistics.ingredientRate}\n'
+                    '技能等級: ${statistics.skillLevel}\n'
+                    '主技能速度參數: ${statistics.mainSkillSpeedParameter}\n'
+                    '持有上限溢出數: ${statistics.maxOverflowHoldCount}\n'
+                    '持有上限溢出能量: ${statistics.overflowHoldEnergy}\n'
+                    '性格速度: ${statistics.characterSpeed}\n'
+                    '活力加速: ${statistics.accelerateVitality}\n'
+                    '睡眠EXP獎勵: ${statistics.sleepExpBonus}\n'
+                    '夢之碎片獎勵: ${statistics.dreamChipsBonus}\n'
+                    '主技能能量: ${statistics.mainSkillTotalEnergy}\n'
+                    '主技活力加速: ${statistics.mainSkillAccelerateVitality}\n',
             ),
           ],
-          Text(
-            statistics?.rank ?? '',
+          MySubHeader(
+            titleText: 't_others'.xTr,
+            color: dangerColor,
           ),
+          MyElevatedButton(
+            onPressed: () {
+              // TODO: Loading, Error Handling
+              DialogUtility.danger(
+                context,
+                confirmText: 't_delete'.xTr,
+                title: Text('t_delete_pokemon'.xTr),
+                content: Text(
+                  't_delete_someone_hint'.xTrParams({
+                    'someone': profile.basicProfile.nameI18nKey.xTr,
+                  }),
+                ),
+                onConfirm: () async {
+                  await context.read<MainViewModel>().deleteProfile(profile.id);
+                  onDeletedSuccess();
+                },
+              );
+            },
+            child: Text('t_delete'.xTr),
+          ),
+          Gap.xl,
         ],
       ),
       Gap.trailing,

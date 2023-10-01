@@ -53,4 +53,8 @@ final class StoredPokemonProfiles implements BaseLocalFile {
     }
   }
 
+  Future<void> delete(int profileId) async {
+    _profiles.removeFirstWhere((e) => e.id == profileId);
+  }
+
 }

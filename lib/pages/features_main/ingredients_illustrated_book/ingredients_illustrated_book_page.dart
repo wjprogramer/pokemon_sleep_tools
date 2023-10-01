@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -70,26 +71,34 @@ class _IngredientsIllustratedBookPageState extends State<IngredientsIllustratedB
   Widget _buildItem(Ingredient ingredient) {
     return InkWell(
       onTap: () {
-        // FruitPage.go(context, fruit);
+        IngredientPage.go(context, ingredient);
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            ingredient.nameI18nKey.xTr,
-            style: _theme.textTheme.bodyLarge,
-          ),
-          Row(
-            children: [
-              EnergyIcon(
-                size: 16,
-              ),
-              DreamChipIcon(
-                size: 16,
-              ),
-            ],
-          ),
-        ],
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              ingredient.nameI18nKey.xTr,
+              style: _theme.textTheme.bodyLarge,
+            ),
+            Row(
+              children: [
+                EnergyIcon(
+                  size: 16,
+                ),
+                Gap.sm,
+                Text(Display.numInt(ingredient.energy)),
+                Gap.md,
+                DreamChipIcon(
+                  size: 16,
+                ),
+                Gap.sm,
+                Text(Display.numInt(ingredient.dreamChips)),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

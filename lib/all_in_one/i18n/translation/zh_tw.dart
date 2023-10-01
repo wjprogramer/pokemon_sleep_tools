@@ -39,8 +39,13 @@ Map<String, String> getZhTwTrText() {
     't_details': '詳細',
     't_review': '評價',
     't_analysis': '分析',
-    '': '',
-    '': '',
+    't_create_success': '建立成功',
+    't_create_failed': '建立失敗',
+    't_continue_to_create_next_or_back_manually': '繼續新增下一筆，或手動返回上一頁',
+    't_cancel': '取消',
+    't_delete': '刪除',
+    't_delete_pokemon': '刪除寶可夢',
+    't_delete_someone_hint': '刪除「@someone」刪除後無法復原',
     '': '',
 
     // region # Common
