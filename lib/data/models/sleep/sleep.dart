@@ -1,4 +1,6 @@
 export 'dish.dart';
+export 'dish_level_info.dart';
+export 'dish_type.dart';
 export 'fruit.dart';
 export 'ingredient.dart';
 export 'ingredient_chain.dart';

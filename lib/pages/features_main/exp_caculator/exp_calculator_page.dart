@@ -190,6 +190,9 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           ),
           SliderWithButtons(
             value: _currLevel.toDouble(),
+            max: 100,
+            min: 1,
+            divisions: 99,
             onChanged: (v) {
               _currLevel = v.toInt();
 

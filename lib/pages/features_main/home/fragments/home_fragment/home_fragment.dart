@@ -295,25 +295,24 @@ class _HomeFragmentState extends State<HomeFragment> {
               Iconify(FluentMdl2.webcam_2_off, color: Colors.blue), // 寶可夢球!
               Iconify(Carbon.model, color: Colors.blue), // 鑽石
               Iconify(Tabler.zzz_off, color: Colors.blue),
-              Iconify(Pajamas.food, color: Colors.blue),
-              Iconify(Ep.food, color: Colors.blue),
-              Iconify(Uil.food, color: Colors.blue),
               Iconify(Cil.dinner, color: Colors.blue),
-              Iconify(Vs.cutlery, color: Colors.blue),
-              Iconify(Fa.cutlery, color: Colors.blue),
-              Iconify(Fe.cutlery, color: Colors.blue),
-              Iconify(Jam.cutlery, color: Colors.blue),
-              Iconify(Mdi.cutlery_fork_knife, color: Colors.blue),
-              Iconify(Mdi.cutlery_clean, color: Colors.blue),
               Iconify(Mdi.pot, color: Colors.blue),
               Iconify(Mdi.pot_light, color: Colors.blue),
               Iconify(Mdi.pot_mix, color: Colors.blue),
 
-               // 寶可夢盒 （單個代表「寶可夢」）
               Iconify(Cib.asana, color: Colors.blue), // 寶可夢盒
               Iconify(Bi.box, color: Colors.blue),
               Iconify(Bi.box_fill, color: Colors.blue),
               Iconify(Bi.box_seam_fill, color: Colors.blue),
+
+              Iconify(Pajamas.food, color: Colors.blue),
+              Iconify(Ep.food, color: Colors.blue),
+              Iconify(Uil.food, color: Colors.blue),
+              Iconify(Vs.cutlery, color: Colors.blue),
+              Iconify(Fa.cutlery, color: Colors.blue),
+              Iconify(Fe.cutlery, color: Colors.blue),
+              Iconify(Jam.cutlery, color: Colors.blue),
+              Iconify(Mdi.cutlery_clean, color: Colors.blue),
 
             ],
           ),

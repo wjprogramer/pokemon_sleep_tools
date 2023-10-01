@@ -11,14 +11,16 @@ class SliderWithButtons extends StatefulWidget {
     super.key,
     required this.value,
     required this.onChanged,
-    this.max = 100,
-    this.min = 1,
+    required this.max,
+    required this.min,
+    this.divisions,
   });
 
   final double value;
   final ValueChanged<double> onChanged;
   final double max;
   final double min;
+  final int? divisions;
 
   @override
   State<SliderWithButtons> createState() => _SliderWithButtonsState();
@@ -30,6 +32,7 @@ class _SliderWithButtonsState extends State<SliderWithButtons> {
   double get _value => widget.value;
   double get _max => widget.max;
   double get _min => widget.min;
+  int? get _divisions => widget.divisions;
 
   // UI
   late ThemeData _theme;
@@ -87,9 +90,9 @@ class _SliderWithButtonsState extends State<SliderWithButtons> {
             onChanged: (v) {
               _changeLevel(v);
             },
-            divisions: 99,
+            divisions: _divisions,
             min: _min,
-            max: 100,
+            max: _max,
           ),
         Row(
           children: [

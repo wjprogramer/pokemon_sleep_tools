@@ -23,8 +23,15 @@ final dreamChipColor = Colors.yellow.shade700;
 const tmpColorSkill = Colors.purple;
 final tmpColorCharacter = Colors.cyan.shade600;
 
-// Dish
-const dishBgColor = Color(0xFFFFFFBC);
-const dishBorderColor = Color(0xFFDCC8A4);
-const dishIngredientColor = Color(0xFFA5947A);
-const dishLevelLabelColor = Color(0xFFFEBC44);
+// Dish - Salad
+const dishSaladBgColor = Color(0xFFFFFFBC);
+const dishSaladBorderColor = Color(0xFFDCC8A4);
+const dishSaladIngredientColor = Color(0xFFA5947A);
+const dishSaladLevelLabelColor = Color(0xFFFEBC44);
+const dishSaladMaterialBgColor = Color(0xFFFEF7D8);
+const dishSaladIconColor = Color(0xFFEFC558);
+
+// Dish - Curry & Soup
+final dishCurryLabelBgColor = Colors.red.shade200;
+final dishCurryBgColor = Colors.red.shade50;
+

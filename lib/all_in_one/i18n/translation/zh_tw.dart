@@ -33,6 +33,7 @@ Map<String, String> getZhTwTrText() {
     't_hold_candies': '擁有糖果',
     't_candy_unit': '顆',
     't_set_level': '設定等級',
+    't_set_recipe_level': '設定食譜等級',
     't_candies_info_text': '1. 萬能糖果S可以產生3個指定寶可夢的一般糖果',
     't_candies': '糖果',
     't_simple': '簡易',
@@ -70,7 +71,14 @@ Map<String, String> getZhTwTrText() {
     't_sub_skills': '副技能',
     // endregion
 
-    // region
+    // region # Food
+    // region ## Dish
+    't_soup': '濃湯',
+    't_curry': '咖哩',
+    't_desserts': '點心',
+    't_drinks': '飲料',
+    't_salad': '沙拉',
+    // endregion
     // endregion
 
     // region

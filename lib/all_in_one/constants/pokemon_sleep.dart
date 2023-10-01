@@ -11,3 +11,6 @@ const MAX_TEAM_COUNT = 10;
 /// 照理來說不會變啦，各世代好像都是 100 為上限
 /// 如果真的變了，[ExpSleepUtility] 需要特別注意
 const MAX_POKEMON_LEVEL = 100;
+
+/// 食譜等級
+const MAX_RECIPE_LEVEL = 50;
