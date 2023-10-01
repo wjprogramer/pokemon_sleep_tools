@@ -17,7 +17,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_
 import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/sleep_illustrated_book/sleep_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -87,7 +87,7 @@ class _HomeFragmentState extends State<HomeFragment> {
               MyOutlinedButton(
                 color: color1,
                 onPressed: () {
-                  SleepIllustratedBookPage.go(context);
+                  SleepFacesIllustratedBookPage.go(context);
                 },
                 iconBuilder: (color, size) {
                   return Icon(Icons.camera_alt_outlined, color: color, size: size,);

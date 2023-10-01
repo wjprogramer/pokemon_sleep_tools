@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
 class PokemonFoodRecipesPage extends StatefulWidget {
@@ -36,21 +39,25 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
         titleText: 't_recipes'.xTr,
       ),
       body: ListView(
-        children: const [
+        padding: const EdgeInsets.symmetric(
+          horizontal: HORIZON_PADDING,
+        ),
+        children: [
           // TODO:
-          Text(
-            '食譜一覽:\n'
-                '\n'
-                '太陽之力番茄咖哩\n'
-                '單純白醬濃湯\n'
-                '日照炸肉排咖哩\n'
-                '寶寶甜蜜咖哩\n'
-                '\n'
-                '\n'
-                '\n',
-          ),
+          ...Dish.values.map(_buildDish),
+          Gap.trailing,
         ],
       ),
     );
   }
+
+  Widget _buildDish(Dish dish) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        bottom: 16,
+      ),
+      child: DishCard(dish: dish),
+    );
+  }
+
 }

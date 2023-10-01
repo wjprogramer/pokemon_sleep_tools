@@ -17,8 +17,14 @@ const greenColor = Color(0xFF24BE56);
 const warningColor = Color(0xFFF5B14F);
 const dangerColor = Colors.red;
 const positiveColor = Colors.blue;
+final dreamChipColor = Colors.yellow.shade700;
 
 // 自己隨便訂的顏色
 const tmpColorSkill = Colors.purple;
 final tmpColorCharacter = Colors.cyan.shade600;
 
+// Dish
+const dishBgColor = Color(0xFFFFFFBC);
+const dishBorderColor = Color(0xFFDCC8A4);
+const dishIngredientColor = Color(0xFFA5947A);
+const dishLevelLabelColor = Color(0xFFFEBC44);

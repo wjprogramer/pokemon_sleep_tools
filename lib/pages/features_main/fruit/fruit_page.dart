@@ -39,11 +39,13 @@ class FruitPage extends StatefulWidget {
 }
 
 class _FruitPageState extends State<FruitPage> {
+  Fruit get _fruit => widget._args.fruit;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(
-        titleText: ''.xTr,
+        titleText: _fruit.nameI18nKey.xTr,
       ),
     );
   }

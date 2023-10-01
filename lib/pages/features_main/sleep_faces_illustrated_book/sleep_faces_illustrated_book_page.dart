@@ -13,12 +13,19 @@ import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
-class PokemonIllustratedBookPage extends StatefulWidget {
-  const PokemonIllustratedBookPage._();
+/// TODO:
+/// 遊戲中可以切換「顯示模式」
+/// 1. 顯示睡姿
+/// 2. 顯示寶可夢
+///
+/// TODO:
+/// 用「淺夢入睡、安然入睡、深深入睡」區分
+class SleepFacesIllustratedBookPage extends StatefulWidget {
+  const SleepFacesIllustratedBookPage._();
 
-  static const MyPageRoute route = ('/PokemonIllustratedBookPage', _builder);
+  static const MyPageRoute route = ('/SleepFacesIllustratedBookPage', _builder);
   static Widget _builder(dynamic args) {
-    return const PokemonIllustratedBookPage._();
+    return const SleepFacesIllustratedBookPage._();
   }
 
   static void go(BuildContext context) {
@@ -28,15 +35,16 @@ class PokemonIllustratedBookPage extends StatefulWidget {
   }
 
   @override
-  State<PokemonIllustratedBookPage> createState() => _PokemonIllustratedBookPageState();
+  State<SleepFacesIllustratedBookPage> createState() => _SleepFacesIllustratedBookPageState();
 }
 
-class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage> {
+class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBookPage> {
+
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
   SleepFaceRepository get _sleepFaceRepo => getIt();
 
-  late Map<int, PokemonBasicProfile> _basicProfileOf;
-  late Map<int, Map<int, String>> _sleepFacesOf;
+  var _basicProfileOf = <int, PokemonBasicProfile>{};
+  var _sleepFacesOf = <int, Map<int, String>>{};
 
   @override
   void initState() {
@@ -56,18 +64,45 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(
-        titleText: 't_pokemon_illustrated_book'.xTr,
+        titleText: 't_sleep_illustrated_book'.xTr,
       ),
       body: buildListView(
         padding: const EdgeInsets.symmetric(
           horizontal: HORIZON_PADDING,
         ),
         children: [
+          ..._basicProfileOf.entries.map((entry) => _buildItem(
+            entry.basicProfile,
+          )),
           Gap.trailing,
         ],
       ),
     );
   }
+
+  Widget _buildItem(PokemonBasicProfile basicProfile) {
+    final sleepFace = _sleepFacesOf[basicProfile.id];
+    final sleepFaceNames = sleepFace?.entries.map((e) => e.value).join(',') ?? Display.placeHolder;
+
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            basicProfile.nameI18nKey.xTr,
+          ),
+          Text(
+            sleepFaceNames,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+extension _BasicProfileEntry on MapEntry<int, PokemonBasicProfile> {
+  PokemonBasicProfile get basicProfile => value;
 }
 
 

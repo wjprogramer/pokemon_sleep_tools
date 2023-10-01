@@ -4,8 +4,13 @@ import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 
 class SleepFaceRepository implements MyInjectable {
 
+  Future<Map<int, Map<int, String>>> findAll() async {
+    return _getData();
+  }
+
   /// 1st MapEntry: [PokemonBasicProfile.id] to 2nd MapEntry
-  /// 2nd MapEntry: index to sleep face name
+  /// 2nd MapEntry: index (TODO: change to sleep face id, 遊戲中有 ID 可以看)
+  ///               to sleep face name
   Map<int, Map<int, String>> _getData() {
     return {
       1: {

@@ -8,8 +8,9 @@ import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
-import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class FruitsPage extends StatefulWidget {
@@ -47,7 +48,7 @@ class _FruitsPageState extends State<FruitsPage> {
 
     return Scaffold(
       appBar: buildAppBar(
-        titleText: ''.xTr,
+        titleText: 't_fruits'.xTr,
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(
@@ -73,16 +74,39 @@ class _FruitsPageState extends State<FruitsPage> {
         FruitPage.go(context, fruit);
       },
       child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 8,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              fruit.nameI18nKey.xTr,
-              style: _theme.textTheme.bodyLarge,
+            RichText(
+              text: TextSpan(
+                text: fruit.nameI18nKey.xTr,
+                style: _theme.textTheme.titleMedium,
+                children: [
+                  // TODO: chip, color
+                  TextSpan(
+                    text: ' (${fruit.attr})',
+                    style: _theme.textTheme.bodySmall?.copyWith(
+                      color: greyColor2,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            Gap.sm,
             Row(
               children: [
-                
+                EnergyIcon(
+                  size: 16,
+                ),
+                Gap.sm,
+                Text(
+                  '${Display.numInt(fruit.energyIn1)} ~ ${Display.numInt(fruit.energyIn60)}',
+                  style: _theme.textTheme.bodySmall,
+                ),
               ],
             ),
           ],

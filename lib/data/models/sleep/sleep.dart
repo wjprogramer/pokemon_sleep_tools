@@ -1,3 +1,4 @@
+export 'dish.dart';
 export 'fruit.dart';
 export 'ingredient.dart';
 export 'ingredient_chain.dart';

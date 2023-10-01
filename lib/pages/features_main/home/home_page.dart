@@ -46,9 +46,7 @@ class _HomePageState extends State<HomePage> {
       _Fragment(
         builder: (context) => const PokemonBoxFragment(),
         titleBuilder: () => 'Pokemon',
-        iconBuilder: (context, color) => Iconify(
-          FluentMdl2.webcam_2, color: color,
-        ),
+        iconBuilder: (context, color) => Icon(Icons.catching_pokemon, color: color,),
       ),
       _Fragment(
         builder: (context) => const HomeFragment(),
