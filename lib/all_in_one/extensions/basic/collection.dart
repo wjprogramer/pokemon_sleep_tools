@@ -23,4 +23,17 @@ extension ListX<E> on List<E> {
   int? get lastIndex {
     return isEmpty ? null : length - 1;
   }
+
+  void removeFirstWhere(bool Function(E element) test) {
+    int? index;
+    for (var i = 0; i < length; i++) {
+      if (test(this[i])) {
+        index = i;
+        break;
+      }
+    }
+    if (index != null) {
+      removeAt(index);
+    }
+  }
 }

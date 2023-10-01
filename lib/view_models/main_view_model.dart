@@ -21,6 +21,11 @@ class MainViewModel extends ChangeNotifier {
     return res;
   }
 
+  Future<void> deleteProfile(int profileId) async {
+    await _profileRepo.delete(profileId);
+    notifyListeners();
+  }
+
   Future<void> loadProfiles() async {
     await _profileRepo.findAll();
     notifyListeners();

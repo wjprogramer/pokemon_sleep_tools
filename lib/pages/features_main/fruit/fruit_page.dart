@@ -55,7 +55,7 @@ class _FruitPageState extends State<FruitPage> {
         children: [
           Row(
             children: [
-              EnergyIcon(),
+              const EnergyIcon(),
               Gap.sm,
               Text(
                 '${Display.numInt(_fruit.energyIn1)} ~ ${Display.numInt(_fruit.energyIn60)}',

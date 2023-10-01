@@ -39,6 +39,13 @@ class PokemonProfileRepository implements MyInjectable {
     return stored.profiles;
   }
 
+  Future<void> delete(int profileId) async {
+    await _localStorage.use(_cache.storedPokemonProfilesXXX, (stored) async {
+      await stored.delete(profileId);
+      await _localStorage.writePokemonProfiles(stored);
+    });
+  }
+
   Future<PokemonProfile> getDemoProfile() async {
     final profile = PokemonProfile(
       basicProfileId: 18,

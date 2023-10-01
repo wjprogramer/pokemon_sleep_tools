@@ -432,17 +432,29 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       return;
     }
 
-    final pokemon = await _mainViewModel.createProfile(CreatePokemonProfilePayload(
-      basicProfileId: _basicProfileField.value!.id,
-      character: _characterField.value!,
-      subSkills: _subSkillsField.value!,
-      ingredient2: _ingredient2Field.value!,
-      ingredientCount2: _ingredient2CountField.value!,
-      ingredient3: _ingredient3Field.value!,
-      ingredientCount3: _ingredient3CountField.value!,
-    ));
+    try {
+      final pokemon = await _mainViewModel.createProfile(CreatePokemonProfilePayload(
+        basicProfileId: _basicProfileField.value!.id,
+        character: _characterField.value!,
+        subSkills: _subSkillsField.value!,
+        ingredient2: _ingredient2Field.value!,
+        ingredientCount2: _ingredient2CountField.value!,
+        ingredient3: _ingredient3Field.value!,
+        ingredientCount3: _ingredient3CountField.value!,
+      ));
 
-    debugPrint(pokemon.getConstructorCode());
+      debugPrint(pokemon.getConstructorCode());
+      DialogUtility.text(
+        context,
+        title: Text('t_create_success'.xTr),
+        content: Text('t_continue_to_create_next_or_back_manually'.xTr),
+      );
+    } catch (e) {
+      DialogUtility.text(
+        context,
+        title: Text('t_create_failed'.xTr),
+      );
+    }
   }
 }
 

@@ -12,6 +12,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
@@ -54,6 +55,7 @@ MyRoutesMapping generateRoutes() {
     FruitPage.route,
     FruitsPage.route,
     HomePage.route,
+    IngredientPage.route,
     IngredientsIllustratedBookPage.route,
     MainSkillPage.route,
     MainSkillsIllustratedBookPage.route,
