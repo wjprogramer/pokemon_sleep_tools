@@ -10,6 +10,8 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
@@ -19,8 +21,8 @@ import 'package:pokemon_sleep_tools/pages/features_main/sleep_illustrated_book/s
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
-import 'package:pokemon_sleep_tools/widgets/main/gap.dart';
-import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
+import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
 class HomeFragment extends StatefulWidget {
   const HomeFragment({super.key});
@@ -163,17 +165,6 @@ class _HomeFragmentState extends State<HomeFragment> {
                 child: Text('t_sub_skills'.xTr),
               ),
               MyOutlinedButton(
-                color: tmpColorCharacter,
-                onPressed: () {
-                  CharactersIllustratedBookPage.go(context);
-                },
-                iconBuilder: (color, size) {
-                  return Icon(Icons.face, color: color, size: size,);
-                },
-                builder: MyOutlinedButton.builderUnboundWidth,
-                child: Text('t_character'.xTr),
-              ),
-              MyOutlinedButton(
                 color: color1,
                 onPressed: () {
                   IngredientsIllustratedBookPage.go(context);
@@ -183,6 +174,29 @@ class _HomeFragmentState extends State<HomeFragment> {
                 },
                 builder: MyOutlinedButton.builderUnboundWidth,
                 child: Text('t_ingredients'.xTr),
+              ),
+              MyOutlinedButton(
+                color: color1,
+                onPressed: () {
+                  FruitsPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Iconify(Bi.apple, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_fruits'.xTr),
+                // t_ingredients
+              ),
+              MyOutlinedButton(
+                color: tmpColorCharacter,
+                onPressed: () {
+                  CharactersIllustratedBookPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Icon(Icons.face, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('t_character'.xTr),
               ),
             ],
           ),

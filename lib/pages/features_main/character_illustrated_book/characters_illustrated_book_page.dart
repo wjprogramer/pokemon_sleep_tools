@@ -11,7 +11,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/p
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
-import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
 /// TODO: (Idea) 反查寶可夢盒的對應性格寶可夢 [PokemonBoxPage] (可以帶入初始查詢(篩選)條件)

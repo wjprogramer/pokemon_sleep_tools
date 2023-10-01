@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
 class LoadingView extends StatelessWidget {
   const LoadingView({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
-import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
 class BottomBarWithConfirmButton extends StatelessWidget {
   const BottomBarWithConfirmButton({

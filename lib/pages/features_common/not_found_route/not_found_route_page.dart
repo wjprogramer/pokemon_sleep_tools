@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
-import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
 class NotFoundRoutePage extends StatelessWidget {
   const NotFoundRoutePage({

@@ -12,7 +12,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calcul
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
-import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
 /// TODO: 刪除功能、使用道具
@@ -221,6 +221,7 @@ class _PokemonDetailsView extends StatelessWidget {
           ),
           MyElevatedButton(
             onPressed: () {
+              /// TODO: 如果是「班基拉斯、沙基拉斯、又基拉斯」要將 _isLarvitar 設為 true
               ExpCalculatorPage.go(context);
             },
             child: Text('提升等級'),

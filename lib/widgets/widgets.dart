@@ -1,1 +1,1 @@
-export 'main/main_widgets.dart';
+export 'common/common.dart';

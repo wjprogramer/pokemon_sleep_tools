@@ -21,17 +21,17 @@ enum SubSkill {
   researchExpBonus(16, '研究EXP獎勵', '透過睡眠研究獲得的研究EXP都會增加6%', 3),
   dreamChipBonus(17, '夢之碎片獎勵', '透過睡眠研究獲得的夢之碎片會增加6%', 3);
 
-  const SubSkill(this.id, this.nameI18nKey, this.intro, this.level);
+  const SubSkill(this.id, this.nameI18nKey, this.intro, this.rarity);
 
   final int id;
   final String nameI18nKey;
   final String intro;
 
-  /// 自己設定的
-  final int level;
+  /// 遊戲內有黃藍灰背景的副技能，應該是用於區分稀有度?
+  final int rarity;
 
   Color get bgColor {
-    switch (level) {
+    switch (rarity) {
       case 1: return greyColor;
       case 2: return blueColor;
       case 3: return yellowColor;

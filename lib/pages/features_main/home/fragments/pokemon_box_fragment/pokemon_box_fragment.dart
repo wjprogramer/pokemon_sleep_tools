@@ -13,7 +13,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_te
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
-import 'package:pokemon_sleep_tools/widgets/main/main_widgets.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
 class PokemonBoxFragment extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pokemon_sleep_tools/widgets/main/gap.dart';
+import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
 
 class MainMenuSubtitle extends StatelessWidget {
   const MainMenuSubtitle({

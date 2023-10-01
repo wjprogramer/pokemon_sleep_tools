@@ -10,6 +10,7 @@ Map<String, String> getZhTwTrText() {
     't_ingredient': '食材',
     't_ingredients': '食材',
     't_fruit': '樹果',
+    't_fruits': '樹果',
     't_developing': '開發中',
     't_food': '料理',
     't_recipes': '食譜',
