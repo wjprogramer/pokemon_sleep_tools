@@ -226,16 +226,16 @@ class _PokemonDetailsView extends StatelessWidget {
             child: Text('提升等級'),
           ),
           MySubHeader(
-            text: 't_help_ability'.xTr,
+            titleText: 't_help_ability'.xTr,
           ),
           buildWithLabel(
             text: 't_fruit'.xTr,
           ),
           MySubHeader(
-            text: '${'t_main_skill'.xTr}${'t_slash'.xTr}${'t_sub_skills'.xTr}',
+            titleText: '${'t_main_skill'.xTr}${'t_slash'.xTr}${'t_sub_skills'.xTr}',
           ),
           Text(
-            profile.basicProfile.mainSkill.name.xTr,
+            profile.basicProfile.mainSkill.nameI18nKey.xTr,
           ),
           Text(
             statistics?.rank ?? '',

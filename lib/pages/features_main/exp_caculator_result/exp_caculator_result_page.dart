@@ -132,10 +132,13 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
     var candyExpEffect = 1.0;
     var candyExp = 25 * candyExpEffect;
 
+    // TODO: 需詳細確認數字
+    // https://pks.raenonx.cc/info/nature 顯示 1.18 and 0.82，
+    // 但實際算，好像是用 1.2 and 0.8 ?
     if (character?.positive == 'EXP') {
-      candyExpEffect = 1.2;
+      candyExpEffect = 1.2; // TODO: 1.18 or 1.2?
     } else if (character?.negative == 'EXP') {
-      candyExpEffect = 0.8;
+      candyExpEffect = 0.8; // TODO: 0.82 or 0.8?
     }
 
     final currAccumulateExp = ExpSleepUtility.getAccumulateExp(_args.currLevel, isLarvitarAndParent: _args.isLarvitar) + currSingleLevelAccumulateExp;

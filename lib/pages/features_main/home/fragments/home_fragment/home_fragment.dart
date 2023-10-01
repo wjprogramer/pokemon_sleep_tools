@@ -143,7 +143,7 @@ class _HomeFragmentState extends State<HomeFragment> {
               MyOutlinedButton(
                 color: tmpColorSkill,
                 onPressed: () {
-                  MainSkillsCharacterIllustratedBookPage.go(context);
+                  MainSkillsIllustratedBookPage.go(context);
                 },
                 iconBuilder: (color, size) {
                   return Icon(Icons.thunderstorm, color: color, size: size,);

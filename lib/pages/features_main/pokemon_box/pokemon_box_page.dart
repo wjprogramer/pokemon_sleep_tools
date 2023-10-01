@@ -102,12 +102,13 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
     super.initState();
 
     scheduleMicrotask(() async {
+      final mainViewModel = context.read<MainViewModel>();
+
       _indexToProfileId = List
           .generate(MAX_TEAM_POKEMON_COUNT, (index) => index)
           .toMap((i) => i, (i) => -1);
       _currPickIndex = _args.initialIndex ?? _currPickIndex;
 
-      final mainViewModel = context.read<MainViewModel>();
       await mainViewModel.loadProfiles();
 
       final profileIdList = _args.initialTeam?.profileIdList;

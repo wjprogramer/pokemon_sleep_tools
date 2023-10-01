@@ -5,11 +5,13 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 class MySubHeader extends StatelessWidget {
   const MySubHeader({
     super.key,
-    required this.text,
-    this.color = primaryColor,
-  });
+    this.titleText,
+    this.title,
+    Color? color,
+  }) : color = color ?? primaryColor;
 
-  final String text;
+  final String? titleText;
+  final Widget? title;
   final Color color;
 
   @override
@@ -35,13 +37,7 @@ class MySubHeader extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12, vertical: 4,
                   ),
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                      color: color.fgColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: _buildTitle(),
                 ),
               ),
             ),
@@ -49,6 +45,22 @@ class MySubHeader extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  Widget _buildTitle() {
+    Widget result = title ?? Text(
+      titleText ?? '',
+    );
+
+    result = DefaultTextStyle(
+      style: TextStyle(
+        color: color.fgColor,
+        fontWeight: FontWeight.bold,
+      ),
+      child: result,
+    );
+
+    return result;
   }
 }
 

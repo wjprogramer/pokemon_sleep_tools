@@ -140,7 +140,8 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
 
-    final buttonWidthResults = UiUtility.getCommonWidthInRowBy(context);
+    final buttonWidthResults =
+    UiUtility.getCommonWidthInRowBy(context);
     _subSkillButtonWidth = buttonWidthResults.childWidth;
     _subSkillButtonSpacing = buttonWidthResults.spacing;
 

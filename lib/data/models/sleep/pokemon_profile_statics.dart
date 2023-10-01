@@ -243,7 +243,7 @@ class PokemonProfileStatistics {
 
   bool _isMainSkillIn(List<String> skillNames) {
     for (final skillName in skillNames) {
-      if (basicProfile.mainSkill.name == skillName) {
+      if (basicProfile.mainSkill.nameI18nKey == skillName) {
         return true;
       }
     }

@@ -10,6 +10,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calcul
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp_caculator_result_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
@@ -48,7 +49,8 @@ MyRoutesMapping generateRoutes() {
     ExpCalculatorResultPage.route,
     HomePage.route,
     IngredientsIllustratedBookPage.route,
-    MainSkillsCharacterIllustratedBookPage.route,
+    MainSkillPage.route,
+    MainSkillsIllustratedBookPage.route,
     MapsPage.route,
     PokemonBasicProfilePicker.route,
     ...PokemonMaintainProfilePage.routes,

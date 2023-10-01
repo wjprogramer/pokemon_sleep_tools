@@ -6,7 +6,6 @@ Map<String, String> getZhTwTrText() {
     't_confirm': '確定',
     't_create': '建立',
     't_edit': '編輯',
-    't_pokemon': '寶可夢',
     't_character': '性格',
     't_ingredient': '食材',
     't_ingredients': '食材',
@@ -22,7 +21,6 @@ Map<String, String> getZhTwTrText() {
     't_map': '地圖',
     't_research_notes': '研究筆記',
     't_sleep_illustrated_book': '睡姿圖鑑',
-    't_pokemon_box': '寶可夢盒',
     't_help_ability': '幫忙能力',
     't_others': '其他',
     't_exp_and_candies': '經驗值 & 糖果',
@@ -48,6 +46,8 @@ Map<String, String> getZhTwTrText() {
     // endregion
 
     // region # Pokemon
+    't_pokemon': '寶可夢',
+    't_pokemon_box': '寶可夢盒',
     't_pokemon_illustrated_book': '寶可夢圖鑑',
     't_other_pokemon': '其他寶可夢',
     't_select_pokemon': '選擇寶可夢',

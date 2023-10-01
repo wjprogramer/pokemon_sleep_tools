@@ -102,7 +102,7 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
                             '-----------------\n'
                             '其他:\n'
                             '類型: ${pokemon.basicProfile.sleepType.name} (${pokemon.basicProfile.fruit.nameI18nKey})\n'
-                            '主技能: ${pokemon.basicProfile.mainSkill.name}\n'
+                            '主技能: ${pokemon.basicProfile.mainSkill.nameI18nKey}\n'
                             '\n'
                     ),
                   ),

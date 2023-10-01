@@ -1,6 +1,17 @@
 /// 性格
 ///
+/// IMPORTANT:
+/// 目前都是將 [PokemonCharacter.positive], [PokemonCharacter.negative]
+/// 作為判斷依據，因此改動要注意
+///
 /// TODO: 需要實際將版本切換至英文確認翻譯文本
+///
+/// '主技能' => '主技能發動機率'
+/// '食材發現' => '食材發現率'
+/// 'EXP' => 'EXP獲得量'
+/// '活力回復' => '活力回復量'
+///
+/// 性格 = nature
 enum PokemonCharacter {
   afraidLoneliness(1, '怕寂寞', '幫忙速度', '活力回復'),
   stubborn(2, '固執', '幫忙速度', '食材發現'),

@@ -176,7 +176,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
       ...Hp.list(
         children: [
           MySubHeader(
-            text: 't_select_pokemon'.xTr,
+            titleText: 't_select_pokemon'.xTr,
           ),
         ],
       ),
@@ -215,7 +215,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
       ...Hp.list(
         children: [
           MySubHeader(
-            text: 't_set_level'.xTr,
+            titleText: 't_set_level'.xTr,
           ),
           Slider(
             value: _currLevel.toDouble(),
@@ -259,7 +259,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           ),
           Gap.xl,
           MySubHeader(
-            text: 't_other_settings'.xTr,
+            titleText: 't_other_settings'.xTr,
           ),
           Gap.xl,
           // buildWithLabel(

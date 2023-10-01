@@ -1,3 +1,4 @@
+/// [description] 中的數值會根據技能等級以及 [basicValues] 的數值做變動
 enum MainSkill {
   energyFillS(1, '能量填充S', '使卡比獸的能量增加400'),
   energyFillM(2, '能量填充M', '使卡比獸的能量增加880'),
@@ -12,24 +13,64 @@ enum MainSkill {
   cuisineS(11, '料理強化S', '增加下一次料理時的鍋子容量，讓鍋子能多放7個食材'),
   finger(12, '揮指', '從全部的主技能中隨機發動1種');
 
-  const MainSkill(this.id, this.name, this.subName);
+  const MainSkill(this.id, this.nameI18nKey, this.description);
 
   final int id;
-  final String name;
-  final String subName;
+  final String nameI18nKey;
+  final String description;
 }
 
 extension MainSkillX on MainSkill {
-  /// Return Lv. 1 to Lv. 6 basic energy list
+  /// Return Lv. 1 to Lv. 6 basic value list
+  /// 已經和 [此網站](https://pks.raenonx.cc/info/mainskill) 雙重比對過
   List<double> get basicValues {
     switch (this) {
       case MainSkill.energyFillS: return [400, 569, 785, 1083, 1496, 2066, ];
       case MainSkill.energyFillM: return [880, 1251, 1726, 2383, 3290, 4546, ];
       case MainSkill.dreamChipS: return [88, 125, 173, 274, 395, 568, ];
-      case MainSkill.vitalityS: return [14, 17, 23, 29, 38, 51, ];
-      case MainSkill.energyFillSn: return [500, 711.5, 981.5, 1354, 1870, 2582.5, ];
-      case MainSkill.dreamChipSn: return [110, 156.5, 216.5, 342.5, 494, 710, ];
-      case MainSkill.vitalityFillS: return [12, 16, 21, 27, 34, 43, ];
+      case MainSkill.vitalityS: return [14, 17, 23, 29, 38, 51, ]; // TODO: 和不同網站數值有出入
+      /*
+        活力療癒S
+        隨機讓隊伍的1隻寶可夢回復活力 {#1}
+        (單位為隨機隊內 1 名的活力回復量)
+        (註解的資料來源為 https://pks.raenonx.cc/info/mainskill)
+
+        Lv 1: 14
+        Lv 2: 17
+        Lv 3: 22
+        Lv 4: 28
+        Lv 5: 38
+        Lv 6: 50
+      */
+      case MainSkill.energyFillSn: return [500, 711.5, 981.5, 1354, 1870, 2582.5, ]; // TODO: 和不同網站計算不一樣
+      /*
+        能量填充S (#1 ~ #2)
+        卡比獸的能量增加 {#1} ～ {#2}
+        TODO: (此數值為區間，需研究原本參考網站的數值邏輯)
+        (註解的資料來源為 https://pks.raenonx.cc/info/mainskill)
+
+        Lv 1: 200 ~ 800
+        Lv 2: 285 ~ 1138
+        Lv 3: 393 ~ 1570
+        Lv 4: 542 ~ 2166
+        Lv 5: 748 ~ 2992
+        Lv 6: 1033 ~ 4132
+       */
+      case MainSkill.dreamChipSn: return [110, 156.5, 216.5, 342.5, 494, 710, ]; // TODO: 和不同網站計算不一樣
+      /*
+        夢之碎片獲取S (#1 ~ #2)
+        獲得 {#1} ～ {#2} 個夢之碎片。
+        TODO: (此數值為區間，需研究原本參考網站的數值邏輯)
+        (註解的資料來源為 https://pks.raenonx.cc/info/mainskill)
+
+        Lv. 1:  44 ~ 176
+        Lv. 2:  63 ~ 250
+        Lv. 3:  87 ~ 346
+        Lv. 4:  137 ~ 548
+        Lv. 5:  198 ~ 790
+        Lv. 6:  284 ~ 1136
+       */
+      case MainSkill.vitalityFillS: return [12, 16, 21, 27 /* 26 */, 34 /* 33 */, 43, ]; // TODO: 註解的值和不同網站數值有出入
       case MainSkill.vitalityAllS: return [5, 7, 9, 11, 15, 18, ];
       case MainSkill.helpSupportS: return [4, 5, 6, 7, 8, 9, ];
       case MainSkill.ingredientS: return [6, 8, 11, 14, 17, 21, ];
@@ -38,6 +79,7 @@ extension MainSkillX on MainSkill {
     }
   }
 
+  /// TODO: 這邊好像有部分主觀計算，可以讓使用者自行設定權重?
   List<double> calcEnergyList() {
     switch (this) {
       case MainSkill.energyFillS: return MainSkill.energyFillS.basicValues;
@@ -64,3 +106,55 @@ extension MainSkillX on MainSkill {
     }
   }
 }
+
+/*
+
+TODO:
+
+
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+ */
+
