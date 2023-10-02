@@ -48,6 +48,13 @@ Map<String, String> getZhTwTrText() {
     't_delete_pokemon': '刪除寶可夢',
     't_delete_someone_hint': '刪除「@someone」刪除後無法復原',
     't_other_illustrated_books': '其他圖鑑',
+    't_close': '關閉',
+    't_ok': 'OK',
+    't_reset': '重置',
+    't_name_and_nickname': '名字、暱稱',
+    't_attributes': '屬性',
+    't_categories': '種類',
+    '': '',
     '': '',
 
     // region # Common
@@ -72,6 +79,7 @@ Map<String, String> getZhTwTrText() {
     // endregion
 
     // region # Skill
+    't_skills': '技能',
     't_main_skill': '主技能',
     't_main_skills': '主技能',
     't_sub_skills': '副技能',

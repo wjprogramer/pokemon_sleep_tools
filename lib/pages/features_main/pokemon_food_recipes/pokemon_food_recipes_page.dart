@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -114,7 +115,7 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
       ),
       bottomNavigationBar: BottomBarWithActions(
         onSearch: () {
-
+          DialogUtility.pickPokemonSearchFilters(context);
         },
         onFilter: () {},
       ),
