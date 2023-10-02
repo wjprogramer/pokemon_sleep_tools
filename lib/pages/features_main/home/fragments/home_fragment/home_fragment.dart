@@ -134,7 +134,7 @@ class _HomeFragmentState extends State<HomeFragment> {
         MainMenuSubtitle(
           icon: const Iconify(Bx.grid_alt, size: 16,),
           title: Text(
-            't_others'.xTr,
+            't_other_illustrated_books'.xTr,
           ),
         ),
         Wrap(

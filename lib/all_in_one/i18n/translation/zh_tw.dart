@@ -47,6 +47,7 @@ Map<String, String> getZhTwTrText() {
     't_delete': '刪除',
     't_delete_pokemon': '刪除寶可夢',
     't_delete_someone_hint': '刪除「@someone」刪除後無法復原',
+    't_other_illustrated_books': '其他圖鑑',
     '': '',
 
     // region # Common

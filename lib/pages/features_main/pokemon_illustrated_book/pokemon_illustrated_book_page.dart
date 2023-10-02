@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_basic_profile_repository.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/sleep_face_repository.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -80,14 +81,19 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   }
 
   Widget _buildBasicProfile(PokemonBasicProfile basicProfile) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          '#${basicProfile.boxNo} ${basicProfile.nameI18nKey.xTr}',
-          style: _theme.textTheme.bodyLarge,
-        ),
-      ],
+    return InkWell(
+      onTap: () {
+        PokemonBasicProfilePage.go(context, basicProfile);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            '#${basicProfile.boxNo} ${basicProfile.nameI18nKey.xTr}',
+            style: _theme.textTheme.bodyLarge,
+          ),
+        ],
+      ),
     );
   }
 }

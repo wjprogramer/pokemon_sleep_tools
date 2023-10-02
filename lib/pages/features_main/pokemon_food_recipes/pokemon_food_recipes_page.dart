@@ -16,6 +16,8 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
+/// TODO: 儲存篩選條件？自動存？手動存？存食譜等級？存鍋子容量？可設定需要自動儲存哪些？之後會有匯出匯入資料的功能，要連同這些設定一起儲存？
+/// 鍋子容量照理來說，不會變少，應該可以自動儲存？
 class PokemonFoodRecipesPage extends StatefulWidget {
   const PokemonFoodRecipesPage._();
 
@@ -40,7 +42,7 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
   var _isLoading = false;
 
   // Data
-  var _currLevel = 2;
+  var _currLevel = 1;
   var _dishLevelInfoOf = <Dish, DishLevelInfo>{};
 
   @override
@@ -74,6 +76,7 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
               MySubHeader(
                 titleText: 't_set_recipe_level'.xTr,
               ),
+              const SizedBox(height: Gap.smV,),
               SliderWithButtons(
                 value: _currLevel.toDouble(),
                 max: MAX_RECIPE_LEVEL.toDouble(),
@@ -84,8 +87,9 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
                   _updateData();
                   setState(() { });
                 },
+                hideSlider: true,
               ),
-              const SizedBox(height: Gap.xlV,),
+              // const SizedBox(height: Gap.smV,),
               MySubHeader(
                 titleText: 't_recipes'.xTr,
               ),
@@ -98,12 +102,21 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
               ),
               children: [
                 Gap.lg,
+                // IconButton(
+                //   onPressed: () {}, icon: Icon(),
+                // ),
                 ...Dish.values.map(_buildDish),
                 Gap.trailing,
               ],
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomBarWithActions(
+        onSearch: () {
+
+        },
+        onFilter: () {},
       ),
     );
   }

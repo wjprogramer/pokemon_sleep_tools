@@ -32,6 +32,7 @@ class DishCard extends StatelessWidget {
     final radius = BorderRadius.circular(_radiusValue);
 
     final ingredientBaseStyle = theme.textTheme.bodySmall;
+    final ingredientAndQuantityList = dish.getIngredients();
 
     Color labelBgColor;
     Color dishBgColor;
@@ -200,21 +201,24 @@ class DishCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Container(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Text(
-                                      dish.nameI18nKey.xTr,
-                                      style: theme.textTheme.bodyLarge?.copyWith(
-                                        fontWeight: FontWeight.w600,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 12),
+                                      child: Text(
+                                        dish.nameI18nKey.xTr,
+                                        style: theme.textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  Gap.md,
+                                  Gap.sm,
                                   Opacity(
                                     opacity: 0,
                                     child: buildEnergyLabel(isPlaceholder: true),
@@ -244,7 +248,14 @@ class DishCard extends StatelessWidget {
                                       spacing: 12,
                                       runSpacing: 6,
                                       children: [
-                                        ...dish.getIngredients().map((ingredientToQuantity) {
+                                        if (ingredientAndQuantityList.isEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: _ingredientLabelVerticalPaddingValue,
+                                            ),
+                                            child: Text('t_none'.xTr, style: ingredientBaseStyle,),
+                                          )
+                                        else ...ingredientAndQuantityList.map((ingredientToQuantity) {
                                           final ingredient = ingredientToQuantity.$1;
                                           final quantity = ingredientToQuantity.$2;
 
@@ -299,6 +310,7 @@ class DishCard extends StatelessWidget {
                 color: labelBgColor,
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(8),
+                  topRight: Radius.circular(_radiusValue),
                 ),
               ),
               child: buildEnergyLabel(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -60,6 +61,10 @@ class DialogUtility {
         ],
       ),
     );
+  }
+
+  static Future<void> pickS(BuildContext context) async {
+    final screenSize = context.mediaQuery.size;
   }
 
   static void loading() {

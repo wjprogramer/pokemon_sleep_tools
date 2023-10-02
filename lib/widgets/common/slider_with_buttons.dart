@@ -14,6 +14,7 @@ class SliderWithButtons extends StatefulWidget {
     required this.max,
     required this.min,
     this.divisions,
+    this.hideSlider = false,
   });
 
   final double value;
@@ -21,6 +22,7 @@ class SliderWithButtons extends StatefulWidget {
   final double max;
   final double min;
   final int? divisions;
+  final bool hideSlider;
 
   @override
   State<SliderWithButtons> createState() => _SliderWithButtonsState();
@@ -33,6 +35,7 @@ class _SliderWithButtonsState extends State<SliderWithButtons> {
   double get _max => widget.max;
   double get _min => widget.min;
   int? get _divisions => widget.divisions;
+  bool get _hideSlider => widget.hideSlider;
 
   // UI
   late ThemeData _theme;
@@ -84,7 +87,7 @@ class _SliderWithButtonsState extends State<SliderWithButtons> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         /// FIXME: 模擬器和實體機的滑動有問題、先隱藏
-        if (kDebugMode)
+        if (kDebugMode && !_hideSlider)
           Slider(
             value: widget.value.toDouble(),
             onChanged: (v) {

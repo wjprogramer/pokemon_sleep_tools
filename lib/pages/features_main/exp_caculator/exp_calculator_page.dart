@@ -222,7 +222,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           ReactiveMyTextField(
             formControl: _remainExpToNextLevelField,
             decoration: InputDecoration(
-              suffix: Text('/ $_currLevelNeedExp'),
+              suffix: Text('/ ${Display.numInt(_currLevelNeedExp)}'),
             ),
           ),
           Gap.sm,

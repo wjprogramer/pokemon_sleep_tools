@@ -17,6 +17,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_
 import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
@@ -60,6 +61,7 @@ MyRoutesMapping generateRoutes() {
     MainSkillPage.route,
     MainSkillsIllustratedBookPage.route,
     MapsPage.route,
+    PokemonBasicProfilePage.route,
     PokemonBasicProfilePicker.route,
     ...PokemonMaintainProfilePage.routes,
     PokemonBoxPage.route,
