@@ -176,7 +176,16 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
 
               return DataRow(
                 cells: [
-                  DataCell(Text(level.toString())),
+                  DataCell(
+                    Text(
+                      level.toString(),
+                      style: TextStyle(
+                        color: _simpleMode ? null
+                            : level % 10 == 0 ? color1
+                            : null,
+                      ),
+                    )
+                  ),
                   DataCell(Text(Display.numInt(totalExp))),
                   ...values.map((e) => DataCell(
                     Row(
