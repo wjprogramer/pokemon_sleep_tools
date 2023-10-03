@@ -73,7 +73,7 @@ class PokemonBasicProfile {
   /// ex: [拉達, 拉達（阿羅拉的樣子）]
   final List<int>? styles;
 
-  /// [PokemonType.id]
+  /// [PokemonAttr.id]
   final List<int> types;
 
   /// ...?
@@ -118,5 +118,7 @@ class PokemonBasicProfile {
     ingredientOptions2 = v.ingredientOptions2;
     ingredientOptions3 = v.ingredientOptions3;
   }
+
+
 
 }

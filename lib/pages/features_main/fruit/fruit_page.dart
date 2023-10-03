@@ -19,8 +19,10 @@ class _FruitPageArgs {
 }
 
 /// TODO: 反查地圖，帶入樹果搜尋條件，顯示哪些寶可夢有對應樹果
-///       原攻略網站好像沒實作
+///       原攻略網站有地圖入口、但好像沒實作
 /// TODO: 粗略顯示哪些地圖有此樹果，如果沒有就直接打叉（但也不需要 disable，因為突然想到該地圖查東西）
+/// TODO: 可設定寶可夢等級，顯示樹果能量，以及顯示各項寶可夢食材組合的能量
+/// TODO: 反查寶可夢
 class FruitPage extends StatefulWidget {
   const FruitPage._(this._args);
 
@@ -47,6 +49,9 @@ class _FruitPageState extends State<FruitPage> {
 
   Fruit get _fruit => widget._args.fruit;
 
+  // Page status
+  var _initialized = false;
+
   // Data
   var _basicProfiles = <PokemonBasicProfile>[];
 
@@ -59,26 +64,19 @@ class _FruitPageState extends State<FruitPage> {
         return basicProfile.fruit == _fruit;
       }).toList();
 
-      // for (final dish in Dish.values) {
-      //   final ingredients = dish.getIngredients();
-      //   final dishContainsTargetIngredient = ingredients.any((pair) => pair.$1 == _ingredient);
-      //   if (!dishContainsTargetIngredient) {
-      //     continue;
-      //   }
-      //
-      //   _dishList.add(dish);
-      //   _dishIngredientsOf[dish] = ingredients;
-      // }
-      //
-      // _initialized = true;
-      // if (mounted) {
-      //   setState(() { });
-      // }
+      _initialized = true;
+      if (mounted) {
+        setState(() { });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_initialized) {
+      return LoadingView();
+    }
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: _fruit.nameI18nKey.xTr,
@@ -97,7 +95,9 @@ class _FruitPageState extends State<FruitPage> {
               ),
             ],
           ),
-
+          ..._basicProfiles.map((e) => Text(
+            e.nameI18nKey.xTr,
+          )),
           Gap.trailing,
         ],
       ),

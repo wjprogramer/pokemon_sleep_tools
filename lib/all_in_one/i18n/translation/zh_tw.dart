@@ -57,6 +57,8 @@ Map<String, String> getZhTwTrText() {
     't_categories': '種類',
     't_hold_someone_pokemon': '擁有「@someone」寶可夢',
     't_capacity': '容量',
+    't_dish_maker': '製作料理',
+    '': '',
     '': '',
     '': '',
 

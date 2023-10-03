@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/dish_maker/dish_maker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_recipes/pokemon_food_recipes_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
@@ -45,6 +46,14 @@ class _PokemonFoodMenuPageState extends State<PokemonFoodMenuPage> {
             },
             child: Text('t_recipes_view'.xTr),
           ),
+          Gap.md,
+          MyElevatedButton(
+            onPressed: () {
+              DishMakerPage.go(context);
+            },
+            child: Text('t_dish_maker'.xTr),
+          ),
+          Gap.trailing,
         ],
       ),
     );
