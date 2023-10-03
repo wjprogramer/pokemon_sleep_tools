@@ -13,8 +13,7 @@ class UiUtility {
     // => containerWidth =  count * (realWidth + spacing) - spacing
     // => count = (containerWidth + spacing) / (realWidth + spacing)
     final count = (containerWidth + spacing) ~/ (baseChildWidth + spacing);
-    print('$count, $containerWidth');
-    
+
     final remainWidth = containerWidth - (count * baseChildWidth + (count - 1) * spacing);
     return baseChildWidth + (remainWidth / count);
   }

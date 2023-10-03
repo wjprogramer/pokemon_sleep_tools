@@ -33,6 +33,7 @@ Map<String, String> getZhTwTrText() {
     't_hold_candies': '擁有糖果',
     't_candy_unit': '顆',
     't_set_level': '設定等級',
+    't_set_pokemon_level': '設定寶可夢等級',
     't_set_recipe_level': '設定食譜等級',
     't_candies_info_text': '1. 萬能糖果S可以產生3個指定寶可夢的一般糖果',
     't_candies': '糖果',
@@ -54,6 +55,8 @@ Map<String, String> getZhTwTrText() {
     't_name_and_nickname': '名字、暱稱',
     't_attributes': '屬性',
     't_categories': '種類',
+    't_hold_someone_pokemon': '擁有「@someone」寶可夢',
+    't_capacity': '容量',
     '': '',
     '': '',
 

@@ -14,3 +14,6 @@ const MAX_POKEMON_LEVEL = 100;
 
 /// 食譜等級
 const MAX_RECIPE_LEVEL = 50;
+
+/// 鍋子容量
+const POT_CAPACITIES_OPTIONS = [15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81];

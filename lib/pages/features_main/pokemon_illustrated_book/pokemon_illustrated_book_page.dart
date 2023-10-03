@@ -49,7 +49,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
 
     scheduleMicrotask(() async {
       _basicProfiles = await _basicProfileRepo.findAll();
-      _sleepFacesOf = await _sleepFaceRepo.findAll();
+      _sleepFacesOf = await _sleepFaceRepo.findAllNames();
 
       if (mounted) {
         setState(() { });

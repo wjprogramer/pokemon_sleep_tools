@@ -191,33 +191,44 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
           );
         },
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: Consumer<MainViewModel>(
+        builder: (context, viewModel, child) {
+          final profiles = viewModel.profiles;
+
+          return _buildBottomNavigationBar(profiles);
+        },
+      ),
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 8, horizontal: 16,
-        ),
-        decoration: BoxDecoration(
-          border: Border(
-            top: Divider.createBorderSide(context),
+  Widget _buildBottomNavigationBar(List<PokemonProfile> profiles) {
+    return BottomBarWithActions(
+      onSearch: () {
+        DialogUtility.pickPokemonSearchFilters(
+          context,
+          calcCounts: (options) {
+            if (options.isEmptyOptions()) {
+              return (profiles.length, profiles.length);
+            }
+
+            final matches = profiles.where((p) => options.fruitOf[p.basicProfile.fruit] ?? false);
+            return (matches.length, profiles.length);
+          },
+        );
+      },
+      onSort: () {
+
+      },
+      suffixActions: [
+        if (_confirmButtonVisible())
+          Padding(
+            padding: const EdgeInsets.only(right: Gap.mdV),
+            child: MyElevatedButton(
+              onPressed: _submit,
+              child: Text('t_confirm'.xTr),
+            ),
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            // TODO: 篩選器、排序
-            if (_confirmButtonVisible())
-              MyElevatedButton(
-                onPressed: _submit,
-                child: Text('t_confirm'.xTr),
-              ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 

@@ -37,3 +37,8 @@ extension ListX<E> on List<E> {
     }
   }
 }
+
+extension MapX<K, V> on Map<K, V> {
+}
+
+

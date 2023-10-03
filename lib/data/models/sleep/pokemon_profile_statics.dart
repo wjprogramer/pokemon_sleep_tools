@@ -185,7 +185,7 @@ class PokemonProfileStatistics {
 
   int _calcFruitCount() =>
       1 + _getSubSkillsCountMatch(SubSkill.berryCountS) +
-          _getOneIfSleepTypeIs(PokemonSleepType.t3);
+          _getOneIfSpecialtyIs(PokemonSpecialty.t3);
 
   int _calcHelperBonus() =>
       15 * _getSubSkillsCountMatch(SubSkill.helperBonus);
@@ -254,8 +254,8 @@ class PokemonProfileStatistics {
       .where((skill) => skill == targetValue)
       .length;
 
-  int _getOneIfSleepTypeIs(PokemonSleepType sleepType) =>
-      basicProfile.sleepType == sleepType ? 1 : 0;
+  int _getOneIfSpecialtyIs(PokemonSpecialty specialty) =>
+      basicProfile.specialty == specialty ? 1 : 0;
 
   int _getOneIf(bool value) => value ? 1 : 0;
   // endregion

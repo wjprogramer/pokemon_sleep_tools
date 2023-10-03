@@ -14,7 +14,7 @@ class PokemonBasicProfile {
     required this.evolutionMaxCount,
     required this.helpInterval,
     required this.fruit,
-    required this.sleepType,
+    required this.specialty,
     required this.mainSkill,
     required this.boxCount,
     required this.ingredient1,
@@ -30,7 +30,7 @@ class PokemonBasicProfile {
       String nameI18nKey,
       int helpInterval,
       Fruit fruit,
-      PokemonSleepType sleepType,
+      PokemonSpecialty specialty,
       MainSkill mainSkill,
       int evolutionMaxCount, // 最終進化階段
       int boxCount,
@@ -44,7 +44,7 @@ class PokemonBasicProfile {
       nameI18nKey: nameI18nKey,
       helpInterval: helpInterval,
       fruit: fruit,
-      sleepType: sleepType,
+      specialty: specialty,
       mainSkill: mainSkill,
       evolutionMaxCount: evolutionMaxCount,
       boxCount: boxCount,
@@ -92,7 +92,7 @@ class PokemonBasicProfile {
   final Fruit fruit;
 
   /// Pokemon Sleep, type
-  final PokemonSleepType sleepType;
+  final PokemonSpecialty specialty;
 
   /// Pokemon Sleep, 主技能
   final MainSkill mainSkill;

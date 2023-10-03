@@ -52,7 +52,7 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
 
     scheduleMicrotask(() async {
       _basicProfileOf = await _basicProfileRepo.findAllMapping();
-      _sleepFacesOf = await _sleepFaceRepo.findAll();
+      _sleepFacesOf = await _sleepFaceRepo.findAllNames();
 
       if (mounted) {
         setState(() { });

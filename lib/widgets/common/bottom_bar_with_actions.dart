@@ -7,18 +7,21 @@ class BottomBarWithActions extends StatelessWidget {
     super.key,
     this.onSearch,
     this.isSearchOn,
-    this.onFilter,
-    this.filterText,
+    this.onSort,
+    this.sortText,
     this.onAscendingChanged,
     this.isAscending = false,
+    this.suffixActions,
   });
 
   final Function()? onSearch;
   final bool? isSearchOn;
-  final Function()? onFilter;
-  final String? filterText;
+  final Function()? onSort;
+  final String? sortText;
   final ValueChanged<bool>? onAscendingChanged;
   final bool isAscending;
+
+  final List<Widget>? suffixActions;
 
   @override
   Widget build(BuildContext context) {
@@ -52,19 +55,20 @@ class BottomBarWithActions extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (onFilter != null)
+              if (onSort != null)
                 Padding(
                   padding: const EdgeInsets.only(right: spacing),
                   child: MyOutlinedButton2(
-                    onPressed: () => onSearch?.call(),
+                    onPressed: () => onSort?.call(),
                     child: Row(
                       children: [
-                        Icon(Icons.filter_list),
-                        Text(filterText ?? ''),
+                        Icon(Icons.sort),
+                        Text(sortText ?? ''),
                       ],
                     ),
                   ),
                 ),
+              ...?suffixActions,
               // Padding(
               //   padding: const EdgeInsets.only(right: spacing),
               //   child: MyOutlinedButton2(

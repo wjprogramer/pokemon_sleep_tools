@@ -115,9 +115,9 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
       ),
       bottomNavigationBar: BottomBarWithActions(
         onSearch: () {
-          DialogUtility.pickPokemonSearchFilters(context);
+          DialogUtility.pickDishSearchOptions(context);
         },
-        onFilter: () {},
+        onSort: () {},
       ),
     );
   }

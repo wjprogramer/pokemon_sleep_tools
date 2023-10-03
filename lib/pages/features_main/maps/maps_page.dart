@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -10,6 +14,7 @@ import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
+/// TODO: 可以顯示蒐集率
 class MapsPage extends StatefulWidget {
   const MapsPage._();
 
@@ -29,11 +34,107 @@ class MapsPage extends StatefulWidget {
 }
 
 class _MapsPageState extends State<MapsPage> {
+  SleepFaceRepository get _sleepFaceRepo => getIt();
+
+  // UI
+  late ThemeData _theme;
+
+  // Page status
+  var _initialized = false;
+
+  // Data
+  final _pokemonCountOfFiled = <PokemonField, int>{};
+  final _sleepFaceCountOfFiled = <PokemonField, int>{};
+
+  @override
+  void initState() {
+    super.initState();
+
+    scheduleMicrotask(() async {
+      // field to basic_profile_id
+      final fieldToBasicProfileIdList = <PokemonField, Set<int>>{};
+
+      // init
+      for (var field in PokemonField.values) {
+        fieldToBasicProfileIdList[field] = {};
+        _sleepFaceCountOfFiled[field] = 0;
+      }
+
+      // load
+      final sleepFaces = await _sleepFaceRepo.findAll();
+
+      // process
+      for (var sleepFace in sleepFaces) {
+        fieldToBasicProfileIdList[sleepFace.field]!.add(sleepFace.basicProfileId);
+        _sleepFaceCountOfFiled[sleepFace.field] = _sleepFaceCountOfFiled[sleepFace.field]! + 1;
+      }
+
+      // extract
+      for (var field in PokemonField.values) {
+        _pokemonCountOfFiled[field] = fieldToBasicProfileIdList[field]!.length;
+      }
+
+      // complete
+      _initialized = true;
+      if (mounted) {
+        setState(() { });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _theme = context.theme;
+
+    if (!_initialized) {
+      return LoadingView();
+    }
+
     return Scaffold(
       appBar: buildAppBar(
-        titleText: ''.xTr,
+        titleText: 't_map'.xTr,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: HORIZON_PADDING,
+        ),
+        children: [
+          ...PokemonField.values.map((e) => _buildField(e)),
+          Gap.trailing,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildField(PokemonField field) {
+    return InkWell(
+      onTap: () {
+        MapPage.go(context, field);
+      },
+      child: Container(
+        padding: const EdgeInsets.only(
+          bottom: Gap.xlV,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              field.nameI18nKey.xTr,
+              style: _theme.textTheme.bodyLarge,
+            ),
+            Gap.xs,
+            Text(
+              '${'t_fruits'.xTr}: ${field.fruits.map((e) => e.nameI18nKey.xTr).join('t_separator'.xTr)}',
+              style: _theme.textTheme.bodyMedium,
+            ),
+            Text(
+              '解鎖數量: ${field.unlockCount}\n'
+                  '寶可夢數量: ${_pokemonCountOfFiled[field]}\n'
+                  '睡姿數量: ${_sleepFaceCountOfFiled[field]}',
+              style: _theme.textTheme.bodyMedium,
+            ),
+          ],
+        ),
       ),
     );
   }
