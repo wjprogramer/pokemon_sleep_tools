@@ -64,6 +64,9 @@ Map<String, String> getZhTwTrText() {
     't_help_interval': '間隔時間',
     't_help_interval_base': '間隔時間(基礎)',
     't_max_carry': '持有上限',
+    't_pot': '鍋子',
+    '': '',
+    '': '',
     '': '',
 
     // region # Common

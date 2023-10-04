@@ -12,6 +12,7 @@ extension IterableX<T> on Iterable<T> {
   Iterable<R> xMapIndexed<R>(R Function(int index, T element, Iterable<T>) convert) {
     return mapIndexed((index, element) => convert(index, element, this));
   }
+
 }
 
 extension ListX<E> on List<E> {
@@ -35,6 +36,20 @@ extension ListX<E> on List<E> {
     if (index != null) {
       removeAt(index);
     }
+  }
+
+  List<E> xRemoveWhere(bool Function(E element) test) {
+    final removedList = <E>[];
+
+    removeWhere((element) {
+      final tested = test(element);
+      if (tested) {
+        removedList.add(element);
+      }
+      return tested;
+    });
+
+    return removedList;
   }
 }
 

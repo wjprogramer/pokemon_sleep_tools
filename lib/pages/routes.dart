@@ -28,6 +28,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pot/pot_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
@@ -74,6 +75,7 @@ MyRoutesMapping generateRoutes() {
     PokemonIllustratedBookPage.route,
     PokemonSliderDetailsPage.route,
     PokemonTeamsPage.route,
+    PotPage.route,
     ResearchNotesPage.route,
     SleepFacesIllustratedBookPage.route,
     SplashPage.route,

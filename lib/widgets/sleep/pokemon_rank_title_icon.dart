@@ -6,9 +6,11 @@ class PokemonRankTitleIcon extends StatelessWidget {
   const PokemonRankTitleIcon({
     super.key,
     required this.rank,
+    this.size,
   });
 
   final RankTitle rank;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +79,11 @@ class PokemonRankTitleIcon extends StatelessWidget {
       blendMode: BlendMode.srcIn,
       shaderCallback: (Rect bounds) => gradient
           .createShader(bounds),
+      // shaderCallback: (Rect bounds) => gradient
+      //     .createShader(Rect.fromLTRB(0, 0, bounds.width, bounds.height)),
       child: Icon(
         Icons.catching_pokemon,
+        size: size,
       ),
     );
   }

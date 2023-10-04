@@ -32,9 +32,14 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
 
   String get _titleText => 't_form_team'.xTr;
 
+  // UI
+  final _pageController = PageController(keepPage: true);
+
+  // Page status
   final _disposers = <MyDisposable>[];
   var _isInitialized = false;
 
+  // Data
   late List<PokemonTeam?> _teams;
   var _profileOf = <int, PokemonProfile>{};
   var _currIndex = 0;
@@ -67,6 +72,7 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
 
   @override
   void dispose() {
+    _pageController.dispose();
     _disposers.disposeAll();
     super.dispose();
   }
@@ -122,6 +128,7 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
               height: 150,
             ),
             child: PageView(
+              controller: _pageController,
               onPageChanged: _onPageChanged,
               children: _teams
                   .map((e) => _buildPokemonTeam(e))
@@ -140,6 +147,20 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
           ),
           Gap.trailing,
         ],
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: [
+            ...List.generate(MAX_TEAM_COUNT, (index) => ListTile(
+              onTap: () {
+                context.nav.pop();
+                _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+              },
+              title: Text('Team ${index + 1}'),
+            )),
+            Gap.trailing,
+          ],
+        ),
       ),
     );
   }
