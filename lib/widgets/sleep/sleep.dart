@@ -1,5 +1,9 @@
+export 'candy_icon.dart';
 export 'dish_card.dart';
 export 'dream_chip_icon.dart';
 export 'energy_icon.dart';
+export 'friend_points_icon.dart';
 export 'pokemon_rank_title_icon.dart';
+export 'pokemon_recorded_icon.dart';
 export 'pokemon_type_icon.dart';
+export 'xp_icon.dart';

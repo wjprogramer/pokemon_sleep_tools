@@ -13,6 +13,7 @@ const orangeColor = Color(0xFFF5B14F);
 const orangeColorLight = Color(0xFFF4C267);
 const pinkColor = Colors.pink;
 const greenColor = Color(0xFF24BE56);
+const friendPointsIconColor = Colors.pink;
 
 const warningColor = Color(0xFFF5B14F);
 const dangerColor = Colors.red;

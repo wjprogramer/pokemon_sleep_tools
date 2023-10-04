@@ -18,6 +18,7 @@ Map<String, String> getZhTwTrText() {
     't_main_menu': '主選單',
     't_sub_menu': '副選單',
     't_bag': '包包',
+    't_evolution': '進化',
     't_evolution_items': '進化道具',
     't_map': '地圖',
     't_research_notes': '研究筆記',
@@ -57,8 +58,12 @@ Map<String, String> getZhTwTrText() {
     't_hold_someone_pokemon': '擁有「@someone」寶可夢',
     't_capacity': '容量',
     't_dish_maker': '製作料理',
-    '': '',
-    '': '',
+    't_abilities': '能力',
+    't_sleep_type': '睡眠類型',
+    't_specialty': '專長',
+    't_help_interval': '間隔時間',
+    't_help_interval_base': '間隔時間(基礎)',
+    't_max_carry': '持有上限',
     '': '',
 
     // region # Common

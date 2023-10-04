@@ -14,6 +14,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
 class PokemonBoxFragment extends StatefulWidget {
@@ -107,7 +108,7 @@ class _PokemonBoxFragmentState extends State<PokemonBoxFragment> {
                   ExpCalculatorPage.go(context);
                 },
                 iconBuilder: (color, size) {
-                  return Iconify(Mdi.candy, color: color, size: size,);
+                  return CandyIcon(color: color, size: size,);
                 },
                 builder: MyOutlinedButton.builderUnboundWidth,
                 child: Text('t_exp_and_candies'.xTr),

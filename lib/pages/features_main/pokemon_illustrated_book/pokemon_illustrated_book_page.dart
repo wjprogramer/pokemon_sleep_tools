@@ -111,10 +111,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
               opacity: _profileOf[basicProfile.id] != null ? 1 : 0,
               child: const Padding(
                 padding: EdgeInsets.only(right: Gap.mdV),
-                child: Icon(
-                  Icons.catching_pokemon,
-                  color: color1,
-                ),
+                child: PokemonRecordedIcon(),
               ),
             ),
             Expanded(
