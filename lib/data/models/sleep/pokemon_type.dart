@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 // "18": "妖精"
 // }
 
+/// 寶可夢屬性
 enum PokemonType {
   t1(1, '一般', Color(0xFFC4C4C4)),
   t2(2, '火', Color(0xFFEF8D5A)),

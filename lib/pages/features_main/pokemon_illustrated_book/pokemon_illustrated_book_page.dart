@@ -17,6 +17,14 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
+/// TODO: 篩選條件: 睡姿 [PokemonField]、名稱、[PokemonType]、[Fruit]、[PokemonSpecialty]、[SleepType]、利用食材 Lv1/30/60/any 查詢 [Ingredient]、目前進化街段(1,2,3)、最終進化街段(1,2,3)、
+/// TODO: 篩選器有寶可夢等級，但這個等級是顯示寶可夢對應能量的數值，所以實際上不是篩選器條件之一
+///
+/// TODO: 顯示資訊可以調整 "ID、樹果能量、樹果產量、食材能量、食材產量、食材機率、總能量、友情點數、幫忙間隔 (基礎)、幫忙間隔 (等效)、幫忙間隔 (樹果)、幫忙間隔 (食材)、滿包所需時長、樹果、食材、主技能、睡眠類型、專長"
+/// TODO: 排序可以調整 "ID、樹果能量、樹果產量、食材能量、食材產量、食材機率、總能量、友情點數、幫忙間隔 (基礎)、幫忙間隔 (等效)、幫忙間隔 (樹果)、幫忙間隔 (食材)、滿包所需時長"
+///
+/// TODO: 寶可夢數量: 篩選數量 / 全部數量
+///
 class PokemonIllustratedBookPage extends StatefulWidget {
   const PokemonIllustratedBookPage._();
 

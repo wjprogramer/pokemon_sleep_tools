@@ -1,6 +1,6 @@
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-/// 地圖、場所
+/// 地圖 (、場所)
 enum PokemonField {
   f1(1, '萌綠之島', [], 0),
   f2(2, '天青沙灘', [ Fruit.f3, Fruit.f10, Fruit.f18 ], 20),

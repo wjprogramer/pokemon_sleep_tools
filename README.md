@@ -8,7 +8,7 @@ fvm flutter pub run build_runner build --delete-conflicting-outputs
 
 Overview TODO (粗略完成即可，深層頁面不用非常完整):
 
-- [ ] 寶可夢圖鑑
+- [x] 寶可夢圖鑑
 - [ ] 個體分析
 - [ ] 地圖、睡姿
 - [ ] 製作料理

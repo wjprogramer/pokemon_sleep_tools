@@ -1,3 +1,4 @@
+/// 專長
 enum PokemonSpecialty {
   t1(1, '技能型'),
   t2(2, '食材型'),

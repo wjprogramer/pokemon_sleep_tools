@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -22,6 +23,9 @@ class _MapPageArgs {
 /// TODO:
 /// 篩選：
 /// 寶可夢屬性、樹果、專長、睡眠類型、食材 Lv1、食材 Lv30、食材 Lv60、進化階段、主技能
+///
+/// [PokemonIllustratedBookPage] 可以參考此頁面的資訊
+///
 class MapPage extends StatefulWidget {
   const MapPage._(this._args);
 
