@@ -12,6 +12,7 @@ export 'pokemon_profile.dart';
 export 'pokemon_profile_statics.dart';
 export 'pokemon_specialty.dart';
 export 'pokemon_team.dart';
+export 'pokemon_type.dart';
 export 'rank_title.dart';
 export 'sleep_face.dart';
 export 'sleep_type.dart';

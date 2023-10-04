@@ -101,7 +101,7 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
                             '$ingredients\n'
                             '-----------------\n'
                             '其他:\n'
-                            '類型: ${pokemon.basicProfile.specialty.name} (${pokemon.basicProfile.fruit.nameI18nKey})\n'
+                            '類型: ${pokemon.basicProfile.specialty.nameI18nKey} (${pokemon.basicProfile.fruit.nameI18nKey})\n'
                             '主技能: ${pokemon.basicProfile.mainSkill.nameI18nKey}\n'
                             '\n'
                     ),

@@ -35,3 +35,11 @@ const dishSaladIconColor = Color(0xFFEFC558);
 final dishCurryLabelBgColor = Colors.red.shade200;
 final dishCurryBgColor = Colors.red.shade50;
 
+/// [PokemonRan]
+const rankTitle1Color = Color(0xFFEB704D);
+const rankTitle2Color1 = Color(0xFF69A8DD);
+const rankTitle2Color2 = Color(0xFFE36E65);
+const rankTitle3Color1 = Color(0xFFF8E477);
+const rankTitle3Color2 = Color(0xFF666264);
+const rankTitle4Color1 = Color(0xFF8D6EB2);
+const rankTitle4Color2 = Color(0xFFD672B6);

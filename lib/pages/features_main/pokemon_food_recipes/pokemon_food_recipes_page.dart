@@ -45,12 +45,15 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
   // Data
   var _currLevel = 1;
   var _dishLevelInfoOf = <Dish, DishLevelInfo>{};
+  var _dishes = <Dish>[];
+  var _searchOptions = DishSearchOptions();
 
   @override
   void initState() {
     super.initState();
 
     scheduleMicrotask(() {
+      _dishes = [...Dish.values];
       _updateData();
 
       if (mounted) {
@@ -106,7 +109,7 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
                 // IconButton(
                 //   onPressed: () {}, icon: Icon(),
                 // ),
-                ...Dish.values.map(_buildDish),
+                ..._dishes.map(_buildDish),
                 Gap.trailing,
               ],
             ),
@@ -114,12 +117,48 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
         ],
       ),
       bottomNavigationBar: BottomBarWithActions(
-        onSearch: () {
-          DialogUtility.pickDishSearchOptions(context);
+        onSearch: () async {
+          final searchOptions = await DialogUtility.pickDishSearchOptions(
+            context,
+            initialSearchOptions: _searchOptions,
+            calcCounts: (options) {
+              final allDishCount = Dish.values.length;
+              final dishes = _filterDishes(Dish.values, options);
+              return (dishes.length, allDishCount);
+            },
+          );
+
+          _searchOptions = searchOptions;
+          _dishes = _filterDishes(Dish.values, searchOptions);
+          setState(() { });
         },
-        onSort: () {},
+        isSearchOn: _searchOptions.isEmptyOptions() ? null : true,
+        // onSort: () {},
       ),
     );
+  }
+
+  List<Dish> _filterDishes(List<Dish> dishes, DishSearchOptions options) {
+    if (options.isEmptyOptions()) {
+      return Dish.values;
+    }
+
+    Iterable<Dish> dishes = Dish.values;
+
+    if (options.potCapacity != null) {
+      dishes = dishes.where((dish) => dish.capacity <= options.potCapacity!);
+    }
+    if (options.dishTypes.isNotEmpty) {
+      dishes = dishes.where((dish) => options.dishTypes.contains(dish.dishType));
+    }
+    if (options.ingredientOf.isNotEmpty) {
+      dishes = dishes.where((dish) {
+        final ingredients = dish.getIngredients().map((e) => e.$1);
+        return ingredients.any((e) => options.ingredientOf.contains(e));
+      });
+    }
+
+    return dishes.toList();
   }
 
   Widget _buildDish(Dish dish) {

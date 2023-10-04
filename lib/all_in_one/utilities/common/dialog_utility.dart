@@ -108,7 +108,9 @@ class DialogUtility {
                   return Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4
+                        ),
                         decoration: BoxDecoration(
                           border: Border(
                             bottom: Divider.createBorderSide(context),
@@ -209,7 +211,9 @@ class DialogUtility {
         return Row(
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // searchOptions.clear();
+              },
               icon: const Icon(Icons.search),
             ),
             Expanded(
@@ -219,7 +223,7 @@ class DialogUtility {
             ),
             TextButton(
               onPressed: () {
-                context.nav.pop();
+                searchOptions.clear();
               },
               child: Text('t_reset'.xTr),
             ),
@@ -440,6 +444,8 @@ class DialogUtility {
     DishSearchOptions? initialSearchOptions,
     (int, int) Function(DishSearchOptions options)? calcCounts,
   }) async {
+    StateSetter? dialogSetState;
+
     popResult([PokemonSearchOptions? value]) {
       context.nav.pop(value);
     }
@@ -455,6 +461,11 @@ class DialogUtility {
       }
     }
     tryCalcCounts();
+
+    void search() {
+      tryCalcCounts();
+      dialogSetState?.call(() {});
+    }
 
     final screenSize = context.mediaQuery.size;
     final mainWidth = screenSize.width - 2 * (_horizontalListViewPaddingValue / 2 + _horizontalMarginValue);
@@ -490,7 +501,7 @@ class DialogUtility {
       return children.map((e) => wrapHp(child: e));
     }
 
-    final res = await sleepStyle(
+    await sleepStyle(
       context,
       barrierDismissible: false,
       headerBuilder: (context, innerSetState) {
@@ -501,9 +512,12 @@ class DialogUtility {
 
         return Row(
           children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search),
+            IgnorePointer(
+              child: IconButton(
+                onPressed: () {
+                },
+                icon: const Icon(Icons.search),
+              ),
             ),
             Expanded(
               child: Text(
@@ -512,7 +526,8 @@ class DialogUtility {
             ),
             TextButton(
               onPressed: () {
-                context.nav.pop();
+                searchOptions.clear();
+                search();
               },
               child: Text('t_reset'.xTr),
             ),
@@ -520,10 +535,7 @@ class DialogUtility {
         );
       },
       childrenBuilder: (context, innerSetState) {
-        search() {
-          tryCalcCounts();
-          innerSetState(() {});
-        }
+        dialogSetState = innerSetState;
 
         return [
           ...wrapHps(
@@ -576,22 +588,35 @@ class DialogUtility {
               spacing: 12,
               runSpacing: 4,
               children: [
-                ...POT_CAPACITIES_OPTIONS.map((e) => Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(potCapacityItemWidth),
-                    radius: double.infinity,
-                    child: Container(
-                      alignment: Alignment.center,
-                      constraints: BoxConstraints.tightFor(
-                        width: potCapacityItemWidth,
-                        height: potCapacityItemWidth,
+                ...POT_CAPACITIES_OPTIONS.map((potCapacity) {
+                  final selected = potCapacity == searchOptions.potCapacity;
+
+                  return Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        searchOptions.potCapacity = potCapacity;
+                        search();
+                      },
+                      borderRadius: BorderRadius.circular(potCapacityItemWidth),
+                      radius: double.infinity,
+                      child: Container(
+                        alignment: Alignment.center,
+                        constraints: BoxConstraints.tightFor(
+                          width: potCapacityItemWidth,
+                          height: potCapacityItemWidth,
+                        ),
+                        child: Text(
+                          potCapacity.toString(),
+                          style: TextStyle(
+                            color: selected ? primaryColor : null,
+                            fontWeight: selected ? FontWeight.bold : null,
+                          ),
+                        ),
                       ),
-                      child: Text(e.toString()),
                     ),
-                  ),
-                )),
+                  );
+                }),
               ],
             ),
           ),
@@ -620,16 +645,18 @@ class DialogUtility {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        searchOptions.ingredientOf[ingredient] = !(
-                            searchOptions.ingredientOf[ingredient] ?? false
-                        );
+                        if (!searchOptions.ingredientOf.contains(ingredient)) {
+                          searchOptions.ingredientOf.add(ingredient);
+                        } else {
+                          searchOptions.ingredientOf.remove(ingredient);
+                        }
                         search();
                       },
                       child: Row(
                         children: [
                           IgnorePointer(
                             child: Checkbox(
-                              value: searchOptions.ingredientOf[ingredient] ?? false,
+                              value: searchOptions.ingredientOf.contains(ingredient),
                               visualDensity: VisualDensity.compact,
                               onChanged: (v) {},
                             ),

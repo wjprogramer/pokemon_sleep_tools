@@ -22,6 +22,11 @@ class PokemonBasicProfile {
     this.ingredientOptions2 = const [],
     this.ingredientOptions3 = const [],
     required this.ingredientChainId,
+    required this.pokemonType,
+    required this.sleepType,
+    required this.maxCarry,
+    required this.friendshipPoints,
+    required this.recruitRewards,
   });
 
   factory PokemonBasicProfile.from(
@@ -37,6 +42,11 @@ class PokemonBasicProfile {
       Ingredient ingredient1,
       int ingredientCount1,
       int ingredientChainId,
+      PokemonType pokemonType,
+      SleepType sleepType,
+      int maxCarry,
+      int friendshipPoints,
+      PokemonRecruitRewards recruitRewards,
       ) {
     return PokemonBasicProfile(
       id: id,
@@ -51,6 +61,11 @@ class PokemonBasicProfile {
       ingredient1: ingredient1,
       ingredientCount1: ingredientCount1,
       ingredientChainId: ingredientChainId,
+      pokemonType: pokemonType,
+      sleepType: sleepType,
+      maxCarry: maxCarry,
+      friendshipPoints: friendshipPoints,
+      recruitRewards: recruitRewards,
     );
   }
 
@@ -119,6 +134,47 @@ class PokemonBasicProfile {
     ingredientOptions3 = v.ingredientOptions3;
   }
 
+  /// 屬性
+  final PokemonType pokemonType;
+
+  /// 睡眠類型
+  final SleepType sleepType;
+
+  // "maxCarry": 11,
+  // "friendshipPoints": 5,
+  // "recruit": {
+  //      "exp": 18,
+  //      "shards": 39
+  // }
+
+  /// Pokemon Sleep, 持有上限
+  final int maxCarry;
+
+  /// Pokemon Sleep
+  final int friendshipPoints;
+
+  /// Pokemon Sleep
+  final PokemonRecruitRewards recruitRewards;
 
 
+}
+
+class PokemonRecruitRewards {
+  PokemonRecruitRewards({
+    required this.exp,
+    required this.shards,
+  });
+
+  factory PokemonRecruitRewards.from(
+    int exp,
+    int shards,
+  ) {
+    return PokemonRecruitRewards(
+      exp: exp,
+      shards: shards,
+    );
+  }
+
+  final int exp;
+  final int shards;
 }

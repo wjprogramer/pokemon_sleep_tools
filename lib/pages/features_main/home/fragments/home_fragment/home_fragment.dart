@@ -170,7 +170,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   IngredientsIllustratedBookPage.go(context);
                 },
                 iconBuilder: (color, size) {
-                  return Iconify(Bi.apple, color: color, size: size,);
+                  return Iconify(GameIcons.sliced_mushroom, color: color, size: size,);
                 },
                 builder: MyOutlinedButton.builderUnboundWidth,
                 child: Text('t_ingredients'.xTr),
@@ -250,6 +250,20 @@ class _HomeFragmentState extends State<HomeFragment> {
           Gap.xl,
           const Wrap(
             children: [
+              Iconify(GameIcons.grass_mushroom, color: Colors.blue),
+              Iconify(GameIcons.mushroom, color: Colors.blue),
+              Iconify(GameIcons.mushroom_cloud, color: Colors.blue),
+              Iconify(GameIcons.mushroom_gills, color: Colors.blue),
+              Iconify(GameIcons.mushroom_house, color: Colors.blue),
+              Iconify(GameIcons.mushrooms, color: Colors.blue),
+              Iconify(GameIcons.mushrooms_cluster, color: Colors.blue),
+
+              Iconify(GameIcons.spotted_mushroom, color: Colors.blue),
+              Iconify(GameIcons.super_mushroom, color: Colors.blue),
+              Iconify(GameIcons.trunk_mushroom, color: Colors.blue),
+
+
+
               Iconify(AntDesign.function_outlined, color: Colors.blue),
               Iconify(AntDesign.fund_filled, color: Colors.blue),
               Iconify(AntDesign.fund_outlined, color: Colors.blue),

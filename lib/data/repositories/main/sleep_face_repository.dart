@@ -12,6 +12,13 @@ class SleepFaceRepository implements MyInjectable {
     return _findAll();
   }
 
+  String? getCommonSleepFaceName(int style) {
+    if (style == -1) {
+      return '大肚上睡';
+    }
+    return null;
+  }
+
   Future<List<SleepFace>> _findAll() async {
     return [
       SleepFace.from(1, const SnorlaxRank(RankTitle.t1, 2), 1, SleepFaceRewards(18, 39, 3), PokemonField.f1),

@@ -8,16 +8,16 @@ class DishSearchOptions {
   DishSearchOptions({
     List<DishType>? dishTypes,
     this.potCapacity,
-    Map<Ingredient, bool>? ingredientOf,
+    Set<Ingredient>? ingredientOf,
   }): dishTypes = dishTypes ?? [],
         ingredientOf = ingredientOf ?? {};
 
   final List<DishType> dishTypes;
 
   /// [POT_CAPACITIES_OPTIONS]
-  final int? potCapacity;
+  int? potCapacity;
 
-  Map<Ingredient, bool> ingredientOf;
+  Set<Ingredient> ingredientOf;
 
   DishSearchOptions clone() {
     return DishSearchOptions(
@@ -29,8 +29,15 @@ class DishSearchOptions {
 
   bool isEmptyOptions() {
     return dishTypes.isEmpty &&
-        potCapacity != null &&
-        (ingredientOf.isEmpty || ingredientOf.entries.every((e) => !e.value));
+        potCapacity == null &&
+        ingredientOf.isEmpty;
   }
+
+  void clear() {
+    dishTypes.clear();
+    ingredientOf.clear();
+    potCapacity = null;
+  }
+
 
 }

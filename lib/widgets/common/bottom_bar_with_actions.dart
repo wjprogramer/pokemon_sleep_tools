@@ -50,7 +50,10 @@ class BottomBarWithActions extends StatelessWidget {
                       children: [
                         Icon(Icons.search),
                         if (isSearchOn != null)
-                          Text(isSearchOn ?? false ? 'On' : 'Off'),
+                          Padding(
+                            padding: const EdgeInsets.only(left: Gap.mdV),
+                            child: Text(isSearchOn ?? false ? 'On' : 'Off'),
+                          ),
                       ],
                     ),
                   ),

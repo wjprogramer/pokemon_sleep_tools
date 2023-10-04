@@ -21,7 +21,6 @@ Map<String, String> getZhTwTrText() {
     't_evolution_items': '進化道具',
     't_map': '地圖',
     't_research_notes': '研究筆記',
-    't_sleep_illustrated_book': '睡姿圖鑑',
     't_help_ability': '幫忙能力',
     't_others': '其他',
     't_exp_and_candies': '經驗值 & 糖果',
@@ -100,7 +99,10 @@ Map<String, String> getZhTwTrText() {
     // endregion
     // endregion
 
-    // region
+    // region # Sleep
+    't_sleep_face': '睡姿',
+    't_sleep_faces': '睡姿',
+    't_sleep_illustrated_book': '睡姿圖鑑',
     // endregion
 
     // region

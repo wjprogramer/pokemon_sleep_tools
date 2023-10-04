@@ -115,6 +115,7 @@ class _DishPageState extends State<DishPage> {
               titleText: 't_ingredients'.xTr,
             ),
           ),
+
           ..._ingredients.map((ingredient) => ListTile(
             onTap: () {
               IngredientPage.go(context, ingredient.$1);

@@ -38,4 +38,12 @@ class PokemonSearchOptions {
         (ingredientOf.isEmpty || ingredientOf.entries.every((e) => !e.value));
   }
 
+  void clear() {
+    keyword = '';
+    fruitOf.clear();
+    mainSkillOf.clear();
+    subSkillOf.clear();
+    ingredientOf.clear();
+  }
+
 }
