@@ -170,22 +170,34 @@ class DialogUtility {
       spacing: ingredientAndFruitSpacing,
     ).floor().toDouble();
 
-    return await _sleepStyleSearchDialog<PokemonSearchOptions>(
+    TextEditingController? nameField;
+    final keyword = initialSearchOptions.keyword.obs;
+
+    final res = await _sleepStyleSearchDialog<PokemonSearchOptions>(
       context,
       titleText: 't_pokemon'.xTr,
       initialSearchOptions: initialSearchOptions,
       calcCounts: calcCounts,
+      onOptionsCreated: (searchOptions, search) {
+        final ctrl = TextEditingController(text: searchOptions.keyword);
+        ctrl.addListener(() {
+          searchOptions.keyword = ctrl.text;
+          search();
+        });
+        nameField = ctrl;
+      },
       childrenBuilder: (context, search, searchOptions) {
         return [
           ..._wrapHps(
             children: [
-              // TODO:
-              // MySubHeader(
-              //   titleText: 't_name_and_nickname'.xTr,
-              // ),
-              // Gap.sm,
-              // TextField(),
-              // Gap.xl,
+              MySubHeader(
+                titleText: 't_name_and_nickname'.xTr,
+              ),
+              Gap.sm,
+              TextField(
+                controller: nameField,
+              ),
+              Gap.xl,
               // TODO:
               // MySubHeader(
               //   titleText: 't_attributes'.xTr,
@@ -366,6 +378,8 @@ class DialogUtility {
         ];
       },
     );
+
+    return res;
   }
 
   static Future<DishSearchOptions> pickDishSearchOptions(BuildContext context, {
@@ -547,10 +561,12 @@ class DialogUtility {
     required String titleText,
     required T initialSearchOptions,
     (int, int) Function(T options)? calcCounts,
+    Function(T options, VoidCallback search)? onOptionsCreated,
     required List<Widget> Function(BuildContext context, VoidCallback search, T searchOptions) childrenBuilder,
   }) async {
     StateSetter? dialogSetState;
     final searchOptions = initialSearchOptions.clone() as T;
+
     int? matchCount;
     int? allCount;
 
@@ -567,6 +583,7 @@ class DialogUtility {
       tryCalcCounts();
       dialogSetState?.call(() {});
     }
+    onOptionsCreated?.call(searchOptions, search);
 
     await sleepStyle(
       context,
