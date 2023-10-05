@@ -319,7 +319,6 @@ class _HomeFragmentState extends State<HomeFragment> {
               Iconify(Cib.drone, color: Colors.blue), // 寶可夢球?
               Iconify(FluentMdl2.webcam_2_off, color: Colors.blue), // 寶可夢球!
               Iconify(Carbon.model, color: Colors.blue), // 鑽石
-              Iconify(Tabler.zzz_off, color: Colors.blue),
               Iconify(Cil.dinner, color: Colors.blue),
               Iconify(Mdi.pot, color: Colors.blue),
               Iconify(Mdi.pot_light, color: Colors.blue),

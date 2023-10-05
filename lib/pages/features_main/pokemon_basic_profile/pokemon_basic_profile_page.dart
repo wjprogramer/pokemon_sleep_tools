@@ -335,10 +335,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                     facesViewModels.mark(sleepFace.basicProfileId, sleepFace.style);
                   }
                 },
-                icon: Icon(
-                  marked ? Icons.bookmark : Icons.bookmark_border,
-                  color: marked ? orangeColor : null,
-                ),
+                icon: BookmarkIcon(marked: marked),
               ),
               Text(
                 _sleepNamesOfBasicProfile[sleepFace.style] ?? _sleepFaceRepo.getCommonSleepFaceName(sleepFace.style) ?? '',

@@ -46,9 +46,6 @@ class ExpCalculatorPage extends StatefulWidget {
   State<ExpCalculatorPage> createState() => _ExpCalculatorPageState();
 }
 
-/// 要加上糖果介紹
-/// 一般糖果為 +25
-/// 萬能糖果 S => 換成三顆
 class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
 

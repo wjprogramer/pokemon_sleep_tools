@@ -4,12 +4,16 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
-class EmptyPage extends StatefulWidget {
-  const EmptyPage._();
+class _PageArgs {
 
-  static const MyPageRoute route = ('/EmptyPage', _builder);
+}
+
+class SleepFacePage extends StatefulWidget {
+  const SleepFacePage._(this._args);
+
+  static const MyPageRoute route = ('/SleepFacePage', _builder);
   static Widget _builder(dynamic args) {
-    return const EmptyPage._();
+    return SleepFacePage._(args);
   }
 
   static void go(BuildContext context) {
@@ -18,11 +22,13 @@ class EmptyPage extends StatefulWidget {
     );
   }
 
+  final _PageArgs _args;
+
   @override
-  State<EmptyPage> createState() => _EmptyPageState();
+  State<SleepFacePage> createState() => _SleepFacePageState();
 }
 
-class _EmptyPageState extends State<EmptyPage> {
+class _SleepFacePageState extends State<SleepFacePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

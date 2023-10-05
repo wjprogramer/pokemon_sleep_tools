@@ -5,6 +5,8 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_basic_profile_repository.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
@@ -89,25 +91,26 @@ class _MainSkillPageState extends State<MainSkillPage> {
             titleText: _titleText,
           ),
           body: buildListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: HORIZON_PADDING,
-            ),
             children: [
-              MySubHeader(
-                titleText: 't_pokemon'.xTr,
+              Hp(
+                child: MySubHeader(
+                  titleText: 't_pokemon_illustrated_book'.xTr,
+                ),
               ),
               if (_basicProfiles.isEmpty)
-                Text('t_none'.xTr)
+                Hp(child: Text('t_none'.xTr))
               else
                 ..._basicProfiles.map((basicProfile) => _buildPokemonCard(
                   basicProfile: basicProfile,
                   profile: null,
                 )),
-              MySubHeader(
-                titleText: 't_pokemon_box'.xTr,
+              Hp(
+                child: MySubHeader(
+                  titleText: 't_pokemon_box'.xTr,
+                ),
               ),
               if (profiles.isEmpty)
-                Text('t_none'.xTr)
+                Hp(child: Text('t_none'.xTr))
               else
                 ...profiles.map((profile) => _buildPokemonCard(
                   basicProfile: profile.basicProfile,
@@ -125,9 +128,23 @@ class _MainSkillPageState extends State<MainSkillPage> {
     required PokemonProfile? profile,
     required PokemonBasicProfile basicProfile,
   }) {
-    /// TODO: 點擊 Card 到寶可夢詳細頁面
-    return Text(
-      basicProfile.nameI18nKey.xTr,
+    return InkWell(
+      onTap: () {
+        if (profile != null) {
+          PokemonSliderDetailsPage.go(context, initialProfileId: profile.id);
+        } else {
+          PokemonBasicProfilePage.go(context, basicProfile);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: HORIZON_PADDING,
+          vertical: 6,
+        ),
+        child: Text(
+          basicProfile.nameI18nKey.xTr,
+        ),
+      ),
     );
   }
 
