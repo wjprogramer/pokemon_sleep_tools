@@ -38,10 +38,10 @@ class _PokemonMaintainProfilePageArgs {
 class PokemonMaintainProfilePage extends StatefulWidget {
   const PokemonMaintainProfilePage._({
     required _PageType pageType,
-    required this.args,
-  }) : _pageType = pageType;
+    required _PokemonMaintainProfilePageArgs args,
+  }) : _args = args, _pageType = pageType;
 
-  static List<MyPageRoute<_PokemonMaintainProfilePageArgs>> get routes => [
+  static List<MyPageRoute> get routes => [
     _routeCreate, _routeEdit, _routeReadonly,
   ];
 
@@ -61,7 +61,6 @@ class PokemonMaintainProfilePage extends StatefulWidget {
   static goCreate(BuildContext context) {
     context.nav.push(
       _routeCreate,
-      /// TODO: 目前的型態檢查不優，即使放字串、數字，也不用有 error
       arguments: _PokemonMaintainProfilePageArgs(),
     );
   }
@@ -76,20 +75,18 @@ class PokemonMaintainProfilePage extends StatefulWidget {
   }
 
   final _PageType _pageType;
-  final _PokemonMaintainProfilePageArgs args;
+  final _PokemonMaintainProfilePageArgs _args;
 
   @override
   State<PokemonMaintainProfilePage> createState() => _PokemonMaintainProfilePageState();
 }
 
 class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage> {
-  PokemonProfileRepository get _pokemonProfileRepository => getIt();
   MainViewModel get _mainViewModel => context.read<MainViewModel>();
 
   late ThemeData _theme;
 
-  bool get _isMutate => widget._pageType.isMutate;
-  PokemonProfile? get _profile => widget.args.profile;
+  PokemonProfile? get _profile => widget._args.profile;
 
   // Form
   late FormGroup _form;
@@ -216,10 +213,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
               wrapFieldBuilder: (context, fieldWidget) {
                 return GestureDetector(
                   onTap: () async {
-                    if (_profile != null) {
-                      return;
-                    }
-
+                    // TODO: 要可以改進化前後的寶可夢，例如原本是皮卡丘，進來後要可以改成皮丘或雷丘
                     final baseProfile = await PokemonBasicProfilePicker.go(context);
                     if (baseProfile == null) {
                       return;
@@ -538,16 +532,16 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
       final pokemon = await _mainViewModel.updateProfile(newProfile);
       debugPrint(pokemon.getConstructorCode());
-      DialogUtility.text(
-        context,
-        title: Text('t_create_success'.xTr),
-        content: Text('t_continue_to_create_next_or_back_manually'.xTr),
-      );
+      // DialogUtility.text(
+      //   context,
+      //   title: Text('t_create_success'.xTr),
+      //   content: Text('t_continue_to_create_next_or_back_manually'.xTr),
+      // );
     } catch (e) {
-      DialogUtility.text(
-        context,
-        title: Text('t_create_failed'.xTr),
-      );
+      // DialogUtility.text(
+      //   context,
+      //   title: Text('t_create_failed'.xTr),
+      // );
     }
   }
 }

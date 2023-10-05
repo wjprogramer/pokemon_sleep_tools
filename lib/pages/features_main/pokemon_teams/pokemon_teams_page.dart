@@ -11,6 +11,7 @@ import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
+/// TODO: 可以讓使用者自訂標籤，例如對特定某個地圖、對某些樹果
 class PokemonTeamsPage extends StatefulWidget {
   const PokemonTeamsPage({super.key});
 
@@ -102,7 +103,6 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
     if (!_isInitialized) {
       return _buildLoadingView();
     }
@@ -116,8 +116,89 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
           Gap.xl,
           ...Hp.list(
             children: [
-              MyLabel(
-                text: _getCurrTeamName(),
+              GestureDetector(
+                onTap: () {
+                  final textEditCtrl = TextEditingController();
+                  var isLoading = false;
+
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return StatefulBuilder(
+                        builder: (context, innerSetState) {
+                          return AlertDialog(
+                            title: Text('隊伍名稱'),
+                            content: TextField(
+                              controller: textEditCtrl,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  context.nav.pop();
+                                },
+                                child: Text('t_cancel'.xTr),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  try {
+                                    isLoading = true;
+                                    setState(() { });
+
+                                    await _teamViewModel.updateTeam(
+                                      _currIndex,
+                                      PokemonTeam.empty(_currIndex).copyWith(name: textEditCtrl.text),
+                                    );
+                                    context.nav.pop();
+                                  } catch (e) {
+                                    // TODO:
+                                    print(e);
+                                  } finally {
+                                    isLoading = false;
+                                    setState(() { });
+                                  }
+                                },
+                                child: isLoading || true
+                                    ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator(strokeWidth: 3,))
+                                    : Text('t_confirm'.xTr),
+                              ),
+                            ],
+                          );
+                        }
+                      );
+                    },
+                  );
+                },
+                child: MyLabel(
+                  child: Text.rich(
+                    TextSpan(
+                      text: _getCurrTeamName(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: MyLabel.defaultFgColor,
+                      ),
+                      children: [
+                        WidgetSpan(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: Gap.mdV),
+                            child: Icon(
+                              Icons.edit,
+                              color: MyLabel.defaultFgColor,
+                              size: 16,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    strutStyle: StrutStyle(
+                      height: 1.2,
+                      forceStrutHeight: true,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -129,7 +210,7 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
               controller: _pageController,
               onPageChanged: _onPageChanged,
               children: _teams
-                  .map((e) => _buildPokemonTeam(e))
+                  .mapIndexed((teamIndex, e) => _buildPokemonTeam(teamIndex, e))
                   .toList(),
             ),
           ),
@@ -152,9 +233,18 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
             ...List.generate(MAX_TEAM_COUNT, (index) => ListTile(
               onTap: () {
                 context.nav.pop();
-                _pageController.animateToPage(index, duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+                _pageController.animateToPage(index, duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
               },
-              title: Text('Team ${index + 1}'),
+              title: Row(
+                children: [
+                  Text('${index + 1}. '),
+                  Expanded(
+                    child: Text(
+                      _teams[index]?.getDisplayText(index: index) ?? PokemonTeam.getDefaultName(index: index),
+                    ),
+                  ),
+                ],
+              ),
             )),
             Gap.trailing,
           ],
@@ -172,7 +262,7 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
     );
   }
 
-  Widget _buildPokemonTeam(PokemonTeam? pokemonTeam) {
+  Widget _buildPokemonTeam(int teamIndex, PokemonTeam? pokemonTeam) {
     final profileIdList = pokemonTeam?.profileIdList
         ?? List.generate(MAX_TEAM_POKEMON_COUNT, (index) => -1);
     final profiles = profileIdList.map((e) => _profileOf[e]).toList();
@@ -199,12 +289,13 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
 
                         if (pokemonTeam == null) {
                           await _teamViewModel.createTeam(CreatePokemonTeamPayload(
+                            index: teamIndex,
                             name: null,
                             profileIdList: profileIdList,
                           ));
                         } else {
                           final newTeam = pokemonTeam.copyWith(profileIdList: profileIdList);
-                          await _teamViewModel.updateTeam(newTeam);
+                          await _teamViewModel.updateTeam(teamIndex, newTeam);
                         }
                         pop();
                       },

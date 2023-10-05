@@ -147,8 +147,13 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
     }
     if (options.ingredientOf.isNotEmpty) {
       dishes = dishes.where((dish) {
-        final ingredients = dish.getIngredients().map((e) => e.$1);
-        return ingredients.any((e) => options.ingredientOf.contains(e));
+        // 部分符合
+        // final ingredients = dish.getIngredients().map((e) => e.$1);
+        // return ingredients.any((e) => options.ingredientOf.contains(e));
+        // 完全符合
+        final ingredients = dish.getIngredients().map((e) => e.$1).toList();
+        ingredients.removeWhere((e) => options.ingredientOf.contains(e));
+        return ingredients.isEmpty;
       });
     }
 

@@ -13,19 +13,34 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+class _PageArgs {
+  _PageArgs({
+    this.isLarvitarChain = false,
+  });
+
+  final bool isLarvitarChain;
+}
+
 class ExpCalculatorPage extends StatefulWidget {
-  const ExpCalculatorPage._();
+  const ExpCalculatorPage._(this._args);
 
   static const MyPageRoute route = ('/ExpCalculatorPage', _builder);
   static Widget _builder(dynamic args) {
-    return const ExpCalculatorPage._();
+    return ExpCalculatorPage._(args);
   }
 
-  static void go(BuildContext context) {
+  static void go(BuildContext context, {
+    bool isLarvitarChain = false,
+  }) {
     context.nav.push(
       route,
+      arguments: _PageArgs(
+        isLarvitarChain: isLarvitarChain
+      ),
     );
   }
+
+  final _PageArgs _args;
 
   @override
   State<ExpCalculatorPage> createState() => _ExpCalculatorPageState();
@@ -70,6 +85,8 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
       _larvitarChainProfiles = (await Future.wait([86, 87, 88].map((basicProfileId) =>
           _basicProfileRepo.getBasicProfile(basicProfileId))
       )).whereNotNull().toList();
+
+      _isLarvitar = widget._args.isLarvitarChain;
 
       _initialized = true;
       setState(() { });

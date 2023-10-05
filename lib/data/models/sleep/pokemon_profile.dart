@@ -1,6 +1,7 @@
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
+/// TODO: Add user defined name?
 class PokemonProfile {
   PokemonProfile({
     this.id = -1,
@@ -149,5 +150,7 @@ class PokemonProfile {
   String info() {
     return '';
   }
+
+  bool get isLarvitarChain => basicProfile.isLarvitarChain;
 
 }

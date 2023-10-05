@@ -13,6 +13,7 @@ export 'models/app_meta.dart';
 
 part 'models/base_local_file.dart';
 part 'models/stored_pokemon_profiles.dart';
+part 'models/stored_pokemon_sleep_face_styles.dart';
 part 'models/stored_pokemon_teams.dart';
 
 class MyLocalStorage implements MyInjectable {
@@ -32,6 +33,7 @@ class MyLocalStorage implements MyInjectable {
       final writeFuture = switch (resource) {
         StoredPokemonProfiles() => writePokemonProfiles(resource),
         StoredPokemonTeams() => writePokemonTeams(resource),
+        StoredPokemonSleepFaceStyles() => writePokemonSleepFaces(resource),
       };
       await writeFuture;
 
@@ -52,6 +54,7 @@ class MyLocalStorage implements MyInjectable {
       stored = switch (T) {
         StoredPokemonProfiles => (await readPokemonFile()) as T,
         StoredPokemonTeams => (await readPokemonTeams()) as T,
+        StoredPokemonSleepFaceStyles => (await readPokemonSleepFaces()) as T,
         Type() => null,
       };
 
@@ -60,6 +63,7 @@ class MyLocalStorage implements MyInjectable {
       final writeFuture = switch (res) {
         StoredPokemonProfiles() => writePokemonProfiles(res),
         StoredPokemonTeams() => writePokemonTeams(res),
+        StoredPokemonSleepFaceStyles() => writePokemonSleepFaces(res),
       };
       await writeFuture;
     } catch (e) {
@@ -133,5 +137,27 @@ class MyLocalStorage implements MyInjectable {
     file.writeAsStringSync(jsonEncode(data.toJson()));
   }
   // endregion Pokemon Teams
+
+  // region Pokemon Sleep Faces
+  String get _pokemonSleepFacesFilePath {
+    return path.join(_parent.path, 'pokemon_sleep_faces.json');
+  }
+
+  Future<StoredPokemonSleepFaceStyles> readPokemonSleepFaces() async {
+    final file = File(_pokemonSleepFacesFilePath);
+    StoredPokemonSleepFaceStyles result;
+    if (file.notExistsSync()) {
+      result = StoredPokemonSleepFaceStyles();
+    } else {
+      result = StoredPokemonSleepFaceStyles.fromJson(json.decode(file.readAsStringSync()));
+    }
+    return result;
+  }
+
+  Future<void> writePokemonSleepFaces(StoredPokemonSleepFaceStyles data) async {
+    final file = File(_pokemonSleepFacesFilePath);
+    file.writeAsStringSync(jsonEncode(data.toJson()));
+  }
+  // endregion Pokemon Sleep Faces
 
 }

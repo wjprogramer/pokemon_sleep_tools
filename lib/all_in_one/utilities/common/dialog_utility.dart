@@ -149,6 +149,7 @@ class DialogUtility {
     PokemonSearchOptions? initialSearchOptions,
     (int, int) Function(PokemonSearchOptions options)? calcCounts,
   }) async {
+    StateSetter? dialogSetState;
     popResult([PokemonSearchOptions? value]) {
       context.nav.pop(value);
     }
@@ -164,6 +165,11 @@ class DialogUtility {
       }
     }
     tryCalcCounts();
+
+    void search() {
+      tryCalcCounts();
+      dialogSetState?.call(() {});
+    }
 
     const mainSkillBaseItemWidth = 120.0;
     const mainSkillSpacing = 0.0;
@@ -224,6 +230,7 @@ class DialogUtility {
             TextButton(
               onPressed: () {
                 searchOptions.clear();
+                search();
               },
               child: Text('t_reset'.xTr),
             ),
@@ -231,20 +238,18 @@ class DialogUtility {
         );
       },
       childrenBuilder: (context, innerSetState) {
-        search() {
-          tryCalcCounts();
-          innerSetState(() {});
-        }
+        dialogSetState = innerSetState;
 
         return [
           ...wrapHps(
             children: [
-              MySubHeader(
-                titleText: 't_name_and_nickname'.xTr,
-              ),
-              Gap.sm,
-              TextField(),
-              Gap.xl,
+              // TODO:
+              // MySubHeader(
+              //   titleText: 't_name_and_nickname'.xTr,
+              // ),
+              // Gap.sm,
+              // TextField(),
+              // Gap.xl,
               // TODO:
               // MySubHeader(
               //   titleText: 't_attributes'.xTr,
@@ -334,16 +339,18 @@ class DialogUtility {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        searchOptions.ingredientOf[ingredient] = !(
-                            searchOptions.ingredientOf[ingredient] ?? false
-                        );
+                        if (searchOptions.ingredientOf.contains(ingredient)) {
+                          searchOptions.ingredientOf.remove(ingredient);
+                        } else {
+                          searchOptions.ingredientOf.add(ingredient);
+                        }
                         search();
                       },
                       child: Row(
                         children: [
                           IgnorePointer(
                             child: Checkbox(
-                              value: searchOptions.ingredientOf[ingredient] ?? false,
+                              value: searchOptions.ingredientOf.contains(ingredient),
                               visualDensity: VisualDensity.compact,
                               onChanged: (v) {},
                             ),
@@ -387,14 +394,18 @@ class DialogUtility {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        searchOptions.mainSkillOf[mainSkill] = !(searchOptions.mainSkillOf[mainSkill] ?? false);
+                        if (searchOptions.mainSkillOf.contains(mainSkill)) {
+                          searchOptions.mainSkillOf.remove(mainSkill);
+                        } else {
+                          searchOptions.mainSkillOf.add(mainSkill);
+                        }
                         search();
                       },
                       child: Row(
                         children: [
                           IgnorePointer(
                             child: Checkbox(
-                              value: searchOptions.mainSkillOf[mainSkill] ?? false,
+                              value: searchOptions.mainSkillOf.contains(mainSkill),
                               visualDensity: VisualDensity.compact,
                               onChanged: (v) {
                               },

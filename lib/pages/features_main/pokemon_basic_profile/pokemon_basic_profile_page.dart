@@ -3,12 +3,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/sleep_face_repository.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
+import 'package:pokemon_sleep_tools/view_models/sleep_face_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -154,9 +158,10 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
           ],
         ),
       ),
-      body: Consumer<MainViewModel>(
-        builder: (context, mainViewModel, child) {
+      body: Consumer2<MainViewModel, SleepFaceViewModel>(
+        builder: (context, mainViewModel, sleepFaceViewModel, child) {
           final profiles = mainViewModel.profiles;
+          final markStyles = sleepFaceViewModel.markStylesOf[_basicProfile.id] ?? [];
           // 食材 1,2,3
 
           return buildListView(
@@ -257,22 +262,48 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               MySubHeader(
                 titleText: 't_sleep_faces'.xTr,
               ),
+              Gap.md,
               ..._sleepFacesOfField.entries.where((e) => e.value.isNotEmpty).map((e) {
                 final field = e.key;
                 final sleepFaces = e.value;
 
-                return Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        field.nameI18nKey.xTr,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        MapPage.go(context, field);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          8, 8, 8, Gap.smV,
+                        ),
+                        child: Row(
+                          children: [
+                            const IslandIcon(),
+                            Gap.md,
+                            Expanded(
+                              child: Text(
+                                field.nameI18nKey.xTr,
+                              ),
+                            ),
+                            // Icon(Icons.arrow_forward),
+                          ],
+                        ),
                       ),
-                      Gap.md,
-                      ...sleepFaces.map((sleepFace) => _buildSleepFace(sleepFace)),
-                    ],
-                  ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Gap.xs,
+                          ...sleepFaces.map((sleepFace) => _buildSleepFace(sleepFace, markStyles)),
+                          Gap.md,
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               }),
               Gap.trailing,
@@ -283,7 +314,10 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     );
   }
 
-  Widget _buildSleepFace(SleepFace sleepFace) {
+  // TODO: 反查地圖
+  Widget _buildSleepFace(SleepFace sleepFace, List<int> markStyles) {
+    final marked = markStyles.contains(sleepFace.style);
+
     return Container(
       // padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -292,59 +326,69 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
           Row(
             children: [
               IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.bookmark_border),
+                onPressed: () {
+                  final facesViewModels = context.read<SleepFaceViewModel>();
+
+                  if (markStyles.contains(sleepFace.style)) {
+                    facesViewModels.removeMark(sleepFace.basicProfileId, sleepFace.style);
+                  } else {
+                    facesViewModels.mark(sleepFace.basicProfileId, sleepFace.style);
+                  }
+                },
+                icon: Icon(
+                  marked ? Icons.bookmark : Icons.bookmark_border,
+                  color: marked ? orangeColor : null,
+                ),
               ),
-              // IconButton(
-              //   onPressed: () {},
-              //   icon: Icon(Icons.bookmark),
-              // ),
               Text(
                 _sleepNamesOfBasicProfile[sleepFace.style] ?? _sleepFaceRepo.getCommonSleepFaceName(sleepFace.style) ?? '',
               ),
               Gap.md,
-              PokemonRankTitleIcon(rank: sleepFace.snorlaxRank.title,),
+              SnorlaxRankItem(rank: sleepFace.snorlaxRank),
             ],
           ),
-          RichText(
-            text: TextSpan(
-              text: '',
-              style: _theme.textTheme.bodyMedium,
-              children: [
-                WidgetSpan(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: Gap.smV),
-                    child: CandyIcon(size: 16,),
-                  ),
-                ),
-                TextSpan(
-                  text: '${sleepFace.rewards.candy}',
-                ),
-                WidgetSpan(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: Gap.mdV,
-                      right: Gap.smV,
+          Padding(
+            padding: const EdgeInsets.only(left: 48),
+            child: RichText(
+              text: TextSpan(
+                text: '',
+                style: _theme.textTheme.bodyMedium,
+                children: [
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: Gap.smV),
+                      child: CandyIcon(size: 16,),
                     ),
-                    child: DreamChipIcon(size: 16,),
                   ),
-                ),
-                TextSpan(
-                  text: '${sleepFace.rewards.shards}',
-                ),
-                WidgetSpan(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: Gap.mdV,
-                      right: Gap.smV,
+                  TextSpan(
+                    text: '${sleepFace.rewards.candy}',
+                  ),
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: Gap.mdV,
+                        right: Gap.smV,
+                      ),
+                      child: DreamChipIcon(size: 16,),
                     ),
-                    child: XpIcon(size: 16,),
                   ),
-                ),
-                TextSpan(
-                  text: '${sleepFace.rewards.exp}',
-                ),
-              ],
+                  TextSpan(
+                    text: '${sleepFace.rewards.shards}',
+                  ),
+                  WidgetSpan(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: Gap.mdV,
+                        right: Gap.smV,
+                      ),
+                      child: XpIcon(size: 16,),
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${sleepFace.rewards.exp}',
+                  ),
+                ],
+              ),
             ),
           ),
         ],

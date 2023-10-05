@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -245,6 +246,23 @@ class _HomeFragmentState extends State<HomeFragment> {
           Gap.xl,
           const Wrap(
             children: [
+              Iconify(Ls.star, color: Colors.blue),
+              Iconify(Charm.north_star, color: Colors.blue),
+              Iconify(Charm.star, color: Colors.blue),
+              Iconify(Cil.star, color: Colors.blue),
+              Iconify(El.star, color: Colors.blue),
+              Iconify(Gg.shape_rhombus, color: Colors.blue),
+              Iconify(Mdi.rhombus, color: Colors.blue),
+              Iconify(Mdi.rhombus_medium, color: Colors.blue),
+              Iconify(Mdi.rhombus_medium_outline, color: Colors.blue),
+              Iconify(Mdi.rhombus_outline, color: Colors.blue),
+              Iconify(Mdi.rhombus_split, color: Colors.blue),
+              Iconify(Mdi.rhombus_split_outline, color: Colors.blue),
+
+              Iconify(Fontisto.island, color: Colors.blue),
+              Iconify(Arcticons.island, color: Colors.blue),
+              Iconify(EmojioneMonotone.desert_island, color: Colors.blue),
+
               Iconify(GameIcons.grass_mushroom, color: Colors.blue),
               Iconify(GameIcons.mushroom, color: Colors.blue),
               Iconify(GameIcons.mushroom_cloud, color: Colors.blue),
@@ -256,8 +274,6 @@ class _HomeFragmentState extends State<HomeFragment> {
               Iconify(GameIcons.spotted_mushroom, color: Colors.blue),
               Iconify(GameIcons.super_mushroom, color: Colors.blue),
               Iconify(GameIcons.trunk_mushroom, color: Colors.blue),
-
-
 
               Iconify(AntDesign.function_outlined, color: Colors.blue),
               Iconify(AntDesign.fund_filled, color: Colors.blue),
@@ -326,6 +342,7 @@ class _HomeFragmentState extends State<HomeFragment> {
             ],
           ),
         ],
+        Gap.trailing,
       ],
     );
   }

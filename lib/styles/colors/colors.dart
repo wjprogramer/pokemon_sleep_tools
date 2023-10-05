@@ -15,11 +15,14 @@ const orangeColorLight = Color(0xFFF4C267);
 const pinkColor = Colors.pink;
 const greenColor = Color(0xFF24BE56);
 const friendPointsIconColor = Colors.pink;
+final islandColor = Colors.brown.shade700;
+final starIconColor = Colors.yellow.shade700;
 
 const warningColor = Color(0xFFF5B14F);
 const dangerColor = Colors.red;
 const positiveColor = Colors.blue;
 final dreamChipColor = Colors.yellow.shade700;
+final subSkillLevelLabelColor = Colors.brown.shade700;
 
 // 自己隨便訂的顏色
 const tmpColorSkill = Colors.purple;

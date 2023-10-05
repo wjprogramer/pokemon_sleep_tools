@@ -4,10 +4,15 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calculator_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -15,13 +20,17 @@ import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
-/// TODO: 刪除功能、使用道具
+/// 遊戲內有 "使用道具" 的功能，但這邊應該不需要
 class _PokemonSliderDetailsPageArgs {
   _PokemonSliderDetailsPageArgs({
     this.initialProfileId,
+    this.initialProfileIds,
   });
 
   final int? initialProfileId;
+
+  /// [PokemonProfile.id]
+  final List<int>? initialProfileIds;
 }
 
 class PokemonSliderDetailsPage extends StatefulWidget {
@@ -35,11 +44,13 @@ class PokemonSliderDetailsPage extends StatefulWidget {
 
   static void go(BuildContext context, {
     int? initialProfileId,
+    List<int>? initialProfileIds,
   }) {
     context.nav.push(
       PokemonSliderDetailsPage.route,
       arguments: _PokemonSliderDetailsPageArgs(
         initialProfileId: initialProfileId,
+        initialProfileIds: initialProfileIds,
       ),
     );
   }
@@ -59,56 +70,93 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
   var _previousPage = 0;
   var _currIndex = 0;
 
+  /// [PokemonProfile.id] to instance
+  final _profileOf = <int, PokemonProfile>{};
+
+  // Page status
+  final _disposers = <MyDisposable>[];
+  var _initialized = false;
+
   // List
   var _lastOffset = 0.0;
+  var _profiles = <PokemonProfile>[];
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
-    // _scrollController.addListener(() {
-    //   _lastOffset = _scrollController.offset;
-    // });
-    // _scrollController2.addListener(() {
-    //   _lastOffset = _scrollController2.offset;
-    // });
 
     scheduleMicrotask(() async {
+      // Load
       final mainViewModel = context.read<MainViewModel>();
       await mainViewModel.loadProfiles();
 
+      // Utils (with profiles)
+      updateProfileMapping() {
+        final newProfiles = mainViewModel.profiles;
+        for (final profile in newProfiles) {
+          _profileOf[profile.id] = profile;
+        }
+      }
+
+      if (widget._args.initialProfileIds != null) {
+        updateProfileMapping();
+
+        _disposers.add(
+          mainViewModel.xAddListener(() {
+            updateProfileMapping();
+          }),
+        );
+      }
+
       if (_args.initialProfileId != null) {
-        final profiles = mainViewModel.profiles;
-        final index = profiles.indexOrNullWhere((e) => e.id == _args.initialProfileId);
-
-        if (index != null) {
-          _previousPage = index;
-          _pageController.jumpToPage(index);
+        int? index;
+        if (widget._args.initialProfileIds != null) {
+          _profiles = (widget._args.initialProfileIds ?? []).map((e) => _profileOf[e]).whereNotNull().toList();
+          index = widget._args.initialProfileIds?.indexOrNullWhere((profileId) => profileId == _args.initialProfileId);
+        } else {
+          _profiles = mainViewModel.profiles;
+          index = _profiles.indexOrNullWhere((e) => e.id == _args.initialProfileId);
         }
 
+        _previousPage = index ?? _previousPage;
         _currIndex = index ?? 0;
-        _loadData(index ?? 0, mainViewModel.profiles);
-        if (mounted) {
-          setState(() { });
-        }
+        _loadData(index ?? 0, _profiles);
+      }
+
+      _pageController = PageController(initialPage: _currIndex);
+
+      _initialized = true;
+      if (mounted) {
+        setState(() { });
       }
     });
   }
 
   @override
   void dispose() {
+    _disposers.disposeAll();
     _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_initialized) {
+      return const LoadingView();
+    }
+
     return Consumer<MainViewModel>(
       builder: (context, viewModel, child) {
-        final profiles = viewModel.profiles;
-        _currIndex = _currIndex.clamp(0, profiles.lastIndex ?? 0);
+        final initialProfileIds = widget._args.initialProfileIds;
+        if (initialProfileIds != null) {
+          _profiles = initialProfileIds.map((e) => _profileOf[e]).whereNotNull().toList();
+        } else {
+          _profiles = viewModel.profiles;
+        }
 
-        if (profiles.isEmpty) {
+        _currIndex = _currIndex.clamp(0, _profiles.lastIndex ?? 0);
+
+        if (_profiles.isEmpty) {
           return Scaffold(
             appBar: buildAppBar(),
             body: Center(
@@ -119,20 +167,20 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
         return Scaffold(
           appBar: buildAppBar(
-            titleText: profiles[_currIndex].basicProfile.nameI18nKey.xTr,
+            titleText: _profiles[_currIndex].basicProfile.nameI18nKey.xTr,
             actions: [
               IconButton(
                 onPressed: () {
-                  PokemonMaintainProfilePage.goEdit(context, profiles[_currIndex]);
+                  PokemonMaintainProfilePage.goEdit(context, _profiles[_currIndex]);
                 },
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
               ),
             ],
           ),
           body: PageView(
             controller: _pageController,
-            onPageChanged: (page) => _onPageChanged(page, profiles),
-            children: profiles.mapIndexed((profileIndex, profile) => _PokemonDetailsView(
+            onPageChanged: (page) => _onPageChanged(page, _profiles),
+            children: _profiles.mapIndexed((profileIndex, profile) => _PokemonDetailsView(
               profile: profile,
               statistics: _getStatistics(profile),
               onDeletedSuccess: () {
@@ -239,6 +287,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
   PokemonBasicProfile get basicProfile => widget.profile.basicProfile;
 
   late ScrollController _scrollController;
+  late ThemeData _theme;
 
   @override
   void initState() {
@@ -257,6 +306,8 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    _theme = context.theme;
+
     return buildListView(
       controller: _scrollController,
       children: _buildListItems(context, widget.statistics),
@@ -266,6 +317,11 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
   List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics? statistics) {
     final screenSize = MediaQuery.of(context).size;
     final leadingWidth = math.min(screenSize.width * 0.3, 150.0);
+    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
+
+    const subSkillItemSpacing = 24.0;
+    const subSkillParentExtraMarginValue = 4.0;
+    final subSkillWidth = (mainWidth - 2 * subSkillParentExtraMarginValue - subSkillItemSpacing) / 2;
 
     Widget buildWithLabel({
       required String text,
@@ -298,7 +354,10 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           MyElevatedButton(
             onPressed: () {
               /// TODO: 如果是「班基拉斯、沙基拉斯、又基拉斯」要將 _isLarvitar 設為 true
-              ExpCalculatorPage.go(context);
+              ExpCalculatorPage.go(
+                context,
+                isLarvitarChain: widget.profile.isLarvitarChain,
+              );
             },
             child: const Text('提升等級'),
           ),
@@ -307,12 +366,8 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
             titleText: 't_review'.xTr,
           ),
           Gap.xl,
-          if (statistics == null)
-            Text('t_none'.xTr)
-          else ...[
-            Text('能量積分: ${statistics.energyScore}\n'
-                '總評價: ${statistics.rank}'),
-          ],
+          Text('能量積分: ${statistics?.energyScore}\n'
+              '總評價: ${statistics?.rank}'),
           Gap.xl,
           MySubHeader(
             titleText: 't_help_ability'.xTr,
@@ -320,17 +375,40 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           Gap.xl,
           buildWithLabel(
             text: 't_fruit'.xTr,
-            child: Text(
-              basicProfile.fruit.nameI18nKey.xTr,
+            child: InkWell(
+              onTap: () {
+                FruitPage.go(context, basicProfile.fruit);
+              },
+              child: Text(
+                basicProfile.fruit.nameI18nKey.xTr,
+              ),
             ),
           ),
           Gap.xl,
           buildWithLabel(
             text: 't_ingredients'.xTr,
-            child: Text(
-              '${basicProfile.ingredient1.nameI18nKey} x${basicProfile.ingredientCount1}\n'
-                  '${widget.profile.ingredient2.nameI18nKey} x${widget.profile.ingredientCount2}\n'
-                  '${widget.profile.ingredient3.nameI18nKey} x${widget.profile.ingredientCount3}\n',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                InkWell(
+                  onTap: () {
+                    IngredientPage.go(context, basicProfile.ingredient1);
+                  },
+                  child: Text('Lv1      ${basicProfile.ingredient1.nameI18nKey} x${basicProfile.ingredientCount1}'),
+                ),
+                InkWell(
+                  onTap: () {
+                    IngredientPage.go(context, widget.profile.ingredient2);
+                  },
+                  child: Text('Lv30    ${widget.profile.ingredient2.nameI18nKey} x${widget.profile.ingredientCount2}'),
+                ),
+                InkWell(
+                  onTap: () {
+                    IngredientPage.go(context, widget.profile.ingredient3);
+                  },
+                  child: Text('Lv60    ${widget.profile.ingredient3.nameI18nKey} x${widget.profile.ingredientCount3}'),
+                ),
+              ],
             ),
           ),
           Gap.xl,
@@ -344,7 +422,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           buildWithLabel(
             text: '持有上限'.xTr,
             child: Text(
-              '${widget.profile.basicProfile.maxCarry} 個\n', // TODO:
+              '${widget.profile.basicProfile.maxCarry} 個\n',
             ),
           ),
           Gap.xl,
@@ -352,51 +430,123 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
             titleText: '${'t_main_skill'.xTr}${'t_slash'.xTr}${'t_sub_skills'.xTr}',
           ),
           Gap.xl,
-          Text(
-            widget.profile.basicProfile.mainSkill.nameI18nKey.xTr,
+          InkWell(
+            onTap: () {
+              MainSkillPage.go(context, widget.profile.basicProfile.mainSkill);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 16, horizontal: 24,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(),
+              ),
+              child: Text(
+                widget.profile.basicProfile.mainSkill.nameI18nKey.xTr,
+              ),
+            ),
           ),
-          Gap.xl,
-          Text(
-              widget.profile.subSkills.mapIndexed((index, subSkill) => 'Lv. ${SubSkill.levelList[index]} ${subSkill.nameI18nKey.xTr}').join('\n')
+          const SizedBox(height: subSkillItemSpacing),
+          // TODO: 副技能反查?
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: subSkillParentExtraMarginValue,
+            ),
+            child: Wrap(
+              spacing: subSkillItemSpacing,
+              runSpacing: subSkillItemSpacing,
+              children: [
+                ...widget.profile.subSkills.mapIndexed((subSkillIndex, subSkill) => Container(
+                  constraints: BoxConstraints.tightFor(
+                    width: subSkillWidth,
+                  ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                        ),
+                        child: Center(
+                          child: Text(subSkill.nameI18nKey.xTr),
+                        ),
+                      ),
+                      Positioned(
+                        left: -8,
+                        top: -8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4, vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: subSkillLevelLabelColor,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 50,
+                          ),
+                          child: Text(
+                            'Lv. ${SubSkill.levelList[subSkillIndex]}',
+                            style: TextStyle(
+                              fontSize: (_theme.textTheme.bodySmall?.fontSize ?? 16) * 0.7,
+                              color: subSkillLevelLabelColor.fgColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
+              ],
+            ),
           ),
           MySubHeader(
             titleText: 't_analysis'.xTr,
           ),
           Gap.xl,
-          if (statistics == null)
-            Center(child: Text('t_none'.xTr),)
-          else ...[
-
-
+          ...[
             Text(
-                '幫忙均能/次: ${statistics.helpPerAvgEnergy.toStringAsFixed(2)}\n'
-                    '數量: ${statistics.fruitCount}\n'
-                    '幫忙間隔: ${statistics.helpInterval}\n'
-                    '樹果能量: ${statistics.fruitEnergy}\n'
-                    '食材1能量: ${statistics.ingredientEnergy1}\n'
-                    '食材2能量: ${statistics.ingredientEnergy2}\n'
-                    '食材3能量: ${statistics.ingredientEnergy3}\n'
-                    '食材均能: ${statistics.ingredientEnergyAvg}\n'
-                    '幫手獎勵: ${statistics.helperBonus}\n'
-                    '食材機率: ${statistics.ingredientRate}\n'
-                    '技能等級: ${statistics.skillLevel}\n'
-                    '主技能速度參數: ${statistics.mainSkillSpeedParameter}\n'
-                    '持有上限溢出數: ${statistics.maxOverflowHoldCount}\n'
-                    '持有上限溢出能量: ${statistics.overflowHoldEnergy}\n'
-                    '性格速度: ${statistics.characterSpeed}\n'
-                    '活力加速: ${statistics.accelerateVitality}\n'
-                    '睡眠EXP獎勵: ${statistics.sleepExpBonus}\n'
-                    '夢之碎片獎勵: ${statistics.dreamChipsBonus}\n'
-                    '主技能能量: ${statistics.mainSkillTotalEnergy}\n'
-                    '主技活力加速: ${statistics.mainSkillAccelerateVitality}\n',
+              '幫忙均能/次: ${statistics?.helpPerAvgEnergy.toStringAsFixed(2)}\n'
+                  '數量: ${statistics?.fruitCount}\n'
+                  '幫忙間隔: ${statistics?.helpInterval}\n'
+                  '樹果能量: ${statistics?.fruitEnergy}\n'
+                  '食材1能量: ${statistics?.ingredientEnergy1}\n'
+                  '食材2能量: ${statistics?.ingredientEnergy2}\n'
+                  '食材3能量: ${statistics?.ingredientEnergy3}\n'
+                  '食材均能: ${statistics?.ingredientEnergyAvg}\n'
+                  '幫手獎勵: ${statistics?.helperBonus}\n'
+                  '食材機率: ${statistics?.ingredientRate}\n'
+                  '技能等級: ${statistics?.skillLevel}\n'
+                  '主技能速度參數: ${statistics?.mainSkillSpeedParameter}\n'
+                  '持有上限溢出數: ${statistics?.maxOverflowHoldCount}\n'
+                  '持有上限溢出能量: ${statistics?.overflowHoldEnergy}\n'
+                  '性格速度: ${statistics?.characterSpeed}\n'
+                  '活力加速: ${statistics?.accelerateVitality}\n'
+                  '睡眠EXP獎勵: ${statistics?.sleepExpBonus}\n'
+                  '夢之碎片獎勵: ${statistics?.dreamChipsBonus}\n'
+                  '主技能能量: ${statistics?.mainSkillTotalEnergy}\n'
+                  '主技活力加速: ${statistics?.mainSkillAccelerateVitality}\n',
             ),
             Text(
-              '總幫忙速度加成: S(${statistics.totalHelpSpeedS}), M(${statistics.totalHelpSpeedM})',
+              '總幫忙速度加成: S(${statistics?.totalHelpSpeedS}), M(${statistics?.totalHelpSpeedM})',
             ),
           ],
           MySubHeader(
             titleText: 't_others'.xTr,
             color: dangerColor,
+          ),
+          MyElevatedButton(
+            onPressed: () {
+              PokemonBasicProfilePage.go(context, widget.profile.basicProfile);
+            },
+            child: Text(
+              '查看圖鑑',
+            ),
           ),
           MyElevatedButton(
             onPressed: () {

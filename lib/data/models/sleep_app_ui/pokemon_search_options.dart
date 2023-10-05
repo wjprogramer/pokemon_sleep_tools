@@ -4,9 +4,9 @@ class PokemonSearchOptions {
   PokemonSearchOptions({
     this.keyword = '',
     Map<Fruit, bool>? fruitOf,
-    Map<MainSkill, bool>? mainSkillOf,
-    Map<MainSkill, bool>? subSkillOf,
-    Map<Ingredient, bool>? ingredientOf,
+    Set<MainSkill>? mainSkillOf,
+    Set<MainSkill>? subSkillOf,
+    Set<Ingredient>? ingredientOf,
   }):
   fruitOf = fruitOf ?? {},
   mainSkillOf = mainSkillOf ?? {},
@@ -15,9 +15,9 @@ class PokemonSearchOptions {
 
   String keyword;
   Map<Fruit, bool> fruitOf;
-  Map<MainSkill, bool> mainSkillOf;
-  Map<MainSkill, bool> subSkillOf;
-  Map<Ingredient, bool> ingredientOf;
+  Set<MainSkill> mainSkillOf;
+  Set<MainSkill> subSkillOf;
+  Set<Ingredient> ingredientOf;
 
   PokemonSearchOptions clone() {
     return PokemonSearchOptions(
@@ -33,9 +33,9 @@ class PokemonSearchOptions {
     return keyword.trim().isEmpty &&
         (fruitOf.isEmpty || fruitOf.entries.every((e) => !e.value)) &&
         (fruitOf.isEmpty || fruitOf.entries.every((e) => !e.value)) &&
-        (mainSkillOf.isEmpty || mainSkillOf.entries.every((e) => !e.value)) &&
-        (subSkillOf.isEmpty || subSkillOf.entries.every((e) => !e.value)) &&
-        (ingredientOf.isEmpty || ingredientOf.entries.every((e) => !e.value));
+        mainSkillOf.isEmpty &&
+        subSkillOf.isEmpty &&
+        ingredientOf.isEmpty;
   }
 
   void clear() {

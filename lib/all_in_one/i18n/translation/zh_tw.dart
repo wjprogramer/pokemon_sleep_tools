@@ -35,7 +35,7 @@ Map<String, String> getZhTwTrText() {
     't_set_level': '設定等級',
     't_set_pokemon_level': '設定寶可夢等級',
     't_set_recipe_level': '設定食譜等級',
-    't_candies_info_text': '1. 萬能糖果S可以產生3個指定寶可夢的一般糖果',
+    't_candies_info_text': '1. 萬能糖果S可以產生3個指定寶可夢的一般糖果\n2. 一般糖果可以 +25 經驗值，但會受部分性格影響',
     't_candies': '糖果',
     't_simple': '簡易',
     't_details': '詳細',
@@ -65,7 +65,7 @@ Map<String, String> getZhTwTrText() {
     't_help_interval_base': '間隔時間(基礎)',
     't_max_carry': '持有上限',
     't_pot': '鍋子',
-    '': '',
+    't_no_match_other_ingredient_of_dish_hint': '不满足其它食谱的任意食材',
     '': '',
     '': '',
 

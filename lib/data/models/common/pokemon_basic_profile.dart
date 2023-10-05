@@ -157,6 +157,8 @@ class PokemonBasicProfile {
   final PokemonRecruitRewards recruitRewards;
 
 
+  bool get isLarvitarChain => [86, 87, 88].contains(id);
+
 }
 
 class PokemonRecruitRewards {

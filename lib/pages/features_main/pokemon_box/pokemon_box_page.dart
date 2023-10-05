@@ -88,6 +88,10 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   var _cardWidth = 0.0;
   var _cardHeight = 0.0;
 
+  // Data
+  var _allProfiles = <PokemonProfile>[];
+  var _resultProfiles = <PokemonProfile>[];
+
   // Picker mode properties
   var _currPickIndex = 0;
   final List<PokemonProfile?> _profilesField = List.generate(MAX_TEAM_POKEMON_COUNT, (index) => null);
@@ -95,7 +99,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   final _profileIdToIndex = <int, int>{};
 
   // Filter properties
-  // TODO:
+  var _searchOptions = PokemonSearchOptions();
 
   @override
   void initState() {
@@ -109,13 +113,14 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
           .toMap((i) => i, (i) => -1);
       _currPickIndex = _args.initialIndex ?? _currPickIndex;
 
-      await mainViewModel.loadProfiles();
+      _allProfiles = await mainViewModel.loadProfiles();
+      _resultProfiles = _filterOptions(_searchOptions, _allProfiles);
 
       final profileIdList = _args.initialTeam?.profileIdList;
       if (profileIdList != null) {
         final profiles = mainViewModel.profiles;
         final profileOf = profiles.toMap((e) => e.id, (e) => e);
-        final teamProfiles = profileIdList.map((e) => e == null ? null : profileOf[e]).toList();
+        final teamProfiles = profileIdList.map((e) => profileOf[e]).toList();
 
         teamProfiles.forEachIndexed((index, profile) {
           if (profile == null) {
@@ -129,6 +134,25 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
       setState(() {  });
     });
+  }
+
+  List<PokemonProfile> _filterOptions(PokemonSearchOptions options, List<PokemonProfile> profiles) {
+    Iterable<PokemonProfile> newProfiles = [...profiles];
+    if (options.isEmptyOptions()) {
+      return newProfiles.toList();
+    }
+
+    newProfiles = newProfiles.where((p) => options.fruitOf[p.basicProfile.fruit] ?? false);
+
+    final newKeyword = options.keyword.trim();
+    if (newKeyword.isNotEmpty) {
+      newProfiles = newProfiles.where((p) => p.basicProfile.nameI18nKey.xTr.contains(newKeyword));
+    }
+    if (options.mainSkillOf.isNotEmpty) {
+
+    }
+
+    return newProfiles.toList();
   }
 
   @override
@@ -162,7 +186,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       ),
       body: Consumer<MainViewModel>(
         builder: (context, viewModel, child) {
-          final profiles = viewModel.profiles;
+          _allProfiles = viewModel.profiles;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -179,7 +203,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                     Wrap(
                       spacing: cardSpacing,
                       runSpacing: cardSpacing,
-                      children: profiles
+                      children: _resultProfiles
                           .map((profile) => _buildProfileItem(profile))
                           .toList(),
                     ),
@@ -203,18 +227,22 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
   Widget _buildBottomNavigationBar(List<PokemonProfile> profiles) {
     return BottomBarWithActions(
-      onSearch: () {
-        DialogUtility.pickPokemonSearchFilters(
+      onSearch: () async {
+        var res = await DialogUtility.pickPokemonSearchFilters(
           context,
+          initialSearchOptions: _searchOptions,
           calcCounts: (options) {
             if (options.isEmptyOptions()) {
               return (profiles.length, profiles.length);
             }
 
-            final matches = profiles.where((p) => options.fruitOf[p.basicProfile.fruit] ?? false);
-            return (matches.length, profiles.length);
+            return (_filterOptions(options, _allProfiles).length, profiles.length);
           },
         );
+
+        _searchOptions = res ?? _searchOptions;
+        _resultProfiles = _filterOptions(_searchOptions, _allProfiles);
+        setState(() { });
       },
       onSort: () {
 
@@ -295,6 +323,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
     PokemonSliderDetailsPage.go(
       context,
       initialProfileId: profile.id,
+      initialProfileIds: _searchOptions.isEmptyOptions() ? null : _resultProfiles.map((e) => e.id).toList(),
     );
   }
 

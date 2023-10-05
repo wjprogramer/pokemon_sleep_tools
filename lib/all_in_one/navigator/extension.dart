@@ -9,6 +9,7 @@ extension MyContextNavigatorX on MyContextNavigator {
 
   NavigatorState get _navigator => Navigator.of(_context);
 
+  /// TODO: 目前的型態檢查不優，即使放字串、數字，也不用有 error
   Future<R?> push<T extends Object?, R extends Object?>(MyPageRoute<T> route, {
     T? arguments,
   }) async {

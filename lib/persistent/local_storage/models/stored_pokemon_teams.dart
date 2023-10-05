@@ -3,58 +3,51 @@ part of '../local_storage.dart';
 /// TODO: 需設定最上數量, [MAX_TEAM_COUNT]
 final class StoredPokemonTeams implements BaseLocalFile {
   StoredPokemonTeams({
-    int? lastIndex,
-    List<PokemonTeam>? teams,
+    List<PokemonTeam?>? teams,
   }) {
-    _lastIndex = lastIndex ?? _lastIndex;
     _teams = teams ?? _teams;
   }
 
   factory StoredPokemonTeams.fromJson(Map<String, dynamic> json) {
+    final rawTeams = json['teams'] as Iterable;
+    final remainCount = MAX_TEAM_COUNT - rawTeams.length;
+
     return StoredPokemonTeams(
-      lastIndex: json['lastIndex'],
-      teams: (json['teams'] as Iterable)
-          .map((e) => PokemonTeam.fromJson(e))
-          .toList(),
+      teams: [
+        ...rawTeams.map((e) => e != null ? PokemonTeam.fromJson(e) : null),
+        if (remainCount > 0)
+          ...List.generate(remainCount, (index) => null),
+      ],
     );
   }
 
-  int _lastIndex = -1;
-  int get lastIndex => _lastIndex;
-
-  var _teams = <PokemonTeam>[];
-  List<PokemonTeam> get teams => _teams;
+  List<PokemonTeam?> _teams = List.generate(MAX_TEAM_COUNT, (index) => null);
+  List<PokemonTeam?> get teams => _teams;
 
   Map<String, dynamic> toJson() {
     return {
-      'lastIndex': _lastIndex,
       'teams': _teams
-          .map((e) => e.toJson())
+          .map((e) => e?.toJson())
           .toList(),
     };
   }
 
-  Future<PokemonTeam> insert(PokemonTeam team) async {
-    _lastIndex++;
-
+  Future<PokemonTeam> insert(int index, PokemonTeam team) async {
     try {
-      final index = _lastIndex;
-
       final newTeam = team.copyWith(id: index);
-      _teams.add(newTeam);
+      _teams[index] = newTeam;
       return newTeam;
     } catch (e) {
-      _lastIndex--;
       rethrow;
     }
   }
 
-  Future<void> replace(PokemonTeam team) async {
-    final index = _teams.indexOrNullWhere((t) => t.id == team.id);
-    if (index == null) {
-      // TODO: improvement
-      throw Exception();
-    }
+  Future<void> replace(int index, PokemonTeam team) async {
+    // final index = _teams.indexOrNullWhere((t) => t?.id == team.id);
+    // if (index == null) {
+    //   // TODO: improvement
+    //   throw Exception();
+    // }
     _teams[index] = team;
   }
 

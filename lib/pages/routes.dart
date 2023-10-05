@@ -8,7 +8,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_maker/dish_maker_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator/exp_calculator_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp_caculator_result_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart';

@@ -111,14 +111,15 @@ class _DishPageState extends State<DishPage> {
               titleText: 't_ingredients'.xTr,
             ),
           ),
-
-          ..._ingredients.map((ingredient) => ListTile(
+          if (_ingredients.isEmpty)
+            Hp(child: Text('t_no_match_other_ingredient_of_dish_hint'.xTr))
+          else ..._ingredients.map((ingredient) => ListTile(
             onTap: () {
               IngredientPage.go(context, ingredient.$1);
             },
             title: Text('${ingredient.$1.nameI18nKey.xTr} x${ingredient.$2}'),
           )),
-          ...Hp.list(
+          if (_ingredients.isNotEmpty) ...Hp.list(
             children: [
               MySubHeader(
                 titleText: 't_set_pokemon_level'.xTr,

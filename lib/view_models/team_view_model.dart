@@ -8,23 +8,23 @@ class TeamViewModel extends ChangeNotifier {
 
   PokemonTeamRepository get _teamRepo => getIt();
 
-  List<PokemonTeam> _teams = [];
-  List<PokemonTeam> get teams => _teams;
+  List<PokemonTeam?> _teams = [];
+  List<PokemonTeam?> get teams => _teams;
 
   Future<PokemonTeam> createTeam(CreatePokemonTeamPayload payload) async {
     final tmpTeam = PokemonTeam(
-      id: -1,
+      id: payload.index,
       name: payload.name,
       profileIdList: payload.profileIdList,
     );
-    final res = await _teamRepo.create(tmpTeam);
+    final res = await _teamRepo.create(payload.index, tmpTeam);
     _teams = await _teamRepo.findAll();
     notifyListeners();
     return res;
   }
 
-  Future<PokemonTeam> updateTeam(PokemonTeam pokemonTeam) async {
-    await _teamRepo.update(pokemonTeam);
+  Future<PokemonTeam> updateTeam(int index, PokemonTeam pokemonTeam) async {
+    await _teamRepo.update(index, pokemonTeam);
     _teams = await _teamRepo.findAll();
     notifyListeners();
     return pokemonTeam;
