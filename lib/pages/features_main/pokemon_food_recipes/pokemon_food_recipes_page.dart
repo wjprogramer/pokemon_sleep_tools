@@ -46,9 +46,9 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
   void initState() {
     super.initState();
 
-    scheduleMicrotask(() {
+    scheduleMicrotask(() async {
       _dishes = [...Dish.values];
-      _updateData();
+      await _updateData();
 
       if (mounted) {
         setState(() { });
@@ -80,9 +80,9 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
                 max: MAX_RECIPE_LEVEL.toDouble(),
                 min: 1,
                 divisions: MAX_RECIPE_LEVEL - 1,
-                onChanged: (v) {
+                onChanged: (v) async {
                   _currLevel = v.toInt();
-                  _updateData();
+                  await _updateData();
                   setState(() { });
                 },
                 hideSlider: true,
@@ -100,9 +100,6 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
               ),
               children: [
                 Gap.lg,
-                // IconButton(
-                //   onPressed: () {}, icon: Icon(),
-                // ),
                 ..._dishes.map(_buildDish),
                 Gap.trailing,
               ],

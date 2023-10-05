@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
@@ -46,6 +47,7 @@ typedef MyRoutesMapping = Map<String, MyRouteBuilder>;
 MyRoutesMapping generateRoutes() {
   final routes = <MyPageRoute>[
     // common
+    DataSourcesPage.route,
     NotFoundRoutePage.route,
     // dev
     DevIconsPage.route,

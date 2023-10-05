@@ -8,6 +8,7 @@ const greyColor2 = Color(0xFFC8C8C8);
 final greyColor3 = Colors.grey.shade700;
 const blueColor = Color(0xFFC6E0F4);
 const yellowColor = Color(0xFFFBE6A8);
+const yellowLightColor = Color(0xFFfcfce3);
 const potColor = Color(0xFFA38E7E);
 const primaryColor = Color(0xFF3AD47A);
 const orangeColor = Color(0xFFF5B14F);

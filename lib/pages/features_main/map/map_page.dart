@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -126,6 +127,7 @@ class _MapPageState extends State<MapPage> {
     }
 
     final rewards = _rewards.where((reward) => (_sleepFacesOfRank[reward.rank] ?? []).isNotEmpty);
+    final pokemonLabelBorderRadius = BorderRadius.circular(8);
 
     return Scaffold(
       appBar: buildAppBar(
@@ -218,31 +220,45 @@ class _MapPageState extends State<MapPage> {
                       spacing: 12,
                       runSpacing: 4,
                       children: [
-                      ...?_sleepFacesOfRank[reward.rank]?.map((e) => InkWell(
-                        onTap: () {
-                          // TODO: 反查 Basic Profile
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 2,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                _basicProfileOf[e.basicProfileId]?.nameI18nKey.xTr ?? '',
-                                style: pokemonTextStyle,
+                      ...?_sleepFacesOfRank[reward.rank]?.map((e) => Container(
+                        decoration: BoxDecoration(
+                          color: yellowLightColor,
+                          borderRadius: pokemonLabelBorderRadius,
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              final basicProfile = _basicProfileOf[e.basicProfileId];
+                              if (basicProfile == null) {
+                                return;
+                              }
+
+                              PokemonBasicProfilePage.go(context, basicProfile);
+                            },
+                            borderRadius: pokemonLabelBorderRadius,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 2,
                               ),
-                              Text(
-                                '#${e.style == -1 ? '卡' : e.style}',
-                                style: pokemonTextStyle?.copyWith(
-                                  fontSize: (pokemonTextStyle.fontSize ?? 14) * 0.8,
-                                  color: greyColor3,
-                                ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    _basicProfileOf[e.basicProfileId]?.nameI18nKey.xTr ?? '',
+                                    style: pokemonTextStyle,
+                                  ),
+                                  Text(
+                                    '#${e.style == -1 ? '卡' : e.style}',
+                                    style: pokemonTextStyle?.copyWith(
+                                      fontSize: (pokemonTextStyle.fontSize ?? 14) * 0.8,
+                                      color: greyColor3,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       )),

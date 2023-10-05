@@ -146,39 +146,17 @@ class DialogUtility {
   }
 
   static Future<PokemonSearchOptions?> pickPokemonSearchFilters(BuildContext context, {
-    PokemonSearchOptions? initialSearchOptions,
+    required PokemonSearchOptions initialSearchOptions,
     (int, int) Function(PokemonSearchOptions options)? calcCounts,
   }) async {
-    StateSetter? dialogSetState;
-    popResult([PokemonSearchOptions? value]) {
-      context.nav.pop(value);
-    }
-    final searchOptions = initialSearchOptions?.clone() ?? PokemonSearchOptions();
-    int? matchCount;
-    int? allCount;
-
-    tryCalcCounts() {
-      if (calcCounts != null) {
-        final calcMatchCount = calcCounts(searchOptions);
-        matchCount = calcMatchCount.$1;
-        allCount = calcMatchCount.$2;
-      }
-    }
-    tryCalcCounts();
-
-    void search() {
-      tryCalcCounts();
-      dialogSetState?.call(() {});
-    }
+    final screenSize = context.mediaQuery.size;
+    final mainWidth = screenSize.width - 2 * (_horizontalListViewPaddingValue / 2 + _horizontalMarginValue);
 
     const mainSkillBaseItemWidth = 120.0;
     const mainSkillSpacing = 0.0;
 
     const ingredientAndFruitBaseItemWidth = 90.0;
     const ingredientAndFruitSpacing = 0.0;
-
-    final screenSize = context.mediaQuery.size;
-    final mainWidth = screenSize.width - 2 * (_horizontalListViewPaddingValue / 2 + _horizontalMarginValue);
 
     final mainSkillItemWidth = UiUtility.getChildWidthInRowBy(
       baseChildWidth: mainSkillBaseItemWidth,
@@ -192,56 +170,14 @@ class DialogUtility {
       spacing: ingredientAndFruitSpacing,
     ).floor().toDouble();
 
-    Widget wrapHp({ required Widget child, }) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: _horizontalListViewPaddingValue,
-        ),
-        child: child,
-      );
-    }
-
-    Iterable<Widget> wrapHps({ required List<Widget> children }) {
-      return children.map((e) => wrapHp(child: e));
-    }
-
-    final res = await sleepStyle(
+    return await _sleepStyleSearchDialog<PokemonSearchOptions>(
       context,
-      barrierDismissible: false,
-      headerBuilder: (context, innerSetState) {
-        var suffixHeaderText = '';
-        if (matchCount != null && allCount != null) {
-          suffixHeaderText += '($matchCount/$allCount)';
-        }
-
-        return Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                // searchOptions.clear();
-              },
-              icon: const Icon(Icons.search),
-            ),
-            Expanded(
-              child: Text(
-                '${'t_pokemon'.xTr} $suffixHeaderText',
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                searchOptions.clear();
-                search();
-              },
-              child: Text('t_reset'.xTr),
-            ),
-          ],
-        );
-      },
-      childrenBuilder: (context, innerSetState) {
-        dialogSetState = innerSetState;
-
+      titleText: 't_pokemon'.xTr,
+      initialSearchOptions: initialSearchOptions,
+      calcCounts: calcCounts,
+      childrenBuilder: (context, search, searchOptions) {
         return [
-          ...wrapHps(
+          ..._wrapHps(
             children: [
               // TODO:
               // MySubHeader(
@@ -314,7 +250,7 @@ class DialogUtility {
               ],
             ),
           ),
-          ...wrapHps(
+          ..._wrapHps(
             children: [
               Gap.xl,
               MySubHeader(
@@ -369,7 +305,7 @@ class DialogUtility {
               ],
             ),
           ),
-          ...wrapHps(
+          ..._wrapHps(
             children: [
               Gap.xl,
               MySubHeader(
@@ -429,55 +365,13 @@ class DialogUtility {
           Gap.xl,
         ];
       },
-      footerBuilder: (context, innerSetState) {
-        return [
-          Spacer(),
-          TextButton(
-            onPressed: () {
-              popResult();
-            },
-            child: Text('t_cancel'.xTr),
-          ),
-          TextButton(
-            onPressed: () {
-              popResult();
-            },
-            child: Text('t_ok'.xTr),
-          ),
-        ];
-      },
     );
-
-    return res;
   }
 
   static Future<DishSearchOptions> pickDishSearchOptions(BuildContext context, {
-    DishSearchOptions? initialSearchOptions,
+    required DishSearchOptions initialSearchOptions,
     (int, int) Function(DishSearchOptions options)? calcCounts,
   }) async {
-    StateSetter? dialogSetState;
-
-    popResult([PokemonSearchOptions? value]) {
-      context.nav.pop(value);
-    }
-    final searchOptions = initialSearchOptions?.clone() ?? DishSearchOptions();
-    int? matchCount;
-    int? allCount;
-
-    tryCalcCounts() {
-      if (calcCounts != null) {
-        final calcMatchCount = calcCounts(searchOptions);
-        matchCount = calcMatchCount.$1;
-        allCount = calcMatchCount.$2;
-      }
-    }
-    tryCalcCounts();
-
-    void search() {
-      tryCalcCounts();
-      dialogSetState?.call(() {});
-    }
-
     final screenSize = context.mediaQuery.size;
     final mainWidth = screenSize.width - 2 * (_horizontalListViewPaddingValue / 2 + _horizontalMarginValue);
 
@@ -499,57 +393,14 @@ class DialogUtility {
       spacing: ingredientAndFruitSpacing,
     ).floor().toDouble();
 
-    Widget wrapHp({ required Widget child, }) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: _horizontalListViewPaddingValue,
-        ),
-        child: child,
-      );
-    }
-
-    Iterable<Widget> wrapHps({ required List<Widget> children }) {
-      return children.map((e) => wrapHp(child: e));
-    }
-
-    await sleepStyle(
+    return await _sleepStyleSearchDialog<DishSearchOptions>(
       context,
-      barrierDismissible: false,
-      headerBuilder: (context, innerSetState) {
-        var suffixHeaderText = '';
-        if (matchCount != null && allCount != null) {
-          suffixHeaderText += '($matchCount/$allCount)';
-        }
-
-        return Row(
-          children: [
-            IgnorePointer(
-              child: IconButton(
-                onPressed: () {
-                },
-                icon: const Icon(Icons.search),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '${'t_recipes'.xTr} $suffixHeaderText',
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                searchOptions.clear();
-                search();
-              },
-              child: Text('t_reset'.xTr),
-            ),
-          ],
-        );
-      },
-      childrenBuilder: (context, innerSetState) {
-        dialogSetState = innerSetState;
-
+      titleText: 't_recipes'.xTr,
+      initialSearchOptions: initialSearchOptions,
+      calcCounts: calcCounts,
+      childrenBuilder: (context, search, searchOptions) {
         return [
-          ...wrapHps(
+          ..._wrapHps(
             children: [
               MySubHeader(
                 titleText: 't_food'.xTr,
@@ -631,7 +482,7 @@ class DialogUtility {
               ],
             ),
           ),
-          ...wrapHps(
+          ..._wrapHps(
             children: [
               Gap.xl,
               MySubHeader(
@@ -689,26 +540,108 @@ class DialogUtility {
           Gap.xl,
         ];
       },
-      footerBuilder: (context, innerSetState) {
-        return [
-          const Spacer(),
-          TextButton(
-            onPressed: () {
-              popResult();
-            },
-            child: Text('t_cancel'.xTr),
-          ),
-          TextButton(
-            onPressed: () {
-              popResult();
-            },
-            child: Text('t_ok'.xTr),
-          ),
-        ];
+    );
+  }
+
+  static Future<T> _sleepStyleSearchDialog<T extends BaseSearchOptions>(BuildContext context, {
+    required String titleText,
+    required T initialSearchOptions,
+    (int, int) Function(T options)? calcCounts,
+    required List<Widget> Function(BuildContext context, VoidCallback search, T searchOptions) childrenBuilder,
+  }) async {
+    StateSetter? dialogSetState;
+    final searchOptions = initialSearchOptions.clone() as T;
+    int? matchCount;
+    int? allCount;
+
+    tryCalcCounts() {
+      if (calcCounts != null) {
+        final calcMatchCount = calcCounts(searchOptions);
+        matchCount = calcMatchCount.$1;
+        allCount = calcMatchCount.$2;
+      }
+    }
+    tryCalcCounts();
+
+    void search() {
+      tryCalcCounts();
+      dialogSetState?.call(() {});
+    }
+
+    await sleepStyle(
+      context,
+      barrierDismissible: false,
+      headerBuilder: (context, innerSetState) {
+        var suffixHeaderText = '';
+        if (matchCount != null && allCount != null) {
+          suffixHeaderText += '($matchCount/$allCount)';
+        }
+
+        return _header(
+          titleText: '$titleText $suffixHeaderText',
+          onReset: () {
+            searchOptions.clear();
+            search();
+          },
+        );
       },
+      childrenBuilder: (context, innerSetState) {
+        dialogSetState = innerSetState;
+        return childrenBuilder(context, search, searchOptions);
+      },
+      footerBuilder: (context, innerSetState) => _footer(context),
     );
 
     return searchOptions;
+  }
+
+  static Widget _header({
+    required String titleText,
+    required VoidCallback onReset,
+  }) {
+    return Row(
+      children: [
+        IgnorePointer(
+          child: IconButton(
+            onPressed: () { },
+            icon: const Icon(Icons.search),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            titleText,
+          ),
+        ),
+        TextButton(
+          onPressed: onReset,
+          child: Text('t_reset'.xTr),
+        ),
+      ],
+    );
+  }
+
+  /// For dialog children in list view
+  static Iterable<Widget> _wrapHps({ required List<Widget> children }) {
+    return Hp.list(
+      padding: const EdgeInsets.symmetric(
+        horizontal: _horizontalListViewPaddingValue,
+      ),
+      children: children,
+    );
+  }
+
+  static List<Widget> _footer(BuildContext context) {
+    return [
+      const Spacer(),
+      TextButton(
+        onPressed: () => context.nav.pop(),
+        child: Text('t_cancel'.xTr),
+      ),
+      TextButton(
+        onPressed: () => context.nav.pop(),
+        child: Text('t_ok'.xTr),
+      ),
+    ];
   }
 
   static void loading() {

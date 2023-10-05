@@ -1,6 +1,6 @@
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-class PokemonSearchOptions {
+class PokemonSearchOptions implements BaseSearchOptions {
   PokemonSearchOptions({
     this.keyword = '',
     Map<Fruit, bool>? fruitOf,
@@ -19,6 +19,7 @@ class PokemonSearchOptions {
   Set<MainSkill> subSkillOf;
   Set<Ingredient> ingredientOf;
 
+  @override
   PokemonSearchOptions clone() {
     return PokemonSearchOptions(
       keyword: keyword,
@@ -29,6 +30,7 @@ class PokemonSearchOptions {
     );
   }
 
+  @override
   bool isEmptyOptions() {
     return keyword.trim().isEmpty &&
         (fruitOf.isEmpty || fruitOf.entries.every((e) => !e.value)) &&
@@ -38,6 +40,7 @@ class PokemonSearchOptions {
         ingredientOf.isEmpty;
   }
 
+  @override
   void clear() {
     keyword = '';
     fruitOf.clear();

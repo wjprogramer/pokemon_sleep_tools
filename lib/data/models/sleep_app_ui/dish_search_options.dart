@@ -4,7 +4,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 // TODO: 料理 => 食譜一覽
 // 篩選：容量、食材、料理種類
 
-class DishSearchOptions {
+class DishSearchOptions implements BaseSearchOptions {
   DishSearchOptions({
     List<DishType>? dishTypes,
     this.potCapacity,
@@ -19,6 +19,7 @@ class DishSearchOptions {
 
   Set<Ingredient> ingredientOf;
 
+  @override
   DishSearchOptions clone() {
     return DishSearchOptions(
       dishTypes: dishTypes,
@@ -27,12 +28,14 @@ class DishSearchOptions {
     );
   }
 
+  @override
   bool isEmptyOptions() {
     return dishTypes.isEmpty &&
         potCapacity == null &&
         ingredientOf.isEmpty;
   }
 
+  @override
   void clear() {
     dishTypes.clear();
     ingredientOf.clear();
