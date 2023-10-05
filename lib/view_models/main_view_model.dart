@@ -12,13 +12,19 @@ class MainViewModel extends ChangeNotifier {
 
   MyCacheManager get _cache => getIt();
 
-  StoredPokemonProfiles get _storedPokemonProfiles => _cache.storedPokemonProfilesXXX;
+  StoredPokemonProfiles get _storedPokemonProfiles => _cache.storedPokemonProfiles;
   List<PokemonProfile> get profiles => _storedPokemonProfiles.profiles;
 
   Future<PokemonProfile> createProfile(CreatePokemonProfilePayload payload) async {
     final res = await _profileRepo.create(payload);
     notifyListeners();
     return res;
+  }
+
+  Future<PokemonProfile> updateProfile(PokemonProfile newPokemonProfile) async {
+    await _profileRepo.update(newPokemonProfile);
+    notifyListeners();
+    return newPokemonProfile;
   }
 
   Future<void> deleteProfile(int profileId) async {

@@ -53,6 +53,15 @@ final class StoredPokemonProfiles implements BaseLocalFile {
     }
   }
 
+  Future<void> update(PokemonProfile profile) async {
+    final index = _profiles.indexOrNullWhere((e) => e.id == profile.id);
+    if (index == null) {
+      throw Exception(); // Not found
+    }
+
+    _profiles[index] = profile;
+  }
+
   Future<void> delete(int profileId) async {
     _profiles.removeFirstWhere((e) => e.id == profileId);
   }

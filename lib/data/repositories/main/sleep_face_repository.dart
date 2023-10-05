@@ -1,6 +1,5 @@
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 
 class SleepFaceRepository implements MyInjectable {
 

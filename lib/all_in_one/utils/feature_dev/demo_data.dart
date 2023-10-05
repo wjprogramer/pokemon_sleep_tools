@@ -73,6 +73,92 @@ List<PokemonProfile> getAllDemoProfiles() {
       ingredient3: Ingredient.i12,
       ingredientCount3: 7,
     ),
+    // I/flutter (19740): PokemonProfile(
+    // I/flutter (19740):    basicProfileId: 36,
+    // I/flutter (19740):    character: PokemonCharacter.c14,
+    // I/flutter (19740):    subSkillLv10: SubSkill.holdMaxS,
+    // I/flutter (19740):    subSkillLv25: SubSkill.helpSpeedS,
+    // I/flutter (19740):    subSkillLv50: SubSkill.ingredientRateM,
+    // I/flutter (19740):    subSkillLv75: SubSkill.skillRateS,
+    // I/flutter (19740):    subSkillLv100: SubSkill.ingredientRateS,
+    // I/flutter (19740):    ingredient2: Ingredient.i15,
+    // I/flutter (19740):    ingredientCount2: 5,
+    // I/flutter (19740):    ingredient3: Ingredient.i2,
+    // I/flutter (19740):    ingredientCount3: 4,
+    // I/flutter (19740): )
+    // I/flutter (19740): PokemonProfile(
+    // I/flutter (19740):    id: -1,
+    // I/flutter (19740):    basicProfileId: 47,
+    // I/flutter (19740):    character: PokemonCharacter.c15,
+    // I/flutter (19740):    subSkillLv10: SubSkill.berryCountS,
+    // I/flutter (19740):    subSkillLv25: SubSkill.skillLevelM,
+    // I/flutter (19740):    subSkillLv50: SubSkill.holdMaxL,
+    // I/flutter (19740):    subSkillLv75: SubSkill.researchExpBonus,
+    // I/flutter (19740):    subSkillLv100: SubSkill.skillRateM,
+    // I/flutter (19740):    ingredient2: Ingredient.i2,
+    // I/flutter (19740):    ingredientCount2: 4,
+    // I/flutter (19740):    ingredient3: Ingredient.i2,
+    // I/flutter (19740):    ingredientCount3: 6,
+    // I/flutter (19740): )
+    // I/flutter (19740): PokemonProfile(
+    // I/flutter (19740):    id: -1,
+    // I/flutter (19740):    basicProfileId: 17,
+    // I/flutter (19740):    character: PokemonCharacter.c15,
+    // I/flutter (19740):    subSkillLv10: SubSkill.berryCountS,
+    // I/flutter (19740):    subSkillLv25: SubSkill.skillLevelM,
+    // I/flutter (19740):    subSkillLv50: SubSkill.holdMaxL,
+    // I/flutter (19740):    subSkillLv75: SubSkill.researchExpBonus,
+    // I/flutter (19740):    subSkillLv100: SubSkill.skillRateM,
+    // I/flutter (19740):    ingredient2: Ingredient.i5,
+    // I/flutter (19740):    ingredientCount2: 2,
+    // I/flutter (19740):    ingredient3: Ingredient.i11,
+    // I/flutter (19740):    ingredientCount3: 3,
+    // I/flutter (19740): )
+    // I/flutter (19740): PokemonProfile(
+    // I/flutter (19740):    id: -1,
+    // I/flutter (19740):    basicProfileId: 76,
+    // I/flutter (19740):    character: PokemonCharacter.afraidLoneliness,
+    // I/flutter (19740):    subSkillLv10: SubSkill.berryCountS,
+    // I/flutter (19740):    subSkillLv25: SubSkill.skillRateM,
+    // I/flutter (19740):    subSkillLv50: SubSkill.ingredientRateM,
+    // I/flutter (19740):    subSkillLv75: SubSkill.ingredientRateS,
+    // I/flutter (19740):    subSkillLv100: SubSkill.helpSpeedM,
+    // I/flutter (19740):    ingredient2: Ingredient.i6,
+    // I/flutter (19740):    ingredientCount2: 2,
+    // I/flutter (19740):    ingredient3: Ingredient.i6,
+    // I/flutter (19740):    ingredientCount3: 4,
+    // I/flutter (19740): )
+    // I/flutter (19740): PokemonProfile(
+    // I/flutter (19740):    id: -1,
+    // I/flutter (19740):    basicProfileId: 64,
+    // I/flutter (19740):    character: PokemonCharacter.mischievous,
+    // I/flutter (19740):    subSkillLv10: SubSkill.helpSpeedS,
+    // I/flutter (19740):    subSkillLv25: SubSkill.researchExpBonus,
+    // I/flutter (19740):    subSkillLv50: SubSkill.holdMaxS,
+    // I/flutter (19740):    subSkillLv75: SubSkill.helpSpeedM,
+    // I/flutter (19740):    subSkillLv100: SubSkill.skillLevelS,
+    // I/flutter (19740):    ingredient2: Ingredient.i13,
+    // I/flutter (19740):    ingredientCount2: 2,
+    // I/flutter (19740):    ingredient3: Ingredient.i1,
+    // I/flutter (19740):    ingredientCount3: 3,
+    // I/flutter (19740): )
+    // I/flutter (19740): PokemonProfile(
+    // I/flutter (19740):    id: -1,
+    // I/flutter (19740):    basicProfileId: 23,
+    // I/flutter (19740):    character: PokemonCharacter.c12,
+    // I/flutter (19740):    subSkillLv10: SubSkill.skillRateM,
+    // I/flutter (19740):    subSkillLv25: SubSkill.helpSpeedS,
+    // I/flutter (19740):    subSkillLv50: SubSkill.skillLevelS,
+    // I/flutter (19740):    subSkillLv75: SubSkill.ingredientRateS,
+    // I/flutter (19740):    subSkillLv100: SubSkill.ingredientRateM,
+    // I/flutter (19740):    ingredient2: Ingredient.i12,
+    // I/flutter (19740):    ingredientCount2: 5,
+    // I/flutter (19740):    ingredient3: Ingredient.i12,
+    // I/flutter (19740):    ingredientCount3: 7,
+    // I/flutter (19740): )
+    // D/EGL_emulation(19740): app_time_stats: avg=7.14ms min=1.01ms max=36.38ms count=52
+
+
   ];
 
   return results;

@@ -1,16 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/zondicons.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
-import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_profile_repository.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
@@ -18,10 +15,8 @@ import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
-import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
 class HomeFragment extends StatefulWidget {

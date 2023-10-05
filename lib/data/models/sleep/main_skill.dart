@@ -1,4 +1,4 @@
-import 'package:pokemon_sleep_tools/data/models/models.dart';
+
 
 /// [description] 中的數值會根據技能等級以及 [basicValues] 的數值做變動
 enum MainSkill {

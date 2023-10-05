@@ -1,16 +1,17 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
-import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:provider/provider.dart';
 
+/// TODO: 篩選 [DishSearchOptions]
+/// TODO: 可設定食材等級
+/// TODO: 反查料理
 class PotPage extends StatefulWidget {
   const PotPage._();
 
@@ -68,12 +69,40 @@ class _PotPageState extends State<PotPage> {
       return LoadingView();
     }
 
+    final mainContentWidth = context.mediaQuery.size.width - 2 * HORIZON_PADDING;
+    final leadingWidth = math.min(mainContentWidth * 0.2, 100).toDouble();
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: 't_pot'.xTr,
       ),
       body: buildListView(
-        children: [],
+        children: [
+          ...POT_CAPACITIES_OPTIONS.map((e) => Hp(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(
+                    width: leadingWidth,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(e.toString()),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    (_dishesOfPotCapacity[e] ?? []).map((e) => e.nameI18nKey.xTr).join(', '),
+                  ),
+                ),
+              ],
+            ),
+          )),
+          Gap.trailing,
+        ],
       ),
     );
   }

@@ -48,7 +48,7 @@ class BottomBarWithActions extends StatelessWidget {
                     onPressed: () => onSearch?.call(),
                     child: Row(
                       children: [
-                        Icon(Icons.search),
+                        const Icon(Icons.search),
                         if (isSearchOn != null)
                           Padding(
                             padding: const EdgeInsets.only(left: Gap.mdV),
@@ -58,19 +58,20 @@ class BottomBarWithActions extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (onSort != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: spacing),
-                  child: MyOutlinedButton2(
-                    onPressed: () => onSort?.call(),
-                    child: Row(
-                      children: [
-                        Icon(Icons.sort),
-                        Text(sortText ?? ''),
-                      ],
-                    ),
-                  ),
-                ),
+              // TODO:
+              // if (onSort != null)
+              //   Padding(
+              //     padding: const EdgeInsets.only(right: spacing),
+              //     child: MyOutlinedButton2(
+              //       onPressed: () => onSort?.call(),
+              //       child: Row(
+              //         children: [
+              //           Icon(Icons.sort),
+              //           Text(sortText ?? ''),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
               ...?suffixActions,
               // Padding(
               //   padding: const EdgeInsets.only(right: spacing),

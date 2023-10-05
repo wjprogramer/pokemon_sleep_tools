@@ -70,6 +70,51 @@ class PokemonProfile {
     );
   }
 
+  PokemonProfile clone() {
+    return PokemonProfile(
+      id: id,
+      basicProfileId: basicProfileId,
+      character: character,
+      subSkillLv10: subSkillLv10,
+      subSkillLv25: subSkillLv25,
+      subSkillLv50: subSkillLv50,
+      subSkillLv75: subSkillLv75,
+      subSkillLv100: subSkillLv100,
+      ingredient2: ingredient2,
+      ingredientCount2: ingredientCount2,
+      ingredient3: ingredient3,
+      ingredientCount3: ingredientCount3,
+    );
+  }
+
+  PokemonProfile copyWith({
+    PokemonCharacter? character,
+    SubSkill? subSkillLv10,
+    SubSkill? subSkillLv25,
+    SubSkill? subSkillLv50,
+    SubSkill? subSkillLv75,
+    SubSkill? subSkillLv100,
+    Ingredient? ingredient2,
+    int? ingredientCount2,
+    Ingredient? ingredient3,
+    int? ingredientCount3,
+  }) {
+    return PokemonProfile(
+      id: id,
+      basicProfileId: basicProfileId,
+      character: character ?? this.character,
+      subSkillLv10: subSkillLv10 ?? this.subSkillLv10,
+      subSkillLv25: subSkillLv25 ?? this.subSkillLv25,
+      subSkillLv50: subSkillLv50 ?? this.subSkillLv50,
+      subSkillLv75: subSkillLv75 ?? this.subSkillLv75,
+      subSkillLv100: subSkillLv100 ?? this.subSkillLv100,
+      ingredient2: ingredient2 ?? this.ingredient2,
+      ingredientCount2: ingredientCount2 ?? this.ingredientCount2,
+      ingredient3: ingredient3 ?? this.ingredient3,
+      ingredientCount3: ingredientCount3 ?? this.ingredientCount3,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'basicProfileId': basicProfileId,
@@ -86,6 +131,7 @@ class PokemonProfile {
   String getConstructorCode() {
     return
       'PokemonProfile(\n'
+          '   id: -1,\n'
           '   basicProfileId: $basicProfileId,\n'
           '   character: $character,\n'
           '   subSkillLv10: $subSkillLv10,\n'

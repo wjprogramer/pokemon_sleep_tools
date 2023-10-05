@@ -8,7 +8,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:collection/collection.dart';
 
 export 'models/app_meta.dart';
 
@@ -94,7 +93,7 @@ class MyLocalStorage implements MyInjectable {
 
   Future<StoredPokemonProfiles> readPokemonFile() async {
     if (_cache.checkSet(StoredPokemonProfiles)) {
-      return _cache.storedPokemonProfilesXXX;
+      return _cache.storedPokemonProfiles;
     }
     final file = File(_pokemonProfileFilePath);
     StoredPokemonProfiles result;
@@ -103,7 +102,7 @@ class MyLocalStorage implements MyInjectable {
     } else {
       result = StoredPokemonProfiles.fromJson(json.decode(file.readAsStringSync()));
     }
-    _cache.storedPokemonProfilesXXX = result;
+    _cache.storedPokemonProfiles = result;
     return result;
   }
 

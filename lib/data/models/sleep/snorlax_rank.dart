@@ -1,6 +1,5 @@
 // 卡比獸等級
 
-import 'package:flutter/cupertino.dart';
 import 'package:pokemon_sleep_tools/data/models/sleep/rank_title.dart';
 
 class SnorlaxRank {

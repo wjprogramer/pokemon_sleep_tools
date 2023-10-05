@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
@@ -60,10 +59,19 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
   var _previousPage = 0;
   var _currIndex = 0;
 
+  // List
+  var _lastOffset = 0.0;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    // _scrollController.addListener(() {
+    //   _lastOffset = _scrollController.offset;
+    // });
+    // _scrollController2.addListener(() {
+    //   _lastOffset = _scrollController2.offset;
+    // });
 
     scheduleMicrotask(() async {
       final mainViewModel = context.read<MainViewModel>();
@@ -113,16 +121,31 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
           appBar: buildAppBar(
             titleText: profiles[_currIndex].basicProfile.nameI18nKey.xTr,
             actions: [
+              IconButton(
+                onPressed: () {
+                  PokemonMaintainProfilePage.goEdit(context, profiles[_currIndex]);
+                },
+                icon: Icon(Icons.edit),
+              ),
             ],
           ),
           body: PageView(
             controller: _pageController,
             onPageChanged: (page) => _onPageChanged(page, profiles),
-            children: profiles.map((profile) => _PokemonDetailsView(
+            children: profiles.mapIndexed((profileIndex, profile) => _PokemonDetailsView(
               profile: profile,
               statistics: _getStatistics(profile),
               onDeletedSuccess: () {
                 _currIndex -= 1;
+              },
+              initialOffset: _lastOffset,
+              onScroll: (offset) {
+                if (_currIndex != profileIndex) {
+                  return;
+                }
+
+                _lastOffset = offset;
+                setState(() { });
               },
             )).toList(),
           ),
@@ -137,6 +160,9 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
     scheduleMicrotask(() {
       _loadData(page, profiles);
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     });
   }
 
@@ -190,23 +216,50 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
 }
 
-class _PokemonDetailsView extends StatelessWidget {
+class _PokemonDetailsView extends StatefulWidget {
   const _PokemonDetailsView({
     required this.profile,
     this.statistics,
     required this.onDeletedSuccess,
+    required this.initialOffset,
+    required this.onScroll,
   });
 
   final PokemonProfile profile;
   final PokemonProfileStatistics? statistics;
   final Function() onDeletedSuccess;
+  final double initialOffset;
+  final ValueChanged<double> onScroll;
 
-  PokemonBasicProfile get basicProfile => profile.basicProfile;
+  @override
+  State<_PokemonDetailsView> createState() => _PokemonDetailsViewState();
+}
+
+class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
+  PokemonBasicProfile get basicProfile => widget.profile.basicProfile;
+
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController(initialScrollOffset: widget.initialOffset)
+      ..addListener(() {
+        widget.onScroll(_scrollController.offset);
+      });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return buildListView(
-      children: _buildListItems(context, statistics),
+      controller: _scrollController,
+      children: _buildListItems(context, widget.statistics),
     );
   }
 
@@ -276,8 +329,8 @@ class _PokemonDetailsView extends StatelessWidget {
             text: 't_ingredients'.xTr,
             child: Text(
               '${basicProfile.ingredient1.nameI18nKey} x${basicProfile.ingredientCount1}\n'
-                  '${profile.ingredient2.nameI18nKey} x${profile.ingredientCount2}\n'
-                  '${profile.ingredient1.nameI18nKey} x${profile.ingredientCount3}\n',
+                  '${widget.profile.ingredient2.nameI18nKey} x${widget.profile.ingredientCount2}\n'
+                  '${widget.profile.ingredient3.nameI18nKey} x${widget.profile.ingredientCount3}\n',
             ),
           ),
           Gap.xl,
@@ -291,7 +344,7 @@ class _PokemonDetailsView extends StatelessWidget {
           buildWithLabel(
             text: '持有上限'.xTr,
             child: Text(
-              '-- 個\n', // TODO:
+              '${widget.profile.basicProfile.maxCarry} 個\n', // TODO:
             ),
           ),
           Gap.xl,
@@ -300,11 +353,11 @@ class _PokemonDetailsView extends StatelessWidget {
           ),
           Gap.xl,
           Text(
-            profile.basicProfile.mainSkill.nameI18nKey.xTr,
+            widget.profile.basicProfile.mainSkill.nameI18nKey.xTr,
           ),
           Gap.xl,
           Text(
-              profile.subSkills.mapIndexed((index, subSkill) => 'Lv. ${SubSkill.levelList[index]} ${subSkill.nameI18nKey.xTr}').join('\n')
+              widget.profile.subSkills.mapIndexed((index, subSkill) => 'Lv. ${SubSkill.levelList[index]} ${subSkill.nameI18nKey.xTr}').join('\n')
           ),
           MySubHeader(
             titleText: 't_analysis'.xTr,
@@ -313,6 +366,8 @@ class _PokemonDetailsView extends StatelessWidget {
           if (statistics == null)
             Center(child: Text('t_none'.xTr),)
           else ...[
+
+
             Text(
                 '幫忙均能/次: ${statistics.helpPerAvgEnergy.toStringAsFixed(2)}\n'
                     '數量: ${statistics.fruitCount}\n'
@@ -323,8 +378,6 @@ class _PokemonDetailsView extends StatelessWidget {
                     '食材3能量: ${statistics.ingredientEnergy3}\n'
                     '食材均能: ${statistics.ingredientEnergyAvg}\n'
                     '幫手獎勵: ${statistics.helperBonus}\n'
-                    '幫忙速度S: ${statistics.totalHelpSpeedS}\n'
-                    '幫忙速度M: ${statistics.totalHelpSpeedM}\n'
                     '食材機率: ${statistics.ingredientRate}\n'
                     '技能等級: ${statistics.skillLevel}\n'
                     '主技能速度參數: ${statistics.mainSkillSpeedParameter}\n'
@@ -336,6 +389,9 @@ class _PokemonDetailsView extends StatelessWidget {
                     '夢之碎片獎勵: ${statistics.dreamChipsBonus}\n'
                     '主技能能量: ${statistics.mainSkillTotalEnergy}\n'
                     '主技活力加速: ${statistics.mainSkillAccelerateVitality}\n',
+            ),
+            Text(
+              '總幫忙速度加成: S(${statistics.totalHelpSpeedS}), M(${statistics.totalHelpSpeedM})',
             ),
           ],
           MySubHeader(
@@ -351,12 +407,12 @@ class _PokemonDetailsView extends StatelessWidget {
                 title: Text('t_delete_pokemon'.xTr),
                 content: Text(
                   't_delete_someone_hint'.xTrParams({
-                    'someone': profile.basicProfile.nameI18nKey.xTr,
+                    'someone': widget.profile.basicProfile.nameI18nKey.xTr,
                   }),
                 ),
                 onConfirm: () async {
-                  await context.read<MainViewModel>().deleteProfile(profile.id);
-                  onDeletedSuccess();
+                  await context.read<MainViewModel>().deleteProfile(widget.profile.id);
+                  widget.onDeletedSuccess();
                 },
               );
             },
@@ -368,7 +424,6 @@ class _PokemonDetailsView extends StatelessWidget {
       Gap.trailing,
     ];
   }
-
 }
 
 

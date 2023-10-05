@@ -15,8 +15,8 @@ class MyCacheManager implements MyInjectable {
   final _statusOf = <Type, bool>{};
 
   StoredPokemonProfiles _storedPokemonProfiles = StoredPokemonProfiles.empty();
-  StoredPokemonProfiles get storedPokemonProfilesXXX => _storedPokemonProfiles;
-  set storedPokemonProfilesXXX(StoredPokemonProfiles value) {
+  StoredPokemonProfiles get storedPokemonProfiles => _storedPokemonProfiles;
+  set storedPokemonProfiles(StoredPokemonProfiles value) {
     _storedPokemonProfiles = value;
     _statusOf[StoredPokemonProfiles] = true;
   }

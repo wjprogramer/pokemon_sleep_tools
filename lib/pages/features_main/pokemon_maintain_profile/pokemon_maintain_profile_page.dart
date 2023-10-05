@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
@@ -24,30 +26,35 @@ enum _PageType {
   final bool isMutate;
 }
 
-class PokemonMaintainProfilePageArgs {
+class _PokemonMaintainProfilePageArgs {
+  _PokemonMaintainProfilePageArgs({
+    this.profile,
+  });
 
+  final PokemonProfile? profile;
 }
 
+/// TODO: 切換寶可夢的時候，要清除食材
 class PokemonMaintainProfilePage extends StatefulWidget {
   const PokemonMaintainProfilePage._({
     required _PageType pageType,
+    required this.args,
   }) : _pageType = pageType;
 
-  static List<MyPageRoute<PokemonMaintainProfilePageArgs>> get routes => [
+  static List<MyPageRoute<_PokemonMaintainProfilePageArgs>> get routes => [
     _routeCreate, _routeEdit, _routeReadonly,
   ];
 
-  static MyPageRoute<PokemonMaintainProfilePageArgs> get _routeCreate =>
+  static MyPageRoute<_PokemonMaintainProfilePageArgs> get _routeCreate =>
       ('/PokemonBoxPage/create', _getBuilder(_PageType.create));
-  static MyPageRoute<PokemonMaintainProfilePageArgs> get _routeEdit =>
+  static MyPageRoute<_PokemonMaintainProfilePageArgs> get _routeEdit =>
       ('/PokemonBoxPage/edit', _getBuilder(_PageType.edit));
-  static MyPageRoute<PokemonMaintainProfilePageArgs> get _routeReadonly =>
+  static MyPageRoute<_PokemonMaintainProfilePageArgs> get _routeReadonly =>
       ('/PokemonBoxPage/readonly', _getBuilder(_PageType.readonly));
 
   static MyRouteBuilder _getBuilder(_PageType pageType) {
     return (dynamic args) {
-      args = args as PokemonMaintainProfilePageArgs?;
-      return PokemonMaintainProfilePage._(pageType: pageType);
+      return PokemonMaintainProfilePage._(pageType: pageType, args: args);
     };
   }
 
@@ -55,11 +62,21 @@ class PokemonMaintainProfilePage extends StatefulWidget {
     context.nav.push(
       _routeCreate,
       /// TODO: 目前的型態檢查不優，即使放字串、數字，也不用有 error
-      arguments: PokemonMaintainProfilePageArgs(),
+      arguments: _PokemonMaintainProfilePageArgs(),
+    );
+  }
+
+  static goEdit(BuildContext context, PokemonProfile profile) {
+    context.nav.push(
+      _routeEdit,
+      arguments: _PokemonMaintainProfilePageArgs(
+        profile: profile,
+      ),
     );
   }
 
   final _PageType _pageType;
+  final _PokemonMaintainProfilePageArgs args;
 
   @override
   State<PokemonMaintainProfilePage> createState() => _PokemonMaintainProfilePageState();
@@ -72,6 +89,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
   late ThemeData _theme;
 
   bool get _isMutate => widget._pageType.isMutate;
+  PokemonProfile? get _profile => widget.args.profile;
 
   // Form
   late FormGroup _form;
@@ -100,6 +118,13 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       _ingredient1CountField.value = basicProfile?.ingredientCount1;
 
       setState(() { });
+    });
+
+    scheduleMicrotask(() async {
+      await _initData();
+      if (mounted) {
+        setState(() { });
+      }
     });
   }
 
@@ -151,6 +176,24 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     });
   }
 
+  Future<void> _initData() async {
+    final profile = _profile;
+    if (widget._pageType != _PageType.edit || profile == null) {
+      return;
+    }
+
+    _basicProfileField.value = profile.basicProfile;
+    _characterField.value = profile.character;
+    _subSkillsField.value = profile.subSkills;
+
+    _ingredient2Field.value = profile.ingredient2;
+    _ingredient3Field.value = profile.ingredient3;
+
+    _ingredient1CountField.value = profile.ingredientCount1;
+    _ingredient2CountField.value = profile.ingredientCount2;
+    _ingredient3CountField.value = profile.ingredientCount3;
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -173,6 +216,10 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
               wrapFieldBuilder: (context, fieldWidget) {
                 return GestureDetector(
                   onTap: () async {
+                    if (_profile != null) {
+                      return;
+                    }
+
                     final baseProfile = await PokemonBasicProfilePicker.go(context);
                     if (baseProfile == null) {
                       return;
@@ -432,6 +479,18 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       return;
     }
 
+    switch (widget._pageType) {
+      case _PageType.create:
+        _create();
+        break;
+      case _PageType.edit:
+        break;
+      case _PageType.readonly:
+        break;
+    }
+  }
+
+  void _create() async {
     try {
       final pokemon = await _mainViewModel.createProfile(CreatePokemonProfilePayload(
         basicProfileId: _basicProfileField.value!.id,
@@ -443,6 +502,41 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         ingredientCount3: _ingredient3CountField.value!,
       ));
 
+      debugPrint(pokemon.getConstructorCode());
+      DialogUtility.text(
+        context,
+        title: Text('t_create_success'.xTr),
+        content: Text('t_continue_to_create_next_or_back_manually'.xTr),
+      );
+    } catch (e) {
+      DialogUtility.text(
+        context,
+        title: Text('t_create_failed'.xTr),
+      );
+    }
+  }
+
+  void _update() async {
+    try {
+      final profile = _profile;
+      if (profile == null) {
+        throw Exception();
+      }
+
+      final newProfile = profile.copyWith(
+        character: _characterField.value!,
+        subSkillLv10: _subSkillsField.value![0],
+        subSkillLv25: _subSkillsField.value![1],
+        subSkillLv50: _subSkillsField.value![2],
+        subSkillLv75: _subSkillsField.value![3],
+        subSkillLv100: _subSkillsField.value![4],
+        ingredient2: _ingredient2Field.value!,
+        ingredientCount2: _ingredient2CountField.value!,
+        ingredient3: _ingredient3Field.value!,
+        ingredientCount3: _ingredient3CountField.value!,
+      );
+
+      final pokemon = await _mainViewModel.updateProfile(newProfile);
       debugPrint(pokemon.getConstructorCode());
       DialogUtility.text(
         context,

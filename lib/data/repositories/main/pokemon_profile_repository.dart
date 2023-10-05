@@ -25,7 +25,7 @@ class PokemonProfileRepository implements MyInjectable {
     );
     await _postProcessProfile(profile);
 
-    await _localStorage.use(_cache.storedPokemonProfilesXXX, (stored) async {
+    await _localStorage.use(_cache.storedPokemonProfiles, (stored) async {
       await stored.insert(profile);
       await _localStorage.writePokemonProfiles(stored);
     });
@@ -39,8 +39,15 @@ class PokemonProfileRepository implements MyInjectable {
     return stored.profiles;
   }
 
+  Future<void> update(PokemonProfile newProfile) async {
+    await _localStorage.use(_cache.storedPokemonProfiles, (stored) async {
+      await stored.update(newProfile);
+      await _localStorage.writePokemonProfiles(stored);
+    });
+  }
+
   Future<void> delete(int profileId) async {
-    await _localStorage.use(_cache.storedPokemonProfilesXXX, (stored) async {
+    await _localStorage.use(_cache.storedPokemonProfiles, (stored) async {
       await stored.delete(profileId);
       await _localStorage.writePokemonProfiles(stored);
     });
