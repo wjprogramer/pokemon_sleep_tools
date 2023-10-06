@@ -4,6 +4,7 @@ export 'dish_type.dart';
 export 'field.dart';
 export 'fruit.dart';
 export 'fruit_level_info.dart';
+export 'game_item.dart';
 export 'ingredient.dart';
 export 'ingredient_chain.dart';
 export 'main_skill.dart';

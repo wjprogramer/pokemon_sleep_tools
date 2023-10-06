@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 class PokemonSearchOptions implements BaseSearchOptions {
   PokemonSearchOptions({
     String keyword = '',
-    Map<Fruit, bool>? fruitOf,
+    Set<Fruit>? fruitOf,
     Set<MainSkill>? mainSkillOf,
     Set<MainSkill>? subSkillOf,
     Set<Ingredient>? ingredientOf,
@@ -13,17 +15,22 @@ class PokemonSearchOptions implements BaseSearchOptions {
   subSkillOf = subSkillOf ?? {},
   ingredientOf = ingredientOf ?? {};
 
-  String _keyword = '';
-  String get keyword => _keyword;
-  set keyword(String v) {
-    // TODO:
-    _keyword = v;
-  }
-
-  Map<Fruit, bool> fruitOf;
+  Set<Fruit> fruitOf;
   Set<MainSkill> mainSkillOf;
   Set<MainSkill> subSkillOf;
   Set<Ingredient> ingredientOf;
+
+  String _keyword = '';
+  String get keyword => _keyword;
+  /// Will trigger listeners
+  set keyword(String v) {
+    _keyword = v;
+    for (final listener in _keywordListeners) {
+      listener(v);
+    }
+  }
+
+  final _keywordListeners = <ValueChanged<String>>[];
 
   @override
   PokemonSearchOptions clone() {
@@ -39,7 +46,7 @@ class PokemonSearchOptions implements BaseSearchOptions {
   @override
   bool isEmptyOptions() {
     return keyword.trim().isEmpty &&
-        (fruitOf.isEmpty || fruitOf.entries.every((e) => !e.value)) &&
+        fruitOf.isEmpty &&
         mainSkillOf.isEmpty &&
         subSkillOf.isEmpty &&
         ingredientOf.isEmpty;
@@ -54,7 +61,48 @@ class PokemonSearchOptions implements BaseSearchOptions {
     ingredientOf.clear();
   }
 
-  setKeywordWithoutListener() {
+  void setKeywordWithoutListen(String value) {
+    _keyword = value;
+  }
+
+  void addKeywordListener(ValueChanged<String> listener) {
+    _keywordListeners.add(listener);
+  }
+
+  void removeKeywordListener(ValueChanged<String> listener) {
+    _keywordListeners.remove(listener);
+  }
+
+  @override
+  void dispose() {
+    _keywordListeners.clear();
+  }
+
+  List<PokemonProfile> filterProfiles(List<PokemonProfile> profiles) {
+    Iterable<PokemonProfile> results = [...profiles];
+    if (isEmptyOptions()) {
+      return results.toList();
+    }
+
+    if (fruitOf.isNotEmpty) {
+      results = results
+          .where((p) => fruitOf.contains(p.basicProfile.fruit));
+    }
+
+    final newKeyword = keyword.trim();
+    if (newKeyword.isNotEmpty) {
+      results = results
+          .where((p) => p.basicProfile.nameI18nKey.xTr.contains(newKeyword));
+    }
+    if (mainSkillOf.isNotEmpty) {
+      results = results
+          .where((p) => mainSkillOf.contains(p.basicProfile.mainSkill));
+    }
+
+    return results.toList();
+  }
+
+  filterBasicProfiles() {
 
   }
 

@@ -104,22 +104,11 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
         actions: [
           IconButton(
             onPressed: () {
-              showAdaptiveDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('t_candies'.xTr),
-                    content: Text('t_candies_info_text'.xTr),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          context.nav.pop();
-                        },
-                        child: Text('t_confirm'.xTr),
-                      ),
-                    ],
-                  );
-                },
+              DialogUtility.text(
+                context,
+                title: Text('t_candies'.xTr),
+                content: Text('t_candies_info_text'.xTr),
+                barrierDismissible: true,
               );
             },
             icon: const Icon(Icons.info_outline),

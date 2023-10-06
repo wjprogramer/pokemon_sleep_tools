@@ -43,6 +43,19 @@ class _FruitsPageState extends State<FruitsPage> {
     return Scaffold(
       appBar: buildAppBar(
         titleText: 't_fruits'.xTr,
+        actions: [
+          IconButton(
+            onPressed: () {
+              DialogUtility.text(
+                context,
+                title: Text('t_fruits'.xTr),
+                content: Text('給卡比獸吃，用以增加能量'.xTr),
+                barrierDismissible: true,
+              );
+            },
+            icon: Icon(Icons.info_outline),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/sleep_face_repository.dart';
+import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -52,6 +54,8 @@ class PokemonBasicProfilePage extends StatefulWidget {
 
 class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   SleepFaceRepository get _sleepFaceRepo => getIt();
+  EvolutionRepository get _evolutionRepo => getIt();
+  PokemonBasicProfileRepository get _basicProfileRepo => getIt();
 
   PokemonBasicProfile get _basicProfile => widget._args.basicProfile;
 
@@ -70,6 +74,10 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   var _existInBox = false;
 
   var _currPokemonLevel = 1;
+
+  List<List<Evolution>> _evolutions = List.generate(MAX_POKEMON_EVOLUTION_STAGE, (index) => []);
+
+  var _basicProfilesInEvolutionChain = <int, PokemonBasicProfile>{};
 
   @override
   void initState() {
@@ -93,6 +101,17 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
       for (final sleepFace in sleepFaces) {
         _sleepFacesOfField[sleepFace.field]?.add(sleepFace);
       }
+
+      final evolutions = await _evolutionRepo.findByBasicProfileId(_basicProfile.id);
+      _evolutions = evolutions;
+
+      final basicProfileIdInEvolutionChain = evolutions
+          .expand((e) => e)
+          .map((e) => e.basicProfileId)
+          .toList();
+
+      _basicProfilesInEvolutionChain = await _basicProfileRepo
+          .findByIdList(basicProfileIdInEvolutionChain); // _evolutions
 
       _initialized = true;
       if (mounted) {
@@ -256,8 +275,10 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               MySubHeader(
                 titleText: 't_evolution'.xTr,
               ),
-              // TODO: 顯示整段進化練
-              // TODO: 要反查
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _buildEvolutions(_evolutions),
+              ),
               Gap.md,
               MySubHeader(
                 titleText: 't_sleep_faces'.xTr,
@@ -314,81 +335,122 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     );
   }
 
-  // TODO: 反查地圖
   Widget _buildSleepFace(SleepFace sleepFace, List<int> markStyles) {
     final marked = markStyles.contains(sleepFace.style);
 
-    return Container(
-      // padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  final facesViewModels = context.read<SleepFaceViewModel>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                final facesViewModels = context.read<SleepFaceViewModel>();
 
-                  if (markStyles.contains(sleepFace.style)) {
-                    facesViewModels.removeMark(sleepFace.basicProfileId, sleepFace.style);
-                  } else {
-                    facesViewModels.mark(sleepFace.basicProfileId, sleepFace.style);
-                  }
-                },
-                icon: BookmarkIcon(marked: marked),
-              ),
-              Text(
-                _sleepNamesOfBasicProfile[sleepFace.style] ?? _sleepFaceRepo.getCommonSleepFaceName(sleepFace.style) ?? '',
-              ),
-              Gap.md,
-              SnorlaxRankItem(rank: sleepFace.snorlaxRank),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 48),
-            child: RichText(
-              text: TextSpan(
-                text: '',
-                style: _theme.textTheme.bodyMedium,
-                children: [
-                  WidgetSpan(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: Gap.smV),
-                      child: CandyIcon(size: 16,),
+                if (markStyles.contains(sleepFace.style)) {
+                  facesViewModels.removeMark(sleepFace.basicProfileId, sleepFace.style);
+                } else {
+                  facesViewModels.mark(sleepFace.basicProfileId, sleepFace.style);
+                }
+              },
+              icon: BookmarkIcon(marked: marked),
+            ),
+            Text(
+              _sleepNamesOfBasicProfile[sleepFace.style] ?? _sleepFaceRepo.getCommonSleepFaceName(sleepFace.style) ?? '',
+            ),
+            Gap.md,
+            SnorlaxRankItem(rank: sleepFace.snorlaxRank),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 48),
+          child: RichText(
+            text: TextSpan(
+              text: '',
+              style: _theme.textTheme.bodyMedium,
+              children: [
+                const WidgetSpan(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: Gap.smV),
+                    child: CandyIcon(size: 16,),
+                  ),
+                ),
+                TextSpan(
+                  text: '${sleepFace.rewards.candy}',
+                ),
+                const WidgetSpan(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: Gap.mdV,
+                      right: Gap.smV,
                     ),
+                    child: DreamChipIcon(size: 16,),
                   ),
-                  TextSpan(
-                    text: '${sleepFace.rewards.candy}',
-                  ),
-                  WidgetSpan(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: Gap.mdV,
-                        right: Gap.smV,
-                      ),
-                      child: DreamChipIcon(size: 16,),
+                ),
+                TextSpan(
+                  text: '${sleepFace.rewards.shards}',
+                ),
+                const WidgetSpan(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: Gap.mdV,
+                      right: Gap.smV,
                     ),
+                    child: XpIcon(size: 16,),
                   ),
-                  TextSpan(
-                    text: '${sleepFace.rewards.shards}',
-                  ),
-                  WidgetSpan(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: Gap.mdV,
-                        right: Gap.smV,
-                      ),
-                      child: XpIcon(size: 16,),
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${sleepFace.rewards.exp}',
-                  ),
-                ],
-              ),
+                ),
+                TextSpan(
+                  text: '${sleepFace.rewards.exp}',
+                ),
+              ],
             ),
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEvolutions(List<List<Evolution>> evolutionsStages) {
+    List<Widget> x(int index, List<Evolution> e, Iterable<List<Evolution>> list) {
+      return [
+        ..._buildEvolutionStage(e),
+        if (index != list.length - 1)
+          const Icon(Icons.arrow_right),
+      ];
+    }
+
+    return Row(
+      children: [
+        ...evolutionsStages
+            .where((element) => element.isNotEmpty)
+            .xMapIndexed(x)
+            .expand((e) => e),
+      ],
+    );
+  }
+
+  List<Widget> _buildEvolutionStage(List<Evolution> evolutionsStage) {
+    return [
+      ...evolutionsStage
+          .map((e) => (e, _basicProfilesInEvolutionChain[e.basicProfileId]!))
+          .whereNotNull()
+          .map((e) => _buildEvolutionItem(e)),
+    ];
+  }
+
+  Widget _buildEvolutionItem((Evolution, PokemonBasicProfile) entry) {
+    final (evolution, basicProfile) = entry;
+    final isCurrent = _basicProfile.id == basicProfile.id;
+
+    return InkWell(
+      onTap: isCurrent ? null : () {
+        PokemonBasicProfilePage.go(context, basicProfile);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          basicProfile.nameI18nKey.xTr,
+        ),
       ),
     );
   }

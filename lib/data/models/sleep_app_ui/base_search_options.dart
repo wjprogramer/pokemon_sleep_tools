@@ -4,4 +4,6 @@ abstract class BaseSearchOptions {
   bool isEmptyOptions();
 
   void clear();
+
+  void dispose() {}
 }

@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
+import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
@@ -18,7 +20,9 @@ import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
+import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:provider/provider.dart';
 
 class HomeFragment extends StatefulWidget {
   const HomeFragment({super.key});
@@ -227,6 +231,12 @@ class _HomeFragmentState extends State<HomeFragment> {
                     teamRepo.findAll();
                   },
                   child: const Text('Temp'),
+                ),
+                MyElevatedButton(
+                  onPressed: () async {
+                    DevPokemonEvolutionsPage.go(context);
+                  },
+                  child: const Text('進化'),
                 ),
                 MyElevatedButton(
                   onPressed: () {},

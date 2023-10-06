@@ -2,6 +2,9 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 
 // ignore_for_file: constant_identifier_names
 
+/// 寶可夢最高進化階數，根據個人經驗，目前最高就到 3
+const MAX_POKEMON_EVOLUTION_STAGE = 3;
+
 /// 每個隊伍容納最多的寶可夢數量
 const MAX_TEAM_POKEMON_COUNT = 5;
 

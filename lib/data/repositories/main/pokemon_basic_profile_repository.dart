@@ -16,6 +16,15 @@ class PokemonBasicProfileRepository implements MyInjectable {
     return _allPokemonMapping;
   }
 
+  Future<Map<int, PokemonBasicProfile>> findByIdList(List<int> basicProfileIdList) async {
+    final mapping = await findAllMapping();
+    return basicProfileIdList
+        .map((e) => mapping[e])
+        .whereNotNull()
+        .toList()
+        .toMap((profile) => profile.id, (profile) => profile);
+  }
+
   Future<List<PokemonBasicProfile>> findAll() async {
     final x = [..._allPokemonMapping.entries.map((e) => e.value)];
     x.sort((a, b) => a.boxNo - b.boxNo);

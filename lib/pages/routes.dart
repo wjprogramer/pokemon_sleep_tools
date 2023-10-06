@@ -4,6 +4,7 @@ import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sour
 import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
@@ -52,6 +53,7 @@ MyRoutesMapping generateRoutes() {
     // dev
     DevIconsPage.route,
     DevPokemonBoxPage.route,
+    DevPokemonEvolutionsPage.route,
     MyStorybookPage.route,
     // main
     BagPage.route,

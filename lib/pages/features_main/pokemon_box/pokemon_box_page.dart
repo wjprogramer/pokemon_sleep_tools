@@ -8,7 +8,9 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
+import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:provider/provider.dart';
 
@@ -91,6 +93,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   // Data
   var _allProfiles = <PokemonProfile>[];
   var _resultProfiles = <PokemonProfile>[];
+  var _profileIdListInTeam = <int>{};
 
   // Picker mode properties
   var _currPickIndex = 0;
@@ -107,6 +110,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
     scheduleMicrotask(() async {
       final mainViewModel = context.read<MainViewModel>();
+      final teamViewModel = context.read<TeamViewModel>();
+      final teams = await teamViewModel.loadTeams();
 
       _indexToProfileId = List
           .generate(MAX_TEAM_POKEMON_COUNT, (index) => index)
@@ -114,7 +119,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       _currPickIndex = _args.initialIndex ?? _currPickIndex;
 
       _allProfiles = await mainViewModel.loadProfiles();
-      _resultProfiles = _filterOptions(_searchOptions, _allProfiles);
+      _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
 
       final profileIdList = _args.initialTeam?.profileIdList;
       if (profileIdList != null) {
@@ -132,34 +137,17 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         });
       }
 
+      _profileIdListInTeam = {
+        ...teams.whereNotNull().map((team) => team.profileIdList).expand((e) => e),
+      }..remove(-1);
+
       setState(() {  });
     });
-  }
-
-  List<PokemonProfile> _filterOptions(PokemonSearchOptions options, List<PokemonProfile> profiles) {
-    Iterable<PokemonProfile> newProfiles = [...profiles];
-    if (options.isEmptyOptions()) {
-      return newProfiles.toList();
-    }
-
-    newProfiles = newProfiles.where((p) => options.fruitOf[p.basicProfile.fruit] ?? false);
-
-    final newKeyword = options.keyword.trim();
-    if (newKeyword.isNotEmpty) {
-      newProfiles = newProfiles.where((p) => p.basicProfile.nameI18nKey.xTr.contains(newKeyword));
-    }
-    if (options.mainSkillOf.isNotEmpty) {
-
-    }
-
-    return newProfiles.toList();
   }
 
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
-
-    // TODO: Consumer2, for teams, readonly, 若有在 teams 中，要顯示「正在隊中」;
 
     final screenSize = MediaQuery.of(context).size;
     final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
@@ -184,8 +172,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
           ),
         ],
       ),
-      body: Consumer<MainViewModel>(
-        builder: (context, viewModel, child) {
+      body: Consumer2<MainViewModel, TeamViewModel>(
+        builder: (context, viewModel, teamViewModel, child) {
           _allProfiles = viewModel.profiles;
 
           return Column(
@@ -228,20 +216,19 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   Widget _buildBottomNavigationBar(List<PokemonProfile> profiles) {
     return BottomBarWithActions(
       onSearch: () async {
-        var res = await DialogUtility.pickPokemonSearchFilters(
+        var res = await DialogUtility.searchPokemon(
           context,
           initialSearchOptions: _searchOptions,
           calcCounts: (options) {
             if (options.isEmptyOptions()) {
               return (profiles.length, profiles.length);
             }
-
-            return (_filterOptions(options, _allProfiles).length, profiles.length);
+            return (options.filterProfiles(_allProfiles).length, profiles.length);
           },
         );
 
         _searchOptions = res ?? _searchOptions;
-        _resultProfiles = _filterOptions(_searchOptions, _allProfiles);
+        _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
         setState(() { });
       },
       onSort: () {
@@ -302,6 +289,24 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text('${index + 1}'),
+                ),
+              ),
+            ),
+          if (_profileIdListInTeam.contains(profile.id))
+            Positioned(
+              right: 0,
+              left: 0,
+              child: Container(
+                padding: const EdgeInsets.all(2.0),
+                color: color1,
+                child: Text(
+                  '正在隊中',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: color1.fgColor,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
                 ),
               ),
             ),

@@ -1,6 +1,7 @@
-import 'package:pokemon_sleep_tools/data/models/common/common.dart';
+import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-enum EvolutionItem {
+/// TODO: 應該被 [GameItem] 取代？
+enum EvolutionGameItem {
   i1(1, '聯繫繩', [ 39, 37, 48 ]),
   i2(2, '火之石', [ 55, 31 ]),
   i3(3, '水之石', [ 55, ]),
@@ -11,7 +12,7 @@ enum EvolutionItem {
   i8(8, '光之石', [ 74 ]),
   i9(9, '王者之證', [ 39 ]);
 
-  const EvolutionItem(this.id, this.nameI18nKey, this.basicProfileIds);
+  const EvolutionGameItem(this.id, this.nameI18nKey, this.basicProfileIds);
 
   final int id;
   final String nameI18nKey;

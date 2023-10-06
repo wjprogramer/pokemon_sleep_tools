@@ -30,9 +30,10 @@ class TeamViewModel extends ChangeNotifier {
     return pokemonTeam;
   }
 
-  Future<void> loadTeams() async {
+  Future<List<PokemonTeam?>> loadTeams() async {
     _teams = await _teamRepo.findAll();
     notifyListeners();
+    return _teams;
   }
 
 }

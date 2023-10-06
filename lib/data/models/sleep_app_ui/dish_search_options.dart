@@ -42,5 +42,9 @@ class DishSearchOptions implements BaseSearchOptions {
     potCapacity = null;
   }
 
+  @override
+  void dispose() {
+  }
+
 
 }

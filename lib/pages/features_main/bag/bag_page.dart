@@ -46,7 +46,7 @@ class _BagPageState extends State<BagPage> {
   }
 
   Future<void> _init() async {
-    for (final evolutionItem in EvolutionItem.values) {
+    for (final evolutionItem in EvolutionGameItem.values) {
       for (final basicProfileId in evolutionItem.basicProfileIds) {
         if (_basicProfileIdToInstance[basicProfileId] != null) {
           continue;
@@ -76,7 +76,7 @@ class _BagPageState extends State<BagPage> {
           // 薰香
           // 進化道具
           Text('t_evolution_items'.xTr),
-          ...EvolutionItem.values.map((evolutionItem) => <Widget>[
+          ...EvolutionGameItem.values.map((evolutionItem) => <Widget>[
             Gap.xl,
             Text('# ${evolutionItem.nameI18nKey.xTr}'),
             Gap.sm,
@@ -92,7 +92,7 @@ class _BagPageState extends State<BagPage> {
     );
   }
 
-  List<Widget> _buildBasicProfiles(EvolutionItem evolutionItem) {
+  List<Widget> _buildBasicProfiles(EvolutionGameItem evolutionItem) {
     return evolutionItem.basicProfileIds
         .map((basicProfileId) => _basicProfileIdToInstance[basicProfileId])
         .whereNotNull()
