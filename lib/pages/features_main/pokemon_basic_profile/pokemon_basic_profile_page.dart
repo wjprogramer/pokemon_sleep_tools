@@ -8,7 +8,6 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/data/repositories/main/sleep_face_repository.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -164,8 +163,8 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
           children: [
             // PokemonTypeIcon(type: _basicProfile.pokemonType),
             if (_existInBox)
-              Padding(
-                padding: const EdgeInsets.only(right: Gap.mdV),
+              const Padding(
+                padding: EdgeInsets.only(right: Gap.mdV),
                 child: PokemonRecordedIcon(),
               ),
             Expanded(
@@ -445,15 +444,6 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     final (evolution, basicProfile) = entry;
     final isCurrent = _basicProfile.id == basicProfile.id;
 
-    // "candy,level"
-    // "level,candy"
-    // "item,candy"
-    // "item,candy,item"
-    // "timing,sleepTime,candy"
-    // "sleepTime,candy"
-    // "candy,sleepTime"
-    // "candy,sleepTime,timing"
-
     List<Widget> conditionsItems;
 
     if (stage == null) {
@@ -461,10 +451,9 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     } else {
       conditionsItems = stage.conditions
           .whereType<EvolutionConditionRaw>()
-          .map((e) => Text(e.values.toString()))
+          .map((e) => _buildEvolutionCondition(e))
           .toList();
     }
-
 
     return InkWell(
       onTap: isCurrent ? null : () {
@@ -483,6 +472,62 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
         ),
       ),
     );
+  }
+
+  Widget _buildEvolutionCondition(EvolutionConditionRaw condition) {
+    final values = condition.values;
+    List<Widget>? children;
+
+    // "candy,level"
+    // "level,candy"
+    // "item,candy"
+    // "item,candy,item"
+    // "timing,sleepTime,candy"
+    // "sleepTime,candy"
+    // "candy,sleepTime"
+    // "candy,sleepTime,timing"
+
+    switch (values['type']) {
+      case 'candy':
+        children = [
+          const CandyIcon(),
+          Text(Display.numInt(values['count'] ?? 0)),
+        ];
+        break;
+      case 'level':
+        children = [
+          const LevelIcon(size: 20,),
+          Text(Display.numInt(values['level'] ?? 0)),
+        ];
+        break;
+      case 'sleepTime':
+        children = [
+          const Iconify(
+            Tabler.zzz, color: positiveColor,
+          ),
+          Text('${Display.numInt(values['hours'] ?? 0)}小時'),
+        ];
+        break;
+      case 'item':
+        children = [
+          Text(GameItem.getById(values['item'])?.nameI18nKey.xTr ?? Display.placeHolder),
+        ];
+        break;
+      case 'timing':
+        children = [
+          const Icon(Icons.access_time_rounded, color: greenColor,),
+          Text(
+            '${values['startHour']} ~ ${values['endHour']}'
+          ),
+        ];
+        break;
+    }
+
+    if (children != null) {
+      return Row(children: children);
+    }
+
+    return Text(condition.values.toString());
   }
 
 }

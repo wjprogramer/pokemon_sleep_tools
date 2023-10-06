@@ -1,8 +1,5 @@
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
-import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
-import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 
 class EvolutionRepository implements MyInjectable {
   Future<Map<int, Evolution>> findAllMapping() async {

@@ -256,6 +256,16 @@ class _HomeFragmentState extends State<HomeFragment> {
           Gap.xl,
           const Wrap(
             children: [
+              Iconify(Carbon.increase_level, color: Colors.blue),
+              Iconify(Carbon.skill_level, color: Colors.blue),
+              Iconify(Carbon.skill_level_advanced, color: Colors.blue),
+              Iconify(Carbon.skill_level_basic, color: Colors.blue),
+              Iconify(Carbon.skill_level_intermediate, color: Colors.blue),
+              Iconify(Cil.level_up, color: Colors.blue),
+              Iconify(Fa.level_up, color: Colors.blue),
+              Iconify(Icons8.level_up, color: Colors.blue),
+              Iconify(GameIcons.level_end_flag, color: Colors.blue), // 馬里歐終點
+
               Iconify(Ls.star, color: Colors.blue),
               Iconify(Charm.north_star, color: Colors.blue),
               Iconify(Charm.star, color: Colors.blue),

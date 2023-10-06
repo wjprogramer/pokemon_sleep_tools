@@ -33,6 +33,8 @@
 // "33": "副技能種子",
 // "34": "友好薰香"
 
+import 'package:collection/collection.dart';
+
 enum GameItem {
   i1(1, '專注薰香'),
   i2(2, '幸運薰香'),
@@ -73,4 +75,9 @@ enum GameItem {
 
   final int id;
   final String nameI18nKey;
+
+  static GameItem? getById(int id) {
+    return GameItem.values.toList().firstWhereOrNull((e) => e.id == id);
+  }
+
 }

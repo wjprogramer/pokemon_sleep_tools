@@ -6,6 +6,7 @@ export 'dream_chip_icon.dart';
 export 'energy_icon.dart';
 export 'friend_points_icon.dart';
 export 'island_icon.dart';
+export 'level_icon.dart';
 export 'pokemon_rank_item.dart';
 export 'pokemon_rank_title_icon.dart';
 export 'pokemon_recorded_icon.dart';
