@@ -413,7 +413,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   Widget _buildEvolutions(List<List<Evolution>> evolutionsStages) {
     List<Widget> x(int index, List<Evolution> e, Iterable<List<Evolution>> list) {
       return [
-        ..._buildEvolutionStage(e),
+        ..._buildEvolutionStage(e, index == 0 ? null : evolutionsStages[index - 1]),
         if (index != list.length - 1)
           const Icon(Icons.arrow_right),
       ];
@@ -429,18 +429,42 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     );
   }
 
-  List<Widget> _buildEvolutionStage(List<Evolution> evolutionsStage) {
+  List<Widget> _buildEvolutionStage(List<Evolution> evolutionsStage, List<Evolution>? preEvolution) {
+    final stages = (preEvolution ?? []).map((e) => e.nextStages).expand((e) => e);
+    final basicProfileIdToStage = stages.toMap((p0) => p0.basicProfileId, (stage) => stage);
+
     return [
       ...evolutionsStage
           .map((e) => (e, _basicProfilesInEvolutionChain[e.basicProfileId]!))
           .whereNotNull()
-          .map((e) => _buildEvolutionItem(e)),
+          .map((e) => _buildEvolutionItem(e, basicProfileIdToStage[e.$2.id])),
     ];
   }
 
-  Widget _buildEvolutionItem((Evolution, PokemonBasicProfile) entry) {
+  Widget _buildEvolutionItem((Evolution, PokemonBasicProfile) entry, EvolutionStage? stage) {
     final (evolution, basicProfile) = entry;
     final isCurrent = _basicProfile.id == basicProfile.id;
+
+    // "candy,level"
+    // "level,candy"
+    // "item,candy"
+    // "item,candy,item"
+    // "timing,sleepTime,candy"
+    // "sleepTime,candy"
+    // "candy,sleepTime"
+    // "candy,sleepTime,timing"
+
+    List<Widget> conditionsItems;
+
+    if (stage == null) {
+      conditionsItems = [];
+    } else {
+      conditionsItems = stage.conditions
+          .whereType<EvolutionConditionRaw>()
+          .map((e) => Text(e.values.toString()))
+          .toList();
+    }
+
 
     return InkWell(
       onTap: isCurrent ? null : () {
@@ -448,8 +472,14 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
       },
       child: Container(
         padding: const EdgeInsets.all(8.0),
-        child: Text(
-          basicProfile.nameI18nKey.xTr,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              basicProfile.nameI18nKey.xTr,
+            ),
+            ...conditionsItems,
+          ],
         ),
       ),
     );
