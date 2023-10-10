@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -253,17 +254,18 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                 titleText: 't_ingredients'.xTr,
               ),
               // TODO: 反查食材
-              SliderWithButtons(
-                value: _currPokemonLevel.toDouble(),
-                onChanged: (v) {
-                  _currPokemonLevel = v.toInt();
-                  setState(() { });
-                },
-                max: 60,
-                min: 1,
-                divisions: 59,
-                hideSlider: true,
-              ),
+              if (kDebugMode)
+                SliderWithButtons(
+                  value: _currPokemonLevel.toDouble(),
+                  onChanged: (v) {
+                    _currPokemonLevel = v.toInt();
+                    setState(() { });
+                  },
+                  max: 60,
+                  min: 1,
+                  divisions: 59,
+                  hideSlider: true,
+                ),
               Text(
                 '1. ${_basicProfile.ingredient1.nameI18nKey.xTr}\n'
                     '2. ${_basicProfile.ingredientOptions2.map((e) => '${e.$1.nameI18nKey.xTr} x${e.$2}').join(', ')}\n'

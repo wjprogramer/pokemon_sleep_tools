@@ -36,7 +36,7 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
   // UI
   final _pageController = PageController(keepPage: true);
 
-  // Page status
+  // Page
   final _disposers = <MyDisposable>[];
   var _isInitialized = false;
 

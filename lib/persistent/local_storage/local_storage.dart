@@ -138,8 +138,10 @@ class MyLocalStorage implements MyInjectable {
     return path.join(_parent.path, 'pokemon_profiles.json');
   }
 
-  Future<StoredPokemonProfiles> readPokemonFile() async {
-    if (_cache.checkSet(StoredPokemonProfiles)) {
+  Future<StoredPokemonProfiles> readPokemonFile({
+    bool force = false,
+  }) async {
+    if (_cache.checkSet(StoredPokemonProfiles) && !force) {
       return _cache.storedPokemonProfiles;
     }
     final file = File(_pokemonProfileFilePath);

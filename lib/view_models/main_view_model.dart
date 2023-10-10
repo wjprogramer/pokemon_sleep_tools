@@ -32,8 +32,10 @@ class MainViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<PokemonProfile>> loadProfiles() async {
-    await _profileRepo.findAll();
+  Future<List<PokemonProfile>> loadProfiles({
+    bool force = false,
+  }) async {
+    await _profileRepo.findAll(force: force);
     notifyListeners();
     return profiles;
   }

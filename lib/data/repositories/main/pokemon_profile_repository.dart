@@ -33,8 +33,10 @@ class PokemonProfileRepository implements MyInjectable {
     return profile;
   }
 
-  Future<List<PokemonProfile>> findAll() async {
-    final stored = await _localStorage.readPokemonFile();
+  Future<List<PokemonProfile>> findAll({
+    bool force = false,
+  }) async {
+    final stored = await _localStorage.readPokemonFile(force: force);
     await _postProcessProfiles(stored.profiles);
     return stored.profiles;
   }

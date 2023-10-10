@@ -7,11 +7,15 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_basic_profile_repository.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
+import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dream_chip_icon.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/energy_icon.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
+import 'package:provider/provider.dart';
 
 class _IngredientPageArgs {
   _IngredientPageArgs(this.ingredient);
@@ -49,13 +53,17 @@ class _IngredientPageState extends State<IngredientPage> {
   // UI
   late ThemeData _theme;
 
-  // Page status
+  // Page
   var _initialized = false;
+  final _disposers = <MyDisposable>[];
 
   // Data
   final _dishList = <Dish>[];
   final _dishIngredientsOf = <Dish, List<(Ingredient, int)>>{};
   var _basicProfiles = <PokemonBasicProfile>[];
+
+  /// [PokemonBasicProfile.id] to [PokemonProfile]
+  var _profileOf = <int, PokemonProfile>{};
 
   var _currPokemonLevel = 1;
 
@@ -64,6 +72,18 @@ class _IngredientPageState extends State<IngredientPage> {
     super.initState();
 
     scheduleMicrotask(() async {
+      final mainViewModel = context.read<MainViewModel>();
+
+      _disposers.addAll([
+        mainViewModel.xAddListener(_listenMainViewModel),
+      ]);
+
+      final profiles = await mainViewModel.loadProfiles();
+      _profileOf = {};
+      for (final profile in profiles) {
+        _profileOf[profile.basicProfileId] = profile;
+      }
+
       _basicProfiles = (await _basicProfileRepo.findAll()).where((basicProfile) {
         return basicProfile.ingredient1 == _ingredient ||
             [
@@ -87,10 +107,27 @@ class _IngredientPageState extends State<IngredientPage> {
       }
 
       _initialized = true;
+      print(12);
       if (mounted) {
         setState(() { });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _disposers.disposeAll();
+    super.dispose();
+  }
+
+  void _listenMainViewModel() {
+    final mainViewModel = context.read<MainViewModel>();
+    _profileOf = mainViewModel.profiles
+        .toMap((profile) => profile.basicProfileId, (profile) => profile);
+
+    if (mounted) {
+      setState(() { });
+    }
   }
 
   @override
@@ -220,18 +257,16 @@ class _IngredientPageState extends State<IngredientPage> {
                   'someone': _ingredient.nameI18nKey.xTr,
                 }),
               ),
-              ..._basicProfiles
-                  .map((e) => _buildBasicProfile(e))
-                  .expand((e) => e),
             ],
           ),
+          ..._basicProfiles
+              .map((e) => _buildBasicProfile(e)),
           Gap.trailing,
         ],
       ),
     );
   }
 
-  /// TODO: 反查寶可夢
   /// TODO: 需要計算各種組合的能量
   ///     例如
   ///     [PokemonBasicProfile.ingredientOptions2] 的第一個，配上 [PokemonBasicProfile.ingredientOptions3] 第一個
@@ -239,18 +274,80 @@ class _IngredientPageState extends State<IngredientPage> {
   ///     然後各種組合的差異數值 （攻略網站：同一種寶可夢不同組合，會有不同的間隔時間、能量）
   ///     https://pks.raenonx.cc/ingredient/3
   ///
-  /// TODO: 注意，有些對應食材，需要等到 Lv 30 或 Lv 60
-  List<Widget> _buildBasicProfile(PokemonBasicProfile basicProfile) {
-    return [
-      Gap.sm,
-      Text(basicProfile.nameI18nKey.xTr),
-      Text('1. ${basicProfile.ingredient1.nameI18nKey.xTr}'),
-      if (_currPokemonLevel >= 30)
-        Text('2. ${basicProfile.ingredientOptions2.map((e) => e.$1.nameI18nKey.xTr).join('t_separator'.xTr)}'),
-      if (_currPokemonLevel >= 60)
-        Text('3. ${basicProfile.ingredientOptions3.map((e) => e.$1.nameI18nKey.xTr).join('t_separator'.xTr)}'),
-      Gap.md,
-    ];
+  Widget _buildBasicProfile(PokemonBasicProfile basicProfile) {
+    return Hp(
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Opacity(
+            opacity: _profileOf[basicProfile.id] != null ? 1 : 0,
+            child: const Padding(
+              padding: EdgeInsets.only(right: Gap.mdV),
+              child: PokemonRecordedIcon(),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Gap.sm,
+                Text(basicProfile.nameI18nKey.xTr),
+                Row(
+                  children: [
+                    const Text('Lv 1.'),
+                    _buildIngredientLabel(basicProfile.ingredient1),
+                  ],
+                ),
+                if (_currPokemonLevel >= 30)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Wrap(
+                      children: [
+                        const Text('Lv 30.'),
+                        ...basicProfile.ingredientOptions2.map((e) => _buildIngredientLabel(e.$1)),
+                      ],
+                    ),
+                  ),
+                if (_currPokemonLevel >= 60)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Row(
+                      children: [
+                        const Text('Lv 60.'),
+                        Expanded(
+                          child: Wrap(
+                            spacing: 4,
+                            children: basicProfile.ingredientOptions3.map((e) => _buildIngredientLabel(e.$1)).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                Gap.md
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              PokemonBasicProfilePage.go(context, basicProfile);
+            },
+            icon: Icon(Icons.arrow_forward_ios),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIngredientLabel(Ingredient ingredient) {
+    final sameIngredient = _ingredient == ingredient;
+
+    return IngredientLabel(
+      sameIngredient: sameIngredient,
+      ingredient: ingredient,
+      onTap: sameIngredient ? null : () {
+        IngredientPage.go(context, ingredient);
+      },
+    );
   }
 }
 

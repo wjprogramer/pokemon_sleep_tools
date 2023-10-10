@@ -92,10 +92,21 @@ class _SleepFragmentState extends State<SleepFragment> {
                   MyOutlinedButton(
                     color: tmpColor,
                     onPressed: () async {
-                      await _localStorage.importData();
-                      final mainViewModel = context.read<MainViewModel>();
+                      try {
+                        await _localStorage.importData();
+                        final mainViewModel = context.read<MainViewModel>();
 
-                      await mainViewModel.loadProfiles();
+                        await mainViewModel.loadProfiles(force: true);
+                        DialogUtility.text(
+                          context,
+                          title: Text('資料匯入成功'),
+                        );
+                      } catch (e) {
+                        DialogUtility.text(
+                          context,
+                          title: Text('資料匯入失敗'),
+                        );
+                      }
                     },
                     iconBuilder: (color, size) {
                       return Icon(Icons.login, color: color, size: size,);
@@ -105,7 +116,20 @@ class _SleepFragmentState extends State<SleepFragment> {
                   ),
                   MyOutlinedButton(
                     color: tmpColor,
-                    onPressed: () => _localStorage.exportData(),
+                    onPressed: () async {
+                      try {
+                        await _localStorage.exportData();
+                        DialogUtility.text(
+                          context,
+                          title: Text('資料匯出成功'),
+                        );
+                      } catch (e) {
+                        DialogUtility.text(
+                          context,
+                          title: Text('資料匯出失敗'),
+                        );
+                      }
+                    },
                     iconBuilder: (color, size) {
                       return Icon(Icons.logout, color: color, size: size,);
                     },
