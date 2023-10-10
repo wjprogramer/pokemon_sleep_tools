@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
@@ -75,13 +76,15 @@ class _BagPageState extends State<BagPage> {
           Gap.xl,
           // 薰香
           // 進化道具
-          Text('t_evolution_items'.xTr),
+          MySubHeader(
+            titleText: 't_evolution_items'.xTr,
+          ),
           ...EvolutionGameItem.values.map((evolutionItem) => <Widget>[
-            Gap.xl,
+            Gap.lg,
             Text('# ${evolutionItem.nameI18nKey.xTr}'),
-            Gap.sm,
+            Gap.xs,
             Wrap(
-              spacing: 12,
+              spacing: 6,
               runSpacing: 4,
               children: _buildBasicProfiles(evolutionItem),
             ),
@@ -101,7 +104,15 @@ class _BagPageState extends State<BagPage> {
   }
 
   Widget _buildBasicProfileForEvolution(PokemonBasicProfile basicProfile) {
-    return Text(basicProfile.nameI18nKey.xTr);
+    return InkWell(
+      onTap: () {
+        PokemonBasicProfilePage.go(context, basicProfile);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(basicProfile.nameI18nKey.xTr),
+      ),
+    );
   }
 }
 

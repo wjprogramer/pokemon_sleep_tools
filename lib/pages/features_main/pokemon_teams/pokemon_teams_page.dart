@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/team_analysis/team_analysis_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
@@ -118,7 +120,7 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
             children: [
               GestureDetector(
                 onTap: () {
-                  final textEditCtrl = TextEditingController();
+                  final textEditCtrl = TextEditingController(text: _getCurrTeamName());
                   var isLoading = false;
 
                   showDialog(
@@ -151,14 +153,13 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
                                     );
                                     context.nav.pop();
                                   } catch (e) {
-                                    // TODO:
                                     print(e);
                                   } finally {
                                     isLoading = false;
                                     setState(() { });
                                   }
                                 },
-                                child: isLoading || true
+                                child: isLoading
                                     ? SizedBox(width: 25, height: 25, child: CircularProgressIndicator(strokeWidth: 3,))
                                     : Text('t_confirm'.xTr),
                               ),
@@ -217,10 +218,17 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
           ...Hp.list(
             children: [
               _buildIndicators(context),
+              if (kDebugMode) ...[
+                Gap.xl,
+                MyElevatedButton(
+                  onPressed: () {},
+                  child: Text('t_auto_form_team'.xTr),
+                ),
+              ],
               Gap.xl,
               MyElevatedButton(
-                onPressed: () {},
-                child: Text('t_auto_form_team'.xTr),
+                onPressed: _getTeamAnalysisGoPageCallback(),
+                child: Text('t_analysis'.xTr),
               ),
             ],
           ),
@@ -251,6 +259,21 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
         ),
       ),
     );
+  }
+
+  Function()? _getTeamAnalysisGoPageCallback() {
+    final team = _teams[_currIndex];
+    if (team == null) {
+      return null;
+    }
+
+    if (team.profileIdList.any((e) => e != -1)) {
+      return () {
+        TeamAnalysisPage.go(context, _currIndex);
+      };
+    }
+
+    return null;
   }
 
   Widget _buildLoadingView() {

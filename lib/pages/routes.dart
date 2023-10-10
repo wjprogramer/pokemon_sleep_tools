@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
@@ -37,6 +38,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/team_analysis/team_analysis_page.dart';
 
 typedef MyRouteBuilder<T extends Object?> = Widget Function(dynamic args);
 
@@ -56,6 +58,7 @@ MyRoutesMapping generateRoutes() {
     DevPokemonEvolutionsPage.route,
     MyStorybookPage.route,
     // main
+    AboutPage.route,
     BagPage.route,
     CharactersIllustratedBookPage.route,
     DishPage.route,
@@ -87,6 +90,7 @@ MyRoutesMapping generateRoutes() {
     SplashPage.route,
     SubSkillPickerPage.route,
     SubSkillsCharacterIllustratedBookPage.route,
+    TeamAnalysisPage.route,
   ];
 
   // final Map<Type, Map<String, MyRouteBuilder>> x = {

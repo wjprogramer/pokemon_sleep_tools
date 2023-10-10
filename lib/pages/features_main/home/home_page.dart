@@ -72,6 +72,9 @@ class _HomePageState extends State<HomePage> {
         title: Text(
           _fragments[_currPage].titleBuilder(),
         ),
+        centerTitle: true,
+        // FIXME: 不知為何有時候會出現上一頁
+        leading: Container(),
       ),
       body: PageView(
         controller: _pageController,

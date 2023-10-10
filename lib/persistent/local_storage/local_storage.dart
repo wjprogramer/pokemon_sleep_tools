@@ -8,6 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:path/path.dart' as path;
 
 export 'models/app_meta.dart';
 
@@ -69,6 +71,47 @@ class MyLocalStorage implements MyInjectable {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<void> exportData() async {
+    final dir = await getTemporaryDirectory();
+    final filePath = path.join(dir.path, 'pokemon_sleep.json');
+
+    final res = _LocalStoredDocumentResult(
+      profiles: await readPokemonFile(),
+      faceStyles: await readPokemonSleepFaces(),
+      teams: await readPokemonTeams(),
+    );
+
+    final file = File(filePath)
+      ..createSync()
+      ..writeAsStringSync(json.encode(res.toJson()));
+
+    await FileSaver.instance.saveAs(
+      name: 'sleep_data',
+      ext: 'json',
+      mimeType: MimeType.text,
+      file: file,
+    );
+  }
+
+  Future<void> importData() async {
+    final file = await FileUtility.pickSingleFile();
+    if (file == null) {
+      return;
+    }
+
+    final content = file.readAsStringSync();
+    final jsonObj = json.decode(content);
+    final result = _LocalStoredDocumentResult.fromJson(jsonObj);
+
+    final profiles = result.profiles;
+    final faceStyles = result.faceStyles;
+    final teams = result.teams;
+
+    if (profiles != null) { await writePokemonProfiles(profiles); }
+    if (faceStyles != null) { await writePokemonSleepFaces(faceStyles); }
+    if (teams != null) { await writePokemonTeams(teams); }
   }
   // endregion
 
@@ -159,5 +202,35 @@ class MyLocalStorage implements MyInjectable {
     file.writeAsStringSync(jsonEncode(data.toJson()));
   }
   // endregion Pokemon Sleep Faces
+
+}
+
+/// 完整本地端匯入、匯出檔案結構
+class _LocalStoredDocumentResult {
+  _LocalStoredDocumentResult({
+    required this.profiles,
+    required this.faceStyles,
+    required this.teams,
+  });
+
+  StoredPokemonProfiles? profiles;
+  StoredPokemonSleepFaceStyles? faceStyles;
+  StoredPokemonTeams? teams;
+
+  factory _LocalStoredDocumentResult.fromJson(Map<String, dynamic> json) {
+    return _LocalStoredDocumentResult(
+      profiles: json['profiles'] == null ? null : StoredPokemonProfiles.fromJson(json['profiles']),
+      faceStyles: json['faceStyles'] == null ? null : StoredPokemonSleepFaceStyles.fromJson(json['faceStyles']),
+      teams: json['teams'] == null ? null : StoredPokemonTeams.fromJson(json['teams']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'profiles': profiles?.toJson(),
+      'faceStyles': faceStyles?.toJson(),
+      'teams': teams?.toJson(),
+    };
+  }
 
 }

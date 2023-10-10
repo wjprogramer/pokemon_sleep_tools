@@ -1,12 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
+import 'package:pokemon_sleep_tools/persistent/local_storage/local_storage.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
+import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
-import 'package:pokemon_sleep_tools/widgets/common/menu/main_menu_subtitle.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SleepFragment extends StatefulWidget {
   const SleepFragment({super.key});
@@ -16,6 +24,8 @@ class SleepFragment extends StatefulWidget {
 }
 
 class _SleepFragmentState extends State<SleepFragment> {
+  MyLocalStorage get _localStorage => getIt();
+
   double _menuButtonWidth = 100;
   double _menuButtonSpacing = 0;
 
@@ -26,62 +36,115 @@ class _SleepFragmentState extends State<SleepFragment> {
     _menuButtonSpacing = menuItemWidthResults.spacing;
 
     return ListView(
-      padding: const EdgeInsets.symmetric(
-        horizontal: HORIZON_PADDING,
-      ),
       children: [
-        MainMenuSubtitle(
-          paddingTop: 0,
-          icon: const Iconify(Carbon.sub_volume, size: 16),
-          title: Text(
-            '常用'.xTr,
-          ),
-        ),
-        MainMenuSubtitle(
-          icon: const Iconify(Bx.grid_alt, size: 16,),
-          title: Text(
-            't_main_menu'.xTr,
-          ),
-        ),
-        Text(
-          'TODO: 資料匯出、匯入、語言切換、設定',
-        ),
-        MainMenuSubtitle(
-          icon: const Iconify(Bx.grid_alt, size: 16,),
-          title: Text(
-            't_others'.xTr,
-          ),
-        ),
-        Wrap(
-          spacing: _menuButtonSpacing,
-          runSpacing: _menuButtonSpacing,
-          children: _wrapMenuItems(
-            children: [
-              MyOutlinedButton(
-                color: greyColor3,
-                onPressed: () {
-                  showLicensePage(context: context);
-                },
-                iconBuilder: (color, size) {
-                  return Icon(Icons.file_copy_outlined, color: color, size: size,);
-                },
-                builder: MyOutlinedButton.builderUnboundWidth,
-                child: Text('版權標記'.xTr),
+        ...Hp.list(
+          children: [
+            // MainMenuSubtitle(
+            //   paddingTop: 0,
+            //   icon: const Iconify(Carbon.sub_volume, size: 16),
+            //   title: Text(
+            //     '常用'.xTr,
+            //   ),
+            // ),
+            // MainMenuSubtitle(
+            //   icon: const Iconify(Bx.grid_alt, size: 16,),
+            //   title: Text(
+            //     't_main_menu'.xTr,
+            //   ),
+            // ),
+            // const Text(
+            //   'TODO: 語言切換、設定',
+            // ),
+            MainMenuSubtitle(
+              paddingTop: 0,
+              icon: const Iconify(Bx.grid_alt, size: 16,),
+              title: Text(
+                't_others'.xTr,
               ),
-              MyOutlinedButton(
-                color: greyColor3,
-                onPressed: () {
-                  DataSourcesPage.go(context);
-                },
-                iconBuilder: (color, size) {
-                  return Icon(Icons.file_copy_outlined, color: color, size: size,);
-                },
-                builder: MyOutlinedButton.builderUnboundWidth,
-                child: Text('資料來源'.xTr),
+            ),
+            Wrap(
+              spacing: _menuButtonSpacing,
+              runSpacing: _menuButtonSpacing,
+              children: _wrapMenuItems(
+                children: [
+                  MyOutlinedButton(
+                    color: greyColor3,
+                    onPressed: () {
+                      showLicensePage(context: context);
+                    },
+                    iconBuilder: (color, size) {
+                      return Icon(Icons.file_copy_outlined, color: color, size: size,);
+                    },
+                    builder: MyOutlinedButton.builderUnboundWidth,
+                    child: Text('版權標記'.xTr),
+                  ),
+                  MyOutlinedButton(
+                    color: greyColor3,
+                    onPressed: () {
+                      DataSourcesPage.go(context);
+                    },
+                    iconBuilder: (color, size) {
+                      return Icon(Icons.file_copy_outlined, color: color, size: size,);
+                    },
+                    builder: MyOutlinedButton.builderUnboundWidth,
+                    child: Text('資料來源'.xTr),
+                  ),
+                  MyOutlinedButton(
+                    color: tmpColor,
+                    onPressed: () async {
+                      await _localStorage.importData();
+                      final mainViewModel = context.read<MainViewModel>();
+
+                      await mainViewModel.loadProfiles();
+                    },
+                    iconBuilder: (color, size) {
+                      return Icon(Icons.login, color: color, size: size,);
+                    },
+                    builder: MyOutlinedButton.builderUnboundWidth,
+                    child: Text('資料匯入'.xTr),
+                  ),
+                  MyOutlinedButton(
+                    color: tmpColor,
+                    onPressed: () => _localStorage.exportData(),
+                    iconBuilder: (color, size) {
+                      return Icon(Icons.logout, color: color, size: size,);
+                    },
+                    builder: MyOutlinedButton.builderUnboundWidth,
+                    child: Text('資料匯出'.xTr),
+                  ),
+                  MyOutlinedButton(
+                    color: tmpColor,
+                    onPressed: () async {
+                      AboutPage.go(context);
+                    },
+                    iconBuilder: (color, size) {
+                      // return Icon(Icons.phone_android, color: color, size: size,);
+                      return Icon(Icons.info_outline, color: color, size: size,);
+                    },
+                    builder: MyOutlinedButton.builderUnboundWidth,
+                    child: Text('關於'.xTr),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            // MainMenuSubtitle(
+            //   icon: const Iconify(Bx.grid_alt, size: 16,),
+            //   title: Text(
+            //     '外部連結'.xTr,
+            //   ),
+            // ),
+          ],
         ),
+        // ...ListTile.divideTiles(
+        //   context: context,
+        //   tiles: [
+        //     _buildListTile(
+        //       titleText: '【攻略】使用能量計算!!更科學的『寶可夢Sleep潛力計算機v4.0』五段評價系統!!',
+        //       url: 'https://forum.gamer.com.tw/C.php?bsn=36685&snA=913',
+        //       subTitleText: '主要參考計算方式',
+        //     ),
+        //   ],
+        // ),
         Gap.trailing,
       ],
     );
@@ -99,6 +162,24 @@ class _SleepFragmentState extends State<SleepFragment> {
         width: _menuButtonWidth,
       ),
       child: child,
+    );
+  }
+
+  Widget _buildListTile({
+    required String titleText,
+    required String url,
+    String? subTitleText,
+  }) {
+    return ListTile(
+      onTap: () {
+        launchUrl(Uri.parse(url));
+      },
+      title: Text(titleText),
+      subtitle: subTitleText == null ? null
+          : Text(subTitleText, maxLines: 2, overflow: TextOverflow.ellipsis,),
+      trailing: const Icon(
+        Icons.open_in_new,
+      ),
     );
   }
 }

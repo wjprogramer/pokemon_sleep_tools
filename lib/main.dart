@@ -6,6 +6,8 @@ import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 // Icons.fire_extinguisher_sharp 這個很像傷藥、道具的 icon
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     const AppContainer(
       child: MyApp()
