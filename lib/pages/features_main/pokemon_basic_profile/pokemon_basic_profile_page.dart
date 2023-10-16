@@ -188,6 +188,10 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               horizontal: HORIZON_PADDING,
             ),
             children: [
+              if (MyEnv.USE_DEBUG_IMAGE)
+                Image.asset(
+                  AssetsPath.pokemonPortrait(_basicProfile.boxNo),
+                ),
               MySubHeader(
                 titleText: 't_abilities'.xTr,
               ),

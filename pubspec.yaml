@@ -38,6 +38,7 @@ dependencies:
   drift: ^2.11.1
   file_picker: ^5.5.0
   file_saver: ^0.2.8
+  flutter_dotenv: ^5.1.0
   gap: ^3.0.1
   get: ^4.6.6
   get_it: ^7.6.4
@@ -88,6 +89,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
+    - .env
     - assets/
     - assets/debug/
     - assets/debug/images/
@@ -110,7 +112,7 @@ flutter:
     - assets/debug/images/pokemon/
     - assets/debug/images/pokemon/icons/
     - assets/debug/images/pokemon/portrait/
-    - assets/debug/images/pokemon/portrait/shiny
+    - assets/debug/images/pokemon/portrait/shiny/
     - assets/debug/images/rank/
     - assets/debug/images/sleep/
     - assets/debug/images/sleep/1/
