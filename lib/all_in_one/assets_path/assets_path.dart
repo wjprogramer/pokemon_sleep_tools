@@ -1,3 +1,5 @@
+import 'package:pokemon_sleep_tools/data/models/models.dart';
+
 class AssetsPath {
   AssetsPath._();
 
@@ -5,6 +7,22 @@ class AssetsPath {
 
   static String pokemonPortrait(int boxNo) {
     return '$_prefix/pokemon/portrait/$boxNo.png';
+  }
+
+  static mealIcon(int dishId) {
+    return '$_prefix/meal/icons/$dishId.png';
+  }
+
+  static mealPortrait(int dishId) {
+    return '$_prefix/meal/portrait/$dishId.png';
+  }
+
+  static fruit(Fruit fruit) {
+    return '$_prefix/berry/${fruit.id}.png';
+  }
+
+  static ingredient(Ingredient ingredient) {
+    return '$_prefix/ingredient/${ingredient.id}.png';
   }
 
 }

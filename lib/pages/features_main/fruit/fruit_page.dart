@@ -98,7 +98,6 @@ class _FruitPageState extends State<FruitPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (!_initialized) {
@@ -107,7 +106,23 @@ class _FruitPageState extends State<FruitPage> {
 
     return Scaffold(
       appBar: buildAppBar(
-        titleText: _fruit.nameI18nKey.xTr,
+        // titleText: _fruit.nameI18nKey.xTr,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (MyEnv.USE_DEBUG_IMAGE)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: SizedBox(
+                  width: 20,
+                  child: FruitImage(
+                    fruit: _fruit,
+                  ),
+                ),
+              ),
+            Text(_fruit.nameI18nKey.xTr),
+          ],
+        ),
       ),
       body: buildListView(
         children: [

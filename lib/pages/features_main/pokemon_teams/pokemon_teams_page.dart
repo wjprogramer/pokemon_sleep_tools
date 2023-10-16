@@ -297,48 +297,71 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
       child: Hp(
         child: Row(
           children: [
-            ...profiles.mapIndexed((index, profile) => <Widget>[
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    final pop = context.nav.pop;
+            ...profiles.mapIndexed((index, profile) {
+              Widget child;
 
-                    PokemonBoxPage.pick(
-                      context,
-                      initialTeam: pokemonTeam,
-                      initialIndex: index,
-                      onConfirm: (profiles) async {
-                        final profileIdList = profiles.map((e) => e?.id ?? -1).toList();
-
-                        if (pokemonTeam == null) {
-                          await _teamViewModel.createTeam(CreatePokemonTeamPayload(
-                            index: teamIndex,
-                            name: null,
-                            profileIdList: profileIdList,
-                          ));
-                        } else {
-                          final newTeam = pokemonTeam.copyWith(profileIdList: profileIdList);
-                          await _teamViewModel.updateTeam(teamIndex, newTeam);
-                        }
-                        pop();
-                      },
-                    );
-                  },
+              if (profile == null) {
+                child = const Center(child: Icon(Icons.add, color: greyColor2,));
+              } else if (MyEnv.USE_DEBUG_IMAGE) {
+                child = ClipRect(
                   child: Container(
-                    height: double.infinity,
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border.all(),
+                    height: double.infinity,
+                    child: Transform(
+                      transform: Matrix4.identity()
+                        ..scale(1.5),
+                      child: Image.asset(
+                        AssetsPath.pokemonPortrait(profile.basicProfile.boxNo),
+                        errorBuilder: (context, error, stackTrace) => Container(),
+                      ),
                     ),
-                    child: profile == null
-                        ? const Center(child: Icon(Icons.add, color: greyColor2,))
-                        : Center(child: Text(profile.basicProfile.nameI18nKey.xTr)),
+                  ),
+                );
+              } else {
+                child = Center(child: Text(profile.basicProfile.nameI18nKey.xTr));
+              }
+
+              return <Widget>[
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      final pop = context.nav.pop;
+
+                      PokemonBoxPage.pick(
+                        context,
+                        initialTeam: pokemonTeam,
+                        initialIndex: index,
+                        onConfirm: (profiles) async {
+                          final profileIdList = profiles.map((e) => e?.id ?? -1).toList();
+
+                          if (pokemonTeam == null) {
+                            await _teamViewModel.createTeam(CreatePokemonTeamPayload(
+                              index: teamIndex,
+                              name: null,
+                              profileIdList: profileIdList,
+                            ));
+                          } else {
+                            final newTeam = pokemonTeam.copyWith(profileIdList: profileIdList);
+                            await _teamViewModel.updateTeam(teamIndex, newTeam);
+                          }
+                          pop();
+                        },
+                      );
+                    },
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                      ),
+                      child: child,
+                    ),
                   ),
                 ),
-              ),
-              if (index != profiles.lastIndex)
-                Gap.xl,
-            ]).expand((e) => e),
+                if (index != profiles.lastIndex)
+                  Gap.md,
+              ];
+            }).expand((e) => e),
           ],
         ),
       ),

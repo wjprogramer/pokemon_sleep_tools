@@ -18,6 +18,7 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/pokemon_image.dart';
 import 'package:provider/provider.dart';
 
 /// 遊戲內有 "使用道具" 的功能，但這邊應該不需要
@@ -351,6 +352,13 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
       Gap.xl,
       ...Hp.list(
         children: [
+          if (MyEnv.USE_DEBUG_IMAGE)
+            SizedBox(
+              height: 200,
+              child: PokemonImage(
+                basicProfile: widget.profile.basicProfile
+              ),
+            ),
           MyElevatedButton(
             onPressed: () {
               /// TODO: 如果是「班基拉斯、沙基拉斯、又基拉斯」要將 _isLarvitar 設為 true

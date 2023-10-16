@@ -1,4 +1,5 @@
 export 'dialog/dialog.dart';
+export 'images/images.dart';
 export 'bookmark_icon.dart';
 export 'candy_icon.dart';
 export 'dish_card.dart';

@@ -7,7 +7,7 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_recipes/pokemon_food_recipes_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/dish_list/dish_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
@@ -17,9 +17,9 @@ class _DishPageArgs {
   final Dish dish;
 }
 
-/// TODO: [PokemonFoodRecipesPage] 可以設定食譜等級、調整顯示能量
+/// TODO: [DishListPage] 可以設定食譜等級、調整顯示能量
 ///       在此頁面也可以做這件事，但可以根據 args 決定是否要顯示
-///       例如：如果是從 [PokemonFoodRecipesPage] 跳轉到此頁面就不顯示（因為該頁面已經有計算器）
+///       例如：如果是從 [DishListPage] 跳轉到此頁面就不顯示（因為該頁面已經有計算器）
 ///             而如果從 [IngredientPage] 反查料理到此頁面，就顯示能量計算器
 class DishPage extends StatefulWidget {
   const DishPage._(this._args);

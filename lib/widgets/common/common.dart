@@ -5,6 +5,7 @@ export 'bottom_bar_with_confirm_button.dart';
 export 'form/form.dart';
 export 'gap.dart';
 export 'hp.dart';
+export 'increment_value_button.dart';
 export 'list_view.dart';
 export 'loading_view.dart';
 export 'menu/menu.dart';

@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/energy_icon.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 
 /// TODO: use and improve InkWell
 /// TODO: 根據不同的 [DishType] 決定不同 Icon
@@ -184,17 +185,26 @@ class DishCard extends StatelessWidget {
                         ),
                         child: Stack(
                           children: [
+                            Container(),
+                            if (MyEnv.USE_DEBUG_IMAGE)
+                              Align(
+                                alignment: Alignment.bottomLeft,
+                                child: DishIconImage(
+                                  dish: dish,
+                                ),
+                              )
+                            else
+                              Align(
+                                alignment: const Alignment(0, 0.2),
+                                child: Iconify(
+                                  Mdi.cutlery_fork_knife,
+                                  color: dishIconColor,
+                                ),
+                              ),
                             Positioned(
                               top: 0,
                               right: 0,
                               child: buildLevelLabelValue(),
-                            ),
-                            Align(
-                              alignment: const Alignment(0, 0.2),
-                              child: Iconify(
-                                Mdi.cutlery_fork_knife,
-                                color: dishIconColor,
-                              ),
                             ),
                           ],
                         ),

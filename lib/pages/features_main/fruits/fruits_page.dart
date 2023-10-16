@@ -88,20 +88,34 @@ class _FruitsPageState extends State<FruitsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            RichText(
-              text: TextSpan(
-                text: fruit.nameI18nKey.xTr,
-                style: _theme.textTheme.titleMedium,
-                children: [
-                  // TODO: chip, color
-                  TextSpan(
-                    text: ' (${fruit.attr})',
-                    style: _theme.textTheme.bodySmall?.copyWith(
-                      color: greyColor2,
+            Row(
+              children: [
+                if (MyEnv.USE_DEBUG_IMAGE)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: SizedBox(
+                      width: 20,
+                      child: FruitImage(
+                        fruit: fruit,
+                      ),
                     ),
                   ),
-                ],
-              ),
+                RichText(
+                  text: TextSpan(
+                    text: fruit.nameI18nKey.xTr,
+                    style: _theme.textTheme.titleMedium,
+                    children: [
+                      // TODO: chip, color
+                      TextSpan(
+                        text: ' (${fruit.attr})',
+                        style: _theme.textTheme.bodySmall?.copyWith(
+                          color: greyColor2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Gap.sm,
             Row(

@@ -71,9 +71,23 @@ class _IngredientsIllustratedBookPageState extends State<IngredientsIllustratedB
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              ingredient.nameI18nKey.xTr,
-              style: _theme.textTheme.bodyLarge,
+            Row(
+              children: [
+                if (MyEnv.USE_DEBUG_IMAGE)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: IngredientImage(
+                      ingredient: ingredient,
+                      width: 25,
+                    ),
+                  ),
+                Expanded(
+                  child: Text(
+                    ingredient.nameI18nKey.xTr,
+                    style: _theme.textTheme.bodyLarge,
+                  ),
+                ),
+              ],
             ),
             Row(
               children: [

@@ -11,27 +11,56 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 
+enum _PageType {
+  view,
+  pick,
+}
+
+class _Args {
+  _Args({
+    required this.pageType,
+  });
+
+  final _PageType pageType;
+}
+
 /// TODO: 儲存篩選條件？自動存？手動存？存食譜等級？存鍋子容量？可設定需要自動儲存哪些？之後會有匯出匯入資料的功能，要連同這些設定一起儲存？
 /// 鍋子容量照理來說，不會變少，應該可以自動儲存？
-class PokemonFoodRecipesPage extends StatefulWidget {
-  const PokemonFoodRecipesPage._();
+class DishListPage extends StatefulWidget {
+  const DishListPage._(this._args);
 
-  static const MyPageRoute route = ('/PokemonFoodRecipesPage', _builder);
+  static const MyPageRoute route = ('/DishListPage', _builder);
   static Widget _builder(dynamic args) {
-    return const PokemonFoodRecipesPage._();
+    return DishListPage._(args);
   }
 
   static void go(BuildContext context) {
     context.nav.push(
       route,
+      arguments: _Args(pageType: _PageType.view),
     );
   }
 
+  static Future<(Dish, int)?> pick(BuildContext context) async {
+    final res = await context.nav.push(
+      route,
+      arguments: _Args(pageType: _PageType.pick),
+    );
+    return res is (Dish, int) ? res : null;
+  }
+
+  final _Args _args;
+
+  void _popResult(BuildContext context, [(Dish, int)? dishLevel]) {
+    context.nav.pop(dishLevel);
+  }
+
   @override
-  State<PokemonFoodRecipesPage> createState() => _PokemonFoodRecipesPageState();
+  State<DishListPage> createState() => _DishListPageState();
 }
 
-class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
+class _DishListPageState extends State<DishListPage> {
+  _PageType get _pageType => widget._args.pageType;
 
   // Page status
   var _isLoading = false;
@@ -167,7 +196,14 @@ class _PokemonFoodRecipesPageState extends State<PokemonFoodRecipesPage> {
         level: _currLevel,
         energy: _dishLevelInfoOf[dish]?.energy,
         onTap: () {
-          DishPage.go(context, dish);
+          switch (_pageType) {
+            case _PageType.view:
+              DishPage.go(context, dish);
+              break;
+            case _PageType.pick:
+              widget._popResult(context, (dish, _currLevel));
+              break;
+          }
         },
       ),
     );

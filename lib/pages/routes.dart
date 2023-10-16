@@ -10,6 +10,8 @@ import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/dish_energy_calculator/dish_energy_calculator_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/dish_info/dish_info_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_maker/dish_maker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp_caculator_result_page.dart';
@@ -26,7 +28,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/po
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_recipes/pokemon_food_recipes_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/dish_list/dish_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
@@ -62,6 +64,9 @@ MyRoutesMapping generateRoutes() {
     BagPage.route,
     CharactersIllustratedBookPage.route,
     DishPage.route,
+    DishEnergyCalculatorPage.route,
+    DishInfoPage.route,
+    DishListPage.route,
     DishMakerPage.route,
     ExpCalculatorPage.route,
     ExpCalculatorResultPage.route,
@@ -79,7 +84,6 @@ MyRoutesMapping generateRoutes() {
     ...PokemonMaintainProfilePage.routes,
     PokemonBoxPage.route,
     PokemonFoodMenuPage.route,
-    PokemonFoodRecipesPage.route,
     PokemonIllustratedBookPage.route,
     PokemonSliderDetailsPage.route,
     PokemonTeamsPage.route,

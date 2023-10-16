@@ -261,6 +261,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
     return InkWell(
       onTap: () => _onTap(profile),
+      onLongPress: () => _onLongPress(profile),
       child: Stack(
         children: [
           Container(
@@ -320,11 +321,20 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       case _PageType.picker:
         return _onTapUnderPickerMode(profile);
       case _PageType.readonly:
-        return _onTapUnderReadOnly(profile);
+        return _viewPokemonProfile(profile);
+    }
+  }
+
+  void _onLongPress(PokemonProfile profile) {
+    switch (_args.pageType) {
+      case _PageType.picker:
+        return _viewPokemonProfile(profile);
+      case _PageType.readonly:
+        return;
     }
   }
   
-  void _onTapUnderReadOnly(PokemonProfile profile) {
+  void _viewPokemonProfile(PokemonProfile profile) {
     PokemonSliderDetailsPage.go(
       context,
       initialProfileId: profile.id,

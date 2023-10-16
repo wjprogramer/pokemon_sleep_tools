@@ -189,8 +189,8 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
             ),
             children: [
               if (MyEnv.USE_DEBUG_IMAGE)
-                Image.asset(
-                  AssetsPath.pokemonPortrait(_basicProfile.boxNo),
+                PokemonImage(
+                  basicProfile: _basicProfile,
                 ),
               MySubHeader(
                 titleText: 't_abilities'.xTr,

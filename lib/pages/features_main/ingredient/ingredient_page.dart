@@ -140,7 +140,20 @@ class _IngredientPageState extends State<IngredientPage> {
 
     return Scaffold(
       appBar: buildAppBar(
-        titleText: _titleText,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (MyEnv.USE_DEBUG_IMAGE)
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: IngredientImage(
+                  ingredient: _ingredient,
+                  width: 25,
+                ),
+              ),
+            Text(_titleText),
+          ],
+        )
       ),
       body: buildListView(
         children: [
@@ -181,19 +194,48 @@ class _IngredientPageState extends State<IngredientPage> {
                 horizontal: HORIZON_PADDING,
                 vertical: 4,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: Row(
                 children: [
-                  Text(
-                    dish.nameI18nKey.xTr,
-                    style: _theme.textTheme.bodyLarge,
-                  ),
-                  Text(
-                    _dishIngredientsOf[dish]
-                        ?.map((ingredientPair) => '${ingredientPair.$1.nameI18nKey.xTr} x${ingredientPair.$2}')
-                        .join(', ') ?? '',
-                    style: _theme.textTheme.bodyMedium?.copyWith(
-                      color: greyColor3,
+                  if (MyEnv.USE_DEBUG_IMAGE)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: DishImage(
+                        dish: dish,
+                        width: 30,
+                      ),
+                    ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          dish.nameI18nKey.xTr,
+                          style: _theme.textTheme.bodyLarge,
+                        ),
+                        if (MyEnv.USE_DEBUG_IMAGE)
+                          Wrap(
+                            children: (_dishIngredientsOf[dish] ?? []).map((dishCount) => Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IngredientImage(
+                                  ingredient: dishCount.$1,
+                                  width: 20,
+                                ),
+                                Gap.sm,
+                                Text('x${dishCount.$2}'),
+                                Gap.sm,
+                              ],
+                            )).toList(),
+                          )
+                        else
+                          Text(
+                            _dishIngredientsOf[dish]?.map((ingredientPair) => '${ingredientPair.$1.nameI18nKey.xTr} x${ingredientPair.$2}')
+                                .join(', ') ?? '',
+                            style: _theme.textTheme.bodyMedium?.copyWith(
+                              color: greyColor3,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

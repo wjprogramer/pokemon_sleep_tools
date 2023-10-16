@@ -41,8 +41,13 @@ class _DataSourcesPageState extends State<DataSourcesPage> {
                 subTitleText: '主要參考計算方式',
               ),
               _buildListTile(
-                titleText: '寶可夢攻略網站',
+                titleText: '資料攻略站',
                 url: 'https://pks.raenonx.cc',
+                subTitleText: '蒐集資料',
+              ),
+              _buildListTile(
+                titleText: '資料攻略站 / 巴哈文章',
+                url: 'https://forum.gamer.com.tw/C.php?bsn=36685&snA=130&tnum=58',
                 subTitleText: '蒐集資料',
               ),
               _buildListTile(
@@ -63,6 +68,33 @@ class _DataSourcesPageState extends State<DataSourcesPage> {
               //   titleText: '',
               //   url: '',
               // ),
+            ],
+          ),
+          Gap.xl,
+          Hp(child: Text('「漂流食神」策略系列文章')),
+          ...ListTile.divideTiles(
+            context: context,
+            tiles: [
+              _buildListTile(
+                titleText: '【攻略】食材寵認知革命 - 食譜進階觀念篇',
+                url: 'https://forum.gamer.com.tw/Co.php?bsn=36685&sn=14342',
+              ),
+              _buildListTile(
+                titleText: '【攻略】食材寵認知革命(二) - 食材寵進階觀念篇',
+                url: 'https://forum.gamer.com.tw/Co.php?bsn=36685&sn=14344',
+              ),
+              _buildListTile(
+                titleText: '【攻略】食材寵認知革命(三) - 組隊思維進階觀念篇',
+                url: 'https://forum.gamer.com.tw/Co.php?bsn=36685&sn=14347',
+              ),
+              _buildListTile(
+                titleText: '【攻略】平衡隊伍「漂流食神」攻略詳解',
+                url: 'https://forum.gamer.com.tw/Co.php?bsn=36685&sn=14459',
+              ),
+              _buildListTile(
+                titleText: '【攻略】平衡隊伍「漂流食神」 - 新手版本+好友募集文',
+                url: 'https://forum.gamer.com.tw/Co.php?bsn=36685&sn=14472',
+              ),
             ],
           ),
           Gap.trailing,
