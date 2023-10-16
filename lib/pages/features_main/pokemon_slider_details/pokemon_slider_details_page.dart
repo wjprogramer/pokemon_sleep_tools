@@ -353,11 +353,9 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
       ...Hp.list(
         children: [
           if (MyEnv.USE_DEBUG_IMAGE)
-            SizedBox(
+            PokemonImage(
               height: 200,
-              child: PokemonImage(
-                basicProfile: widget.profile.basicProfile
-              ),
+              basicProfile: widget.profile.basicProfile
             ),
           MyElevatedButton(
             onPressed: () {

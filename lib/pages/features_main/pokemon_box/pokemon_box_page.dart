@@ -12,6 +12,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:provider/provider.dart';
 
 typedef PokemonBoxSubmitCallback = dynamic Function(List<PokemonProfile?> profiles);
@@ -263,6 +264,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       onTap: () => _onTap(profile),
       onLongPress: () => _onLongPress(profile),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           Container(
             width: _cardWidth,
@@ -276,24 +278,26 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                 color: _theme.primaryColorLight,
               )
             ),
-            child: Text(
-              profile.basicProfile.nameI18nKey,
-            ),
+            child: !MyEnv.USE_DEBUG_IMAGE
+                ? Text(profile.basicProfile.nameI18nKey.xTr)
+                : PokemonImage(
+                    basicProfile: profile.basicProfile,
+                  )
           ),
-          if (index != null)
+          if (MyEnv.USE_DEBUG_IMAGE)
             Positioned(
+              left: 0,
               right: 0,
               bottom: 0,
-              left: 0,
-              child: SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('${index + 1}'),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  profile.basicProfile.nameI18nKey.xTr,
+                  textAlign: TextAlign.center,
                 ),
               ),
             ),
-          if (_profileIdListInTeam.contains(profile.id))
+          if (_profileIdListInTeam.contains(profile.id) && widget._args.pageType == _PageType.readonly)
             Positioned(
               right: 0,
               left: 0,
@@ -308,6 +312,38 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                   ),
                   textAlign: TextAlign.center,
                   maxLines: 1,
+                ),
+              ),
+            ),
+          if (index != null)
+            Positioned(
+              right: 0,
+              top: -8,
+              left: -8,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: whiteColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: color1,
+                        blurRadius: 10,
+                      )
+                    ],
+                  ),
+                  child: SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Text(
+                        '${index + 1}',
+                        style: TextStyle(
+                          color: color1,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -393,6 +429,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
   Widget _buildPokemonField(int index) {
     final isSelected = _currPickIndex == index;
+    final basicProfile = _profilesField[index]?.basicProfile;
 
     return GestureDetector(
       onTap: () {
@@ -403,9 +440,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       child: Column(
         children: [
           Container(
-            alignment: Alignment.center,
             margin: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-            padding: const EdgeInsets.all(4),
             constraints: const BoxConstraints(
               minHeight: 50,
             ),
@@ -417,11 +452,36 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                     : _theme.disabledColor,
               ),
             ),
-            child: Text(
-              _profilesField[index]?.basicProfile.nameI18nKey ?? '-',
-              textAlign: TextAlign.center,
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
+            child: SizedBox(
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Opacity(
+                    opacity: _profilesField[index]?.basicProfile != null && MyEnv.USE_DEBUG_IMAGE ? 0 : 1,
+                    child: Center(
+                      child: Text(
+                        _profilesField[index]?.basicProfile.nameI18nKey ?? '-',
+                        textAlign: TextAlign.center,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  if (basicProfile == null || !MyEnv.USE_DEBUG_IMAGE)
+                    Container()
+                  else
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: PokemonIconImage(
+                        width: 50,
+                        basicProfile: basicProfile,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ],
