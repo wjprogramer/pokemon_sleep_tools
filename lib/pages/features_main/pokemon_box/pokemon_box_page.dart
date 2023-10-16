@@ -260,6 +260,19 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   Widget _buildProfileItem(PokemonProfile profile) {
     final index = _profileIdToIndex[profile.id];
 
+    Widget child;
+    if (!MyEnv.USE_DEBUG_IMAGE) {
+      child = Center(child: Text(profile.basicProfile.nameI18nKey.xTr));
+    } else {
+      child = Align(
+        alignment: Alignment(0, -0.3),
+        child: PokemonImage(
+          basicProfile: profile.basicProfile,
+        ),
+      );
+    }
+
+
     return InkWell(
       onTap: () => _onTap(profile),
       onLongPress: () => _onLongPress(profile),
@@ -268,7 +281,6 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         children: [
           Container(
             width: _cardWidth,
-            alignment: Alignment.center,
             constraints: BoxConstraints(
               maxWidth: _cardWidth,
               minHeight: _cardHeight,
@@ -278,11 +290,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                 color: _theme.primaryColorLight,
               )
             ),
-            child: !MyEnv.USE_DEBUG_IMAGE
-                ? Text(profile.basicProfile.nameI18nKey.xTr)
-                : PokemonImage(
-                    basicProfile: profile.basicProfile,
-                  )
+            child: child
           ),
           if (MyEnv.USE_DEBUG_IMAGE)
             Positioned(
