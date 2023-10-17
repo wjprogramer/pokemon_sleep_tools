@@ -8,6 +8,12 @@
 
 ```shell
 fvm flutter pub run build_runner build --delete-conflicting-outputs
+
+# Generating docs
+fvm dart doc .
+# Viewing docs
+fvm dart pub global activate dhttpd
+fvm dhttpd --path doc/api
 ```
 
 Overview TODO (粗略完成即可，深層頁面不用非常完整):
