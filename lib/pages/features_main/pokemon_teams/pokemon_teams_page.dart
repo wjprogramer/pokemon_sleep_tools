@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/team_analysis/team_analysis_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -346,6 +347,18 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
                           }
                           pop();
                         },
+                      );
+                    },
+                    onLongPress: () {
+                      final profileId = profile?.id;
+                      if (profileId == null) {
+                        return;
+                      }
+
+                      PokemonSliderDetailsPage.go(
+                        context,
+                        initialProfileId: profileId,
+                        initialProfileIds: profiles.whereNotNull().map((e) => e.id).toList(),
                       );
                     },
                     child: Container(

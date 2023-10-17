@@ -4,10 +4,12 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/base_dialog.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 
 Future<PokemonSearchOptions?> showPokemonSearchDialog(BuildContext context, {
   required String titleText,
@@ -112,13 +114,50 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 controller: _nameField,
               ),
               Gap.xl,
-              // TODO:
-              // MySubHeader(
-              //   titleText: 't_attributes'.xTr,
-              // ),
-              // Gap.sm,
-              // Text('一般、火、水、電'),
-              // Gap.xl,
+              MySubHeader(
+                titleText: 't_attributes'.xTr,
+              ),
+              Gap.sm,
+              Wrap(
+                spacing: 0,
+                runSpacing: 0,
+                children: [
+                  if (MyEnv.USE_DEBUG_IMAGE) ...[
+                    ...PokemonType.values.map((pokemonType) => IconButton(
+                      onPressed: () {
+                        if (searchOptions.typeof.contains(pokemonType)) {
+                          searchOptions.typeof.remove(pokemonType);
+                        } else {
+                          searchOptions.typeof.add(pokemonType);
+                        }
+                        search();
+                      },
+                      tooltip: pokemonType.nameI18nKey.xTr,
+                      icon: Stack(
+                        children: [
+                          PokemonTypeImage(
+                            pokemonType: pokemonType,
+                            width: 30,
+                          ),
+                          if (searchOptions.typeof.contains(pokemonType)) Positioned(
+                            right: 5,
+                            bottom: 5,
+                            child: Container(
+                              width: 10,
+                              height: 10,
+                              child: Icon(
+                                Icons.check,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ))
+                  ],
+                ],
+              ),
+              Gap.xl,
               // MySubHeader(
               //   titleText: 't_categories'.xTr,
               // ),
@@ -139,21 +178,37 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
               spacing: ingredientAndFruitSpacing,
               runSpacing: 4,
               children: [
-                ...Fruit.values.map((fruit) => Container(
+                if (MyEnv.USE_DEBUG_IMAGE) ...Fruit.values.map((fruit) => IconButton(
+                  onPressed: () => _toggleFruit(fruit, searchOptions, search),
+                  tooltip: fruit.nameI18nKey.xTr,
+                  icon: Stack(
+                    children: [
+                      FruitImage(
+                        fruit: fruit,
+                        width: 30,
+                      ),
+                      if (searchOptions.fruitOf.contains(fruit)) Positioned(
+                        right: 5,
+                        bottom: 5,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          child: Icon(
+                            Icons.check,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )) else ...Fruit.values.map((fruit) => Container(
                   constraints: BoxConstraints.tightFor(
                     width: ingredientAndFruitItemWidth,
                   ),
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () {
-                        if (searchOptions.fruitOf.contains(fruit)) {
-                          searchOptions.fruitOf.remove(fruit);
-                        } else {
-                          searchOptions.fruitOf.add(fruit);
-                        }
-                        search();
-                      },
+                      onTap: () => _toggleFruit(fruit, searchOptions, search),
                       child: Row(
                         children: [
                           IgnorePointer(
@@ -195,21 +250,37 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
               spacing: ingredientAndFruitSpacing,
               runSpacing: 4,
               children: [
-                ...Ingredient.values.map((ingredient) => Container(
+                if (MyEnv.USE_DEBUG_IMAGE) ...Ingredient.values.map((ingredient) => IconButton(
+                  onPressed: () => _toggleIngredient(ingredient, searchOptions, search),
+                  tooltip: ingredient.nameI18nKey.xTr,
+                  icon: Stack(
+                    children: [
+                      IngredientImage(
+                        ingredient: ingredient,
+                        width: 30,
+                      ),
+                      if (searchOptions.ingredientOf.contains(ingredient)) Positioned(
+                        right: 5,
+                        bottom: 5,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          child: Icon(
+                            Icons.check,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )) else ...Ingredient.values.map((ingredient) => Container(
                   constraints: BoxConstraints.tightFor(
                     width: ingredientAndFruitItemWidth,
                   ),
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () {
-                        if (searchOptions.ingredientOf.contains(ingredient)) {
-                          searchOptions.ingredientOf.remove(ingredient);
-                        } else {
-                          searchOptions.ingredientOf.add(ingredient);
-                        }
-                        search();
-                      },
+                      onTap: () => _toggleIngredient(ingredient, searchOptions, search),
                       child: Row(
                         children: [
                           IgnorePointer(
@@ -296,6 +367,25 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
       calcCounts: widget.calcCounts,
     );
   }
+
+  void _toggleIngredient(Ingredient ingredient, PokemonSearchOptions searchOptions, Function() search) {
+    if (searchOptions.ingredientOf.contains(ingredient)) {
+      searchOptions.ingredientOf.remove(ingredient);
+    } else {
+      searchOptions.ingredientOf.add(ingredient);
+    }
+    search();
+  }
+
+  void _toggleFruit(Fruit fruit, PokemonSearchOptions searchOptions, Function() search) {
+    if (searchOptions.fruitOf.contains(fruit)) {
+      searchOptions.fruitOf.remove(fruit);
+    } else {
+      searchOptions.fruitOf.add(fruit);
+    }
+    search();
+  }
+
 }
 
 

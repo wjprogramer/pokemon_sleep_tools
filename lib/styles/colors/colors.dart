@@ -50,3 +50,8 @@ const rankTitle3Color1 = Color(0xFFF8E477);
 const rankTitle3Color2 = Color(0xFF666264);
 const rankTitle4Color1 = Color(0xFF8D6EB2);
 const rankTitle4Color2 = Color(0xFFD672B6);
+
+/// [PokemonSpecialty]
+const specialty1Color = Color(0xFF24D36C);
+const specialty2Color = Color(0xFFFDBB43);
+const specialty3Color = Color(0xFFFE765A);

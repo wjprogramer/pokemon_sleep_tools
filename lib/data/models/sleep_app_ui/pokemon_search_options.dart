@@ -6,16 +6,19 @@ class PokemonSearchOptions implements BaseSearchOptions {
   PokemonSearchOptions({
     String keyword = '',
     Set<Fruit>? fruitOf,
+    Set<PokemonType>? typeof,
     Set<MainSkill>? mainSkillOf,
     Set<MainSkill>? subSkillOf,
     Set<Ingredient>? ingredientOf,
   }) : _keyword = keyword,
-  fruitOf = fruitOf ?? {},
-  mainSkillOf = mainSkillOf ?? {},
-  subSkillOf = subSkillOf ?? {},
-  ingredientOf = ingredientOf ?? {};
+    fruitOf = fruitOf ?? {},
+    typeof = typeof ?? {},
+    mainSkillOf = mainSkillOf ?? {},
+    subSkillOf = subSkillOf ?? {},
+    ingredientOf = ingredientOf ?? {};
 
   Set<Fruit> fruitOf;
+  Set<PokemonType> typeof;
   Set<MainSkill> mainSkillOf;
   Set<MainSkill> subSkillOf;
   Set<Ingredient> ingredientOf;

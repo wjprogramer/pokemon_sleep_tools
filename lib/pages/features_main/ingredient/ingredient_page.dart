@@ -192,16 +192,16 @@ class _IngredientPageState extends State<IngredientPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: HORIZON_PADDING,
-                vertical: 4,
+                vertical: 0,
               ),
               child: Row(
                 children: [
                   if (MyEnv.USE_DEBUG_IMAGE)
                     Padding(
-                      padding: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.only(right: 12),
                       child: DishImage(
                         dish: dish,
-                        width: 30,
+                        width: 52,
                       ),
                     ),
                   Expanded(

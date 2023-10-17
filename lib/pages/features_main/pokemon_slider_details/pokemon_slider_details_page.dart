@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -18,6 +19,8 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/fruit_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/pokemon_image.dart';
 import 'package:provider/provider.dart';
 
@@ -286,6 +289,7 @@ class _PokemonDetailsView extends StatefulWidget {
 
 class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
   PokemonBasicProfile get basicProfile => widget.profile.basicProfile;
+  PokemonProfile get _profile => widget.profile;
 
   late ScrollController _scrollController;
   late ThemeData _theme;
@@ -324,12 +328,27 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
     const subSkillParentExtraMarginValue = 4.0;
     final subSkillWidth = (mainWidth - 2 * subSkillParentExtraMarginValue - subSkillItemSpacing) / 2;
 
+    Widget image = Container();
+    if (MyEnv.USE_DEBUG_IMAGE) {
+      image = PokemonImage(
+        height: 200,
+        basicProfile: widget.profile.basicProfile,
+      );
+    }
+    // if (Platform.isAndroid) {
+    //   image = Hero(
+    //     tag: 'pokemon_image_${widget.profile.id}',
+    //     child: image,
+    //   );
+    // }
+
     Widget buildWithLabel({
       required String text,
       required Widget child,
+      CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.start,
     }) {
       return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: crossAxisAlignment,
         children: [
           Container(
             margin: const EdgeInsets.only(right: 12),
@@ -348,15 +367,32 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
       );
     }
 
+    Widget buildIngredientLevelLabel(int level) {
+      return Stack(
+        children: [
+          Opacity(
+            opacity: 0,
+            child: Text('Lv 100'),
+          ),
+          Positioned.fill(
+            child: Row(
+              children: [
+                Text('Lv'),
+                Spacer(),
+                Text('${level.clamp(1, 100)}'),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     return [
       Gap.xl,
       ...Hp.list(
         children: [
           if (MyEnv.USE_DEBUG_IMAGE)
-            PokemonImage(
-              height: 200,
-              basicProfile: widget.profile.basicProfile
-            ),
+            image,
           MyElevatedButton(
             onPressed: () {
               /// TODO: 如果是「班基拉斯、沙基拉斯、又基拉斯」要將 _isLarvitar 設為 true
@@ -381,12 +417,27 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           Gap.xl,
           buildWithLabel(
             text: 't_fruit'.xTr,
+            crossAxisAlignment: CrossAxisAlignment.center,
             child: InkWell(
               onTap: () {
                 FruitPage.go(context, basicProfile.fruit);
               },
-              child: Text(
-                basicProfile.fruit.nameI18nKey.xTr,
+              child: Row(
+                children: [
+                  if (MyEnv.USE_DEBUG_IMAGE)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: FruitImage(
+                        fruit: basicProfile.fruit,
+                        width: 24,
+                      ),
+                    ),
+                  Expanded(
+                    child: Text(
+                      basicProfile.fruit.nameI18nKey.xTr,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -400,19 +451,70 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                   onTap: () {
                     IngredientPage.go(context, basicProfile.ingredient1);
                   },
-                  child: Text('Lv1      ${basicProfile.ingredient1.nameI18nKey} x${basicProfile.ingredientCount1}'),
+                  child: Row(
+                    children: [
+                      buildIngredientLevelLabel(1),
+                      Gap.md,
+                      if (MyEnv.USE_DEBUG_IMAGE)
+                        Padding(
+                          padding: const EdgeInsets.only(),
+                          child: IngredientImage(
+                            ingredient: basicProfile.ingredient1,
+                            width: 24,
+                          ),
+                        ),
+                      Expanded(
+                        child: Text(basicProfile.ingredient1.nameI18nKey.xTr),
+                      ),
+                      Text('x${basicProfile.ingredientCount1}'),
+                    ],
+                  ),
                 ),
                 InkWell(
                   onTap: () {
                     IngredientPage.go(context, widget.profile.ingredient2);
                   },
-                  child: Text('Lv30    ${widget.profile.ingredient2.nameI18nKey} x${widget.profile.ingredientCount2}'),
+                  child: Row(
+                    children: [
+                      buildIngredientLevelLabel(30),
+                      Gap.md,
+                      if (MyEnv.USE_DEBUG_IMAGE)
+                        Padding(
+                          padding: const EdgeInsets.only(),
+                          child: IngredientImage(
+                            ingredient: widget.profile.ingredient2,
+                            width: 24,
+                          ),
+                        ),
+                      Expanded(
+                        child: Text(widget.profile.ingredient2.nameI18nKey.xTr),
+                      ),
+                      Text('x${widget.profile.ingredientCount2}'),
+                    ],
+                  ),
                 ),
                 InkWell(
                   onTap: () {
                     IngredientPage.go(context, widget.profile.ingredient3);
                   },
-                  child: Text('Lv60    ${widget.profile.ingredient3.nameI18nKey} x${widget.profile.ingredientCount3}'),
+                  child: Row(
+                    children: [
+                      buildIngredientLevelLabel(60),
+                      Gap.md,
+                      if (MyEnv.USE_DEBUG_IMAGE)
+                        Padding(
+                          padding: const EdgeInsets.only(),
+                          child: IngredientImage(
+                            ingredient: widget.profile.ingredient3,
+                            width: 24,
+                          ),
+                        ),
+                      Expanded(
+                        child: Text(widget.profile.ingredient3.nameI18nKey.xTr),
+                      ),
+                      Text('x${widget.profile.ingredientCount3}'),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -421,7 +523,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           buildWithLabel(
             text: '幫忙間隔'.xTr,
             child: Text(
-              '${basicProfile.helpInterval}\n',
+              '${basicProfile.helpInterval} 秒',
             ),
           ),
           Gap.xl,

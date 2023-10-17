@@ -13,6 +13,10 @@ class AssetsPath {
     return '$_prefix/pokemon/icons/$boxNo.png';
   }
 
+  static pokemonType(PokemonType pokemonType) {
+    return '$_prefix/type/${pokemonType.id}.png';
+  }
+
   static mealIcon(int dishId) {
     return '$_prefix/meal/icons/$dishId.png';
   }

@@ -37,6 +37,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pot/pot_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_face/sleep_face_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/specialty_info/specialty_info_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
@@ -91,6 +92,7 @@ MyRoutesMapping generateRoutes() {
     ResearchNotesPage.route,
     SleepFacePage.route,
     SleepFacesIllustratedBookPage.route,
+    SpecialtyInfoPage.route,
     SplashPage.route,
     SubSkillPickerPage.route,
     SubSkillsCharacterIllustratedBookPage.route,

@@ -11,6 +11,7 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/specialty_info/specialty_info_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
@@ -134,9 +135,10 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     Widget buildWithLabel({
       required String text,
       required Widget child,
+      CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.start,
     }) {
       return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: crossAxisAlignment,
         children: [
           Container(
             margin: const EdgeInsets.only(right: 12),
@@ -203,12 +205,44 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               Gap.md,
               buildWithLabel(
                 text: 't_specialty'.xTr,
-                child: Text(_basicProfile.specialty.nameI18nKey.xTr),
+                crossAxisAlignment: CrossAxisAlignment.center,
+                child: Row(
+                  children: [
+                    SpecialtyLabel(
+                      specialty: _basicProfile.specialty,
+                    ),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        SpecialtyInfoPage.go(context);
+                      },
+                      icon: Icon(
+                        Icons.info_outline,
+                        color: greyColor2,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ],
+                ),
               ),
               Gap.md,
               buildWithLabel(
                 text: 't_fruit'.xTr,
-                child: Text(_basicProfile.fruit.nameI18nKey.xTr),
+                child: Row(
+                  children: [
+                    if (MyEnv.USE_DEBUG_IMAGE)
+                      Padding(
+                        padding: const EdgeInsets.only(right: Gap.smV),
+                        child: FruitImage(
+                          fruit: _basicProfile.fruit,
+                          width: 24,
+                        ),
+                      ),
+                    Expanded(
+                      child: Text(_basicProfile.fruit.nameI18nKey.xTr),
+                    ),
+                  ],
+                ),
               ),
               Gap.md,
               // TODO: 主技能反查
@@ -420,17 +454,21 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
       return [
         ..._buildEvolutionStage(e, index == 0 ? null : evolutionsStages[index - 1]),
         if (index != list.length - 1)
-          const Icon(Icons.arrow_right),
+          Center(child: const Icon(Icons.arrow_right)),
       ];
     }
 
-    return Row(
-      children: [
-        ...evolutionsStages
-            .where((element) => element.isNotEmpty)
-            .xMapIndexed(x)
-            .expand((e) => e),
-      ],
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: MyEnv.USE_DEBUG_IMAGE
+            ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        children: [
+          ...evolutionsStages
+              .where((element) => element.isNotEmpty)
+              .xMapIndexed(x)
+              .expand((e) => e),
+        ],
+      ),
     );
   }
 
@@ -461,20 +499,51 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
           .toList();
     }
 
-    return InkWell(
-      onTap: isCurrent ? null : () {
-        PokemonBasicProfilePage.go(context, basicProfile);
-      },
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              basicProfile.nameI18nKey.xTr,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: isCurrent ? null : () {
+          PokemonBasicProfilePage.go(context, basicProfile);
+        },
+        child: Container(
+          decoration: !MyEnv.USE_DEBUG_IMAGE ? null : BoxDecoration(
+            border: Border.all(
+              color: isCurrent ? positiveColor : greyColor2,
             ),
-            ...conditionsItems,
-          ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (MyEnv.USE_DEBUG_IMAGE) ...[
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: isCurrent ? positiveColor : greyColor2,
+                      ),
+                    ),
+                  ),
+                  child: PokemonIconImage(
+                    basicProfile: basicProfile,
+                    width: 100,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: conditionsItems,
+                  ),
+                ),
+              ] else ...[
+                Text(
+                  basicProfile.nameI18nKey.xTr,
+                ),
+                ...conditionsItems,
+              ],
+            ],
+          ),
         ),
       ),
     );

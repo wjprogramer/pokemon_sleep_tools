@@ -3,6 +3,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/search_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -56,11 +57,11 @@ class _AboutPageState extends State<AboutPage> {
           ...ListTile.divideTiles(
             context: context,
             tiles: [
-              _buildListTile(
+              SearchListTile(
                 titleText: '作者臉書',
                 url: 'https://www.facebook.com/WJProgramer',
               ),
-              _buildListTile(
+              SearchListTile(
                 titleText: '隱私權政策',
                 url: 'https://raw.githubusercontent.com/wjprogramer/public_resources/master/privacy/sleep_tools.md',
               ),
@@ -73,24 +74,6 @@ class _AboutPageState extends State<AboutPage> {
           ),
           Gap.trailing,
         ],
-      ),
-    );
-  }
-
-  Widget _buildListTile({
-    required String titleText,
-    required String url,
-    String? subTitleText,
-  }) {
-    return ListTile(
-      onTap: () {
-        launchUrl(Uri.parse(url));
-      },
-      title: Text(titleText),
-      subtitle: subTitleText == null ? null
-          : Text(subTitleText, maxLines: 2, overflow: TextOverflow.ellipsis,),
-      trailing: const Icon(
-        Icons.open_in_new,
       ),
     );
   }

@@ -266,12 +266,14 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
     } else {
       child = Align(
         alignment: Alignment(0, -0.3),
-        child: PokemonImage(
-          basicProfile: profile.basicProfile,
+        child: Hero(
+          tag: 'pokemon_image_${profile.id}',
+          child: PokemonImage(
+            basicProfile: profile.basicProfile,
+          ),
         ),
       );
     }
-
 
     return InkWell(
       onTap: () => _onTap(profile),
