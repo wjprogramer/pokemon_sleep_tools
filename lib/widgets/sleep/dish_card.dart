@@ -220,11 +220,16 @@ class DishCard extends StatelessWidget {
                                   Expanded(
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 12),
-                                      child: Text(
-                                        dish.nameI18nKey.xTr,
-                                        style: theme.textTheme.bodyLarge?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                      child: Stack(
+                                        children: [
+                                          Text('\n'),
+                                          Text(
+                                            dish.nameI18nKey.xTr,
+                                            style: theme.textTheme.bodyLarge?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -235,7 +240,7 @@ class DishCard extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Gap.xl,
+                              Gap.sm,
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,58 +259,59 @@ class DishCard extends StatelessWidget {
                                   ),
                                   Gap.md,
                                   Expanded(
-                                    child: Wrap(
-                                      spacing: 12,
-                                      runSpacing: 6,
-                                      children: [
-                                        if (ingredientAndQuantityList.isEmpty)
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: _ingredientLabelVerticalPaddingValue,
-                                            ),
-                                            child: Text('t_none'.xTr, style: ingredientBaseStyle,),
-                                          )
-                                        else ...ingredientAndQuantityList.map((ingredientToQuantity) {
-                                          final ingredient = ingredientToQuantity.$1;
-                                          final quantity = ingredientToQuantity.$2;
-
-                                          Widget labelNameContent;
-                                          if (MyEnv.USE_DEBUG_IMAGE) {
-                                            labelNameContent = IngredientImage(
-                                              width: 20,
-                                              ingredient: ingredient,
-                                            );
-                                          } else {
-                                            labelNameContent = Text(
-                                              ingredient.nameI18nKey.xTr,
-                                              style: ingredientBaseStyle,
-                                            );
-                                          }
-
-                                          return Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(
-                                                  vertical: _ingredientLabelVerticalPaddingValue,
-                                                  horizontal: 4,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: dishMaterialBgColor,
-                                                  borderRadius: MyEnv.USE_DEBUG_IMAGE ? null : BorderRadius.circular(4),
-                                                  shape: MyEnv.USE_DEBUG_IMAGE ? BoxShape.circle : BoxShape.rectangle,
-                                                ),
-                                                child: labelNameContent,
+                                    child: Container(
+                                      child: Wrap(
+                                        spacing: 6,
+                                        runSpacing: 6,
+                                        children: [
+                                          if (ingredientAndQuantityList.isEmpty)
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                vertical: _ingredientLabelVerticalPaddingValue,
                                               ),
-                                              Gap.xs,
-                                              Text(
-                                                quantity.toString(),
+                                              child: Text('t_none'.xTr, style: ingredientBaseStyle,),
+                                            )
+                                          else ...ingredientAndQuantityList.map((ingredientToQuantity) {
+                                            final ingredient = ingredientToQuantity.$1;
+                                            final quantity = ingredientToQuantity.$2;
+
+                                            Widget labelNameContent;
+                                            if (MyEnv.USE_DEBUG_IMAGE) {
+                                              labelNameContent = IngredientImage(
+                                                width: 20,
+                                                ingredient: ingredient,
+                                              );
+                                            } else {
+                                              labelNameContent = Text(
+                                                ingredient.nameI18nKey.xTr,
                                                 style: ingredientBaseStyle,
-                                              ),
-                                            ],
-                                          );
-                                        }),
-                                      ],
+                                              );
+                                            }
+
+                                            return Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets.symmetric(
+                                                    vertical: _ingredientLabelVerticalPaddingValue,
+                                                    horizontal: 4,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: dishMaterialBgColor,
+                                                    borderRadius: MyEnv.USE_DEBUG_IMAGE ? null : BorderRadius.circular(4),
+                                                    shape: MyEnv.USE_DEBUG_IMAGE ? BoxShape.circle : BoxShape.rectangle,
+                                                  ),
+                                                  child: labelNameContent,
+                                                ),
+                                                Text(
+                                                  quantity.toString(),
+                                                  style: ingredientBaseStyle,
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

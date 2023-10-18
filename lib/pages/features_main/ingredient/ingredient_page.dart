@@ -184,7 +184,11 @@ class _IngredientPageState extends State<IngredientPage> {
             Hp(child: Text('t_none'.xTr),)
           else ..._dishList.map((dish) => InkWell(
             onTap: () {
-              DishPage.go(context, dish);
+              DishPage.go(
+                context,
+                dish,
+                calculatorVisible: true,
+              );
             },
             child: DishListTile(
               dish: dish,

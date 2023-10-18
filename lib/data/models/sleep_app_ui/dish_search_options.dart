@@ -1,9 +1,6 @@
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-// TODO: 料理 => 食譜一覽
-// 篩選：容量、食材、料理種類
-
 class DishSearchOptions implements BaseSearchOptions {
   DishSearchOptions({
     List<DishType>? dishTypes,

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/sleep/dish_level_info.dart';
 import 'package:pokemon_sleep_tools/data/models/sleep/dish_type.dart';
@@ -67,6 +69,29 @@ enum Dish {
 
   final int capacity;
 
+}
+
+Future<Map<Dish, DishLevelInfo>> calcDishExpOf(int recipeLevel) {
+  return compute<Map<String, dynamic>, Map<Dish, DishLevelInfo>>(
+    calcDishLevelInfoOfAction,
+    { 'level': recipeLevel },
+  );
+}
+
+Future<Map<Dish, DishLevelInfo>> calcDishLevelInfoOfAction(Map<String, dynamic> data) async {
+  final recipeLevel = data['level'];
+  final res = <Dish, DishLevelInfo>{};
+
+  for (final dish in Dish.values) {
+    final levelInfo = dish.getLevels()
+        .firstWhereOrNull((e) => e.level == recipeLevel);
+
+    if (levelInfo != null) {
+      res[dish] = levelInfo;
+    }
+  }
+
+  return res;
 }
 
 extension DishX on Dish {

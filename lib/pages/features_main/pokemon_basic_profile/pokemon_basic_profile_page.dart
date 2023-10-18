@@ -20,18 +20,18 @@ import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
 class _PokemonBasicProfilePageArgs {
-  _PokemonBasicProfilePageArgs(this.basicProfile);
+  _PokemonBasicProfilePageArgs(this.basicProfile, {
+    this.isView = false,
+  });
 
   final PokemonBasicProfile basicProfile;
+  final bool isView;
 }
 
 /// TODO: 妙蛙種子#1，食材機率 25.63% (1:3.902)
 /// TODO: 反查寶可夢盒
 ///
 /// 攻略網站：會附上各種睡姿的圖片、
-///
-/// TODO: 反查睡姿的地圖
-/// TODO: 收藏 "睡姿" 功能
 class PokemonBasicProfilePage extends StatefulWidget {
   const PokemonBasicProfilePage._(this._args);
 
@@ -47,6 +47,14 @@ class PokemonBasicProfilePage extends StatefulWidget {
     );
   }
 
+  static Widget buildView(PokemonBasicProfile basicProfile) {
+    return PokemonBasicProfilePage._(
+      _PokemonBasicProfilePageArgs(
+        basicProfile, isView: true,
+      ),
+    );
+  }
+
   final _PokemonBasicProfilePageArgs _args;
 
   @override
@@ -59,6 +67,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
 
   PokemonBasicProfile get _basicProfile => widget._args.basicProfile;
+  bool get _isView => widget._args.isView;
 
   // UI
   late ThemeData _theme;
@@ -85,40 +94,53 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     super.initState();
 
     scheduleMicrotask(() async {
-      for (final field in PokemonField.values) {
-        _sleepFacesOfField[field] = [];
-      }
-
-      final mainViewModel = context.read<MainViewModel>();
-      final profiles = await mainViewModel.loadProfiles();
-      _existInBox = profiles.any((element) => element.basicProfileId == _basicProfile.id);
-
-      final allSleepFaces = await _sleepFaceRepo.findAll();
-      final sleepFaces = allSleepFaces.where((sleepFace) => sleepFace.basicProfileId == _basicProfile.id).toList();
-
-      final allSleepNames = await _sleepFaceRepo.findAllNames();
-      _sleepNamesOfBasicProfile = allSleepNames[_basicProfile.id] ?? {};
-
-      for (final sleepFace in sleepFaces) {
-        _sleepFacesOfField[sleepFace.field]?.add(sleepFace);
-      }
-
-      final evolutions = await _evolutionRepo.findByBasicProfileId(_basicProfile.id);
-      _evolutions = evolutions;
-
-      final basicProfileIdInEvolutionChain = evolutions
-          .expand((e) => e)
-          .map((e) => e.basicProfileId)
-          .toList();
-
-      _basicProfilesInEvolutionChain = await _basicProfileRepo
-          .findByIdList(basicProfileIdInEvolutionChain); // _evolutions
-
-      _initialized = true;
-      if (mounted) {
-        setState(() { });
-      }
+      _load();
     });
+  }
+
+  Future<void> _load() async {
+    // Clear or reset
+    _initialized = false;
+    _sleepFacesOfField.clear();
+    for (final field in PokemonField.values) {
+      _sleepFacesOfField[field] = [];
+    }
+
+    final mainViewModel = context.read<MainViewModel>();
+    final profiles = await mainViewModel.loadProfiles();
+    _existInBox = profiles.any((element) => element.basicProfileId == _basicProfile.id);
+
+    final allSleepFaces = await _sleepFaceRepo.findAll();
+    final sleepFaces = allSleepFaces.where((sleepFace) => sleepFace.basicProfileId == _basicProfile.id).toList();
+
+    final allSleepNames = await _sleepFaceRepo.findAllNames();
+    _sleepNamesOfBasicProfile = allSleepNames[_basicProfile.id] ?? {};
+
+    for (final sleepFace in sleepFaces) {
+      _sleepFacesOfField[sleepFace.field]?.add(sleepFace);
+    }
+
+    final evolutions = await _evolutionRepo.findByBasicProfileId(_basicProfile.id);
+    _evolutions = evolutions;
+
+    final basicProfileIdInEvolutionChain = evolutions
+        .expand((e) => e)
+        .map((e) => e.basicProfileId)
+        .toList();
+
+    _basicProfilesInEvolutionChain = await _basicProfileRepo
+        .findByIdList(basicProfileIdInEvolutionChain); // _evolutions
+
+    _initialized = true;
+    if (mounted) {
+      setState(() { });
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant PokemonBasicProfilePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _load();
   }
 
   @override
@@ -126,7 +148,9 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     _theme = context.theme;
 
     if (!_initialized) {
-      return LoadingView();
+      return LoadingView(
+        isView: _isView,
+      );
     }
 
     final screenSize = MediaQuery.of(context).size;
@@ -161,7 +185,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     }
 
     return Scaffold(
-      appBar: buildAppBar(
+      appBar: _isView ? null : buildAppBar(
         title: Row(
           children: [
             // PokemonTypeIcon(type: _basicProfile.pokemonType),
@@ -216,16 +240,17 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                       specialty: _basicProfile.specialty,
                     ),
                     Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        SpecialtyInfoPage.go(context);
-                      },
-                      icon: Icon(
-                        Icons.info_outline,
-                        color: greyColor2,
+                    if (kDebugMode)
+                      IconButton(
+                        onPressed: () {
+                          SpecialtyInfoPage.go(context);
+                        },
+                        icon: Icon(
+                          Icons.info_outline,
+                          color: greyColor2,
+                        ),
+                        visualDensity: VisualDensity.compact,
                       ),
-                      visualDensity: VisualDensity.compact,
-                    ),
                   ],
                 ),
               ),

@@ -76,7 +76,7 @@ class _DishSearchDialogState extends State<DishSearchDialog> {
           ...SleepSearchDialogBaseContent.hpList(
             children: [
               MySubHeader(
-                titleText: 't_food'.xTr,
+                titleText: '料理種類'.xTr,
               ),
               Gap.sm,
               ...DishType.values.map((dishType) => Material(

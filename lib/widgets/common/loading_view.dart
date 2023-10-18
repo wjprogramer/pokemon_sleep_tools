@@ -5,14 +5,16 @@ class LoadingView extends StatelessWidget {
   const LoadingView({
     super.key,
     this.titleText,
+    this.isView = false,
   });
   
   final String? titleText;
+  final bool isView;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(
+      appBar: isView ? null : buildAppBar(
         titleText: titleText,
       ),
       body: const Center(

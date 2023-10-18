@@ -11,6 +11,8 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 
+const _spacing = 12.0;
+
 enum _PageType {
   view,
   pick,
@@ -86,11 +88,19 @@ class _DishListPageState extends State<DishListPage> {
   }
 
   Future<void> _updateData() async {
-    _dishLevelInfoOf = await _calcDishExpOf(_currLevel);
+    _dishLevelInfoOf = await calcDishExpOf(_currLevel);
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = context.mediaQuery.size;
+    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
+    final itemWidth = UiUtility.getChildWidthInRowBy(
+      baseChildWidth: 350,
+      containerWidth: mainWidth,
+      spacing: _spacing,
+    );
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: 't_recipes'.xTr,
@@ -129,7 +139,17 @@ class _DishListPageState extends State<DishListPage> {
               ),
               children: [
                 Gap.lg,
-                ..._dishes.map(_buildDish),
+                Wrap(
+                  spacing: _spacing,
+                  children: _dishes.map((dish) => ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: itemWidth,
+                    ),
+                    child: _buildDish(
+                      dish,
+                    ),
+                  )).toList(),
+                ),
                 Gap.trailing,
               ],
             ),
@@ -186,25 +206,4 @@ class _DishListPageState extends State<DishListPage> {
 
 }
 
-Future<Map<Dish, DishLevelInfo>> _calcDishExpOf(int recipeLevel) {
-  return compute<Map<String, dynamic>, Map<Dish, DishLevelInfo>>(
-    _calcDishLevelInfoOfAction,
-    { 'level': recipeLevel },
-  );
-}
 
-Future<Map<Dish, DishLevelInfo>> _calcDishLevelInfoOfAction(Map<String, dynamic> data) async {
-  final recipeLevel = data['level'];
-  final res = <Dish, DishLevelInfo>{};
-
-  for (final dish in Dish.values) {
-    final levelInfo = dish.getLevels()
-        .firstWhereOrNull((e) => e.level == recipeLevel);
-
-    if (levelInfo != null) {
-      res[dish] = levelInfo;
-    }
-  }
-
-  return res;
-}

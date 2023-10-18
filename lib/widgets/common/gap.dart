@@ -19,5 +19,7 @@ class Gap {
   static const xxl = gap.Gap(xxlV);
 
   static const h = gap.Gap(HORIZON_PADDING);
+  static const hV = HORIZON_PADDING;
+
   static const trailing = gap.Gap(60);
 }

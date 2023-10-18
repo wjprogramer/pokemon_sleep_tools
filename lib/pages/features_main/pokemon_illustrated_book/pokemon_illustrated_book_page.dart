@@ -8,10 +8,12 @@ import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_basic_profile
 import 'package:pokemon_sleep_tools/data/repositories/main/sleep_face_repository.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 /// TODO: 篩選條件: 睡姿 [PokemonField]、名稱、[PokemonType]、[Fruit]、[PokemonSpecialty]、[SleepType]、利用食材 Lv1/30/60/any 查詢 [Ingredient]、目前進化街段(1,2,3)、最終進化街段(1,2,3)、
 /// TODO: 篩選器有寶可夢等級，但這個等級是顯示寶可夢對應能量的數值，所以實際上不是篩選器條件之一
@@ -49,6 +51,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   // Data
   var _basicProfiles = <PokemonBasicProfile>[];
   var _sleepFacesOf = <int, Map<int, String>>{};
+  PokemonBasicProfile? _currBasicProfile;
 
   /// [PokemonBasicProfile.id] to [PokemonProfile]
   final _profileOf = <int, PokemonProfile>{};
@@ -76,38 +79,82 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
+    final responsive = ResponsiveBreakpoints.of(context);
 
+    final mainContent = Consumer<MainViewModel>(
+      builder: (context, mainViewModel, child) {
+        final profiles = mainViewModel.profiles;
+
+        return buildListView(
+          children: [
+            ..._basicProfiles.map((e) => Padding(
+              padding: const EdgeInsets.only(bottom: Gap.xsV),
+              child: _buildBasicProfile(e, isMobile: responsive.isMobile),
+            )),
+            Gap.trailing,
+          ],
+        );
+      },
+    );
+
+    if (responsive.isMobile) {
+      return Scaffold(
+        appBar: buildAppBar(
+          titleText: 't_pokemon_illustrated_book'.xTr,
+        ),
+        body: mainContent,
+      );
+    }
+
+    final basicProfile = _currBasicProfile;
     return Scaffold(
       appBar: buildAppBar(
         titleText: 't_pokemon_illustrated_book'.xTr,
       ),
-      body: Consumer<MainViewModel>(
-        builder: (context, mainViewModel, child) {
-          final profiles = mainViewModel.profiles;
-
-          return buildListView(
-            children: [
-              ..._basicProfiles.map((e) => Padding(
-                padding: const EdgeInsets.only(bottom: Gap.xsV),
-                child: _buildBasicProfile(e),
-              )),
-              Gap.trailing,
-            ],
-          );
-        },
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            width: COMMON_SIDE_WIDTH,
+            child: mainContent,
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  left: Divider.createBorderSide(context),
+                ),
+              ),
+              child: basicProfile == null
+                  ? Center(child: Text('選擇寶可夢'),)
+                  : PokemonBasicProfilePage.buildView(basicProfile),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildBasicProfile(PokemonBasicProfile basicProfile) {
+  Widget _buildBasicProfile(PokemonBasicProfile basicProfile, {
+    required bool isMobile,
+  }) {
     return InkWell(
       onTap: () {
-        PokemonBasicProfilePage.go(context, basicProfile);
+        if (isMobile) {
+          PokemonBasicProfilePage.go(context, basicProfile);
+        } else {
+          setState(() {
+            _currBasicProfile = basicProfile;
+          });
+        }
       },
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: HORIZON_PADDING,
           vertical: 8,
+        ),
+        decoration: BoxDecoration(
+          color: _currBasicProfile?.id == basicProfile.id ? yellowColor : null,
         ),
         child: Row(
           children: [

@@ -277,9 +277,10 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
           }),
           ...Hp.list(
             children: [
-              MySubHeader(
-                titleText: '樹果 & 適合島嶼'.xTr,
-              ),
+              // TODO:
+              // MySubHeader(
+              //   titleText: '樹果 & 適合島嶼'.xTr,
+              // ),
               MySubHeader(
                 titleText: 't_ingredients'.xTr,
               ),

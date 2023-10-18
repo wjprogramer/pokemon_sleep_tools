@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.d
 import 'package:pokemon_sleep_tools/all_in_one/i18n/support_lang.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/translations.dart';
 import 'package:pokemon_sleep_tools/app/app_dependencies.dart';
+import 'package:pokemon_sleep_tools/app/src/app_builder.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
@@ -71,7 +72,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: generateTempTheme(),
-      builder: BotToastInit(),
+      builder: appBuilder(),
       // i18n
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

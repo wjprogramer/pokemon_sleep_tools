@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
@@ -12,7 +13,7 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 class PokemonFoodMenuPage extends StatefulWidget {
   const PokemonFoodMenuPage._();
 
-  static const MyPageRoute route = ('PokemonFoodMenuPage', _builder);
+  static const MyPageRoute route = ('/PokemonFoodMenuPage', _builder);
   static Widget _builder(dynamic args) {
     return const PokemonFoodMenuPage._();
   }
@@ -34,12 +35,13 @@ class _PokemonFoodMenuPageState extends State<PokemonFoodMenuPage> {
       appBar: buildAppBar(
         titleText: 't_food'.xTr,
         actions: [
-          IconButton(
-            onPressed: () {
-              DishInfoPage.go(context);
-            },
-            icon: Icon(Icons.info_outline),
-          ),
+          if (kDebugMode)
+            IconButton(
+              onPressed: () {
+                DishInfoPage.go(context);
+              },
+              icon: Icon(Icons.info_outline),
+            ),
         ],
       ),
       body: ListView(
