@@ -1,4 +1,3 @@
-import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
@@ -13,6 +12,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart'
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 import 'package:pokemon_sleep_tools/styles/styles.dart';
+import 'package:pokemon_sleep_tools/third_clone/bot_toast/bot_toast.dart';
 import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
