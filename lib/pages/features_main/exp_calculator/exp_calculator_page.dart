@@ -11,6 +11,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class _PageArgs {
@@ -149,7 +150,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           ),
         ],
       ),
-      CheckboxListTile(
+      _buildMyCheckListTile(
         value: _isLarvitar,
         onChanged: (v) {
           if (v == null || !v) {
@@ -158,6 +159,13 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           _isLarvitar = v;
           setState(() { });
         },
+        leading: !MyEnv.USE_DEBUG_IMAGE ? null : Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: PokemonIconImage(
+            basicProfile: _larvitarChainProfiles[0],
+            width: 48,
+          ),
+        ),
         title: Text(
           _larvitarChainProfiles
               .map((e) => e.nameI18nKey.xTr)
@@ -170,8 +178,14 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
           ),
         ),
       ),
-      CheckboxListTile(
+      _buildMyCheckListTile(
         value: !_isLarvitar,
+        leading: !MyEnv.USE_DEBUG_IMAGE ? null : Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: Container(
+            width: 48,
+          ),
+        ),
         onChanged: (v) {
           if (v == null || !v) {
             return;
@@ -307,6 +321,75 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
         ],
       ),
     ];
+  }
+
+  /// 參考 [CheckboxListTile] 整體樣式
+  /// 參考 [ListTile] 中的 _LisTileDefaultsM3 文字樣式
+  _buildMyCheckListTile({
+    required bool value,
+    required ValueChanged onChanged,
+    required Widget title,
+    Widget? subtitle,
+    Widget? leading,
+  }) {
+    final listTileTheme = _theme.listTileTheme;
+    final colorScheme = _theme.colorScheme;
+
+    final bool hasSubtitle = subtitle != null;
+    const isThreeLine = false;
+    final bool isTwoLine = !isThreeLine && hasSubtitle;
+    final bool isOneLine = !isThreeLine && !hasSubtitle;
+
+    final minHeight = isTwoLine ? 72.0
+        : isOneLine ? 56.0
+        : 88.0;
+
+    return InkWell(
+      onTap: () => onChanged(!value),
+      child: Container(
+        constraints: BoxConstraints(
+          minHeight: minHeight,
+        ),
+        child: Row(
+          children: [
+            Gap.h,
+            if (leading != null)
+              leading,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DefaultTextStyle(
+                    style: listTileTheme.titleTextStyle ??
+                        _theme.textTheme.bodyLarge!.copyWith(
+                          color: colorScheme.onSurface,
+                        ),
+                    child: title,
+                  ),
+                  if (subtitle != null)
+                    DefaultTextStyle(
+                      style: listTileTheme.subtitleTextStyle ??
+                          _theme.textTheme.bodyMedium!.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                      child: subtitle,
+                    ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: CHECKBOX_SIZE,
+              child: Checkbox(
+                value: value,
+                onChanged: onChanged,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            ),
+            Gap.h,
+          ],
+        ),
+      ),
+    );
   }
 
 }

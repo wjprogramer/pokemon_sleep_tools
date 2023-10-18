@@ -191,8 +191,12 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
             ),
             children: [
               if (MyEnv.USE_DEBUG_IMAGE)
-                PokemonImage(
-                  basicProfile: _basicProfile,
+                SizedBox(
+                  height: 200,
+                  child: PokemonImage(
+                    basicProfile: _basicProfile,
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
               MySubHeader(
                 titleText: 't_abilities'.xTr,
@@ -526,7 +530,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                   child: PokemonIconImage(
                     basicProfile: basicProfile,
                     width: 100,
-                    height: 50,
+                    height: 70,
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -54,6 +54,14 @@ extension ListX<E> on List<E> {
 }
 
 extension MapX<K, V> on Map<K, V> {
+  Map<NewK, NewV> toMap<NewK, NewV>(NewK Function(K key, V value) v, NewV Function(K key, V value) k) {
+    return {
+      for (final e in this.entries)
+        v(e.key, e.value): k(e.key, e.value),
+    };
+  }
 }
+
+
 
 

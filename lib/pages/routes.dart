@@ -12,9 +12,11 @@ import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_bo
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_energy_calculator/dish_energy_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_info/dish_info_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/dish_list/dish_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_maker/dish_maker_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp_caculator_result_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/field_edit/field_edit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
@@ -28,7 +30,6 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/po
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/dish_list/dish_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
@@ -71,6 +72,7 @@ MyRoutesMapping generateRoutes() {
     DishMakerPage.route,
     ExpCalculatorPage.route,
     ExpCalculatorResultPage.route,
+    FieldEditPage.route,
     FruitPage.route,
     FruitsPage.route,
     HomePage.route,

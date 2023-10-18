@@ -217,7 +217,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   Widget _buildBottomNavigationBar(List<PokemonProfile> profiles) {
     return BottomBarWithActions(
       onSearch: () async {
-        var res = await DialogUtility.searchPokemon(
+        var searchOptions = await DialogUtility.searchPokemon(
           context,
           initialSearchOptions: _searchOptions,
           calcCounts: (options) {
@@ -227,8 +227,11 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
             return (options.filterProfiles(_allProfiles).length, profiles.length);
           },
         );
+        if (searchOptions == null) {
+          return;
+        }
 
-        _searchOptions = res ?? _searchOptions;
+        _searchOptions = searchOptions;
         _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
         setState(() { });
       },

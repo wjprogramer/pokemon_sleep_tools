@@ -3,7 +3,6 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_energy_calculator/dish_energy_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_info/dish_info_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/dish_maker/dish_maker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_list/dish_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pot/pot_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -56,13 +55,13 @@ class _PokemonFoodMenuPageState extends State<PokemonFoodMenuPage> {
           ),
           Gap.md,
           Text('t_others'.xTr),
-          Gap.md,
-          MyElevatedButton(
-            onPressed: () {
-              DishMakerPage.go(context);
-            },
-            child: Text('t_dish_maker'.xTr),
-          ),
+          // Gap.md,
+          // MyElevatedButton(
+          //   onPressed: () {
+          //     DishMakerPage.go(context);
+          //   },
+          //   child: Text('t_dish_maker'.xTr),
+          // ),
           Gap.md,
           MyElevatedButton(
             onPressed: () {

@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
@@ -11,8 +8,6 @@ import 'package:pokemon_sleep_tools/persistent/local_storage/local_storage.dart'
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:file_saver/file_saver.dart';
-import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 

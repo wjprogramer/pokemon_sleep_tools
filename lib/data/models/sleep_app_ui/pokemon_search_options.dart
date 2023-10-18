@@ -10,18 +10,50 @@ class PokemonSearchOptions implements BaseSearchOptions {
     Set<MainSkill>? mainSkillOf,
     Set<MainSkill>? subSkillOf,
     Set<Ingredient>? ingredientOf,
+    Set<Ingredient>? ingredientOfLv1,
+    Set<Ingredient>? ingredientOfLv30,
+    Set<Ingredient>? ingredientOfLv60,
+    Set<PokemonField>? fieldOf,
+    Set<PokemonSpecialty>? specialtyOf,
+    Set<SleepType>? sleepTypeOf,
+    Set<int>? currEvolutionStageOf,
+    Set<int>? maxEvolutionStageOf,
   }) : _keyword = keyword,
     fruitOf = fruitOf ?? {},
     typeof = typeof ?? {},
     mainSkillOf = mainSkillOf ?? {},
     subSkillOf = subSkillOf ?? {},
-    ingredientOf = ingredientOf ?? {};
+    ingredientOf = ingredientOf ?? {},
+    ingredientOfLv1 = ingredientOfLv1 ?? {},
+    ingredientOfLv30 = ingredientOfLv30 ?? {},
+    ingredientOfLv60 = ingredientOfLv60 ?? {};
 
+  /// 搜尋樹果
   Set<Fruit> fruitOf;
+  /// 搜尋屬性
   Set<PokemonType> typeof;
+  /// 搜尋主技能
   Set<MainSkill> mainSkillOf;
+  /// 搜尋副技能
   Set<MainSkill> subSkillOf;
+  /// 搜尋食材
   Set<Ingredient> ingredientOf;
+  /// 只搜尋 1 等的食材
+  Set<Ingredient> ingredientOfLv1;
+  /// 只搜尋 30 等的食材
+  Set<Ingredient> ingredientOfLv30;
+  /// 只搜尋 60 等的食材
+  Set<Ingredient> ingredientOfLv60;
+  /// 可以在哪個島嶼上發現其睡姿
+  Set<PokemonField> fieldOf = {};
+  /// 搜尋專長
+  Set<PokemonSpecialty> specialtyOf = {};
+  /// 搜尋睡眠類型
+  Set<SleepType> sleepTypeOf = {};
+  /// 當前進化階段 (1, 2, 3)
+  Set<int> currEvolutionStageOf = {};
+  /// 最終進化階段 (1, 2, 3)
+  Set<int> maxEvolutionStageOf = {};
 
   String _keyword = '';
   String get keyword => _keyword;
@@ -40,6 +72,7 @@ class PokemonSearchOptions implements BaseSearchOptions {
     return PokemonSearchOptions(
       keyword: keyword,
       fruitOf: fruitOf,
+      typeof: typeof,
       mainSkillOf: mainSkillOf,
       subSkillOf: subSkillOf,
       ingredientOf: ingredientOf,
@@ -50,6 +83,7 @@ class PokemonSearchOptions implements BaseSearchOptions {
   bool isEmptyOptions() {
     return keyword.trim().isEmpty &&
         fruitOf.isEmpty &&
+        typeof.isEmpty &&
         mainSkillOf.isEmpty &&
         subSkillOf.isEmpty &&
         ingredientOf.isEmpty;
@@ -59,6 +93,7 @@ class PokemonSearchOptions implements BaseSearchOptions {
   void clear() {
     keyword = '';
     fruitOf.clear();
+    typeof.clear();
     mainSkillOf.clear();
     subSkillOf.clear();
     ingredientOf.clear();
@@ -92,14 +127,28 @@ class PokemonSearchOptions implements BaseSearchOptions {
           .where((p) => fruitOf.contains(p.basicProfile.fruit));
     }
 
+    if (ingredientOf.isNotEmpty) {
+      results = results.where((p) {
+        return ingredientOf.contains(p.ingredient1) ||
+            ingredientOf.contains(p.ingredient3) ||
+            ingredientOf.contains(p.ingredient3);
+      });
+    }
+
+    if (typeof.isNotEmpty) {
+      results = results
+          .where((p) => typeof.contains(p.basicProfile.pokemonType));
+    }
+
+    if (mainSkillOf.isNotEmpty) {
+      results = results
+          .where((p) => mainSkillOf.contains(p.basicProfile.mainSkill));
+    }
+
     final newKeyword = keyword.trim();
     if (newKeyword.isNotEmpty) {
       results = results
           .where((p) => p.basicProfile.nameI18nKey.xTr.contains(newKeyword));
-    }
-    if (mainSkillOf.isNotEmpty) {
-      results = results
-          .where((p) => mainSkillOf.contains(p.basicProfile.mainSkill));
     }
 
     return results.toList();

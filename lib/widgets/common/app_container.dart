@@ -14,6 +14,7 @@ class AppContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => FieldViewModel()),
         ChangeNotifierProvider(create: (_) => MainViewModel()),
         ChangeNotifierProvider(create: (_) => TeamViewModel()),
         ChangeNotifierProvider(create: (_) => SleepFaceViewModel()),

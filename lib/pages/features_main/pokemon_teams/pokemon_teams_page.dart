@@ -46,6 +46,14 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
   var _profileOf = <int, PokemonProfile>{};
   var _currIndex = 0;
 
+  // Team comment field
+  final _teamCommentCtrl = TextEditingController();
+  var _isEditingTeamComment = false;
+
+  // Team tags field
+  var _isEditingTeamTags = false;
+  final _tmpTags = <String>{};
+
   @override
   void initState() {
     super.initState();
@@ -106,6 +114,8 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final currTeam = _teams[_currIndex];
+
     if (!_isInitialized) {
       return _buildLoadingView();
     }
@@ -231,6 +241,148 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
                 onPressed: _getTeamAnalysisGoPageCallback(),
                 child: Text('t_analysis'.xTr),
               ),
+              Gap.xl,
+              if (currTeam != null) ...[
+                // MySubHeader(
+                //   titleText: '標籤',
+                // ),
+                // if (_isEditingTeamTags)
+                //   Container(
+                //     child: Scrollbar(
+                //       child: TextField(
+                //         controller: _teamCommentCtrl,
+                //         minLines: 5,
+                //         maxLines: 5,
+                //         maxLength: 100,
+                //       ),
+                //     ),
+                //   )
+                // else
+                //   Padding(
+                //     padding: (currTeam.comment ?? '').trim().isEmpty
+                //         ? EdgeInsets.zero
+                //         : EdgeInsets.only(top: Gap.mdV, bottom: Gap.smV),
+                //     child: Text(
+                //       currTeam.comment ?? '',
+                //     ),
+                //   ),
+                // Row(
+                //   children: [
+                //     Spacer(),
+                //     if (_isEditingTeamTags)
+                //       TextButton(
+                //         onPressed: () async {
+                //           setState(() {
+                //             _isEditingTeamTags = false;
+                //           });
+                //         },
+                //         child: Row(
+                //           mainAxisSize: MainAxisSize.min,
+                //           children: [
+                //             Icon(Icons.cancel_outlined),
+                //             Gap.md,
+                //             Text('取消'),
+                //           ],
+                //         ),
+                //       ),
+                //     TextButton(
+                //       key: ValueKey('submit_tags_button'),
+                //       onPressed: () async {
+                //         if (_isEditingTeamTags) {
+                //           await _teamViewModel.updateTeam(_currIndex, currTeam.copyWith(
+                //             comment: _teamCommentCtrl.text.trim(),
+                //           ));
+                //         } else {
+                //           _teamCommentCtrl.text = currTeam.comment ?? '';
+                //         }
+                //
+                //         setState(() {
+                //           _isEditingTeamTags = !_isEditingTeamTags;
+                //         });
+                //       },
+                //       child: Row(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Icon(Icons.note_alt_outlined),
+                //           Gap.md,
+                //           Text(_isEditingTeamTags ? '儲存' : '編輯'),
+                //         ],
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                MySubHeader(
+                  titleText: '筆記',
+                ),
+                if (_isEditingTeamComment)
+                  Container(
+                    child: Scrollbar(
+                      trackVisibility: true,
+                      thumbVisibility: true,
+                      child: TextField(
+                        controller: _teamCommentCtrl,
+                        minLines: 5,
+                        maxLines: 5,
+                        maxLength: 100,
+                      ),
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: (currTeam.comment ?? '').trim().isEmpty
+                        ? EdgeInsets.zero
+                        : EdgeInsets.only(top: Gap.mdV, bottom: Gap.smV),
+                    child: Text(
+                      currTeam.comment ?? '',
+                    ),
+                  ),
+                Row(
+                  children: [
+                    Spacer(),
+                    if (_isEditingTeamComment)
+                      TextButton(
+                        onPressed: () async {
+                          setState(() {
+                            _isEditingTeamComment = false;
+                          });
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.cancel_outlined),
+                            Gap.md,
+                            Text('取消'),
+                          ],
+                        ),
+                      ),
+                    TextButton(
+                      key: ValueKey('submit_comment_button'),
+                      onPressed: () async {
+                        if (_isEditingTeamComment) {
+                          await _teamViewModel.updateTeam(_currIndex, currTeam.copyWith(
+                            comment: _teamCommentCtrl.text.trim(),
+                          ));
+                        } else {
+                          _teamCommentCtrl.text = currTeam.comment ?? '';
+                        }
+
+                        setState(() {
+                          _isEditingTeamComment = !_isEditingTeamComment;
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.note_alt_outlined),
+                          Gap.md,
+                          Text(_isEditingTeamComment ? '儲存' : '編輯'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Gap.xl,
+              ],
             ],
           ),
           Gap.trailing,
@@ -340,6 +492,7 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
                               index: teamIndex,
                               name: null,
                               profileIdList: profileIdList,
+                              comment: null,
                             ));
                           } else {
                             final newTeam = pokemonTeam.copyWith(profileIdList: profileIdList);

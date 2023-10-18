@@ -9,11 +9,8 @@ import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_basic_profile
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
-import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/dream_chip_icon.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/energy_icon.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
@@ -189,58 +186,10 @@ class _IngredientPageState extends State<IngredientPage> {
             onTap: () {
               DishPage.go(context, dish);
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: HORIZON_PADDING,
-                vertical: 0,
-              ),
-              child: Row(
-                children: [
-                  if (MyEnv.USE_DEBUG_IMAGE)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: DishImage(
-                        dish: dish,
-                        width: 52,
-                      ),
-                    ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          dish.nameI18nKey.xTr,
-                          style: _theme.textTheme.bodyLarge,
-                        ),
-                        if (MyEnv.USE_DEBUG_IMAGE)
-                          Wrap(
-                            children: (_dishIngredientsOf[dish] ?? []).map((dishCount) => Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IngredientImage(
-                                  ingredient: dishCount.$1,
-                                  width: 20,
-                                ),
-                                Gap.sm,
-                                Text('x${dishCount.$2}'),
-                                Gap.sm,
-                              ],
-                            )).toList(),
-                          )
-                        else
-                          Text(
-                            _dishIngredientsOf[dish]?.map((ingredientPair) => '${ingredientPair.$1.nameI18nKey.xTr} x${ingredientPair.$2}')
-                                .join(', ') ?? '',
-                            style: _theme.textTheme.bodyMedium?.copyWith(
-                              color: greyColor3,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: DishListTile(
+              dish: dish,
+              ingredients: _dishIngredientsOf[dish] ?? [],
+            )
           )),
           ...Hp.list(
             children: [

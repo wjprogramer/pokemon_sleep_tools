@@ -226,9 +226,6 @@ class _DishEnergyCalculatorPageState extends State<DishEnergyCalculatorPage> {
                       )),
                       DataRow(
                         cells: [
-                          // totalCount
-                          // totalEnergy
-                          // totalEnergyWithBonus
                           DataCell(Text('合計')),
                           DataCell(Text('')),
                           DataCell(Text('')),

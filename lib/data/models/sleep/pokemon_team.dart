@@ -6,11 +6,15 @@ class PokemonTeam {
     required this.id,
     required this.name,
     required this.profileIdList,
+    required this.comment,
+    required this.tags,
   });
 
   int id;
   String? name;
   List<int> profileIdList;
+  String? comment;
+  List<String> tags;
 
   factory PokemonTeam.fromJson(Map<String, dynamic> json) {
     return PokemonTeam(
@@ -20,6 +24,10 @@ class PokemonTeam {
           .whereType<num>()
           .map((e) => e.toInt())
           .toList(),
+      comment: json['comment'] as String?,
+      tags: ((json['tags'] ?? []) as Iterable)
+          .whereType<String>()
+          .toList(),
     );
   }
 
@@ -28,6 +36,8 @@ class PokemonTeam {
       id: index,
       name: null,
       profileIdList: List.generate(MAX_TEAM_POKEMON_COUNT, (index) => -1),
+      comment: null,
+      tags: [],
     );
   }
 
@@ -36,6 +46,8 @@ class PokemonTeam {
       'id': id,
       'name': name,
       'profileIdList': profileIdList,
+      'comment': comment,
+      'tags': tags,
     };
   }
 
@@ -43,11 +55,15 @@ class PokemonTeam {
     int? id,
     String? name,
     List<int>? profileIdList,
+    String? comment,
+    List<String>? tags,
   }) {
     return PokemonTeam(
       id: id ?? this.id,
       name: name ?? this.name,
       profileIdList: profileIdList ?? this.profileIdList,
+      comment: comment ?? this.comment,
+      tags: tags ?? this.tags,
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:gap/gap.dart' as gap;
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 
 class Gap {
   Gap._();
@@ -17,5 +18,6 @@ class Gap {
   static const xl = gap.Gap(xlV);
   static const xxl = gap.Gap(xxlV);
 
+  static const h = gap.Gap(HORIZON_PADDING);
   static const trailing = gap.Gap(60);
 }

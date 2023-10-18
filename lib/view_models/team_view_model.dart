@@ -16,6 +16,8 @@ class TeamViewModel extends ChangeNotifier {
       id: payload.index,
       name: payload.name,
       profileIdList: payload.profileIdList,
+      comment: payload.comment,
+      tags: [],
     );
     final res = await _teamRepo.create(payload.index, tmpTeam);
     _teams = await _teamRepo.findAll();

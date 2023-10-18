@@ -269,6 +269,19 @@ class DishCard extends StatelessWidget {
                                           final ingredient = ingredientToQuantity.$1;
                                           final quantity = ingredientToQuantity.$2;
 
+                                          Widget labelNameContent;
+                                          if (MyEnv.USE_DEBUG_IMAGE) {
+                                            labelNameContent = IngredientImage(
+                                              width: 20,
+                                              ingredient: ingredient,
+                                            );
+                                          } else {
+                                            labelNameContent = Text(
+                                              ingredient.nameI18nKey.xTr,
+                                              style: ingredientBaseStyle,
+                                            );
+                                          }
+
                                           return Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
@@ -279,12 +292,10 @@ class DishCard extends StatelessWidget {
                                                 ),
                                                 decoration: BoxDecoration(
                                                   color: dishMaterialBgColor,
-                                                  borderRadius: BorderRadius.circular(4),
+                                                  borderRadius: MyEnv.USE_DEBUG_IMAGE ? null : BorderRadius.circular(4),
+                                                  shape: MyEnv.USE_DEBUG_IMAGE ? BoxShape.circle : BoxShape.rectangle,
                                                 ),
-                                                child: Text(
-                                                  ingredient.nameI18nKey.xTr,
-                                                  style: ingredientBaseStyle,
-                                                ),
+                                                child: labelNameContent,
                                               ),
                                               Gap.xs,
                                               Text(

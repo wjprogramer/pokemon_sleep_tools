@@ -147,6 +147,9 @@ class _DishListPageState extends State<DishListPage> {
               return (dishes.length, allDishCount);
             },
           );
+          if (searchOptions == null) {
+            return;
+          }
 
           _searchOptions = searchOptions;
           _dishes = _filterDishes(Dish.values, searchOptions);

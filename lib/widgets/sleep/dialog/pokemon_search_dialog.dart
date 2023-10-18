@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
+import 'package:pokemon_sleep_tools/view_models/field_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/base_dialog.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
+import 'package:provider/provider.dart';
 
 Future<PokemonSearchOptions?> showPokemonSearchDialog(BuildContext context, {
   required String titleText,
@@ -50,6 +50,8 @@ class PokemonSearchDialog extends StatefulWidget {
 }
 
 class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
+  FieldViewModel get _fieldViewModel => context.read<FieldViewModel>();
+
   late TextEditingController _nameField;
 
   @override
@@ -135,9 +137,15 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                       tooltip: pokemonType.nameI18nKey.xTr,
                       icon: Stack(
                         children: [
-                          PokemonTypeImage(
-                            pokemonType: pokemonType,
-                            width: 30,
+                          Container(
+                            decoration: BoxDecoration(
+                              color: whiteColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: PokemonTypeImage(
+                              pokemonType: pokemonType,
+                              width: 30,
+                            ),
                           ),
                           if (searchOptions.typeof.contains(pokemonType)) Positioned(
                             right: 5,
@@ -232,6 +240,50 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 )),
               ],
             ),
+          ),
+          TextButton(
+            onPressed: () async {
+              final filedForSnorlax = await showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Container(
+                      constraints: BoxConstraints.tightFor(
+                        height: screenSize.height * 0.5,
+                        width: mainWidth,
+                      ),
+                      child: ListView(
+                        children: [
+                          ...PokemonField.values.map((field) => ListTile(
+                            onTap: () {
+                              context.nav.pop(field);
+                            },
+                            title: Text(field.nameI18nKey.xTr),
+                          )),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+
+              if (filedForSnorlax is! PokemonField) {
+                return;
+              }
+
+              List<Fruit> fruits;
+              if (filedForSnorlax == PokemonField.f1) {
+                fruits = _fieldViewModel.getItem(filedForSnorlax).fruits;
+              } else {
+                fruits = filedForSnorlax.fruits;
+              }
+              searchOptions.fruitOf
+                ..clear()
+                ..addAll(fruits);
+              search();
+            },
+            child: Text('卡比獸喜歡的樹果'),
           ),
           ...SleepSearchDialogBaseContent.hpList(
             children: [

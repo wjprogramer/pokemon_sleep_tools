@@ -3,17 +3,18 @@ library my_local_storage;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:file_saver/file_saver.dart';
-import 'package:path/path.dart' as path;
 
 export 'models/app_meta.dart';
 
 part 'models/base_local_file.dart';
+part 'models/stored_pokemon_fields.dart';
 part 'models/stored_pokemon_profiles.dart';
 part 'models/stored_pokemon_sleep_face_styles.dart';
 part 'models/stored_pokemon_teams.dart';
@@ -33,6 +34,7 @@ class MyLocalStorage implements MyInjectable {
       final res = await callback(resource);
 
       final writeFuture = switch (resource) {
+        StoredPokemonFields() => writePokemonFields(resource),
         StoredPokemonProfiles() => writePokemonProfiles(resource),
         StoredPokemonTeams() => writePokemonTeams(resource),
         StoredPokemonSleepFaceStyles() => writePokemonSleepFaces(resource),
@@ -45,7 +47,7 @@ class MyLocalStorage implements MyInjectable {
     }
   }
 
-  Future<void> readWrite<T extends BaseLocalFile>(Type resource, Future<T> Function(T stored) callback) async {
+  Future<T> readWrite<T extends BaseLocalFile>(Type resource, Future<T> Function(T stored) callback) async {
     try {
       T? stored;
       // if (T == StoredPokemonProfiles) {
@@ -54,6 +56,7 @@ class MyLocalStorage implements MyInjectable {
       //   stored = (await readPokemonTeams()) as T;
       // }
       stored = switch (T) {
+        StoredPokemonFields => (await readPokemonFields()) as T,
         StoredPokemonProfiles => (await readPokemonFile()) as T,
         StoredPokemonTeams => (await readPokemonTeams()) as T,
         StoredPokemonSleepFaceStyles => (await readPokemonSleepFaces()) as T,
@@ -63,11 +66,13 @@ class MyLocalStorage implements MyInjectable {
       final res = await callback(stored!);
 
       final writeFuture = switch (res) {
+        StoredPokemonFields() => writePokemonFields(res),
         StoredPokemonProfiles() => writePokemonProfiles(res),
         StoredPokemonTeams() => writePokemonTeams(res),
         StoredPokemonSleepFaceStyles() => writePokemonSleepFaces(res),
       };
       await writeFuture;
+      return res;
     } catch (e) {
       rethrow;
     }
@@ -81,6 +86,7 @@ class MyLocalStorage implements MyInjectable {
       profiles: await readPokemonFile(),
       faceStyles: await readPokemonSleepFaces(),
       teams: await readPokemonTeams(),
+      fields: await readPokemonFields(),
     );
 
     final file = File(filePath)
@@ -108,10 +114,12 @@ class MyLocalStorage implements MyInjectable {
     final profiles = result.profiles;
     final faceStyles = result.faceStyles;
     final teams = result.teams;
+    final fields = result.fields;
 
     if (profiles != null) { await writePokemonProfiles(profiles); }
     if (faceStyles != null) { await writePokemonSleepFaces(faceStyles); }
     if (teams != null) { await writePokemonTeams(teams); }
+    if (fields != null) { await writePokemonFields(fields); }
   }
   // endregion
 
@@ -205,6 +213,28 @@ class MyLocalStorage implements MyInjectable {
   }
   // endregion Pokemon Sleep Faces
 
+  // region Pokemon Fields
+  String get _pokemonFieldsFilePath {
+    return path.join(_parent.path, 'pokemon_fields.json');
+  }
+
+  Future<StoredPokemonFields> readPokemonFields() async {
+    final file = File(_pokemonFieldsFilePath);
+    StoredPokemonFields result;
+    if (file.notExistsSync()) {
+      result = StoredPokemonFields();
+    } else {
+      result = StoredPokemonFields.fromJson(json.decode(file.readAsStringSync()));
+    }
+    return result;
+  }
+
+  Future<void> writePokemonFields(StoredPokemonFields data) async {
+    final file = File(_pokemonFieldsFilePath);
+    file.writeAsStringSync(jsonEncode(data.toJson()));
+  }
+  // endregion Pokemon Fields
+
 }
 
 /// 完整本地端匯入、匯出檔案結構
@@ -213,17 +243,20 @@ class _LocalStoredDocumentResult {
     required this.profiles,
     required this.faceStyles,
     required this.teams,
+    required this.fields,
   });
 
   StoredPokemonProfiles? profiles;
   StoredPokemonSleepFaceStyles? faceStyles;
   StoredPokemonTeams? teams;
+  StoredPokemonFields? fields;
 
   factory _LocalStoredDocumentResult.fromJson(Map<String, dynamic> json) {
     return _LocalStoredDocumentResult(
       profiles: json['profiles'] == null ? null : StoredPokemonProfiles.fromJson(json['profiles']),
       faceStyles: json['faceStyles'] == null ? null : StoredPokemonSleepFaceStyles.fromJson(json['faceStyles']),
       teams: json['teams'] == null ? null : StoredPokemonTeams.fromJson(json['teams']),
+      fields: json['fields'] == null ? null : StoredPokemonFields.fromJson(json['fields']),
     );
   }
 
@@ -232,6 +265,7 @@ class _LocalStoredDocumentResult {
       'profiles': profiles?.toJson(),
       'faceStyles': faceStyles?.toJson(),
       'teams': teams?.toJson(),
+      'fields': fields?.toJson(),
     };
   }
 

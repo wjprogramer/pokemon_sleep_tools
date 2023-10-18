@@ -4,10 +4,11 @@ import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 void setupRepositoriesDependencies() {
   const bind = registerSingleton;
 
-  bind<PokemonProfileRepository>(PokemonProfileRepository());
+  bind<EvolutionRepository>(EvolutionRepository());
+  bind<FieldRepository>(FieldRepository());
   bind<PokemonBasicProfileRepository>(PokemonBasicProfileRepository());
+  bind<PokemonProfileRepository>(PokemonProfileRepository());
   bind<PokemonTeamRepository>(PokemonTeamRepository());
   bind<SleepFaceRepository>(SleepFaceRepository());
-  bind<EvolutionRepository>(EvolutionRepository());
 
 }

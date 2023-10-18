@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 class PokemonTypeImage extends StatelessWidget {
@@ -18,14 +19,17 @@ class PokemonTypeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      AssetsPath.pokemonType(pokemonType),
-      width: width,
-      height: height,
-      fit: fit,
-      errorBuilder: (context, error, stackTrace) {
-        return Container();
-      },
+    return Tooltip(
+      message: pokemonType.nameI18nKey.xTr,
+      child: Image.asset(
+        AssetsPath.pokemonType(pokemonType),
+        width: width,
+        height: height,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) {
+          return Container();
+        },
+      ),
     );
   }
 }

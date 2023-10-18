@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -19,9 +18,7 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/fruit_image.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/pokemon_image.dart';
 import 'package:provider/provider.dart';
 
 /// 遊戲內有 "使用道具" 的功能，但這邊應該不需要
@@ -171,7 +168,20 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
         return Scaffold(
           appBar: buildAppBar(
-            titleText: _profiles[_currIndex].basicProfile.nameI18nKey.xTr,
+            title: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                if (MyEnv.USE_DEBUG_IMAGE)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: PokemonTypeImage(
+                      pokemonType: _profiles[_currIndex].basicProfile.pokemonType,
+                      width: 32,
+                    ),
+                  ),
+                Expanded(child: Text(_profiles[_currIndex].basicProfile.nameI18nKey.xTr)),
+              ],
+            ),
             actions: [
               IconButton(
                 onPressed: () {

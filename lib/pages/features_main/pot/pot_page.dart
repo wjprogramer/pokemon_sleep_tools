@@ -10,7 +10,6 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
 /// TODO: 篩選 [DishSearchOptions]
-/// TODO: 可設定食材等級
 /// TODO: 反查料理
 class PotPage extends StatefulWidget {
   const PotPage._();

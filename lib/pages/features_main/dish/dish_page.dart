@@ -6,10 +6,11 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_list/dish_list_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 
 class _DishPageArgs {
   _DishPageArgs(this.dish);
@@ -117,7 +118,19 @@ class _DishPageState extends State<DishPage> {
             onTap: () {
               IngredientPage.go(context, ingredient.$1);
             },
-            title: Text('${ingredient.$1.nameI18nKey.xTr} x${ingredient.$2}'),
+            title: Row(
+              children: [
+                if (MyEnv.USE_DEBUG_IMAGE)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: IngredientImage(
+                      width: 30,
+                      ingredient: ingredient.$1,
+                    ),
+                  ),
+                Text('${ingredient.$1.nameI18nKey.xTr} x${ingredient.$2}')
+              ],
+            ),
           )),
           if (_ingredients.isNotEmpty) ...Hp.list(
             children: [

@@ -13,7 +13,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart'
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 import 'package:pokemon_sleep_tools/styles/styles.dart';
-import 'package:pokemon_sleep_tools/view_models/sleep_face_view_model.dart';
+import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
 class MyApp extends StatefulWidget {
@@ -63,6 +63,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initData() async {
     await context.read<SleepFaceViewModel>().init();
+    await context.read<FieldViewModel>().init();
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -48,6 +49,10 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
   PokemonBasicProfile? _currBasicProfile;
   final _keywordController = TextEditingController();
 
+  // UI
+  static const _baseChildWidth = 100.0;
+  static const _spacing = 12.0;
+
   @override
   void initState() {
     super.initState();
@@ -93,11 +98,20 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = context.mediaQuery.size;
+    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
+
     if (_allBasicProfiles.isEmpty) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
+
+    final childWidth = UiUtility.getChildWidthInRowBy(
+      baseChildWidth: _baseChildWidth,
+      containerWidth: mainWidth,
+      spacing: _spacing,
+    );
 
     return Scaffold(
       appBar: buildAppBar(),
@@ -118,7 +132,42 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
                   ),
                   children: [
                     Gap.sm,
-                    ...basicProfiles.map((basicProfile) => MyElevatedButton(
+                    if (MyEnv.USE_DEBUG_IMAGE) Wrap(
+                      spacing: _spacing,
+                      runSpacing: _spacing,
+                      children: [
+                        ...basicProfiles.map((basicProfile) => SizedBox(
+                          width: childWidth,
+                          child: InkWell(
+                            onTap: () => _pickBasicProfile(basicProfile),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 12,
+                                    ),
+                                    child: PokemonImage(
+                                      basicProfile: basicProfile,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    child: Text(
+                                      basicProfile.nameI18nKey,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ))
+                      ],
+                    ) else ...basicProfiles.map((basicProfile) => MyElevatedButton(
                       onPressed: () => _pickBasicProfile(basicProfile),
                       child: Text(basicProfile.nameI18nKey),
                     )),

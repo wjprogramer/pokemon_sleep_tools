@@ -33,4 +33,8 @@ class AssetsPath {
     return '$_prefix/ingredient/${ingredient.id}.png';
   }
 
+  static field(PokemonField field) {
+    return '$_prefix/field/${field.id}.png';
+  }
+
 }

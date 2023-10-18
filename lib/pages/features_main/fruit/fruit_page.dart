@@ -91,7 +91,7 @@ class _FruitPageState extends State<FruitPage> {
   void _listenMainViewModel() {
     final mainViewModel = context.read<MainViewModel>();
     _profileOf = mainViewModel.profiles
-        .toMap((profile) => profile.id, (profile) => profile);
+        .toMap((profile) => profile.basicProfileId, (profile) => profile);
 
     if (mounted) {
       setState(() { });
