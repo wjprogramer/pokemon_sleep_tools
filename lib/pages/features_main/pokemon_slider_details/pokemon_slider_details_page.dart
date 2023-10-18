@@ -343,6 +343,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
       image = PokemonImage(
         height: 200,
         basicProfile: widget.profile.basicProfile,
+        disableTooltip: true,
       );
     }
     // if (Platform.isAndroid) {

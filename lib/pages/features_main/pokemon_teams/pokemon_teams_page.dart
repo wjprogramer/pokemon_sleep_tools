@@ -158,9 +158,11 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
                                     isLoading = true;
                                     setState(() { });
 
+                                    final team = currTeam ?? PokemonTeam.empty(_currIndex);
+
                                     await _teamViewModel.updateTeam(
                                       _currIndex,
-                                      PokemonTeam.empty(_currIndex).copyWith(name: textEditCtrl.text),
+                                      team.copyWith(name: textEditCtrl.text),
                                     );
                                     context.nav.pop();
                                   } catch (e) {

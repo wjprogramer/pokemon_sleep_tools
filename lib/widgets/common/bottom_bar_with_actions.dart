@@ -36,7 +36,7 @@ class BottomBarWithActions extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
-            Gap.mdV, Gap.xsV, 0, 0,
+            Gap.mdV, Gap.xsV, 0, Gap.smV,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,

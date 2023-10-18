@@ -10,26 +10,34 @@ class PokemonIconImage extends StatelessWidget {
     this.width,
     this.height,
     this.fit,
+    this.disableTooltip = false,
   });
 
   final PokemonBasicProfile basicProfile;
   final double? width;
   final double? height;
   final BoxFit? fit;
+  final bool disableTooltip;
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: basicProfile.nameI18nKey.xTr,
-      child: Image.asset(
-        AssetsPath.pokemonIcon(basicProfile.boxNo),
-        width: width,
-        height: height,
-        fit: fit,
-        errorBuilder: (context, error, stackTrace) {
-          return Container();
-        },
-      ),
+    Widget result = Image.asset(
+      AssetsPath.pokemonIcon(basicProfile.boxNo),
+      width: width,
+      height: height,
+      fit: fit,
+      errorBuilder: (context, error, stackTrace) {
+        return Container();
+      },
     );
+
+    if (!disableTooltip) {
+      result = Tooltip(
+        message: basicProfile.nameI18nKey.xTr,
+        child: result,
+      );
+    }
+
+    return result;
   }
 }

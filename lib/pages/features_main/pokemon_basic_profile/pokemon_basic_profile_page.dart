@@ -220,6 +220,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                   child: PokemonImage(
                     basicProfile: _basicProfile,
                     fit: BoxFit.fitHeight,
+                    disableTooltip: true,
                   ),
                 ),
               MySubHeader(

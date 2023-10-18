@@ -8,20 +8,28 @@ class IngredientImage extends StatelessWidget {
     super.key,
     required this.ingredient,
     this.width,
+    this.disableTooltip = false,
   });
 
   final Ingredient ingredient;
   final double? width;
+  final bool disableTooltip;
 
   @override
   Widget build(BuildContext context) {
+    Widget result = Image.asset(
+      AssetsPath.ingredient(ingredient),
+      errorBuilder: (_, __, ___) => Container(),
+      width: width,
+    );
+
+    if (disableTooltip) {
+      return result;
+    }
+
     return Tooltip(
       message: ingredient.nameI18nKey.xTr,
-      child: Image.asset(
-        AssetsPath.ingredient(ingredient),
-        errorBuilder: (_, __, ___) => Container(),
-        width: width,
-      ),
+      child: result,
     );
   }
 }

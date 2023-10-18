@@ -8,13 +8,13 @@ import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog.dart';
 class DialogUtility {
   DialogUtility._();
 
-  static void text(BuildContext context, {
+  static Future<T?> text<T>(BuildContext context, {
     Widget? title,
     Widget? content,
     bool? barrierDismissible,
     List<Widget>? actions,
-  }) {
-    showAdaptiveDialog(
+  }) async {
+    return showAdaptiveDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (_) => AlertDialog(
@@ -30,6 +30,38 @@ class DialogUtility {
         ],
       ),
     );
+  }
+
+  static Future<bool> confirm(BuildContext context, {
+    Widget? title,
+    Widget? content,
+    bool? barrierDismissible,
+    List<Widget>? actions,
+  }) async {
+    final res = await showAdaptiveDialog(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      builder: (_) => AlertDialog(
+        title: title,
+        content: content,
+        actions: actions ?? [
+          TextButton(
+            onPressed: () {
+              context.nav.pop(false);
+            },
+            child: Text('t_cancel'.xTr),
+          ),
+          TextButton(
+            onPressed: () {
+              context.nav.pop(true);
+            },
+            child: Text('t_confirm'.xTr),
+          ),
+        ],
+      ),
+    );
+
+    return res is bool ? res : false;
   }
 
   static void danger(BuildContext context, {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/ingredient_image.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 typedef FieldBuilder<T> = Function(BuildContext context, FormControl<T> field);
@@ -55,14 +56,34 @@ class ReactiveMyTextField<T> extends StatelessWidget {
   }
 
   Widget _buildField() {
+    final newDecoration = decoration.copyWith(
+      prefixIcon: _getPrefixIcon(),
+    );
+
     return ReactiveTextField(
       formControl: formControl,
       validationMessages: validationMessages,
       valueAccessor: _getValueAccessor(),
       keyboardType: _getKeyboardType(),
       inputFormatters: _getInputFormatters(),
-      decoration: decoration,
+      decoration: newDecoration,
     );
+  }
+
+  Widget? _getPrefixIcon() {
+    if (MyEnv.USE_DEBUG_IMAGE) {
+      if (formControl is FormControl<Ingredient> && formControl.value != null) {
+        return Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: IngredientImage(
+            ingredient: formControl.value as Ingredient,
+            width: 24,
+            disableTooltip: true,
+          ),
+        );
+      }
+    }
+    return null;
   }
 
   ControlValueAccessor<T, String>? _getValueAccessor() {

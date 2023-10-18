@@ -17,6 +17,15 @@ fvm dart pub global activate dhttpd
 fvm dhttpd --path doc/api
 ```
 
+## Build
+
+```shell
+fvm flutter build windows
+# \build\windows\x64\Release\Runner
+```
+
+---
+
 Overview TODO (粗略完成即可，深層頁面不用非常完整):
 
 - [x] 寶可夢圖鑑
@@ -53,6 +62,14 @@ TODO:
 - 聯繫繩進化，好友等級三的時候會贈送，繩子的數量會多到用不完，因此不建議浪費點數兌換。
 - 寶可夢在進化過後可以提升一級的主動技能等級、五個持有上限，因此除非你的皮卡丘非常優質，否則還是建議大家，從皮丘開始培養。
 - 
+
+## 桌面開發
+
+- 支援滑鼠向前向後 (上一頁、下一頁)
+  - [Feature Request: add fourth and fifth mouse button to Gesture detector](https://github.com/flutter/flutter/issues/115641)
+  - [\[Desktop\] Navigate back with mouse back button](https://github.com/flutter/flutter/issues/56919)
+  - 關鍵字: XBUTTON1 和 XBUTTON2
+
 
 ## 參考
 

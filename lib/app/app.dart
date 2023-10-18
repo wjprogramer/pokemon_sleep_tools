@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
@@ -50,6 +53,9 @@ class _MyAppState extends State<MyApp> {
     await _initDataPersistent();
     await _initData();
 
+    if (Platform.isWindows) {
+    }
+
     _afterInitialized();
   }
 
@@ -71,8 +77,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: generateTempTheme(),
       builder: appBuilder(),
+      scrollBehavior: Platform.isWindows ? _DesktopAppScrollBehavior() : null,
       // i18n
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -98,4 +106,14 @@ class _MyAppState extends State<MyApp> {
       initialRoute: _initRoute.name,
     );
   }
+}
+
+/// 讓桌面版可以透過滑鼠拖曳 ListView, PageView 等
+class _DesktopAppScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
 }

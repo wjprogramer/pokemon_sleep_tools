@@ -114,6 +114,8 @@ Map<String, String> getZhTwTrText() {
     // endregion
 
     // region
+    't_leave_without_saving': '沒有儲存',
+    't_leave_without_saving_content': '離開後將不會儲存，確定要離開嗎？',
     // endregion
 
     // region
