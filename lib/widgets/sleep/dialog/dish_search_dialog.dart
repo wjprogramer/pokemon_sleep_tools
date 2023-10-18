@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/base_dialog.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/ingredient_image.dart';
 
 Future<DishSearchOptions?> showDishSearchDialog(BuildContext context, {
   required String titleText,
@@ -129,7 +130,11 @@ class _DishSearchDialogState extends State<DishSearchDialog> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        searchOptions.potCapacity = potCapacity;
+                        if (searchOptions.potCapacity == potCapacity) {
+                          searchOptions.potCapacity = null;
+                        } else {
+                          searchOptions.potCapacity = potCapacity;
+                        }
                         search();
                       },
                       borderRadius: BorderRadius.circular(potCapacityItemWidth),
@@ -171,21 +176,42 @@ class _DishSearchDialogState extends State<DishSearchDialog> {
               spacing: ingredientAndFruitSpacing,
               runSpacing: 4,
               children: [
-                ...Ingredient.values.map((ingredient) => Container(
+                if (MyEnv.USE_DEBUG_IMAGE) ...Ingredient.values.map((ingredient) => IconButton(
+                  onPressed: () => _toggleIngredient(searchOptions, ingredient, search),
+                  icon: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IngredientImage(
+                          ingredient: ingredient,
+                          width: 30,
+                        ),
+                      ),
+                      if (searchOptions.ingredientOf.contains(ingredient)) Positioned(
+                        right: 5,
+                        bottom: 5,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          child: Icon(
+                            Icons.check,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )) else ...Ingredient.values.map((ingredient) => Container(
                   constraints: BoxConstraints.tightFor(
                     width: ingredientAndFruitItemWidth,
                   ),
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () {
-                        if (!searchOptions.ingredientOf.contains(ingredient)) {
-                          searchOptions.ingredientOf.add(ingredient);
-                        } else {
-                          searchOptions.ingredientOf.remove(ingredient);
-                        }
-                        search();
-                      },
+                      onTap: () => _toggleIngredient(searchOptions, ingredient, search),
                       child: Row(
                         children: [
                           IgnorePointer(
@@ -214,6 +240,16 @@ class _DishSearchDialogState extends State<DishSearchDialog> {
       },
     );
   }
+
+  void _toggleIngredient(DishSearchOptions searchOptions, Ingredient ingredient, VoidCallback search) {
+    if (!searchOptions.ingredientOf.contains(ingredient)) {
+      searchOptions.ingredientOf.add(ingredient);
+    } else {
+      searchOptions.ingredientOf.remove(ingredient);
+    }
+    search();
+  }
+
 }
 
 

@@ -46,5 +46,32 @@ class DishSearchOptions implements BaseSearchOptions {
   void dispose() {
   }
 
+  List<Dish> filter(List<Dish> dishes) {
+    Iterable<Dish> results = [...dishes];
+    if (isEmptyOptions()) {
+      return results.toList();
+    }
+
+    if (potCapacity != null) {
+      results = results.where((dish) => dish.capacity <= potCapacity!);
+    }
+    if (dishTypes.isNotEmpty) {
+      results = results.where((dish) => dishTypes.contains(dish.dishType));
+    }
+    if (ingredientOf.isNotEmpty) {
+      results = results.where((dish) {
+        // 部分符合
+        // final ingredients = dish.getIngredients().map((e) => e.$1);
+        // return ingredients.any((e) => ingredientOf.contains(e));
+        // 完全符合
+        final ingredients = dish.getIngredients().map((e) => e.$1).toList();
+        ingredients.removeWhere((e) => ingredientOf.contains(e));
+        return ingredients.isEmpty;
+      });
+    }
+
+    return results.toList();
+  }
+
 
 }

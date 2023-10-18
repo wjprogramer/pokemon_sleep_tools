@@ -226,11 +226,20 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
                 constraints: BoxConstraints.tightFor(
                   width: _subSkillButtonWidth,
                 ),
-                child: MyElevatedButton(
-                  onPressed: () => _pickSubSkill(subSkill),
-                  style: ElevatedButton.styleFrom(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: subSkill.bgColor,
                   ),
-                  child: Text(subSkill.nameI18nKey),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => _pickSubSkill(subSkill),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(subSkill.nameI18nKey),
+                      ),
+                    ),
+                  ),
                 ),
               )).toList(),
             ),
@@ -247,7 +256,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          border: Border.all(),
+          color: subSkill.bgColor,
         ),
         child: Text(code),
       ),
@@ -273,16 +282,20 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
           Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.fromLTRB(4, 4, 4, 8),
-            padding: const EdgeInsets.all(4),
+            padding: EdgeInsets.symmetric(
+              vertical: isSelected ? 2 : 4,
+              horizontal: 4,
+            ),
             constraints: const BoxConstraints(
               minHeight: 50,
             ),
             decoration: BoxDecoration(
-              color: isSelected ? _theme.primaryColorLight : null,
+              color: _subSkillFields[index]?.bgColor,
               border: Border.all(
                 color: isSelected
                     ? _theme.primaryColor
                     : _theme.disabledColor,
+                width: isSelected ? 2 : 1,
               ),
             ),
             child: Text(

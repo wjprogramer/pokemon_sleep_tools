@@ -52,7 +52,6 @@ class _DishEnergyCalculatorPageState extends State<DishEnergyCalculatorPage> {
   @override
   Widget build(BuildContext context) {
     final levelBonus = _getMainIngredientsBonus();
-    print('levelBonus $levelBonus');
     final ingredientResultData = <_IngredientData>[
       ..._requiredIngredientCounts.map((e) => _IngredientData(
         ingredient: e.$1,
@@ -73,7 +72,7 @@ class _DishEnergyCalculatorPageState extends State<DishEnergyCalculatorPage> {
 
     return Scaffold(
       appBar: buildAppBar(
-        titleText: ''.xTr,
+        titleText: '料理能量計算器'.xTr,
       ),
       body: buildListView(
         children: [

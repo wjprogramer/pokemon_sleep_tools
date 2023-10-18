@@ -37,4 +37,10 @@ class AssetsPath {
     return '$_prefix/field/${field.id}.png';
   }
 
+  // region generic
+  static String generic(String name) {
+    return '$_prefix/generic/$name.png';
+  }
+  // endregion generic
+
 }

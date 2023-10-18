@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 const color1 = Color(0xFFFE6B4E);
 const whiteColor = Colors.white;
@@ -55,3 +56,8 @@ const rankTitle4Color2 = Color(0xFFD672B6);
 const specialty1Color = Color(0xFF24D36C);
 const specialty2Color = Color(0xFFFDBB43);
 const specialty3Color = Color(0xFFFE765A);
+
+/// [DishType]
+const dishType1Color = Color(0xFFF67316);
+const dishType2Color = Color(0xFFEAB308);
+const dishType3Color = Color(0xFF84CC16);

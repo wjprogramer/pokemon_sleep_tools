@@ -15,5 +15,6 @@ export 'my_label.dart';
 export 'my_outlined_button.dart';
 export 'my_outlined_button_2.dart';
 export 'my_sub_header.dart';
+export 'my_sub_header_2.dart';
 export 'my_text_button.dart';
 export 'slider_with_buttons.dart';

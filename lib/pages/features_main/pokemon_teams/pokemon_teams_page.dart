@@ -318,7 +318,6 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
                   Container(
                     child: Scrollbar(
                       trackVisibility: true,
-                      thumbVisibility: true,
                       child: TextField(
                         controller: _teamCommentCtrl,
                         minLines: 5,

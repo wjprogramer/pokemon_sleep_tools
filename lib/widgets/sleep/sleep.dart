@@ -2,6 +2,7 @@ export 'bookmark_icon.dart';
 export 'candy_icon.dart';
 export 'dialog/dialog.dart';
 export 'dish_card.dart';
+export 'dish_label.dart';
 export 'dream_chip_icon.dart';
 export 'energy_icon.dart';
 export 'friend_points_icon.dart';

@@ -268,11 +268,14 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       child = Center(child: Text(profile.basicProfile.nameI18nKey.xTr));
     } else {
       child = Align(
-        alignment: Alignment(0, -0.3),
-        child: Hero(
-          tag: 'pokemon_image_${profile.id}',
-          child: PokemonImage(
-            basicProfile: profile.basicProfile,
+        alignment: const Alignment(0, -0.3),
+        child: IgnorePointer(
+          // Ignore image tooltip
+          child: Hero(
+            tag: 'pokemon_image_${profile.id}',
+            child: PokemonImage(
+              basicProfile: profile.basicProfile,
+            ),
           ),
         ),
       );

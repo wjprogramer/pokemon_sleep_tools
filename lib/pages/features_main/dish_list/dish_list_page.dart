@@ -143,7 +143,7 @@ class _DishListPageState extends State<DishListPage> {
             initialSearchOptions: _searchOptions,
             calcCounts: (options) {
               final allDishCount = Dish.values.length;
-              final dishes = _filterDishes(Dish.values, options);
+              final dishes = options.filter(Dish.values);
               return (dishes.length, allDishCount);
             },
           );
@@ -152,41 +152,13 @@ class _DishListPageState extends State<DishListPage> {
           }
 
           _searchOptions = searchOptions;
-          _dishes = _filterDishes(Dish.values, searchOptions);
+          _dishes = searchOptions.filter(Dish.values);
           setState(() { });
         },
         isSearchOn: _searchOptions.isEmptyOptions() ? null : true,
         // onSort: () {},
       ),
     );
-  }
-
-  List<Dish> _filterDishes(List<Dish> dishes, DishSearchOptions options) {
-    if (options.isEmptyOptions()) {
-      return Dish.values;
-    }
-
-    Iterable<Dish> dishes = Dish.values;
-
-    if (options.potCapacity != null) {
-      dishes = dishes.where((dish) => dish.capacity <= options.potCapacity!);
-    }
-    if (options.dishTypes.isNotEmpty) {
-      dishes = dishes.where((dish) => options.dishTypes.contains(dish.dishType));
-    }
-    if (options.ingredientOf.isNotEmpty) {
-      dishes = dishes.where((dish) {
-        // 部分符合
-        // final ingredients = dish.getIngredients().map((e) => e.$1);
-        // return ingredients.any((e) => options.ingredientOf.contains(e));
-        // 完全符合
-        final ingredients = dish.getIngredients().map((e) => e.$1).toList();
-        ingredients.removeWhere((e) => options.ingredientOf.contains(e));
-        return ingredients.isEmpty;
-      });
-    }
-
-    return dishes.toList();
   }
 
   Widget _buildDish(Dish dish) {

@@ -1,9 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 enum DishType {
-  currySoup,
-  salad,
-  dessertDrinks;
+  currySoup(dishType1Color),
+  salad(dishType2Color),
+  dessertDrinks(dishType3Color);
+
+  const DishType(this.color);
+
+  final Color color;
 }
 
 extension DishTypeX on DishType {

@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 import 'package:rxdart/rxdart.dart';
@@ -114,7 +115,9 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
     );
 
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar(
+        titleText: '選擇寶可夢',
+      ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -140,6 +143,7 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
                           width: childWidth,
                           child: InkWell(
                             onTap: () => _pickBasicProfile(basicProfile),
+                            onLongPress: () => PokemonBasicProfilePage.go(context, basicProfile),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Stack(
@@ -148,8 +152,11 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
                                     padding: const EdgeInsets.only(
                                       bottom: 12,
                                     ),
-                                    child: PokemonImage(
-                                      basicProfile: basicProfile,
+                                    child: IgnorePointer(
+                                      // ignore image tooltip
+                                      child: PokemonImage(
+                                        basicProfile: basicProfile,
+                                      ),
                                     ),
                                   ),
                                   Positioned(
@@ -177,19 +184,19 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
               },
             ),
           ),
-          BottomBarWithConfirmButton(
-            submit: _submit,
-            childrenAtStart: [
-              Expanded(
-                child: Text(
-                  Display.text(_currBasicProfile?.nameI18nKey),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Gap.xl,
-            ],
-          ),
+          // BottomBarWithConfirmButton(
+          //   submit: _submit,
+          //   childrenAtStart: [
+          //     Expanded(
+          //       child: Text(
+          //         Display.text(_currBasicProfile?.nameI18nKey),
+          //         maxLines: 1,
+          //         overflow: TextOverflow.ellipsis,
+          //       ),
+          //     ),
+          //     Gap.xl,
+          //   ],
+          // ),
         ],
       ),
     );
@@ -198,13 +205,19 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
   Widget _buildSearchBar() {
     return TextField(
       controller: _keywordController,
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          Icons.search,
+        ),
+      ),
     );
   }
 
   void _pickBasicProfile(PokemonBasicProfile basicProfile) {
-    setState(() {
-      _currBasicProfile = basicProfile;
-    });
+    // setState(() {
+    //   _currBasicProfile = basicProfile;
+    // });
+    widget._popResult(context, basicProfile);
   }
 
   void _submit() {

@@ -587,7 +587,11 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          border: Border.all(),
+                          border: Border.all(
+                            color: subSkill.bgColor,
+                            width: 2,
+                          ),
+                          color: subSkill.bgColor.withOpacity(.6),
                         ),
                         child: Center(
                           child: Text(subSkill.nameI18nKey.xTr),
@@ -623,6 +627,14 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
               ],
             ),
           ),
+          MySubHeader(
+            titleText: 't_others'.xTr,
+          ),
+          Gap.xl,
+          Text(
+            _profile.character.nameI18nKey.xTr,
+          ),
+          Gap.md,
           MySubHeader(
             titleText: 't_analysis'.xTr,
           ),
