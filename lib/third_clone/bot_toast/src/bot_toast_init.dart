@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'basis.dart';
 import 'bot_toast_manager.dart';
 
-final GlobalKey<BotToastManagerState> _key = GlobalKey<BotToastManagerState>();
+final GlobalKey<BotToastManagerState> botToastManagerKey = GlobalKey<BotToastManagerState>();
 
 BotToastManagerState get botToastManager {
-  assert(_key.currentState != null);
-  return _key.currentState!;
+  assert(botToastManagerKey.currentState != null);
+  return botToastManagerKey.currentState!;
 }
 
 class BotToastWidgetsBindingObserver with WidgetsBindingObserver {
@@ -49,6 +49,6 @@ TransitionBuilder BotToastInit() {
   //ignore: unnecessary_statements
   BotToastWidgetsBindingObserver._singleton;
   return (_, Widget? child) {
-    return BotToastManager(key: _key, child: child!);
+    return BotToastManager(key: botToastManagerKey, child: child!);
   };
 }

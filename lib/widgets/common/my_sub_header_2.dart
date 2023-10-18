@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 class MySubHeader2 extends StatelessWidget {
