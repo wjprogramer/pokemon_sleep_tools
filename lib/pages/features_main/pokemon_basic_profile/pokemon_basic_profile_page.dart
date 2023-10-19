@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -10,6 +11,8 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/specialty_info/specialty_info_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -85,9 +88,12 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
 
   var _currPokemonLevel = 1;
 
+  // Data evolutions
   List<List<Evolution>> _evolutions = List.generate(MAX_POKEMON_EVOLUTION_STAGE, (index) => []);
 
   var _basicProfilesInEvolutionChain = <int, PokemonBasicProfile>{};
+
+  late PokemonBasicProfile _basicProfileWithSmallestBoxNoInChain;
 
   @override
   void initState() {
@@ -101,6 +107,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   Future<void> _load() async {
     // Clear or reset
     _initialized = false;
+    _basicProfileWithSmallestBoxNoInChain = _basicProfile;
     _sleepFacesOfField.clear();
     for (final field in PokemonField.values) {
       _sleepFacesOfField[field] = [];
@@ -130,6 +137,9 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
 
     _basicProfilesInEvolutionChain = await _basicProfileRepo
         .findByIdList(basicProfileIdInEvolutionChain); // _evolutions
+    _basicProfileWithSmallestBoxNoInChain = _basicProfilesInEvolutionChain
+        .entries.map((e) => e.value)
+        .firstWhereByCompare((a, b) => a.boxNo < b.boxNo);
 
     _initialized = true;
     if (mounted) {
@@ -229,7 +239,12 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               Gap.md,
               buildWithLabel(
                 text: 't_sleep_type'.xTr,
-                child: Text(_basicProfile.sleepType.nameI18nKey.xTr),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: SleepTypeLabel(
+                    sleepType: _basicProfile.sleepType,
+                  ),
+                ),
               ),
               Gap.md,
               buildWithLabel(
@@ -278,7 +293,12 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               // TODO: 主技能反查
               buildWithLabel(
                 text: 't_main_skill'.xTr,
-                child: Text(_basicProfile.mainSkill.nameI18nKey.xTr),
+                child: InkWell(
+                  onTap: () {
+                    MainSkillPage.go(context, _basicProfile.mainSkill);
+                  },
+                  child: Text(_basicProfile.mainSkill.nameI18nKey.xTr),
+                ),
               ),
               Gap.md,
               buildWithLabel(
@@ -322,7 +342,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                 titleText: 't_ingredients'.xTr,
               ),
               // TODO: 反查食材
-              if (kDebugMode)
+              if (kDebugMode && !kDebugMode)
                 SliderWithButtons(
                   value: _currPokemonLevel.toDouble(),
                   onChanged: (v) {
@@ -334,12 +354,10 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                   divisions: 59,
                   hideSlider: true,
                 ),
-              Text(
-                '1. ${_basicProfile.ingredient1.nameI18nKey.xTr}\n'
-                    '2. ${_basicProfile.ingredientOptions2.map((e) => '${e.$1.nameI18nKey.xTr} x${e.$2}').join(', ')}\n'
-                    '3. ${_basicProfile.ingredientOptions3.map((e) => '${e.$1.nameI18nKey.xTr} x${e.$2}').join(', ')}',
-              ),
               // TODO: 顯示各項組合，使用水平滑動可能比較好讀
+              _buildIngredientsUnderLevel(1, [ (_basicProfile.ingredient1, _basicProfile.ingredientCount1) ]),
+              _buildIngredientsUnderLevel(30, _basicProfile.ingredientOptions2),
+              _buildIngredientsUnderLevel(60, _basicProfile.ingredientOptions3),
               Gap.md,
               MySubHeader(
                 titleText: 't_evolution'.xTr,
@@ -404,6 +422,61 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     );
   }
 
+  Widget _buildIngredientsUnderLevel(int level, List<(Ingredient, int)> ingredients) {
+    Widget buildLevel(int level) {
+      return Text(
+        'Lv $level',
+      );
+    }
+
+    Widget buildIngredient(Ingredient ingredient, int count) {
+      return InkWell(
+        onTap: () => IngredientPage.go(context, ingredient),
+        borderRadius: BorderRadius.circular(8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (MyEnv.USE_DEBUG_IMAGE)
+              Padding(
+                padding: const EdgeInsets.only(right: 2),
+                child: IngredientImage(
+                  ingredient: ingredient,
+                  width: 32,
+                  disableTooltip: true,
+                ),
+              ),
+            Text(ingredient.nameI18nKey.xTr),
+          ],
+        ),
+      );
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Stack(
+          children: [
+            Opacity(
+              opacity: 0,
+              child: buildLevel(999),
+            ),
+            buildLevel(level),
+          ],
+        ),
+        Gap.sm,
+        Expanded(
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              ...ingredients.map((e) => buildIngredient(e.$1, e.$2)),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSleepFace(SleepFace sleepFace, List<int> markStyles) {
     final marked = markStyles.contains(sleepFace.style);
 
@@ -438,10 +511,13 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               text: '',
               style: _theme.textTheme.bodyMedium,
               children: [
-                const WidgetSpan(
+                WidgetSpan(
                   child: Padding(
-                    padding: EdgeInsets.only(right: Gap.smV),
-                    child: CandyIcon(size: 16,),
+                    padding: const EdgeInsets.only(right: Gap.smV),
+                    child: CandyOfPokemonIcon(
+                      size: 16,
+                      boxNo: _basicProfileWithSmallestBoxNoInChain.boxNo,
+                    ),
                   ),
                 ),
                 TextSpan(
@@ -484,7 +560,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
       return [
         ..._buildEvolutionStage(e, index == 0 ? null : evolutionsStages[index - 1]),
         if (index != list.length - 1)
-          Center(child: const Icon(Icons.arrow_right)),
+          const Center(child: Icon(Icons.arrow_right)),
       ];
     }
 
@@ -497,6 +573,54 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               .where((element) => element.isNotEmpty)
               .xMapIndexed(x)
               .expand((e) => e),
+          if (kDebugMode)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 100,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: greyColor2,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    const Text('測試用區塊'),
+                    _buildEvolutionCondition(
+                      EvolutionConditionRaw(jsonEncode({
+                        'type': 'candy',
+                        'count': 21,
+                      })),
+                    ),
+                    _buildEvolutionCondition(
+                      EvolutionConditionRaw(jsonEncode({
+                        'type': 'level',
+                        'level': 21,
+                      })),
+                    ),
+                    _buildEvolutionCondition(
+                      EvolutionConditionRaw(jsonEncode({
+                        'type': 'item',
+                        'item': GameItem.i21.id,
+                      })),
+                    ),
+                    _buildEvolutionCondition(
+                      EvolutionConditionRaw(jsonEncode({
+                        'type': 'timing',
+                        'startHour': 6,
+                        'endHour': 18,
+                      })),
+                    ),
+                    _buildEvolutionCondition(
+                      EvolutionConditionRaw(jsonEncode({
+                        'type': 'sleepTime',
+                        'hours': 50,
+                      })),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -515,18 +639,22 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   }
 
   Widget _buildEvolutionItem((Evolution, PokemonBasicProfile) entry, EvolutionStage? stage) {
-    final (evolution, basicProfile) = entry;
+    final (_, basicProfile) = entry;
     final isCurrent = _basicProfile.id == basicProfile.id;
-
     List<Widget> conditionsItems;
 
     if (stage == null) {
       conditionsItems = [];
     } else {
-      conditionsItems = stage.conditions
-          .whereType<EvolutionConditionRaw>()
-          .map((e) => _buildEvolutionCondition(e))
-          .toList();
+      conditionsItems = [];
+      for (final cond in stage.conditions.whereType<EvolutionConditionRaw>()) {
+        final builtCond = _buildEvolutionCondition(cond);
+        if (cond.values['type'] == 'candy') {
+          conditionsItems.insert(0, builtCond);
+        } else {
+          conditionsItems.add(builtCond);
+        }
+      }
     }
 
     return Padding(
@@ -541,8 +669,12 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               color: isCurrent ? positiveColor : greyColor2,
             ),
           ),
+          constraints: const BoxConstraints(
+            minWidth: 110,
+            maxWidth: 110,
+          ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (MyEnv.USE_DEBUG_IMAGE) ...[
                 Container(
@@ -582,6 +714,8 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   Widget _buildEvolutionCondition(EvolutionConditionRaw condition) {
     final values = condition.values;
     List<Widget>? children;
+    Widget? leading;
+    Widget? description;
 
     // "candy,level"
     // "level,candy"
@@ -594,45 +728,76 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
 
     switch (values['type']) {
       case 'candy':
-        children = [
-          const CandyIcon(),
-          Text(Display.numInt(values['count'] ?? 0)),
-        ];
+        leading = CandyOfPokemonIcon(
+          size: 16,
+          boxNo: _basicProfileWithSmallestBoxNoInChain.boxNo,
+        );
+        description = Text(
+          Display.numInt(values['count'] ?? 0),
+          textAlign: TextAlign.start,
+        );
         break;
       case 'level':
-        children = [
-          const LevelIcon(size: 20,),
-          Text(Display.numInt(values['level'] ?? 0)),
-        ];
+        leading = const LevelIcon(size: 20,);
+        description = Text(
+          Display.numInt(values['level'] ?? 0),
+          textAlign: TextAlign.start,
+        );
         break;
       case 'sleepTime':
-        children = [
-          const Iconify(
-            Tabler.zzz, color: positiveColor,
-          ),
-          Text('${Display.numInt(values['hours'] ?? 0)}小時'),
-        ];
+        leading = const Iconify(
+          Tabler.zzz, color: positiveColor,
+          size: 20,
+        );
+        description = Text(
+          '${Display.numInt(values['hours'] ?? 0)}小時',
+          textAlign: TextAlign.start,
+        );
         break;
       case 'item':
-        children = [
-          Text(GameItem.getById(values['item'])?.nameI18nKey.xTr ?? Display.placeHolder),
-        ];
+        final gameItem = GameItem.getById(values['item']);
+        if (MyEnv.USE_DEBUG_IMAGE && gameItem != null) {
+          leading = Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: GameItemImage(
+              gameItem: gameItem,
+              width: 16,
+              disableTooltip: true,
+            ),
+          );
+        }
+        description = Text(
+          Display.text(gameItem?.nameI18nKey.xTr),
+          textAlign: TextAlign.start,
+        );
         break;
       case 'timing':
-        children = [
-          const Icon(Icons.access_time_rounded, color: greenColor,),
-          Text(
-            '${values['startHour']} ~ ${values['endHour']}'
-          ),
-        ];
+        leading = const Icon(
+          Icons.access_time_rounded, color: greenColor,
+          size: 20,
+        );
+        description = Text(
+          '${values['startHour']} ~ ${values['endHour']}',
+          textAlign: TextAlign.start,
+        );
         break;
     }
 
-    if (children != null) {
-      return Row(children: children);
-    }
-
-    return Text(condition.values.toString());
+    return Row(
+      children: [
+        if (leading == null)
+          const SizedBox(width: 32)
+        else Container(
+          alignment: Alignment.center,
+          constraints: const BoxConstraints(
+            minWidth: 32,
+          ),
+          child: leading,
+        ),
+        if (description != null)
+          description,
+      ],
+    );
   }
 
 }

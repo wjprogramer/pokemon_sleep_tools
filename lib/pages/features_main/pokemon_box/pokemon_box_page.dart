@@ -14,8 +14,11 @@ import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 typedef PokemonBoxSubmitCallback = dynamic Function(List<PokemonProfile?> profiles);
+
+const _cardSpacing = 12.0;
 
 enum _PageType {
   readonly,
@@ -86,6 +89,8 @@ class PokemonBoxPage extends StatefulWidget {
 class _PokemonBoxPageState extends State<PokemonBoxPage> {
   _PokemonBoxPageArgs get _args => widget._args;
 
+  final _profileViewKey = const ValueKey('profile_view_key_box_page');
+
   late ThemeData _theme;
 
   var _cardWidth = 0.0;
@@ -95,6 +100,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   var _allProfiles = <PokemonProfile>[];
   var _resultProfiles = <PokemonProfile>[];
   var _profileIdListInTeam = <int>{};
+  PokemonProfile? _profile;
+  var _isMobile = false;
 
   // Picker mode properties
   var _currPickIndex = 0;
@@ -148,73 +155,144 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
   @override
   Widget build(BuildContext context) {
-    _theme = Theme.of(context);
-
     final screenSize = MediaQuery.of(context).size;
-    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
-    const cardSpacing = 12.0;
+    final responsive = ResponsiveBreakpoints.of(context);
 
-    _cardWidth = UiUtility.getChildWidthInRowBy(
-      baseChildWidth: 70,
-      containerWidth: mainWidth,
-      spacing: cardSpacing,
-    );
-    _cardHeight = _cardWidth * 1.318;
+    _theme = Theme.of(context);
+    _isMobile = responsive.isMobile || screenSize.width < COMMON_SIDE_WIDTH * 2.5;
 
-    return Scaffold(
-      appBar: buildAppBar(
-        titleText: 't_pokemon_box'.xTr,
-        actions: [
-          IconButton(
-            onPressed: () {
-              PokemonMaintainProfilePage.goCreate(context);
-            },
-            icon: const AddIcon(),
+    return Consumer2<MainViewModel, TeamViewModel>(
+      builder: (context, viewModel, teamViewModel, child) {
+        if (_isMobile) {
+          final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
+          _calcUiValuesByMainWidth(mainWidth);
+
+          return Scaffold(
+            appBar: buildAppBar(
+              titleText: 't_pokemon_box'.xTr,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    PokemonMaintainProfilePage.goCreate(context);
+                  },
+                  icon: const AddIcon(),
+                ),
+              ],
+            ),
+            body: _buildMainContent(
+              context, viewModel, teamViewModel, child,
+              cardSpacing: _cardSpacing,
+            ),
+            bottomNavigationBar: _buildBottomNavigationBar(),
+          );
+        }
+
+        const sideSize = COMMON_SIDE_WIDTH;
+        const mainWidth = sideSize - 2 * HORIZON_PADDING;
+        _calcUiValuesByMainWidth(mainWidth);
+
+        final profile = _profile;
+        return Scaffold(
+          appBar: buildAppBar(
+            titleText: 't_pokemon_box'.xTr,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  PokemonMaintainProfilePage.goCreate(context);
+                },
+                icon: const AddIcon(),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Consumer2<MainViewModel, TeamViewModel>(
-        builder: (context, viewModel, teamViewModel, child) {
-          _allProfiles = viewModel.profiles;
-
-          return Column(
+          body: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (_args.pageType == _PageType.picker)
-                _buildSelectedPokemonList(),
-              Expanded(
-                child: buildListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: HORIZON_PADDING,
-                  ),
+              SizedBox(
+                width: sideSize,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Gap.md,
-                    Wrap(
-                      spacing: cardSpacing,
-                      runSpacing: cardSpacing,
-                      children: _resultProfiles
-                          .map((profile) => _buildProfileItem(profile))
-                          .toList(),
+                    Expanded(
+                      child: _buildMainContent(
+                        context, viewModel, teamViewModel, child,
+                        cardSpacing: _cardSpacing,
+                      ),
                     ),
-                    Gap.trailing,
+                    _buildBottomNavigationBar(),
                   ],
                 ),
               ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: Divider.createBorderSide(context),
+                    ),
+                  ),
+                  child: profile == null
+                      ? const Center(child: Text('選擇寶可夢'),)
+                      : PokemonSliderDetailsPage.buildView(key: _profileViewKey, profileId: profile?.id),
+                ),
+              ),
             ],
-          );
-        },
-      ),
-      bottomNavigationBar: Consumer<MainViewModel>(
-        builder: (context, viewModel, child) {
-          final profiles = viewModel.profiles;
-
-          return _buildBottomNavigationBar(profiles);
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildBottomNavigationBar(List<PokemonProfile> profiles) {
+  void _calcUiValuesByMainWidth(double mainWidth) {
+    _cardWidth = UiUtility.getChildWidthInRowBy(
+      baseChildWidth: 70,
+      containerWidth: mainWidth,
+      spacing: _cardSpacing,
+    );
+    _cardHeight = _cardWidth * 1.318;
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return Consumer<MainViewModel>(
+      builder: (context, viewModel, child) {
+        final profiles = viewModel.profiles;
+
+        return _buildBottomNavigationBarContent(profiles);
+      },
+    );
+  }
+
+  Widget _buildMainContent(BuildContext context, MainViewModel viewModel, TeamViewModel teamViewModel, Widget? child, {
+    required double cardSpacing,
+  }) {
+    _allProfiles = viewModel.profiles;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (_args.pageType == _PageType.picker)
+          _buildSelectedPokemonList(),
+        Expanded(
+          child: buildListView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: HORIZON_PADDING,
+            ),
+            children: [
+              Gap.md,
+              Wrap(
+                spacing: cardSpacing,
+                runSpacing: cardSpacing,
+                children: _resultProfiles
+                    .map((profile) => _buildProfileItem(profile))
+                    .toList(),
+              ),
+              Gap.trailing,
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBottomNavigationBarContent(List<PokemonProfile> profiles) {
     return BottomBarWithActions(
       onSearch: () async {
         var searchOptions = await DialogUtility.searchPokemon(
@@ -373,20 +451,30 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       case _PageType.picker:
         return _onTapUnderPickerMode(profile);
       case _PageType.readonly:
-        return _viewPokemonProfile(profile);
+        return _viewPokemonProfile(profile, markDirty: true);
     }
   }
 
   void _onLongPress(PokemonProfile profile) {
     switch (_args.pageType) {
       case _PageType.picker:
-        return _viewPokemonProfile(profile);
+        return _viewPokemonProfile(profile, markDirty: true);
       case _PageType.readonly:
         return;
     }
   }
   
-  void _viewPokemonProfile(PokemonProfile profile) {
+  void _viewPokemonProfile(PokemonProfile profile, {
+    bool markDirty = false
+  }) {
+    if (!_isMobile) {
+      _profile = profile;
+      if (markDirty) {
+        setState(() { });
+      }
+      return;
+    }
+
     PokemonSliderDetailsPage.go(
       context,
       initialProfileId: profile.id,
@@ -420,6 +508,9 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
     // Next
     _currPickIndex = (index + 1) % SubSkill.maxCount;
+
+    // View
+    _viewPokemonProfile(profile, markDirty: false);
     setState(() { });
   }
 

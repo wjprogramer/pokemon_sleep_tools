@@ -35,13 +35,12 @@ class _PokemonFoodMenuPageState extends State<PokemonFoodMenuPage> {
       appBar: buildAppBar(
         titleText: 't_food'.xTr,
         actions: [
-          if (kDebugMode)
-            IconButton(
-              onPressed: () {
-                DishInfoPage.go(context);
-              },
-              icon: Icon(Icons.info_outline),
-            ),
+          IconButton(
+            onPressed: () {
+              DishInfoPage.go(context);
+            },
+            icon: Icon(Icons.info_outline),
+          ),
         ],
       ),
       body: ListView(

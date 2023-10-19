@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/data/models/common/common.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 
 class DevPokemonEvolutionsPage extends StatefulWidget {
   const DevPokemonEvolutionsPage._();
@@ -29,7 +32,7 @@ class _DevPokemonEvolutionsPageState extends State<DevPokemonEvolutionsPage> {
   EvolutionRepository get _evolutionRepository => getIt();
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
 
-  var _text = '';
+  var _data = <_TempEvolutionChain>[];
 
   @override
   void initState() {
@@ -65,17 +68,22 @@ class _DevPokemonEvolutionsPageState extends State<DevPokemonEvolutionsPage> {
 
       results.sort((a, b) => a[0][0] - b[0][0]);
 
-      String getNames(List<int> basicProfileIds) {
-        return basicProfileIds.map((e) => basicProfileOf[e]?.nameI18nKey.xTr ?? 'none(id:$e)').join(',');
+      for (final stagesWithIds in results) {
+        final data = _TempEvolutionChain();
+
+        for (var stageIndex = 0; stageIndex < stagesWithIds.length; stageIndex++) {
+          final basicIdsOfStage = stagesWithIds[stageIndex];
+          for (final basicProfileId in basicIdsOfStage) {
+            data.basicProfilesOfStages[stageIndex].add(basicProfileOf[basicProfileId]!);
+          }
+        }
+
+        _data.add(data);
       }
 
-      _text = '';
-      for (final result in results) {
-        _text += result
-            .where((element) => element.isNotEmpty)
-            .map((e) => getNames(e)).join('->');
-        _text += '\n\n';
-      }
+      _data.sort((a, b) {
+        return a.basicProfilesOfStages[0][0].boxNo - b.basicProfilesOfStages[0][0].boxNo;
+      });
 
       if (mounted) {
         setState(() { });
@@ -94,10 +102,65 @@ class _DevPokemonEvolutionsPageState extends State<DevPokemonEvolutionsPage> {
           horizontal: HORIZON_PADDING,
         ),
         children: [
-          Text(_text),
+          // Text('開發用'),
+          // Row(
+          //   children: [
+          //     Wrap(
+          //       children: [
+          //         MyElevatedButton(
+          //           onPressed: () async {
+          //
+          //           },
+          //           child: Text('取得所有糖果資訊'),
+          //         ),
+          //       ],
+          //     ),
+          //   ],
+          // ),
+          Divider(),
+          ..._data.map((devEvolutionItem) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Wrap(
+              children: [
+                CandyOfPokemonIcon(
+                  boxNo: devEvolutionItem.getCandyBoxNo(),
+                  size: 24,
+                ),
+                ...devEvolutionItem.basicProfilesOfStages.where((stage) => stage.isNotEmpty).xMapIndexed((stageIndex, basicProfiles, stages) {
+                  return <Widget>[
+                    ...basicProfiles.map((basicProfile) => Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: Text(
+                        '${basicProfile.nameI18nKey.xTr} (#${basicProfile.boxNo})',
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )),
+                    if (stageIndex < stages.length - 1)
+                      const Icon(Icons.arrow_forward_ios),
+                  ];
+                }).expand((e) => e),
+              ],
+            ),
+          )),
         ],
       ),
     );
+  }
+}
+
+class _TempEvolutionChain {
+  _TempEvolutionChain();
+
+  final List<List<PokemonBasicProfile>> basicProfilesOfStages = List
+      .generate(3, (index) => []);
+
+  int getCandyBoxNo() {
+    return basicProfilesOfStages
+        .map((e) => e.map((x) => x.boxNo))
+        .expand((element) => element)
+        .min;
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
@@ -138,7 +139,7 @@ class EvolutionRepository implements MyInjectable {
       for (var nextStage in evolution.nextStages) {
         final nextEvolution = mapping[nextStage.basicProfileId];
         if (nextEvolution == null) {
-          print('nextEvolution is null: ${nextStage.basicProfileId}');
+          debugPrint('nextEvolution is null: ${nextStage.basicProfileId}');
           continue;
         }
         tourNext(nextEvolution);

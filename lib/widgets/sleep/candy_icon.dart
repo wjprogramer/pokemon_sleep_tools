@@ -15,6 +15,14 @@ class CandyIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Iconify(Mdi.candy, color: color, size: size,);
+    Widget result;
+
+    if (MyEnv.USE_DEBUG_IMAGE) {
+      result = Iconify(Mdi.candy, color: color, size: size,);
+    } else {
+      result = Iconify(Mdi.candy, color: color, size: size,);
+    }
+
+    return result;
   }
 }

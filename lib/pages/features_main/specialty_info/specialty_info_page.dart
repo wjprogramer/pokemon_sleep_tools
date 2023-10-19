@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/search_list_tile.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 
 /// [PokemonSpecialty]
 class SpecialtyInfoPage extends StatefulWidget {
@@ -38,6 +39,7 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
         children: [
           ...Hp.list(
             children: [
+              LicenseSourceCard.t1(),
               MySubHeader(
                 titleText: '懶人包'.xTr,
               ),

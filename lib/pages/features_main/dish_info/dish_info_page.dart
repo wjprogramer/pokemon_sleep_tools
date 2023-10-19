@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dish_card.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DishInfoPage extends StatefulWidget {
@@ -41,25 +42,27 @@ class _DishInfoPageState extends State<DishInfoPage> {
         children: [
           ...Hp.list(
             children: [
+              LicenseSourceCard.t1(),
+              Gap.sm,
               MySubHeader(
-                titleText: '懶人包',
+                titleText: '懶人包'.xTr,
               ),
               Text.rich(
                 TextSpan(
                   text: '',
                   children: [
                     TextSpan(
-                      text: '用盡可能數量多的'
+                      text: '用盡可能數量多的'.xTr,
                     ),
                     TextSpan(
-                      text: '主要食材',
-                      style: TextStyle(
+                      text: '主要食材'.xTr,
+                      style: const TextStyle(
                         color: color1,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     TextSpan(
-                      text: '製作料理',
+                      text: '製作料理'.xTr,
                     )
                   ],
                 ),

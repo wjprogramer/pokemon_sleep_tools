@@ -61,3 +61,18 @@ const specialty3Color = Color(0xFFFE765A);
 const dishType1Color = Color(0xFFF67316);
 const dishType2Color = Color(0xFFEAB308);
 const dishType3Color = Color(0xFF84CC16);
+
+/// [SleepType]
+const sleepType1Color = Color(0xFFFCED83);
+const sleepType2Color = Color(0xFFA3F8FD);
+const sleepType3Color = Color(0xFF6992E8);
+
+/// [PokemonProfileStatistics.rank]
+final rankColorE = Colors.red.shade800;
+const rankColorD = Colors.red;
+const rankColorC = Colors.pink;
+const rankColorB = Colors.blue;
+const rankColorA = Colors.green;
+const rankColorS = Colors.amberAccent;
+final rankColorSS = Colors.grey.shade700;
+final rankColorSSS = Colors.grey.shade700;

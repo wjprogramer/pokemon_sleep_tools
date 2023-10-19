@@ -21,27 +21,30 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:provider/provider.dart';
 
-/// 遊戲內有 "使用道具" 的功能，但這邊應該不需要
+/// - TODO: 要注意 [_PokemonSliderDetailsPageArgs.isView] 後資料更新有沒有問題
+/// - 遊戲內有 "使用道具" 的功能，但這邊應該不需要
 class _PokemonSliderDetailsPageArgs {
   _PokemonSliderDetailsPageArgs({
     this.initialProfileId,
     this.initialProfileIds,
+    this.isView = false,
   });
 
   final int? initialProfileId;
 
   /// [PokemonProfile.id]
   final List<int>? initialProfileIds;
+
+  final bool isView;
 }
 
 class PokemonSliderDetailsPage extends StatefulWidget {
-  const PokemonSliderDetailsPage._({
-    required _PokemonSliderDetailsPageArgs args,
-  }) : _args = args;
+  const PokemonSliderDetailsPage._(this._args, {
+    super.key,
+  });
 
-  static MyPageRoute<void> route = ('/PokemonSliderDetailsPage', (dynamic args) => PokemonSliderDetailsPage._(
-    args: args as _PokemonSliderDetailsPageArgs,
-  ));
+  static MyPageRoute<void> route = ('/PokemonSliderDetailsPage',
+      (dynamic args) => PokemonSliderDetailsPage._(args));
 
   static void go(BuildContext context, {
     int? initialProfileId,
@@ -56,6 +59,21 @@ class PokemonSliderDetailsPage extends StatefulWidget {
     );
   }
 
+  static Widget buildView({
+    Key? key,
+    int? profileId,
+    List<int>? initialProfileIds,
+  }) {
+    return PokemonSliderDetailsPage._(
+      _PokemonSliderDetailsPageArgs(
+        initialProfileId: profileId,
+        initialProfileIds: initialProfileIds,
+        isView: true,
+      ),
+      key: key,
+    );
+  }
+
   final _PokemonSliderDetailsPageArgs _args;
 
   @override
@@ -64,6 +82,7 @@ class PokemonSliderDetailsPage extends StatefulWidget {
 
 class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
   _PokemonSliderDetailsPageArgs get _args => widget._args;
+  bool get _isView => _args.isView;
 
   late PageController _pageController;
 
@@ -133,6 +152,20 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     });
   }
 
+  /// TODO: [initState] 的 load data 需要這裡使用？
+  @override
+  void didUpdateWidget(covariant PokemonSliderDetailsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_args.isView && _args.initialProfileId != null) {
+      final profileIndex = _profiles
+          .indexOrNullWhere((p) => p.id == _args.initialProfileId);
+
+      if (profileIndex != null && _pageController.hasClients) {
+        _pageController.jumpToPage(profileIndex);
+      }
+    }
+  }
+
   @override
   void dispose() {
     _disposers.disposeAll();
@@ -166,54 +199,88 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
           );
         }
 
-        return Scaffold(
-          appBar: buildAppBar(
-            title: Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                if (MyEnv.USE_DEBUG_IMAGE)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: PokemonTypeImage(
-                      pokemonType: _profiles[_currIndex].basicProfile.pokemonType,
-                      width: 32,
-                    ),
-                  ),
-                Expanded(child: Text(_profiles[_currIndex].basicProfile.nameI18nKey.xTr)),
-              ],
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  PokemonMaintainProfilePage.goEdit(context, _profiles[_currIndex]);
-                },
-                icon: const Icon(Icons.edit),
-              ),
-            ],
-          ),
-          body: PageView(
-            controller: _pageController,
-            onPageChanged: (page) => _onPageChanged(page, _profiles),
-            children: _profiles.mapIndexed((profileIndex, profile) => _PokemonDetailsView(
-              profile: profile,
-              statistics: _getStatistics(profile),
-              onDeletedSuccess: () {
-                _currIndex -= 1;
-              },
-              initialOffset: _lastOffset,
-              onScroll: (offset) {
-                if (_currIndex != profileIndex) {
-                  return;
-                }
+        Widget body = PageView(
+          controller: _pageController,
+          onPageChanged: (page) => _onPageChanged(page, _profiles),
+          children: _profiles.mapIndexed((profileIndex, profile) => _PokemonDetailsView(
+            profile: profile,
+            statistics: _getStatistics(profile),
+            onDeletedSuccess: () {
+              _currIndex -= 1;
+            },
+            initialOffset: _lastOffset,
+            onScroll: (offset) {
+              if (_currIndex != profileIndex) {
+                return;
+              }
 
-                _lastOffset = offset;
-                setState(() { });
-              },
-            )).toList(),
+              _lastOffset = offset;
+              setState(() { });
+            },
+          )).toList(),
+        );
+
+        if (_isView) {
+          body = Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                constraints: const BoxConstraints(
+                  minHeight: kToolbarHeight,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Gap.h,
+                    Expanded(
+                      child: _buildTitle(),
+                    ),
+                    ..._buildActions(),
+                  ],
+                ),
+              ),
+              Expanded(child: body),
+            ],
+          );
+        }
+
+        return Scaffold(
+          appBar: _isView ? null : buildAppBar(
+            title: _buildTitle(),
+            actions: _buildActions(),
           ),
+          body: body,
         );
       }
     );
+  }
+
+  Widget _buildTitle() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        if (MyEnv.USE_DEBUG_IMAGE)
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: PokemonTypeImage(
+              pokemonType: _profiles[_currIndex].basicProfile.pokemonType,
+              width: 32,
+            ),
+          ),
+        Expanded(child: Text(_profiles[_currIndex].basicProfile.nameI18nKey.xTr)),
+      ],
+    );
+  }
+
+  List<Widget> _buildActions() {
+    return [
+      IconButton(
+        onPressed: () {
+          PokemonMaintainProfilePage.goEdit(context, _profiles[_currIndex]);
+        },
+        icon: const Icon(Icons.edit),
+      ),
+    ];
   }
 
   void _onPageChanged(int page, List<PokemonProfile> profiles) {

@@ -13,6 +13,19 @@ extension IterableX<T> on Iterable<T> {
     return mapIndexed((index, element) => convert(index, element, this));
   }
 
+  T firstWhereByCompare(bool Function(T a, T b) test) {
+    T? result;
+    for (final e in this) {
+      if (result == null) {
+        result = e;
+      } else {
+        if (test(e, result)) {
+          result = e;
+        }
+      }
+    }
+    return result!;
+  }
 }
 
 extension ListX<E> on List<E> {

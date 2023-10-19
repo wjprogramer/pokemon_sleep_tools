@@ -1,9 +1,15 @@
 # pokemon_sleep_tools
 
+- 平台：Windows, MacOS, Android, iOS (不考慮 Web!!)
+
 注意
 
 - 因資料來源，此 App 不能放廣告或其他營利行為
 - 上架的時候需注意不能使用 assets/debug 下的資源，也要手動將 pubspec.yaml 的 assets/debug 刪掉
+
+## Develop 重要
+
+- iOS 和 macOS 要將所有的 `D T_TOOLCHAIN_DIR` （去掉空白） 取代成 `TOOLCHAIN_DIR`
 
 ## Develop
 
@@ -22,6 +28,8 @@ fvm dhttpd --path doc/api
 ```shell
 fvm flutter build windows
 # \build\windows\x64\Release\Runner
+
+fvm flutter build macos
 ```
 
 ---
@@ -33,11 +41,8 @@ Overview TODO (粗略完成即可，深層頁面不用非常完整):
 - [x] 地圖、睡姿
 - [ ] 製作料理
 - [x] 食譜一覽
-  料理一覽 (用「料理類型、鍋子容量、食材」篩選、可以設定食譜等級計算顯示) -> 料理詳細頁面
-  料理詳細頁面 (食材反查 -> 連結到食材詳細頁面 (可以設定寶可夢和食譜等級計算資訊、顯示擁有對應食材1的寶可夢、應該也可以取得寶可夢盒食材2,3的資訊))
 - [x] 樹果
 - [x] 食材
-  食材一覽 -> 食材詳細頁面 （食材對應的料理 -> 料理反查（顯示料理的資訊）-> 料理詳細頁面）
 - [ ] 隊伍 (寶可夢盒、隊伍分析、自動組隊)
 - [x] 其他
     - [x] 鍋子
@@ -56,6 +61,7 @@ TODO:
 - 寶可夢睡姿、異色圖片
   - 可以設定是否為異色
   - 顯示不同睡姿（分為異色與非異色）
+- 提供主/副技能敘述
 
 一些說明
 

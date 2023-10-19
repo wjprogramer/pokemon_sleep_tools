@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ import 'package:provider/provider.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  // COMMON_SIDE_WIDTH
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -53,7 +56,7 @@ class _MyAppState extends State<MyApp> {
     await _initDataPersistent();
     await _initData();
 
-    if (Platform.isWindows) {
+    if (!kIsWeb && Platform.isWindows) {
     }
 
     _afterInitialized();
@@ -80,7 +83,9 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: generateTempTheme(),
       builder: appBuilder(),
-      scrollBehavior: Platform.isWindows ? _DesktopAppScrollBehavior() : null,
+      scrollBehavior: kIsWeb ? null
+          : Platform.isWindows || Platform.isMacOS ? _DesktopAppScrollBehavior()
+          : null,
       // i18n
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -102,6 +107,10 @@ class _MyAppState extends State<MyApp> {
       },
       routes: {
         _initRoute.name: _initRoute.builder,
+        // if (kIsWeb)
+        // '/': (_) => HomePage(),
+          // for (final route in _routes.entries)
+          //   route.key: route.value,
       },
       initialRoute: _initRoute.name,
     );

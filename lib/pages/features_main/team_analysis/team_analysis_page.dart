@@ -13,6 +13,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/dish_list_tile.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
 import '../../../widgets/sleep/images/images.dart';
@@ -73,6 +74,8 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   var _dishesLv60 = <Dish>{};
 
   var _fruitMapping = <Fruit, (int, List<PokemonBasicProfile>)>{};
+  final List<PokemonProfileStatistics?> _statistics = List
+      .generate(MAX_TEAM_POKEMON_COUNT, (index) => null);
 
   @override
   void initState() {
@@ -162,6 +165,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                   ...profiles.mapIndexed((index, profile) {
                     Widget child;
                     final basicProfile = profile?.basicProfile;
+                    final statistics = _statistics[index];
 
                     if (profile == null) {
                       child = Container();
@@ -210,7 +214,18 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                                   decoration: BoxDecoration(
                                     border: Border.all(),
                                   ),
-                                  child: child,
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      child,
+                                      if (statistics != null)
+                                        Positioned(
+                                          left: 16,
+                                          top: 8,
+                                          child: _buildRank(statistics),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -222,10 +237,10 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                               ),
                             ),
                             if (basicProfile != null) ...[
-                              Text(
-                                basicProfile.specialty.nameI18nKey.xTr,
-                                textAlign: TextAlign.center,
-                              ),
+                              Gap.sm,
+                              Center(child: SpecialtyLabel(specialty: basicProfile.specialty)),
+                              Gap.sm,
+                              Center(child: SleepTypeLabel(sleepType: basicProfile.sleepType),),
                             ],
                           ],
                         ),
@@ -414,6 +429,15 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
       addIngredientCount(_ingredientsAccumulateMapLv60, profile.ingredient3, profile.ingredientCount3);
     }
 
+    for (var profileIndex = 0; profileIndex < profiles.length; profileIndex++) {
+      final profile = profiles[profileIndex];
+      final statistics = profile == null
+          ? null
+          : PokemonProfileStatistics.from(profile);
+      _statistics[profileIndex] = statistics;
+      statistics?.init();
+    }
+
     Map<Dish, List<Ingredient>> initDishAndRemainIngredients(List<Dish> dishes) {
       return dishes.toMap(
             (dish) => dish,
@@ -515,6 +539,129 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   String _getCurrTeamName() {
     return _team?.getDisplayText(index: _teamIndex)
         ?? PokemonTeam.getDefaultName(index: _teamIndex);
+  }
+
+  /// 參考 osu 樣式
+  Widget _buildRank(PokemonProfileStatistics statistics) {
+    final hasDream = statistics.rank.startsWith('夢');
+    final rank = hasDream
+        ? statistics.rank.substring(1)
+        : statistics.rank;
+    final style = TextStyle(
+      fontSize: 25,
+    );
+    double? blurRadius;
+    double spreadRadius = 0.0;
+    var otherShadows = <BoxShadow>[];
+    FontWeight? fontWeight;
+    var needMask = false;
+    ShaderCallback? shaderCallback;
+    double? wordSpacing;
+    double? letterSpacing;
+
+    final color = switch (rank) {
+      'E' => rankColorE,
+      'D' => rankColorD,
+      'C' => rankColorC,
+      'B' => rankColorB,
+      'A' => rankColorA,
+      'S' => rankColorS,
+      'SS' => rankColorSS,
+      'SSS' => rankColorSSS,
+      _ => greyColor3,
+    };
+
+    switch (rank) {
+      case 'E':
+        blurRadius = 15;
+        spreadRadius = 5;
+        break;
+      case 'D':
+        break;
+      case 'C':
+        break;
+      case 'B':
+        break;
+      case 'A':
+        break;
+      case 'S':
+        // fontWeight = FontWeight.bold;
+        blurRadius = 30;
+        spreadRadius = 10;
+        otherShadows = [
+          BoxShadow(color: whiteColor, blurRadius: 5, spreadRadius: 5),
+        ];
+        break;
+      case 'SSS':
+      case 'SS':
+        otherShadows = [
+          BoxShadow(
+            color: color.withOpacity(.2),
+            blurRadius: 5,
+            spreadRadius: 10,
+            // blurStyle: BlurStyle.outer,
+          ),
+        ];
+        needMask = true;
+        letterSpacing = -4;
+        shaderCallback = (rect) => LinearGradient(
+          begin: Alignment(0.3, -1),
+          end: Alignment(-0.3, 1),
+          colors: [
+            color,
+            whiteColor,
+            color,
+          ],
+          stops: [
+            0.0,
+            0.4,
+            0.8,
+          ],
+        ).createShader(rect);
+        break;
+    }
+
+    Widget _buildText({
+      isMask = false,
+    }) {
+      Widget textResult = Text(
+        rank,
+        style: style.copyWith(
+          color: isMask ? whiteColor : color,
+          fontWeight: fontWeight,
+          wordSpacing: wordSpacing,
+          letterSpacing: letterSpacing,
+          shadows: [
+            if (blurRadius != null)
+              BoxShadow(
+                color: color,
+                blurRadius: blurRadius,
+                spreadRadius: spreadRadius,
+              ),
+            ...otherShadows,
+          ],
+        ),
+      );
+
+      if (isMask && shaderCallback != null) {
+        textResult = ShaderMask(
+          shaderCallback: shaderCallback,
+          child: textResult,
+        );
+      }
+
+      return textResult;
+    }
+
+    Widget result = _buildText();
+
+    return Stack(
+      children: [
+        result,
+        if (needMask)
+          _buildText(isMask: true),
+      ],
+    );
   }
 
 }

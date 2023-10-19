@@ -31,15 +31,11 @@ class SpecialtyLabel extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Row(
-        children: [
-          Text(
-            (fullName ? specialty.nameI18nKey : specialty.shortNameI18nKey).xTr,
-            style: baseStyle.copyWith(
-              color: fgColor,
-            ),
-          ),
-        ],
+      child: Text(
+        (fullName ? specialty.nameI18nKey : specialty.shortNameI18nKey).xTr,
+        style: baseStyle.copyWith(
+          color: fgColor,
+        ),
       ),
     );
   }

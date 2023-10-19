@@ -126,7 +126,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
                 ),
               ),
               child: basicProfile == null
-                  ? Center(child: Text('選擇寶可夢'),)
+                  ? const Center(child: Text('選擇寶可夢'),)
                   : PokemonBasicProfilePage.buildView(basicProfile),
             ),
           ),

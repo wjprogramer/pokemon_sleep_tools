@@ -37,6 +37,18 @@ class AssetsPath {
     return '$_prefix/field/${field.id}.png';
   }
 
+  static candy(int pokemonBoxNo) {
+    pokemonBoxNo = switch (pokemonBoxNo) {
+      447 => 448,
+      _ => pokemonBoxNo,
+    };
+    return '$_prefix/candy/$pokemonBoxNo.png';
+  }
+
+  static gameItem(GameItem item) {
+    return '$_prefix/item/${item.id}.png';
+  }
+
   // region generic
   static String generic(String name) {
     return '$_prefix/generic/$name.png';

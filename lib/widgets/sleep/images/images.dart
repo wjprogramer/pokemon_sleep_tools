@@ -2,6 +2,7 @@ export 'dish_icon_image.dart';
 export 'dish_image.dart';
 export 'field_image.dart';
 export 'fruit_image.dart';
+export 'game_item_image.dart';
 export 'ingredient_image.dart';
 export 'pokemon_icon_image.dart';
 export 'pokemon_image.dart';
