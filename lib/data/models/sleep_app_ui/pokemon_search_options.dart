@@ -18,15 +18,20 @@ class PokemonSearchOptions implements BaseSearchOptions {
     Set<SleepType>? sleepTypeOf,
     Set<int>? currEvolutionStageOf,
     Set<int>? maxEvolutionStageOf,
-  }) : _keyword = keyword,
-    fruitOf = fruitOf ?? {},
-    typeof = typeof ?? {},
-    mainSkillOf = mainSkillOf ?? {},
-    subSkillOf = subSkillOf ?? {},
-    ingredientOf = ingredientOf ?? {},
-    ingredientOfLv1 = ingredientOfLv1 ?? {},
-    ingredientOfLv30 = ingredientOfLv30 ?? {},
-    ingredientOfLv60 = ingredientOfLv60 ?? {};
+  }) :_keyword = keyword,
+        fruitOf = fruitOf ?? {},
+        typeof = typeof ?? {},
+        mainSkillOf = mainSkillOf ?? {},
+        subSkillOf = subSkillOf ?? {},
+        ingredientOf = ingredientOf ?? {},
+        ingredientOfLv1 = ingredientOfLv1 ?? {},
+        ingredientOfLv30 = ingredientOfLv30 ?? {},
+        ingredientOfLv60 = ingredientOfLv60 ?? {},
+        fieldOf = fieldOf ?? {},
+        specialtyOf = specialtyOf ?? {},
+        sleepTypeOf = sleepTypeOf ?? {},
+        currEvolutionStageOf = currEvolutionStageOf ?? {},
+        maxEvolutionStageOf = maxEvolutionStageOf ?? {};
 
   /// 搜尋樹果
   Set<Fruit> fruitOf;
@@ -76,17 +81,34 @@ class PokemonSearchOptions implements BaseSearchOptions {
       mainSkillOf: mainSkillOf,
       subSkillOf: subSkillOf,
       ingredientOf: ingredientOf,
+      ingredientOfLv1: ingredientOfLv1,
+      ingredientOfLv30: ingredientOfLv30,
+      ingredientOfLv60: ingredientOfLv60,
+      fieldOf: fieldOf,
+      specialtyOf: specialtyOf,
+      sleepTypeOf: sleepTypeOf,
+      currEvolutionStageOf: currEvolutionStageOf,
+      maxEvolutionStageOf: maxEvolutionStageOf,
     );
   }
 
   @override
   bool isEmptyOptions() {
-    return keyword.trim().isEmpty &&
-        fruitOf.isEmpty &&
-        typeof.isEmpty &&
-        mainSkillOf.isEmpty &&
-        subSkillOf.isEmpty &&
-        ingredientOf.isEmpty;
+    return !(keyword.trim().isNotEmpty ||
+        fruitOf.isNotEmpty ||
+        typeof.isNotEmpty ||
+        mainSkillOf.isNotEmpty ||
+        subSkillOf.isNotEmpty ||
+        ingredientOf.isNotEmpty ||
+        ingredientOfLv1.isNotEmpty ||
+        ingredientOfLv30.isNotEmpty ||
+        ingredientOfLv60.isNotEmpty ||
+        fieldOf.isNotEmpty ||
+        specialtyOf.isNotEmpty ||
+        sleepTypeOf.isNotEmpty ||
+        currEvolutionStageOf.isNotEmpty ||
+        maxEvolutionStageOf.isNotEmpty
+    );
   }
 
   @override
@@ -97,6 +119,14 @@ class PokemonSearchOptions implements BaseSearchOptions {
     mainSkillOf.clear();
     subSkillOf.clear();
     ingredientOf.clear();
+    ingredientOfLv1.clear();
+    ingredientOfLv30.clear();
+    ingredientOfLv60.clear();
+    fieldOf.clear();
+    specialtyOf.clear();
+    sleepTypeOf.clear();
+    currEvolutionStageOf.clear();
+    maxEvolutionStageOf.clear();
   }
 
   void setKeywordWithoutListen(String value) {
@@ -127,6 +157,19 @@ class PokemonSearchOptions implements BaseSearchOptions {
           .where((p) => fruitOf.contains(p.basicProfile.fruit));
     }
 
+    void filterIngredients(Set<Ingredient> ingredientSetParam, Function(PokemonProfile profile) gettingIngredients) {
+      if (ingredientSetParam.isEmpty) {
+        return;
+      }
+      results = results.where((p) {
+        return ingredientSetParam.contains(gettingIngredients(p));
+      });
+    }
+
+    filterIngredients(ingredientOfLv1, (p) => p.ingredient1);
+    filterIngredients(ingredientOfLv30, (p) => p.ingredient2);
+    filterIngredients(ingredientOfLv60, (p) => p.ingredient3);
+
     if (ingredientOf.isNotEmpty) {
       results = results.where((p) {
         return ingredientOf.contains(p.ingredient1) ||
@@ -151,11 +194,21 @@ class PokemonSearchOptions implements BaseSearchOptions {
           .where((p) => p.basicProfile.nameI18nKey.xTr.contains(newKeyword));
     }
 
+    if (sleepTypeOf.isNotEmpty) {
+      results = results
+          .where((p) => sleepTypeOf.contains(p.basicProfile.sleepType));
+    }
+
+    if (specialtyOf.isNotEmpty) {
+      results = results
+          .where((p) => specialtyOf.contains(p.basicProfile.specialty));
+    }
+
     return results.toList();
   }
 
-  filterBasicProfiles() {
-
+  List<PokemonBasicProfile> filterBasicProfiles(List<PokemonBasicProfile> profiles) {
+    return [];
   }
 
 }

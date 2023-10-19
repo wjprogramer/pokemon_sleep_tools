@@ -19,6 +19,20 @@ class PokemonTypeImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const sizeValue = 12.0;
+
+    if (!MyEnv.USE_DEBUG_IMAGE) {
+      return Container(
+        constraints: const BoxConstraints.tightFor(
+          width: sizeValue, height: sizeValue,
+        ),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: pokemonType.color,
+        ),
+      );
+    }
+
     return Tooltip(
       message: pokemonType.nameI18nKey.xTr,
       child: Image.asset(

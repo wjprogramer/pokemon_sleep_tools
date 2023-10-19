@@ -13,17 +13,19 @@ class DishListTile extends StatelessWidget {
     super.key,
     required this.dish,
     required this.ingredients,
+    this.padding,
   });
 
   final Dish dish;
   final List<(Ingredient, int)> ingredients;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     final _theme = context.theme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
+      padding: padding ?? const EdgeInsets.symmetric(
         horizontal: HORIZON_PADDING,
         vertical: 0,
       ),
@@ -35,6 +37,7 @@ class DishListTile extends StatelessWidget {
               child: DishImage(
                 dish: dish,
                 width: 52,
+                disableTooltip: true,
               ),
             ),
           Expanded(

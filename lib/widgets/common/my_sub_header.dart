@@ -52,12 +52,18 @@ class MySubHeader extends StatelessWidget {
       titleText ?? '',
     );
 
-    result = DefaultTextStyle(
-      style: TextStyle(
+    result = IconTheme(
+      data: IconThemeData(
         color: color.fgColor,
-        fontWeight: FontWeight.bold,
+        size: 14,
       ),
-      child: result,
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: color.fgColor,
+          fontWeight: FontWeight.bold,
+        ),
+        child: result,
+      ),
     );
 
     return result;

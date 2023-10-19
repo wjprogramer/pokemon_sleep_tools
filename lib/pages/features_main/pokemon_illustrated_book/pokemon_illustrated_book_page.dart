@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
@@ -45,16 +46,22 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
   SleepFaceRepository get _sleepFaceRepo => getIt();
 
+  static const _hideBottomNavigationBar = kDebugMode;
+
   // UI
   late ThemeData _theme;
 
   // Data
-  var _basicProfiles = <PokemonBasicProfile>[];
+  var _allBasicProfiles = <PokemonBasicProfile>[];
+  var _filteredBasicProfiles = <PokemonBasicProfile>[];
   var _sleepFacesOf = <int, Map<int, String>>{};
   PokemonBasicProfile? _currBasicProfile;
 
   /// [PokemonBasicProfile.id] to [PokemonProfile]
   final _profileOf = <int, PokemonProfile>{};
+
+  // Filter properties
+  var _searchOptions = PokemonSearchOptions();
 
   @override
   void initState() {
@@ -67,7 +74,8 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
         _profileOf[profile.basicProfileId] = profile;
       }
 
-      _basicProfiles = await _basicProfileRepo.findAll();
+      _allBasicProfiles = await _basicProfileRepo.findAll();
+      _filteredBasicProfiles = [..._allBasicProfiles];
       _sleepFacesOf = await _sleepFaceRepo.findAllNames();
 
       if (mounted) {
@@ -87,7 +95,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
 
         return buildListView(
           children: [
-            ..._basicProfiles.map((e) => Padding(
+            ..._allBasicProfiles.map((e) => Padding(
               padding: const EdgeInsets.only(bottom: Gap.xsV),
               child: _buildBasicProfile(e, isMobile: responsive.isMobile),
             )),
@@ -103,6 +111,9 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
           titleText: 't_pokemon_illustrated_book'.xTr,
         ),
         body: mainContent,
+        bottomNavigationBar: _hideBottomNavigationBar
+            ? null
+            : _buildBottomNavigationBar(_allBasicProfiles),
       );
     }
 
@@ -116,7 +127,14 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
         children: [
           SizedBox(
             width: COMMON_SIDE_WIDTH,
-            child: mainContent,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: mainContent),
+                if (!_hideBottomNavigationBar)
+                  _buildBottomNavigationBar(_allBasicProfiles),
+              ],
+            ),
           ),
           Expanded(
             child: Container(
@@ -132,6 +150,33 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar(List<PokemonBasicProfile> profiles) {
+    return BottomBarWithActions(
+      onSearch: () async {
+        var searchOptions = await DialogUtility.searchPokemon(
+          context,
+          initialSearchOptions: _searchOptions,
+          calcCounts: (options) {
+            if (options.isEmptyOptions()) {
+              return (profiles.length, profiles.length);
+            }
+            return (options.filterBasicProfiles(_allBasicProfiles).length, profiles.length);
+          },
+        );
+        if (searchOptions == null) {
+          return;
+        }
+
+        _searchOptions = searchOptions;
+        _filteredBasicProfiles = _searchOptions.filterBasicProfiles(_allBasicProfiles);
+        setState(() { });
+      },
+      onSort: () {
+
+      },
     );
   }
 
@@ -154,7 +199,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
           vertical: 8,
         ),
         decoration: BoxDecoration(
-          color: _currBasicProfile?.id == basicProfile.id ? yellowColor : null,
+          color: _currBasicProfile?.id == basicProfile.id && !isMobile ? yellowColor : null,
         ),
         child: Row(
           children: [
@@ -174,16 +219,18 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
                       text: '#${basicProfile.boxNo} ${basicProfile.nameI18nKey.xTr}  ',
                       style: _theme.textTheme.bodyLarge,
                       children: [
-                        WidgetSpan(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 4,
-                            ),
-                            child: PokemonTypeIcon(
-                              type: basicProfile.pokemonType,
+                        if (kDebugMode && !kDebugMode)
+                          WidgetSpan(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                              ),
+                              child: PokemonTypeImage(
+                                pokemonType: basicProfile.pokemonType,
+                                width: 24,
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                   ),

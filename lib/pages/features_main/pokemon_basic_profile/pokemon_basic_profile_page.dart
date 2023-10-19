@@ -196,22 +196,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
 
     return Scaffold(
       appBar: _isView ? null : buildAppBar(
-        title: Row(
-          children: [
-            // PokemonTypeIcon(type: _basicProfile.pokemonType),
-            if (_existInBox)
-              const Padding(
-                padding: EdgeInsets.only(right: Gap.mdV),
-                child: PokemonRecordedIcon(),
-              ),
-            Expanded(
-              child: Text(
-                // TODO: 攻略網站的 "#圖鑑編號" 會比較小、且為灰色
-                '${_basicProfile.nameI18nKey.xTr} #${_basicProfile.boxNo}',
-              ),
-            ),
-          ],
-        ),
+        title: _buildAppBarTitle(),
       ),
       body: Consumer2<MainViewModel, SleepFaceViewModel>(
         builder: (context, mainViewModel, sleepFaceViewModel, child) {
@@ -219,7 +204,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
           final markStyles = sleepFaceViewModel.markStylesOf[_basicProfile.id] ?? [];
           // 食材 1,2,3
 
-          return buildListView(
+          Widget mainBodyContent = buildListView(
             padding: const EdgeInsets.symmetric(
               horizontal: HORIZON_PADDING,
             ),
@@ -332,7 +317,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                       ],
                     ),
                     Text(
-                      '成為夥伴報酬: ${_basicProfile.recruitRewards.exp}, ${_basicProfile.recruitRewards.shards}'
+                        '成為夥伴報酬: ${_basicProfile.recruitRewards.exp}, ${_basicProfile.recruitRewards.shards}'
                     ),
                   ],
                 ),
@@ -417,8 +402,55 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               Gap.trailing,
             ],
           );
+
+          if (_isView) {
+            mainBodyContent = Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  height: kToolbarHeight,
+                  child: Row(
+                    children: [
+                      Gap.h,
+                      Expanded(child: _buildAppBarTitle()),
+                    ],
+                  ),
+                ),
+                Expanded(child: mainBodyContent),
+              ],
+            );
+          }
+
+          return mainBodyContent;
         },
       ),
+    );
+  }
+
+  Widget _buildAppBarTitle() {
+    return Row(
+      children: [
+        if (MyEnv.USE_DEBUG_IMAGE)
+          Padding(
+            padding: const EdgeInsets.only(right: Gap.mdV),
+            child: PokemonTypeImage(
+              pokemonType: _basicProfile.pokemonType,
+              width: 24,
+            ),
+          ),
+        if (_existInBox)
+          const Padding(
+            padding: EdgeInsets.only(right: Gap.mdV),
+            child: PokemonRecordedIcon(),
+          ),
+        Expanded(
+          child: Text(
+            // TODO: 攻略網站的 "#圖鑑編號" 會比較小、且為灰色
+            '${_basicProfile.nameI18nKey.xTr} #${_basicProfile.boxNo}',
+            style: _isView ? _theme.appBarTheme.titleTextStyle : null,
+          ),
+        ),
+      ],
     );
   }
 

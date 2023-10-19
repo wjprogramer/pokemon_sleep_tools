@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 
 const color1 = Color(0xFFFE6B4E);
 const whiteColor = Colors.white;
+const blackColor = Colors.black;
 
 const greyColor = Color(0xFFE8EAED);
 const greyColor2 = Color(0xFFC8C8C8);
@@ -76,3 +78,6 @@ const rankColorA = Colors.green;
 const rankColorS = Colors.amberAccent;
 final rankColorSS = Colors.grey.shade700;
 final rankColorSSS = Colors.grey.shade700;
+
+/// 資料來源 [MySubHeader] 顏色
+const dataSourceSubHeaderColor = Colors.blue;

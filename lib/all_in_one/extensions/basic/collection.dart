@@ -75,6 +75,17 @@ extension MapX<K, V> on Map<K, V> {
   }
 }
 
+extension SetX<T> on Set<T> {
+  void toggle(T value) {
+    if (contains(value)) {
+      remove(value);
+    } else {
+      add(value);
+    }
+  }
+}
+
+
 
 
 

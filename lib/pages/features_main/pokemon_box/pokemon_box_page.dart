@@ -169,7 +169,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
           return Scaffold(
             appBar: buildAppBar(
-              titleText: 't_pokemon_box'.xTr,
+              title: _buildAppBarTitle(),
               actions: [
                 IconButton(
                   onPressed: () {
@@ -194,7 +194,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         final profile = _profile;
         return Scaffold(
           appBar: buildAppBar(
-            titleText: 't_pokemon_box'.xTr,
+            title: _buildAppBarTitle(),
             actions: [
               IconButton(
                 onPressed: () {
@@ -238,6 +238,34 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildAppBarTitle() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('t_pokemon_box'.xTr),
+        Tooltip(
+          message: '篩選結果數量 / 全部數量'.xTr,
+          child: Container(
+            margin: const EdgeInsets.only(left: 8),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+            ),
+            decoration: BoxDecoration(
+              color: color1,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              '${_resultProfiles.length} / ${_allProfiles.length}',
+              style: _theme.textTheme.bodySmall?.copyWith(
+                color: color1.fgColor,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -313,6 +341,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
         setState(() { });
       },
+      isSearchOn: _searchOptions.isEmptyOptions() ? null : true,
       onSort: () {
 
       },

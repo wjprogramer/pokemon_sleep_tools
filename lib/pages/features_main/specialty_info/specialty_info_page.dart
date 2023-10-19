@@ -61,7 +61,9 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
                 titleText: '說明'.xTr,
               ),
               Gap.xl,
-              Text('專長 & 樹果/食材產量倍數關係'),
+              MySubHeader2(
+                titleText: '專長 & 樹果/食材產量倍數關係'.xTr,
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
@@ -116,7 +118,9 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
                 ),
               ),
               Gap.xl,
-              Text('卡比獸喜好'),
+              MySubHeader2(
+                titleText: '卡比獸喜好'.xTr,
+              ),
               Gap.sm,
               Text(
                 '1. 樹果：如果卡比獸喜歡該樹果，樹果能量會變為兩倍',

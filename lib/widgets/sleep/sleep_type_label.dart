@@ -8,9 +8,13 @@ class SleepTypeLabel extends StatelessWidget {
   const SleepTypeLabel({
     super.key,
     required this.sleepType,
+    this.onTap,
+    this.checked,
   });
 
   final SleepType sleepType;
+  final VoidCallback? onTap;
+  final bool? checked;
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +22,50 @@ class SleepTypeLabel extends StatelessWidget {
     final fgColor = bgColor.fgColor;
     final theme = context.theme;
 
+    final baseStyle = theme.textTheme.bodySmall ?? TextStyle();
+    final evaluatedChecked = checked ?? false;
+
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 4,
-        vertical: 2,
-      ),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Text(
-        sleepType.nameI18nKey.xTr,
-        style: (theme.textTheme.bodySmall ?? TextStyle()).copyWith(
-          color: fgColor,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(6),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 4,
+              vertical: 2,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: 16,
+                  width: evaluatedChecked ? 16 : 0,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 100),
+                    opacity: evaluatedChecked ? 1 : 0,
+                    child: Icon(
+                      Icons.check,
+                      color: fgColor,
+                      size: 14,
+                    ),
+                  ),
+                ),
+                Text(
+                  sleepType.nameI18nKey.xTr,
+                  style: baseStyle.copyWith(
+                    color: fgColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

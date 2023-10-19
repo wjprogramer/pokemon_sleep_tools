@@ -189,6 +189,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
         }
 
         _currIndex = _currIndex.clamp(0, _profiles.lastIndex ?? 0);
+        _isView;
 
         if (_profiles.isEmpty) {
           return Scaffold(
@@ -199,26 +200,41 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
           );
         }
 
-        Widget body = PageView(
-          controller: _pageController,
-          onPageChanged: (page) => _onPageChanged(page, _profiles),
-          children: _profiles.mapIndexed((profileIndex, profile) => _PokemonDetailsView(
-            profile: profile,
-            statistics: _getStatistics(profile),
-            onDeletedSuccess: () {
-              _currIndex -= 1;
-            },
-            initialOffset: _lastOffset,
-            onScroll: (offset) {
-              if (_currIndex != profileIndex) {
-                return;
-              }
+        Widget buildBody({ required Size viewSize}) {
+          return PageView(
+            controller: _pageController,
+            onPageChanged: (page) => _onPageChanged(page, _profiles),
+            children: _profiles.mapIndexed((profileIndex, profile) => _PokemonDetailsView(
+              profile: profile,
+              statistics: _getStatistics(profile),
+              onDeletedSuccess: () {
+                _currIndex -= 1;
+              },
+              initialOffset: _lastOffset,
+              onScroll: (offset) {
+                if (_currIndex != profileIndex) {
+                  return;
+                }
 
-              _lastOffset = offset;
-              setState(() { });
-            },
-          )).toList(),
-        );
+                _lastOffset = offset;
+                setState(() { });
+              },
+              viewSize: viewSize,
+            )).toList(),
+          );
+        }
+
+        Widget body;
+
+        if (_isView) {
+          body = LayoutBuilder(
+            builder: (context, constraints) {
+              return buildBody(viewSize: Size(constraints.maxWidth, constraints.maxHeight));
+            }
+          );
+        } else {
+          body = buildBody(viewSize: context.mediaQuery.size);
+        }
 
         if (_isView) {
           body = Column(
@@ -352,6 +368,7 @@ class _PokemonDetailsView extends StatefulWidget {
     required this.onDeletedSuccess,
     required this.initialOffset,
     required this.onScroll,
+    required this.viewSize,
   });
 
   final PokemonProfile profile;
@@ -359,6 +376,7 @@ class _PokemonDetailsView extends StatefulWidget {
   final Function() onDeletedSuccess;
   final double initialOffset;
   final ValueChanged<double> onScroll;
+  final Size viewSize;
 
   @override
   State<_PokemonDetailsView> createState() => _PokemonDetailsViewState();
@@ -389,18 +407,24 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
   @override
   Widget build(BuildContext context) {
     _theme = context.theme;
+    final leadingWidth = math.min(widget.viewSize.width * 0.3, 150.0);
+    final mainWidth = widget.viewSize.width - 2 * HORIZON_PADDING;
 
     return buildListView(
       controller: _scrollController,
-      children: _buildListItems(context, widget.statistics),
+      children: _buildListItems(
+        context,
+        widget.statistics,
+        leadingWidth: leadingWidth,
+        mainWidth: mainWidth,
+      ),
     );
   }
 
-  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics? statistics) {
-    final screenSize = MediaQuery.of(context).size;
-    final leadingWidth = math.min(screenSize.width * 0.3, 150.0);
-    final mainWidth = screenSize.width - 2 * HORIZON_PADDING;
-
+  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics? statistics, {
+    required double leadingWidth,
+    required double mainWidth,
+  }) {
     const subSkillItemSpacing = 24.0;
     const subSkillParentExtraMarginValue = 4.0;
     final subSkillWidth = (mainWidth - 2 * subSkillParentExtraMarginValue - subSkillItemSpacing) / 2;
@@ -473,7 +497,6 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
             image,
           MyElevatedButton(
             onPressed: () {
-              /// TODO: 如果是「班基拉斯、沙基拉斯、又基拉斯」要將 _isLarvitar 設為 true
               ExpCalculatorPage.go(
                 context,
                 isLarvitarChain: widget.profile.isLarvitarChain,

@@ -5,18 +5,24 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/field_edit/field_edit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/dish_list_tile.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
-import '../../../widgets/sleep/images/images.dart';
+const _dishBaseWidth = 240.0;
+const _dishSpacing = 12.0;
+const _dishPadding = EdgeInsets.symmetric(
+  horizontal: 8, vertical: 0,
+);
+final _dishesContainerHpValue = (Gap.hV * 2 - _dishPadding.horizontal) / 2;
 
 class _PageArgs {
   _PageArgs({
@@ -49,6 +55,7 @@ class TeamAnalysisPage extends StatefulWidget {
 
 class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   int get _teamIndex => widget._args.teamIndex;
+  FieldViewModel get _fieldViewModel => context.read<FieldViewModel>();
 
   // UI
   late ThemeData _theme;
@@ -60,6 +67,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   // Data
   var _profileOf = <int, PokemonProfile>{};
   PokemonTeam? _team;
+  late StoredPokemonFieldItem _fieldItem1;
 
   // Data (Calculated)
   final _ingredientsMapLv1 = <Ingredient, int>{};
@@ -76,6 +84,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   var _fruitMapping = <Fruit, (int, List<PokemonBasicProfile>)>{};
   final List<PokemonProfileStatistics?> _statistics = List
       .generate(MAX_TEAM_POKEMON_COUNT, (index) => null);
+  var _dishListTileWidth = _dishBaseWidth;
 
   @override
   void initState() {
@@ -83,16 +92,20 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final mainViewModel = context.read<MainViewModel>();
       final teamViewModel = context.read<TeamViewModel>();
+      final fieldViewModel = context.read<FieldViewModel>();
 
       _disposers.addAll([
         mainViewModel.xAddListener(_listenMainViewModel),
-        teamViewModel.xAddListener(_listenTeamViewModel)
+        teamViewModel.xAddListener(_listenTeamViewModel),
+        fieldViewModel.xAddListener(_listenFieldViewModel),
       ]);
 
       await Future.wait([
         mainViewModel.loadProfiles(),
         teamViewModel.loadTeams(),
       ]);
+
+      _fieldItem1 = fieldViewModel.getItem(PokemonField.f1);
 
       _team = teamViewModel.teams[_teamIndex];
       _analysis();
@@ -117,6 +130,13 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
     setState(() { });
   }
 
+  void _listenFieldViewModel() {
+    _fieldItem1 = _fieldViewModel.getItem(PokemonField.f1);
+
+    _analysis();
+    setState(() { });
+  }
+
   void _listenMainViewModel() {
     final mainViewModel = context.read<MainViewModel>();
     _profileOf = mainViewModel.profiles
@@ -129,6 +149,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   @override
   Widget build(BuildContext context) {
     _theme = context.theme;
+    final screenSize = context.mediaQuery.size;
     final team = _team;
 
     if (team == null) {
@@ -150,6 +171,12 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
     final dishLv60 = _dishesLv60
         .where((dish) => !_dishesLv30.contains(dish) && !_dishesLv1.contains(dish));
 
+    _dishListTileWidth = UiUtility.getChildWidthInRowBy(
+      baseChildWidth: _dishBaseWidth,
+      containerWidth: screenSize.width - 2 * Gap.hV + _dishPadding.horizontal,
+      spacing: _dishSpacing,
+    );
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: _getCurrTeamName(),
@@ -158,6 +185,8 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
         children: [
           ...Hp.list(
             children: [
+              LicenseSourceCard.t2(),
+              Gap.md,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
@@ -171,7 +200,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                       child = Container();
                     } else if (MyEnv.USE_DEBUG_IMAGE) {
                       child = ClipRect(
-                        child: Container(
+                        child: SizedBox(
                           width: double.infinity,
                           height: double.infinity,
                           child: Transform(
@@ -292,10 +321,10 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
           }),
           ...Hp.list(
             children: [
-              // TODO:
-              // MySubHeader(
-              //   titleText: '樹果 & 適合島嶼'.xTr,
-              // ),
+              MySubHeader(
+                titleText: '樹果 & 適合島嶼'.xTr,
+              ),
+              ...PokemonField.values.map((pokemonField) => _buildFieldWithFruits(pokemonField)),
               MySubHeader(
                 titleText: 't_ingredients'.xTr,
               ),
@@ -320,11 +349,10 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
               comment: ' (假設隊伍寶可夢都介於 Lv 1 ~ 29)',
             ),
           ),
+          Gap.sm,
           if (_dishesLv1.isEmpty)
             Hp(child: Text('t_none'.xTr))
-          else ..._dishesLv1.map((dish) => _buildDishListTile(
-            dish: dish,
-          )),
+          else _buildDishListTiles(_dishesLv1),
           Gap.xl,
           Hp(
             child: _buildTextWithComment(
@@ -332,11 +360,10 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
               comment: ' (假設隊伍寶可夢都介於 Lv 30 ~ 59)',
             ),
           ),
+          Gap.sm,
           if (dishLv30.isEmpty)
             Hp(child: Text('t_none'.xTr))
-          else ...dishLv30.map((dish) => _buildDishListTile(
-            dish: dish,
-          )),
+          else _buildDishListTiles(dishLv30),
           Gap.xl,
           Hp(
             child: _buildTextWithComment(
@@ -344,13 +371,108 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
               comment: ' (假設全寶可夢 Lv 60 以上)',
             ),
           ),
+          Gap.sm,
           if (dishLv60.isEmpty)
             Hp(child: Text('t_none'.xTr))
-          else ...dishLv60.map((dish) => _buildDishListTile(
-            dish: dish,
-          )),
+          else _buildDishListTiles(dishLv60),
+          Hp(
+            child: MySubHeader(
+              titleText: '資料來源'.xTr,
+              color: dataSourceSubHeaderColor,
+            ),
+          ),
+          ...ListTile.divideTiles(
+            context: context,
+            tiles: [
+              SearchListTile(
+                titleText: '【攻略】使用能量計算!!更科學的『寶可夢Sleep潛力計算機v4.0』五段評價系統!!',
+                url: 'https://forum.gamer.com.tw/C.php?bsn=36685&snA=913',
+                subTitleText: '主要參考計算方式',
+              ),
+            ],
+          ),
           Gap.trailing,
         ]
+      ),
+    );
+  }
+
+  Widget _buildFieldWithFruits(PokemonField pokemonField) {
+    final editableField = pokemonField == PokemonField.f1;
+    final fruits = editableField
+        ? _fieldItem1.fruits
+        : pokemonField.fruits;
+
+    return Row(
+      children: [
+        Text(pokemonField.nameI18nKey.xTr),
+        if (MyEnv.USE_DEBUG_IMAGE) ...[
+          ...fruits.map((fruit) {
+            final isFavoriteFruit = _fruitMapping.containsKey(fruit);
+
+            return InkWell(
+              onTap: () {
+                FruitPage.go(context, fruit);
+              },
+              customBorder: CircleBorder(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: FruitImage(
+                        fruit: fruit,
+                        width: 24,
+                      ),
+                    ),
+                    Positioned(
+                      right: 5,
+                      bottom: 5,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        child: Icon(
+                          isFavoriteFruit ? Icons.check : Icons.close,
+                          color: isFavoriteFruit ? primaryColor : dangerColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          })
+        ],
+        const Spacer(),
+        if (editableField)
+          Tooltip(
+            message: '設定樹果',
+            child: IconButton(
+              onPressed: () {
+                FieldEditPage.go(context, pokemonField);
+              },
+              icon: Icon(
+                Icons.edit,
+                size: 16,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildDishListTiles(Iterable<Dish> dishes) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: _dishesContainerHpValue,
+      ),
+      child: Wrap(
+        spacing: _dishSpacing,
+        children: dishes.map((dish) => _buildDishListTile(
+          dish: dish,
+        )).toList(),
       ),
     );
   }
@@ -358,13 +480,17 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   Widget _buildDishListTile({
     required Dish dish,
   }) {
-    return InkWell(
-      onTap: () {
-        DishPage.go(context, dish);
-      },
-      child: DishListTile(
-        dish: dish,
-        ingredients: dish.getIngredients(),
+    return SizedBox(
+      width: _dishListTileWidth,
+      child: InkWell(
+        onTap: () {
+          DishPage.go(context, dish);
+        },
+        child: DishListTile(
+          dish: dish,
+          padding: _dishPadding,
+          ingredients: dish.getIngredients(),
+        ),
       ),
     );
   }
