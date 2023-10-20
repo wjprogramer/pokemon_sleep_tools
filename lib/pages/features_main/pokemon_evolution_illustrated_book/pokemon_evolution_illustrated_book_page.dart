@@ -40,7 +40,7 @@ class _PokemonEvolutionIllustratedBookPageState extends State<PokemonEvolutionIl
   MainViewModel get _mainViewModel => context.read<MainViewModel>();
 
   // Data
-  var _data = <_TempEvolutionChain>[];
+  var _evolutionChains = <TempUiEvolutionChain>[];
   final _disposers = <MyDisposable>[];
 
   /// [PokemonBasicProfile.id] to [PokemonProfile]
@@ -89,7 +89,7 @@ class _PokemonEvolutionIllustratedBookPageState extends State<PokemonEvolutionIl
   }
 
   Future<void> _prepareEvolutions() async {
-    _data = [];
+    _evolutionChains = [];
 
     final evolutionMapping = await _evolutionRepo.findAllMapping();
     final evolutionTempList = evolutionMapping.entries.map((e) => e.value).toList()..sort((a, b) => a.stage - b.stage);
@@ -110,7 +110,7 @@ class _PokemonEvolutionIllustratedBookPageState extends State<PokemonEvolutionIl
       } else {
         final previousBasicProfileId = evolution.previousBasicProfileId;
         if (previousBasicProfileId == null) {
-          throw Exception('basicProfileId: $previousBasicProfileId');
+          continue;
         }
         for (var resultIndex = 0; resultIndex < evolutionsWithBasicProfileId.length; resultIndex++) {
           if (evolutionsWithBasicProfileId[resultIndex][evolution.stage - 2].contains(previousBasicProfileId)) {
@@ -124,22 +124,22 @@ class _PokemonEvolutionIllustratedBookPageState extends State<PokemonEvolutionIl
     evolutionsWithBasicProfileId.sort((a, b) => a[0][0] - b[0][0]);
 
     for (final stagesWithIds in evolutionsWithBasicProfileId) {
-      final data = _TempEvolutionChain();
+      final data = TempUiEvolutionChain();
 
       for (var stageIndex = 0; stageIndex < stagesWithIds.length; stageIndex++) {
         final basicIdsOfStage = stagesWithIds[stageIndex];
         for (final basicProfileId in basicIdsOfStage) {
-          data.basicProfilesOfStages[stageIndex].add(_TempEvolution(
+          data.basicProfilesOfStages[stageIndex].add(TempUiEvolution(
             basicProfileOf[basicProfileId]!,
             basicProfileIdToEvolution[basicProfileId]!,
           ));
         }
       }
 
-      _data.add(data);
+      _evolutionChains.add(data);
     }
 
-    _data.sort((a, b) {
+    _evolutionChains.sort((a, b) {
       return a.basicProfilesOfStages[0][0].basicProfile.boxNo - b.basicProfilesOfStages[0][0].basicProfile.boxNo;
     });
   }
@@ -152,7 +152,7 @@ class _PokemonEvolutionIllustratedBookPageState extends State<PokemonEvolutionIl
       ),
       body: buildListView(
         children: [
-          ..._data.map((e) {
+          ..._evolutionChains.map((e) {
             final (mapping, basicProfileWithSmallestBoxNo) = e.getBasicProfileMappingAndSmallestBoxNo();
 
             return EvolutionsView(
@@ -168,39 +168,4 @@ class _PokemonEvolutionIllustratedBookPageState extends State<PokemonEvolutionIl
     );
   }
 
-}
-
-class _TempEvolutionChain {
-  _TempEvolutionChain();
-
-  final List<List<_TempEvolution>> basicProfilesOfStages = List
-      .generate(MAX_POKEMON_EVOLUTION_STAGE, (index) => []);
-
-  List<List<Evolution>> convertToEvolutions() {
-    return basicProfilesOfStages
-        .map((e) => e.map((e) => e.evolution).toList())
-        .toList();
-  }
-
-  (Map<int, PokemonBasicProfile>, PokemonBasicProfile) getBasicProfileMappingAndSmallestBoxNo() {
-    final result = <int, PokemonBasicProfile>{};
-    PokemonBasicProfile? basicProfileWithSmallestBoxNoInChain;
-
-    for (final stage in basicProfilesOfStages) {
-      for (final evolution in stage) {
-        result[evolution.basicProfile.id] = evolution.basicProfile;
-        if (basicProfileWithSmallestBoxNoInChain == null || basicProfileWithSmallestBoxNoInChain.boxNo > evolution.basicProfile.boxNo) {
-          basicProfileWithSmallestBoxNoInChain = evolution.basicProfile;
-        }
-      }
-    }
-    return (result, basicProfileWithSmallestBoxNoInChain!);
-  }
-}
-
-class _TempEvolution {
-  _TempEvolution(this.basicProfile, this.evolution);
-
-  final PokemonBasicProfile basicProfile;
-  final Evolution evolution;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -44,14 +45,30 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
       _Version(
         name: '1.0.1',
         date: DateTime(2023, 10, 20),
-        description: '第一次上版',
+        description: '更新畫面',
         items: [
+          _VersionSubTitleItem('主要內容'),
           _NormalVersionItem(
-            description: '寶可夢進化圖鑑',
+            '[Feature] 寶可夢進化圖鑑',
             onTap: () {
               PokemonEvolutionIllustratedBookPage.go(context);
             },
           ),
+          _NormalVersionItem(
+            '[UI] 改善背包進化道具畫面樣式',
+            onTap: () {
+              BagPage.go(context);
+            },
+          ),
+          _NormalVersionItem('[Feature] 寶可夢可自訂名稱'),
+          _NormalVersionItem('[FatalBug] 沒辦法更新既有寶可夢資訊'),
+          _NormalVersionItem('[Bug] 修正新增後，返回不會馬上出現'),
+          _NormalVersionItem('[UX] 建立寶可夢，可選擇繼續建立，或返回'),
+          _NormalVersionItem('[WIP] 單一寶可夢的分析資料驗算'),
+          _NormalVersionItem('[UI] 數果列表頁面更新'),
+          _VersionSubTitleItem('細節'),
+          _NormalVersionItem('[UI] 其他細微樣式改變不列（背景色等微調）'),
+          _NormalVersionItem('[INFO] 新增一些資訊（副技能、專長技能型補充）'),
         ],
       ),
       _Version(
@@ -187,6 +204,8 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     switch (item) {
       case _NormalVersionItem():
         return _buildNormalVersionItem(item);
+      case _VersionSubTitleItem():
+        return _buildVersionSubTitleItem(item);
     }
   }
 
@@ -218,6 +237,16 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildVersionSubTitleItem(_VersionSubTitleItem titleItem) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 4),
+      child: Text(
+        titleItem.text,
+        style: _theme.textTheme.titleMedium,
+      ),
     );
   }
 
@@ -287,13 +316,18 @@ class _Version {
 sealed class _VersionItem {}
 
 class _NormalVersionItem extends _VersionItem {
-  _NormalVersionItem({
-    required this.description,
+  _NormalVersionItem(this.description, {
     this.onTap,
   });
 
   final String description;
   final VoidCallback? onTap;
+}
+
+class _VersionSubTitleItem extends _VersionItem {
+  _VersionSubTitleItem(this.text);
+
+  final String text;
 }
 
 

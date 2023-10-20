@@ -58,6 +58,15 @@ class _SubSkillsCharacterIllustratedBookPageState extends State<SubSkillsCharact
         ),
         children: [
           Gap.sm,
+          MySubHeader(titleText: '說明'.xTr,),
+          ListItems(
+            children: [
+              // ref: https://forum.gamer.com.tw/Co.php?bsn=36685&sn=6715
+              Text('副技能可以升級'.xTr),
+              Text('最高級別的副技能只能同時有一個'.xTr),
+            ],
+          ),
+          MySubHeader(titleText: '列表',),
           Wrap(
             spacing: _itemSpacing,
             runSpacing: _itemSpacing,

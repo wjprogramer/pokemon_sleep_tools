@@ -14,6 +14,8 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../widgets/sleep/list_tiles/list_tiles.dart';
+
 class _PageArgs {
   _PageArgs({
     this.isLarvitarChain = false,
@@ -323,8 +325,6 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
     ];
   }
 
-  /// 參考 [CheckboxListTile] 整體樣式
-  /// 參考 [ListTile] 中的 _LisTileDefaultsM3 文字樣式
   _buildMyCheckListTile({
     required bool value,
     required ValueChanged onChanged,
@@ -332,63 +332,12 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
     Widget? subtitle,
     Widget? leading,
   }) {
-    final listTileTheme = _theme.listTileTheme;
-    final colorScheme = _theme.colorScheme;
-
-    final bool hasSubtitle = subtitle != null;
-    const isThreeLine = false;
-    final bool isTwoLine = !isThreeLine && hasSubtitle;
-    final bool isOneLine = !isThreeLine && !hasSubtitle;
-
-    final minHeight = isTwoLine ? 72.0
-        : isOneLine ? 56.0
-        : 88.0;
-
-    return InkWell(
-      onTap: () => onChanged(!value),
-      child: Container(
-        constraints: BoxConstraints(
-          minHeight: minHeight,
-        ),
-        child: Row(
-          children: [
-            Gap.h,
-            if (leading != null)
-              leading,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  DefaultTextStyle(
-                    style: listTileTheme.titleTextStyle ??
-                        _theme.textTheme.bodyLarge!.copyWith(
-                          color: colorScheme.onSurface,
-                        ),
-                    child: title,
-                  ),
-                  if (subtitle != null)
-                    DefaultTextStyle(
-                      style: listTileTheme.subtitleTextStyle ??
-                          _theme.textTheme.bodyMedium!.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                      child: subtitle,
-                    ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: CHECKBOX_SIZE,
-              child: Checkbox(
-                value: value,
-                onChanged: onChanged,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-            Gap.h,
-          ],
-        ),
-      ),
+    return MyListTile(
+      checked: value,
+      onCheckedChanged: onChanged,
+      title: title,
+      subtitle: subtitle,
+      leading: leading,
     );
   }
 

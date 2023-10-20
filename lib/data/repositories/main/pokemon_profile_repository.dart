@@ -13,6 +13,7 @@ class PokemonProfileRepository implements MyInjectable {
     final profile = PokemonProfile(
       basicProfileId: payload.basicProfileId,
       character: payload.character,
+      customName: payload.customName?.trim(),
       subSkillLv10: payload.subSkills[0],
       subSkillLv25: payload.subSkills[1],
       subSkillLv50: payload.subSkills[2],
@@ -59,6 +60,7 @@ class PokemonProfileRepository implements MyInjectable {
     final profile = PokemonProfile(
       basicProfileId: 18,
       character: PokemonCharacter.restrained,
+      customName: null,
       subSkillLv10: SubSkill.ingredientRateS,
       subSkillLv25: SubSkill.helpSpeedS,
       subSkillLv50: SubSkill.holdMaxS,

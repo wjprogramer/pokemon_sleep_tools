@@ -175,6 +175,7 @@ class _PokemonBoxFragmentState extends State<PokemonBoxFragment> {
                 final createdProfile = await mainViewModel.createProfile(CreatePokemonProfilePayload(
                   basicProfileId: profile.basicProfileId,
                   character: profile.character,
+                  customName: profile.customName,
                   subSkills: profile.subSkills,
                   ingredient2: profile.ingredient2,
                   ingredientCount2: profile.ingredientCount2,

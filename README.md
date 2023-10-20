@@ -43,7 +43,9 @@ fvm flutter build macos
 
 ## TODO
 
-- 寶可夢進化鏈圖鑑
+- 主/副技能
+  - 提供敘述
+  - 反查功能盤點
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）
   - 類似手機 plus, pro, pro max 詳細數據對比
 - 因為反查功能很多，避免過多路由，在路由超過一定數量，Global 顯示按鈕用以 pop 到最上層?
@@ -51,9 +53,6 @@ fvm flutter build macos
 - 寶可夢睡姿、異色圖片
   - 可以設定是否為異色
   - 顯示不同睡姿（分為異色與非異色）
-- 主/副技能
-  - 提供敘述
-  - 反查功能盤點
 - 圖鑑內反查寶可夢盒？
 - 顯示盒內所有寶可夢的計算結果（評價）
 - 計算器
@@ -68,7 +67,6 @@ fvm flutter build macos
   - 搜尋寶可夢會出現的島嶼
   - 最終或目前進化階段查詢
   - 使用者自訂名稱
-    - 使用者可以自訂寶可夢名稱
     - 關鍵字查詢可以查詢該欄位
 - 共通搜尋
   - 儲存欄位條件？
@@ -99,7 +97,7 @@ fvm flutter build macos
 - CI/CD
   - Windows build apk/exe/... script
 - 改 icon
-- 進化道具頁面
+- 副技能不會重複嗎？
 
 ### 桌面開發
 

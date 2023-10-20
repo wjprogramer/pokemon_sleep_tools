@@ -167,6 +167,7 @@ class EvolutionsView extends StatelessWidget {
                         color: isCurrent ? positiveColor : greyColor2,
                       ),
                     ),
+                    color: otherBasicProfile.pokemonType.color.withOpacity(.2),
                   ),
                   child: PokemonIconImage(
                     basicProfile: otherBasicProfile,
@@ -195,92 +196,97 @@ class EvolutionsView extends StatelessWidget {
   }
 
   Widget _buildEvolutionCondition(EvolutionConditionRaw condition) {
-    final values = condition.values;
-    List<Widget>? children;
-    Widget? leading;
-    Widget? description;
+    return buildEvolutionCondition(condition, basicProfileWithSmallestBoxNoInChain);
+  }
+}
 
-    // "candy,level"
-    // "level,candy"
-    // "item,candy"
-    // "item,candy,item"
-    // "timing,sleepTime,candy"
-    // "sleepTime,candy"
-    // "candy,sleepTime"
-    // "candy,sleepTime,timing"
+Widget buildEvolutionCondition(EvolutionConditionRaw condition, PokemonBasicProfile basicProfileWithSmallestBoxNoInChain, {
+  MainAxisSize? mainAxisSize,
+}) {
+  final values = condition.values;
+  Widget? leading;
+  Widget? description;
 
-    switch (values['type']) {
-      case 'candy':
-        leading = CandyOfPokemonIcon(
-          size: 16,
-          boxNo: basicProfileWithSmallestBoxNoInChain.boxNo,
-        );
-        description = Text(
-          Display.numInt(values['count'] ?? 0),
-          textAlign: TextAlign.start,
-        );
-        break;
-      case 'level':
-        leading = const LevelIcon(size: 20,);
-        description = Text(
-          Display.numInt(values['level'] ?? 0),
-          textAlign: TextAlign.start,
-        );
-        break;
-      case 'sleepTime':
-        leading = const Iconify(
-          Tabler.zzz, color: positiveColor,
-          size: 20,
-        );
-        description = Text(
-          '${Display.numInt(values['hours'] ?? 0)}小時',
-          textAlign: TextAlign.start,
-        );
-        break;
-      case 'item':
-        final gameItem = GameItem.getById(values['item']);
-        if (MyEnv.USE_DEBUG_IMAGE && gameItem != null) {
-          leading = Padding(
-            padding: const EdgeInsets.only(right: 4),
-            child: GameItemImage(
-              gameItem: gameItem,
-              width: 16,
-              disableTooltip: true,
-            ),
-          );
-        }
-        description = Text(
-          Display.text(gameItem?.nameI18nKey.xTr),
-          textAlign: TextAlign.start,
-        );
-        break;
-      case 'timing':
-        leading = const Icon(
-          Icons.access_time_rounded, color: greenColor,
-          size: 20,
-        );
-        description = Text(
-          '${values['startHour']} ~ ${values['endHour']}',
-          textAlign: TextAlign.start,
-        );
-        break;
-    }
-
-    return Row(
-      children: [
-        if (leading == null)
-          const SizedBox(width: 32)
-        else Container(
-          alignment: Alignment.center,
-          constraints: const BoxConstraints(
-            minWidth: 32,
+  switch (values['type']) {
+    case 'candy':
+      leading = CandyOfPokemonIcon(
+        size: 16,
+        boxNo: basicProfileWithSmallestBoxNoInChain.boxNo,
+      );
+      description = Text(
+        Display.numInt(values['count'] ?? 0),
+        textAlign: TextAlign.start,
+      );
+      break;
+    case 'level':
+      leading = const LevelIcon(size: 20,);
+      description = Text(
+        Display.numInt(values['level'] ?? 0),
+        textAlign: TextAlign.start,
+      );
+      break;
+    case 'sleepTime':
+      leading = const Iconify(
+        Tabler.zzz, color: positiveColor,
+        size: 20,
+      );
+      description = Text(
+        '${Display.numInt(values['hours'] ?? 0)}小時',
+        textAlign: TextAlign.start,
+      );
+      break;
+    case 'item':
+      final gameItem = GameItem.getById(values['item']);
+      if (MyEnv.USE_DEBUG_IMAGE && gameItem != null) {
+        leading = Padding(
+          padding: const EdgeInsets.only(right: 4),
+          child: GameItemImage(
+            gameItem: gameItem,
+            width: 16,
+            disableTooltip: true,
           ),
-          child: leading,
-        ),
-        if (description != null)
-          description,
-      ],
-    );
+        );
+      }
+      description = Text(
+        Display.text(gameItem?.nameI18nKey.xTr),
+        textAlign: TextAlign.start,
+      );
+      break;
+    case 'timing':
+      leading = const Icon(
+        Icons.access_time_rounded, color: greenColor,
+        size: 20,
+      );
+      description = Text(
+        '${values['startHour']} ~ ${values['endHour']}',
+        textAlign: TextAlign.start,
+      );
+      break;
   }
 
+  return Row(
+    mainAxisSize: mainAxisSize ?? MainAxisSize.max,
+    children: [
+      if (leading == null)
+        const SizedBox(width: 32)
+      else Container(
+        alignment: Alignment.center,
+        constraints: const BoxConstraints(
+          minWidth: 32,
+        ),
+        child: leading,
+      ),
+      if (description != null)
+        description,
+    ],
+  );
 }
+
+// "candy,level"
+// "level,candy"
+// "item,candy"
+// "item,candy,item"
+// "timing,sleepTime,candy"
+// "sleepTime,candy"
+// "candy,sleepTime"
+// "candy,sleepTime,timing"

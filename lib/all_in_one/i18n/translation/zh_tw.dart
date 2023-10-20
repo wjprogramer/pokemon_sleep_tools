@@ -43,6 +43,8 @@ Map<String, String> getZhTwTrText() {
     't_analysis': '分析',
     't_create_success': '建立成功',
     't_create_failed': '建立失敗',
+    't_update_success': '更新成功',
+    't_update_failed': '更新失敗',
     't_continue_to_create_next_or_back_manually': '繼續新增下一筆，或手動返回上一頁',
     't_cancel': '取消',
     't_delete': '刪除',

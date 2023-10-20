@@ -92,6 +92,22 @@ class _MainSkillPageState extends State<MainSkillPage> {
           ),
           body: buildListView(
             children: [
+              ...Hp.list(
+                children: [
+                  MySubHeader(
+                    titleText: '敘述'.xTr,
+                  ),
+                  Text(
+                    _args.mainSkill.description.xTr,
+                  ),
+                  MySubHeader(
+                    titleText: '等級'.xTr,
+                  ),
+                  ...List.generate(MAX_MAIN_SKILL_LEVEL, (index) => Text(
+                    _args.mainSkill.getDisplayTextByLevel(index + 1),
+                  )),
+                ],
+              ),
               Hp(
                 child: MySubHeader(
                   titleText: 't_pokemon_illustrated_book'.xTr,

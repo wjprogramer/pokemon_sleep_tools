@@ -20,8 +20,9 @@ class PokemonProfileStatistics {
     ingredientEnergy2 = xIngredientEnergy2;
     final xIngredientEnergy3 = ingredient3.energy * ingredientCount3;
     ingredientEnergy3 = xIngredientEnergy3;
-    final ingredientEnergySum = xIngredientEnergy1 + xIngredientEnergy2 + xIngredientEnergy3;
-    final xIngredientEnergyAvg = (ingredientEnergySum / 3).round();
+    final xIngredientEnergySum = xIngredientEnergy1 + xIngredientEnergy2 + xIngredientEnergy3;
+    ingredientEnergySum = xIngredientEnergySum;
+    final xIngredientEnergyAvg = (xIngredientEnergySum / 3);
     ingredientEnergyAvg = xIngredientEnergyAvg;
 
     final xIngredientRate = _calcIngredientRate();
@@ -82,9 +83,9 @@ class PokemonProfileStatistics {
 
       res -= (
           basicProfile.boxCount +
-              6 * _getSubSkillsCountMatch(SubSkill.holdMaxS) +
-              12 * _getSubSkillsCountMatch(SubSkill.holdMaxM) +
-              18 * _getSubSkillsCountMatch(SubSkill.holdMaxL)
+              6 * getSubSkillsCountMatch(SubSkill.holdMaxS) +
+              12 * getSubSkillsCountMatch(SubSkill.holdMaxM) +
+              18 * getSubSkillsCountMatch(SubSkill.holdMaxL)
       );
 
       return res;
@@ -118,14 +119,12 @@ class PokemonProfileStatistics {
     final xOverflowHoldEnergy = calcOverflowHoldEnergy();
     overflowHoldEnergy = xOverflowHoldEnergy;
 
-    final xMainSkillTotalEnergy = calcMainSkillTotalEnergy().round();
+    final xMainSkillTotalEnergy = calcMainSkillTotalEnergy();
     mainSkillTotalEnergy = xMainSkillTotalEnergy;
 
     final xEnergyScore = (60000 / xHelpInterval) * helpPerAvgEnergy +
         xMainSkillTotalEnergy - xOverflowHoldEnergy + xSleepExpBonus + xDreamChipsBonus;
     energyScore = xEnergyScore.round();
-
-
 
     rank = xEnergyScore < 6000 ? 'E'
         : xEnergyScore < 7000 ? 'D'
@@ -149,7 +148,8 @@ class PokemonProfileStatistics {
   int ingredientEnergy1 = 0;
   int ingredientEnergy2 = 0;
   int ingredientEnergy3 = 0;
-  int ingredientEnergyAvg = 0;
+  int ingredientEnergySum = 0;
+  double ingredientEnergyAvg = 0;
   double helpPerAvgEnergy = 0.0;
   int fruitEnergy = 0;
   int helperBonus = 0;
@@ -161,7 +161,7 @@ class PokemonProfileStatistics {
   int sleepExpBonus = 0;
   double accelerateVitality = 0;
   int dreamChipsBonus = 0;
-  int mainSkillTotalEnergy = 0;
+  double mainSkillTotalEnergy = 0;
   double mainSkillAccelerateVitality = 0;
   double maxOverflowHoldCount = 0;
   double overflowHoldEnergy = 0;
@@ -185,51 +185,51 @@ class PokemonProfileStatistics {
   SubSkill get subSkillLv100 => profile.subSkillLv100;
 
   int _calcFruitCount() =>
-      1 + _getSubSkillsCountMatch(SubSkill.berryCountS) +
-          _getOneIfSpecialtyIs(PokemonSpecialty.t3);
+      1 + getSubSkillsCountMatch(SubSkill.berryCountS) +
+          getOneIfSpecialtyIs(PokemonSpecialty.t3);
 
   int _calcHelperBonus() =>
-      15 * _getSubSkillsCountMatch(SubSkill.helperBonus);
+      15 * getSubSkillsCountMatch(SubSkill.helperBonus);
 
   double _calcTotalHelpSpeedS() =>
-      0.07 * _getSubSkillsCountMatch(SubSkill.helpSpeedS);
+      0.07 * getSubSkillsCountMatch(SubSkill.helpSpeedS);
 
   double _calcTotalHelpSpeedM() =>
-      0.14 * _getSubSkillsCountMatch(SubSkill.helpSpeedM);
+      0.14 * getSubSkillsCountMatch(SubSkill.helpSpeedM);
 
   double _calcIngredientRate() =>
-      1.0 + 0.18 * _getSubSkillsCountMatch(SubSkill.ingredientRateS)
-          + 0.36 * _getSubSkillsCountMatch(SubSkill.ingredientRateM)
-          + 0.2 * _getOneIf(character.positive == '食材發現')
-          - 0.2 * _getOneIf(character.negative == '食材發現');
+      1.0 + 0.18 * getSubSkillsCountMatch(SubSkill.ingredientRateS)
+          + 0.36 * getSubSkillsCountMatch(SubSkill.ingredientRateM)
+          + 0.2 * getOneIf(character.positive == '食材發現')
+          - 0.2 * getOneIf(character.negative == '食材發現');
 
   int _calcSkillLevel() =>
-      _getSubSkillsCountMatch(SubSkill.skillLevelS)
-          + 2 * _getSubSkillsCountMatch(SubSkill.skillLevelM);
+      getSubSkillsCountMatch(SubSkill.skillLevelS)
+          + 2 * getSubSkillsCountMatch(SubSkill.skillLevelM);
 
   double _calcMainSkillSpeedParameter() =>
-      0.0 + 0.2 * _getOneIf(character.positive == '主技能')
-          - 0.2 * _getOneIf(character.negative == '主技能')
-          + 0.18 * _getSubSkillsCountMatch(SubSkill.skillRateS)
-          + 0.36 * _getSubSkillsCountMatch(SubSkill.skillRateM);
+      0.0 + 0.2 * getOneIf(character.positive == '主技能')
+          - 0.2 * getOneIf(character.negative == '主技能')
+          + 0.18 * getSubSkillsCountMatch(SubSkill.skillRateS)
+          + 0.36 * getSubSkillsCountMatch(SubSkill.skillRateM);
 
   /// 性格速度
-  double _calcCharacterSpeed() => 0.1 * _getOneIf(character.positive == '幫忙速度')
-      - 0.1 * _getOneIf(character.negative == '幫忙速度');
+  double _calcCharacterSpeed() => 0.1 * getOneIf(character.positive == '幫忙速度')
+      - 0.1 * getOneIf(character.negative == '幫忙速度');
 
   /// 活力加速
   /// FIXME: 需確認 1.12? 1.02? (試算表公式是用 0.02)
-  double _calcAccelerateVitality() => 0.02 * _getSubSkillsCountMatch(SubSkill.energyRecoverBonus)
-      + 0.1 * _getOneIf(character.positive == '活力回復')
-      - 0.1 * _getOneIf(character.negative == '活力回復');
+  double _calcAccelerateVitality() => 0.02 * getSubSkillsCountMatch(SubSkill.energyRecoverBonus)
+      + 0.1 * getOneIf(character.positive == '活力回復')
+      - 0.1 * getOneIf(character.negative == '活力回復');
 
   /// 睡眠EXP獎勵
   int _calcSleepExpBonus() =>
-      1000 * _getSubSkillsCountMatch(SubSkill.sleepExpBonus);
+      1000 * getSubSkillsCountMatch(SubSkill.sleepExpBonus);
 
   /// 夢之碎片獎勵
   int _calcDreamChipsBonus() =>
-      500 * _getSubSkillsCountMatch(SubSkill.dreamChipBonus);
+      500 * getSubSkillsCountMatch(SubSkill.dreamChipBonus);
 
   // region Utils
   double _getMainSkillEnergy() {
@@ -251,14 +251,14 @@ class PokemonProfileStatistics {
     return false;
   }
 
-  int _getSubSkillsCountMatch(SubSkill targetValue) => subSkills
+  int getSubSkillsCountMatch(SubSkill targetValue) => subSkills
       .where((skill) => skill == targetValue)
       .length;
 
-  int _getOneIfSpecialtyIs(PokemonSpecialty specialty) =>
+  int getOneIfSpecialtyIs(PokemonSpecialty specialty) =>
       basicProfile.specialty == specialty ? 1 : 0;
 
-  int _getOneIf(bool value) => value ? 1 : 0;
+  int getOneIf(bool value) => value ? 1 : 0;
   // endregion
 
 }

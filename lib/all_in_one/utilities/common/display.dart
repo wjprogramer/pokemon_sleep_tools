@@ -7,7 +7,8 @@ class Display {
   static String get placeHolder => 't_none'.xTr;
 
   // https://stackoverflow.com/questions/14865568/currency-format-in-dart
-  static final _numDoubleFormat = NumberFormat("#,##0.00", "en_US");
+  // static final _numDoubleFormat = NumberFormat("#,##0.00", "en_US");
+  static final _numDoubleFormat = NumberFormat("#,###.##", "en_US");
 
   static final _numIntFormat = NumberFormat("#,##0", "en_US");
 
@@ -23,6 +24,10 @@ class Display {
 
   static String numInt(num value) {
     return _numIntFormat.format(value.toInt());
+  }
+
+  static String numDouble(num value) {
+    return _numDoubleFormat.format(value);
   }
 
   static String date(DateTime? date) {

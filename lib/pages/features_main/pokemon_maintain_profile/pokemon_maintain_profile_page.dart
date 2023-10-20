@@ -97,6 +97,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
   // Form Field
   late FormControl<PokemonBasicProfile> _basicProfileField;
   late FormControl<PokemonCharacter> _characterField;
+  late FormControl<String?> _customNameField;
   late FormControl<List<SubSkill>> _subSkillsField;
 
   late FormControl<Ingredient> _ingredient1Field;
@@ -112,22 +113,24 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     super.initState();
     _initForm();
 
-    _basicProfileField.valueChanges.listen((basicProfile) {
-      _ingredientDisplayTextControllers[0].text =
-          Display.text(basicProfile?.ingredient1.nameI18nKey);
-
-      _ingredient1CountField.value = basicProfile?.ingredientCount1;
-      _ingredient1Field.value = basicProfile?.ingredient1;
-      _ingredient2CountField.value = null;
-      _ingredient2Field.value = null;
-      _ingredient3CountField.value = null;
-      _ingredient3Field.value = null;
-
-      setState(() { });
-    });
-
     scheduleMicrotask(() async {
+      // 先初始化資料，再新增 listener (避免因 listener 被 trigger 後清空欄位)
       await _initData();
+
+      _basicProfileField.valueChanges.listen((basicProfile) {
+        _ingredientDisplayTextControllers[0].text =
+            Display.text(basicProfile?.ingredient1.nameI18nKey);
+
+        _ingredient1CountField.value = basicProfile?.ingredientCount1;
+        _ingredient1Field.value = basicProfile?.ingredient1;
+        _ingredient2CountField.value = null;
+        _ingredient2Field.value = null;
+        _ingredient3CountField.value = null;
+        _ingredient3Field.value = null;
+
+        setState(() { });
+      });
+
       if (mounted) {
         setState(() { });
       }
@@ -150,6 +153,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     _characterField = FormControl(
       validators: [ Validators.required ],
     );
+    _customNameField = FormControl();
     _subSkillsField = FormControl(
       validators: [
         Validators.required,
@@ -177,6 +181,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     _form = FormGroup({
       '_basicProfile': _basicProfileField,
       '_character': _characterField,
+      '_customNameField': _customNameField,
       '_subSkills': _subSkillsField,
       '_ingredient1': _ingredient1Field,
       '_ingredient2': _ingredient2Field,
@@ -205,6 +210,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
     _basicProfileField.value = profile.basicProfile;
     _characterField.value = profile.character;
+    _customNameField.value = profile.customName;
     _subSkillsField.value = profile.subSkills;
 
     _ingredient1Field.value = profile.ingredient1;
@@ -243,6 +249,9 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
               horizontal: HORIZON_PADDING,
             ),
             children: [
+              MySubHeader(
+                titleText: '基本資訊',
+              ),
               Gap.xl,
               Row(
                 children: [
@@ -292,6 +301,14 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                       ),
                     ),
                 ],
+              ),
+              // _customNameField
+              Gap.xl,
+              ...ReactiveMyTextField.labelField(
+                label: Text('自訂名稱'.xTr),
+                field: ReactiveMyTextField(
+                  formControl: _customNameField,
+                ),
               ),
               Gap.xl,
               ...ReactiveMyTextField.labelField(
@@ -473,6 +490,10 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                   );
                 },
               ),
+              // TODO: 相遇的日子，紀錄使用者實際發現寶可夢的時間
+              // MySubHeader(
+              //   titleText: 't_others'.xTr,
+              // ),
               Gap.trailing,
             ],
           ),
@@ -624,6 +645,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         _create();
         break;
       case _PageType.edit:
+        _update();
         break;
       case _PageType.readonly:
         break;
@@ -635,6 +657,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       final pokemon = await _mainViewModel.createProfile(CreatePokemonProfilePayload(
         basicProfileId: _basicProfileField.value!.id,
         character: _characterField.value!,
+        customName: _customNameField.value,
         subSkills: _subSkillsField.value!,
         ingredient2: _ingredient2Field.value!,
         ingredientCount2: _ingredient2CountField.value!,
@@ -647,6 +670,21 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         context,
         title: Text('t_create_success'.xTr),
         content: Text('t_continue_to_create_next_or_back_manually'.xTr),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.nav.pop();
+            },
+            child: Text('繼續新增下一筆'.xTr),
+          ),
+          TextButton(
+            onPressed: () {
+              context.nav.pop();
+              context.nav.pop();
+            },
+            child: Text('t_confirm'.xTr),
+          ),
+        ],
       );
     } catch (e) {
       DialogUtility.text(
@@ -665,6 +703,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
       final newProfile = profile.copyWith(
         character: _characterField.value!,
+        customName: _customNameField.value,
         subSkillLv10: _subSkillsField.value![0],
         subSkillLv25: _subSkillsField.value![1],
         subSkillLv50: _subSkillsField.value![2],
@@ -678,16 +717,12 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
       final pokemon = await _mainViewModel.updateProfile(newProfile);
       debugPrint(pokemon.getConstructorCode());
-      // DialogUtility.text(
-      //   context,
-      //   title: Text('t_create_success'.xTr),
-      //   content: Text('t_continue_to_create_next_or_back_manually'.xTr),
-      // );
+      context.nav.pop();
     } catch (e) {
-      // DialogUtility.text(
-      //   context,
-      //   title: Text('t_create_failed'.xTr),
-      // );
+      DialogUtility.text(
+        context,
+        title: Text('t_update_failed'.xTr),
+      );
     }
   }
 }

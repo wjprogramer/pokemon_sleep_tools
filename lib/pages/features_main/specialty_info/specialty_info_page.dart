@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -7,6 +9,7 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// [PokemonSpecialty]
 class SpecialtyInfoPage extends StatefulWidget {
@@ -28,8 +31,12 @@ class SpecialtyInfoPage extends StatefulWidget {
 }
 
 class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
+  late ThemeData _theme;
+
   @override
   Widget build(BuildContext context) {
+    _theme = context.theme;
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: '特長'.xTr,
@@ -116,6 +123,28 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
                   ],
                 ),
               ),
+              Gap.sm,
+              Text.rich(
+                TextSpan(
+                  text: '※ 技能型推測為兩倍技能發動率',
+                  children: [
+                    TextSpan(
+                      text: ' [參考] ',
+                      style: TextStyle(
+                        color: positiveColor,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap = () => launchUrl(Uri.parse('https://forum.gamer.com.tw/Co.php?bsn=36685&sn=6715')),
+                    ),
+                    // placeholder: 避免前者的 recognizer 導致剩餘的 space 也會觸發 onTap
+                    TextSpan(
+                      text: ' ',
+                    ),
+                  ],
+                ),
+                style: _theme.textTheme.bodySmall?.copyWith(
+                  color: greyColor3,
+                ),
+              ),
               Gap.xl,
               MySubHeader2(
                 titleText: '卡比獸喜好'.xTr,
@@ -162,6 +191,7 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
               Gap.md,
               MySubHeader(
                 titleText: '資料來源'.xTr,
+                color: dataSourceSubHeaderColor,
               ),
             ],
           ),
@@ -171,6 +201,10 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
               SearchListTile(
                 titleText: '【攻略】食材寵認知革命(二) - 食材寵進階觀念篇',
                 url: 'https://forum.gamer.com.tw/Co.php?bsn=36685&sn=14344',
+              ),
+              SearchListTile(
+                titleText: '【心得】個人遊玩心得分享：個性、副技能、最強的主技能寶可夢等~ 簡易分析&建議選擇! (08/19更)',
+                url: 'https://forum.gamer.com.tw/Co.php?bsn=36685&sn=6715',
               ),
             ],
           ),

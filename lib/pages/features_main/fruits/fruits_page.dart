@@ -76,63 +76,96 @@ class _FruitsPageState extends State<FruitsPage> {
   }
 
   Widget _buildItem(Fruit fruit) {
-    return InkWell(
-      onTap: () {
-        FruitPage.go(context, fruit);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 8,
+    final content = Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: fruit.pokemonType.color.withOpacity(.7),
+          width: 2,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                if (MyEnv.USE_DEBUG_IMAGE)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: SizedBox(
-                      width: 20,
-                      child: FruitImage(
-                        fruit: fruit,
-                      ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              if (MyEnv.USE_DEBUG_IMAGE)
+                Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: SizedBox(
+                    width: 28,
+                    child: FruitImage(
+                      fruit: fruit,
                     ),
                   ),
-                RichText(
-                  text: TextSpan(
-                    text: fruit.nameI18nKey.xTr,
-                    style: _theme.textTheme.titleMedium,
-                    children: [
-                      // TODO: chip, color
+                ),
+              RichText(
+                text: TextSpan(
+                  text: fruit.nameI18nKey.xTr,
+                  style: _theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  children: [
+                    // TODO: chip, color
+                    if (!MyEnv.USE_DEBUG_IMAGE)
                       TextSpan(
                         text: ' (${fruit.attr})',
                         style: _theme.textTheme.bodySmall?.copyWith(
                           color: greyColor2,
                         ),
                       ),
-                    ],
-                  ),
+                  ],
                 ),
-              ],
-            ),
-            Gap.sm,
-            Row(
-              children: [
-                EnergyIcon(
-                  size: 16,
-                ),
-                Gap.sm,
-                Text(
-                  '${Display.numInt(fruit.energyIn1)} ~ ${Display.numInt(fruit.energyIn60)}',
-                  style: _theme.textTheme.bodySmall,
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          Gap.sm,
+          Row(
+            children: [
+              EnergyIcon(
+                size: 16,
+              ),
+              Gap.sm,
+              Text(
+                '${Display.numInt(fruit.energyIn1)} ~ ${Display.numInt(fruit.energyIn60)}',
+                style: _theme.textTheme.bodySmall,
+              ),
+            ],
+          ),
+        ],
       ),
+    );
+
+    return Stack(
+      children: [
+        Opacity(
+          opacity: 0,
+          child: IgnorePointer(
+            child: content,
+          ),
+        ),
+        if (MyEnv.USE_DEBUG_IMAGE)
+          Positioned(
+            right: -15,
+            bottom: -15,
+            child: Opacity(
+              opacity: 0.3,
+              child: PokemonTypeImage(
+                pokemonType: fruit.pokemonType,
+                width: 80,
+              ),
+            ),
+          ),
+        InkWell(
+          onTap: () {
+            FruitPage.go(context, fruit);
+          },
+          child: content,
+        ),
+      ],
     );
   }
 

@@ -88,6 +88,7 @@ class PokemonBoxPage extends StatefulWidget {
 
 class _PokemonBoxPageState extends State<PokemonBoxPage> {
   _PokemonBoxPageArgs get _args => widget._args;
+  MainViewModel get _mainViewModel => context.read<MainViewModel>();
 
   final _profileViewKey = const ValueKey('profile_view_key_box_page');
 
@@ -95,6 +96,9 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
   var _cardWidth = 0.0;
   var _cardHeight = 0.0;
+
+  // Page
+  final _disposers = <MyDisposable>[];
 
   // Data
   var _allProfiles = <PokemonProfile>[];
@@ -149,8 +153,24 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         ...teams.whereNotNull().map((team) => team.profileIdList).expand((e) => e),
       }..remove(-1);
 
+      _disposers.addAll([
+        mainViewModel.xAddListener(_listenMainViewModel)
+      ]);
+
       setState(() {  });
     });
+  }
+
+  @override
+  void dispose() {
+    _disposers.disposeAll();
+    super.dispose();
+  }
+
+  void _listenMainViewModel() {
+    _allProfiles = _mainViewModel.profiles;
+    _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
+    setState(() { });
   }
 
   @override
@@ -291,8 +311,6 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   Widget _buildMainContent(BuildContext context, MainViewModel viewModel, TeamViewModel teamViewModel, Widget? child, {
     required double cardSpacing,
   }) {
-    _allProfiles = viewModel.profiles;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -415,7 +433,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  profile.basicProfile.nameI18nKey.xTr,
+                  profile.getDisplayText(),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -598,7 +616,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                     opacity: _profilesField[index]?.basicProfile != null && MyEnv.USE_DEBUG_IMAGE ? 0 : 1,
                     child: Center(
                       child: Text(
-                        _profilesField[index]?.basicProfile.nameI18nKey ?? '-',
+                        _profilesField[index]?.getDisplayText() ?? '-',
                         textAlign: TextAlign.center,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,

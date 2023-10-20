@@ -1,4 +1,16 @@
-
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:get/get.dart';
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 
 /// [description] 中的數值會根據技能等級以及 [basicValues] 的數值做變動
 enum MainSkill {
@@ -23,6 +35,27 @@ enum MainSkill {
 }
 
 extension MainSkillX on MainSkill {
+  /// 1 <= [level] <= [MAX_MAIN_SKILL_LEVEL]
+  String getDisplayTextByLevel(int level) {
+    final baseMessage = switch (this) {
+      MainSkill.energyFillS => '使卡比獸的能量增加 @value',
+      MainSkill.energyFillM => '使卡比獸的能量增加 @value',
+      MainSkill.energyFillSn => '使卡比獸的能量增加 @value',
+      MainSkill.dreamChipS => '獲得 @value 個夢之碎片',
+      MainSkill.dreamChipSn => '獲得 @value 個夢想碎片',
+      MainSkill.vitalityS => '隨機讓1隻自己以外的寶可夢回復活力 @value 點',
+      MainSkill.vitalityAllS => '讓幫手隊伍的寶可夢回復活力 @value 點',
+      MainSkill.vitalityFillS => '讓自己恢復 @value 點活力',
+      MainSkill.helpSupportS => '幫手寶可夢中的某1隻會立刻完成 4 次幫忙',
+      MainSkill.ingredientS => '隨機獲得食材6個',
+      MainSkill.cuisineS => '增加下一次料理時的鍋子容量，讓鍋子能多放7個食材',
+      MainSkill.finger => '從全部的主技能中隨機發動 @value 種',
+    };
+    return baseMessage.trParams({
+      'value': Display.numInt(basicValues[level - 1]),
+    });
+  }
+
   /// Return Lv. 1 to Lv. 6 basic value list
   /// 已經和 [此網站](https://pks.raenonx.cc/info/mainskill) 雙重比對過
   List<double> get basicValues {
@@ -108,55 +141,3 @@ extension MainSkillX on MainSkill {
     }
   }
 }
-
-/*
-
-TODO:
-
-
---------------------------------------------------------------------------------
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
---------------------------------------------------------------------------------
-
-
-
-
- */
-

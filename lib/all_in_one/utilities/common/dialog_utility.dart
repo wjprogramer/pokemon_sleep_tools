@@ -13,6 +13,7 @@ class DialogUtility {
     Widget? content,
     bool? barrierDismissible,
     List<Widget>? actions,
+    List<Widget>? preActions,
   }) async {
     return showAdaptiveDialog<T>(
       context: context,

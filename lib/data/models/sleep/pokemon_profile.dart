@@ -1,4 +1,5 @@
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 /// TODO: Add user defined name?
@@ -7,6 +8,7 @@ class PokemonProfile {
     this.id = -1,
     required this.basicProfileId,
     required this.character,
+    this.customName,
     required this.subSkillLv10,
     required this.subSkillLv25,
     required this.subSkillLv50,
@@ -23,6 +25,7 @@ class PokemonProfile {
   final int basicProfileId;
   late PokemonBasicProfile basicProfile;
   final PokemonCharacter character;
+  final String? customName;
 
   final SubSkill subSkillLv10;
   final SubSkill subSkillLv25;
@@ -59,6 +62,7 @@ class PokemonProfile {
       basicProfileId: json['basicProfileId'],
       character: PokemonCharacter.values
           .firstWhere((e) => e.id == json['characterId']),
+      customName: json['customName'],
       subSkillLv10: subSkillMapping[json['subSkillIds'][0]]!,
       subSkillLv25: subSkillMapping[json['subSkillIds'][1]]!,
       subSkillLv50: subSkillMapping[json['subSkillIds'][2]]!,
@@ -76,6 +80,7 @@ class PokemonProfile {
       id: id,
       basicProfileId: basicProfileId,
       character: character,
+      customName: customName,
       subSkillLv10: subSkillLv10,
       subSkillLv25: subSkillLv25,
       subSkillLv50: subSkillLv50,
@@ -90,6 +95,7 @@ class PokemonProfile {
 
   PokemonProfile copyWith({
     PokemonCharacter? character,
+    required String? customName,
     SubSkill? subSkillLv10,
     SubSkill? subSkillLv25,
     SubSkill? subSkillLv50,
@@ -104,6 +110,7 @@ class PokemonProfile {
       id: id,
       basicProfileId: basicProfileId,
       character: character ?? this.character,
+      customName: customName ?? this.customName,
       subSkillLv10: subSkillLv10 ?? this.subSkillLv10,
       subSkillLv25: subSkillLv25 ?? this.subSkillLv25,
       subSkillLv50: subSkillLv50 ?? this.subSkillLv50,
@@ -113,13 +120,14 @@ class PokemonProfile {
       ingredientCount2: ingredientCount2 ?? this.ingredientCount2,
       ingredient3: ingredient3 ?? this.ingredient3,
       ingredientCount3: ingredientCount3 ?? this.ingredientCount3,
-    );
+    )..basicProfile = basicProfile;
   }
 
   Map<String, dynamic> toJson() {
     return {
       'basicProfileId': basicProfileId,
       'characterId': character.id,
+      'customName': customName,
       'id': id,
       'subSkillIds': subSkills.map((e) => e.id).toList(),
       'ingredient2Id': ingredient2.id,
@@ -135,6 +143,7 @@ class PokemonProfile {
           '   id: -1,\n'
           '   basicProfileId: $basicProfileId,\n'
           '   character: $character,\n'
+          '   customName: $customName,\n'
           '   subSkillLv10: $subSkillLv10,\n'
           '   subSkillLv25: $subSkillLv25,\n'
           '   subSkillLv50: $subSkillLv50,\n'
@@ -145,6 +154,10 @@ class PokemonProfile {
           '   ingredient3: $ingredient3,\n'
           '   ingredientCount3: $ingredientCount3,\n'
           ')';
+  }
+
+  String getDisplayText() {
+    return customName ?? basicProfile.nameI18nKey.xTr;
   }
 
   String info() {

@@ -3,11 +3,13 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/analysis_details/analysis_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
@@ -283,7 +285,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
               width: 32,
             ),
           ),
-        Expanded(child: Text(_profiles[_currIndex].basicProfile.nameI18nKey.xTr)),
+        Expanded(child: Text(_profiles[_currIndex].getDisplayText())),
       ],
     );
   }
@@ -756,6 +758,16 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
             Text(
               '總幫忙速度加成: S(${statistics?.totalHelpSpeedS}), M(${statistics?.totalHelpSpeedM})',
             ),
+            if (kDebugMode)
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    AnalysisDetailsPage.go(context, _profile.id);
+                  },
+                  child: Text('詳細計算過程'),
+                ),
+              ),
           ],
           MySubHeader(
             titleText: 't_others'.xTr,
