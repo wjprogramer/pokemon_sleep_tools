@@ -1,3 +1,4 @@
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 class PokemonProfileStatistics {
@@ -37,7 +38,9 @@ class PokemonProfileStatistics {
     mainSkillSpeedParameter = xMainSkillSpeedParameter;
 
     double calcMainSkillAccelerateVitality() {
-      if (_isMainSkillIn(['活力填充S', '活力療癒S', '活力全體療癒S'])) {
+      if (isMainSkillIn({
+        MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS,
+      })) {
         return (0.015 * xMainSkillEnergy) * (1 + xMainSkillSpeedParameter);
       }
 
@@ -108,7 +111,9 @@ class PokemonProfileStatistics {
     }
 
     double calcMainSkillTotalEnergy() {
-      if (_isMainSkillIn(['活力填充S', '活力療癒S', '活力全體療癒S'])) {
+      if (isMainSkillIn({
+        MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS,
+      })) {
         return 0;
       }
       return xMainSkillEnergy * (1 + xMainSkillSpeedParameter);
@@ -239,16 +244,13 @@ class PokemonProfileStatistics {
   }
 
   int _getMainSkillEnergyIndex() {
-    return basicProfile.evolutionMaxCount + _calcSkillLevel() - 1;
+    return (
+      basicProfile.evolutionMaxCount + _calcSkillLevel() - 1
+    ).clamp(0, MAX_MAIN_SKILL_LEVEL - 1);
   }
 
-  bool _isMainSkillIn(List<String> skillNames) {
-    for (final skillName in skillNames) {
-      if (basicProfile.mainSkill.nameI18nKey == skillName) {
-        return true;
-      }
-    }
-    return false;
+  bool isMainSkillIn(Set<MainSkill> skillNames) {
+    return skillNames.contains(basicProfile.mainSkill);
   }
 
   int getSubSkillsCountMatch(SubSkill targetValue) => subSkills

@@ -37,6 +37,12 @@ fvm flutter build windows
 # \build\windows\x64\Release\Runner
 
 fvm flutter build macos
+fvm flutter build apk --release
+
+
+powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_windows.ps1
+powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
+
 ```
 
 ---
