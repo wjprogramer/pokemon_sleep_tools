@@ -6,6 +6,7 @@ export 'dish_card.dart';
 export 'dish_label.dart';
 export 'dream_chip_icon.dart';
 export 'energy_icon.dart';
+export 'evolutions_view.dart';
 export 'field_label.dart';
 export 'friend_points_icon.dart';
 export 'images/images.dart';

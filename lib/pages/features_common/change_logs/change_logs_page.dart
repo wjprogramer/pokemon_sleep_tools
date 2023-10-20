@@ -1,0 +1,300 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
+import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+
+class ChangeLogsPage extends StatefulWidget {
+  const ChangeLogsPage._();
+
+  static const MyPageRoute route = ('/ChangeLogsPage', _builder);
+  static Widget _builder(dynamic args) {
+    return const ChangeLogsPage._();
+  }
+
+  static void go(BuildContext context) {
+    context.nav.push(
+      route,
+    );
+  }
+
+  @override
+  State<ChangeLogsPage> createState() => _ChangeLogsPageState();
+}
+
+class _ChangeLogsPageState extends State<ChangeLogsPage> {
+
+  // UI
+  late ThemeData _theme;
+
+  // Data
+  late List<_Version> _versions;
+  bool _isMobile = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _versions = [
+      _Version(
+        name: '1.0.1',
+        date: DateTime(2023, 10, 20),
+        description: '第一次上版',
+        items: [
+          _NormalVersionItem(
+            description: '寶可夢進化圖鑑',
+            onTap: () {
+              PokemonEvolutionIllustratedBookPage.go(context);
+            },
+          ),
+        ],
+      ),
+      _Version(
+        name: '1.0.0',
+        date: DateTime(2023, 10, 19),
+        description: '第一次上版',
+        items: [],
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _theme = Theme.of(context);
+
+    final responsive = ResponsiveBreakpoints.of(context);
+    _isMobile = responsive.isMobile;
+
+    return Scaffold(
+      appBar: buildAppBar(
+        titleText: ''.xTr,
+      ),
+      body: buildListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: Gap.hV,
+        ),
+        children: [
+          ..._buildListItems(),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildListItems() {
+    return [
+      ..._versions.mapIndexed((versionIndex, e) =>
+          _buildVersion(e, isFirst: versionIndex == 0)).expand((e) => e),
+      Gap.trailing,
+    ];
+  }
+
+  List<Widget> _buildVersion(_Version version, {
+    bool isFirst = false,
+  }) {
+    final versionWidget = Row(
+      children: [
+        const Iconify(
+          Fa6Solid.tag,
+          color: gitColor,
+          size: 12,
+        ),
+        Gap.sm,
+        Text(
+          version.name,
+          style: _theme.textTheme.bodySmall?.copyWith(
+            color: greyColor3,
+          ),
+        ),
+      ],
+    );
+
+    final content = Container(
+      margin: const EdgeInsets.only(
+        bottom: 16,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: _theme.dividerColor,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: Gap.smV,
+        vertical: Gap.mdV,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _buildVersionHeader(
+                  version, isFirst: isFirst,
+                ),
+              ),
+            ],
+          ),
+          if (version.description != null)
+            Text(version.description!),
+          if (version.items.isNotEmpty)
+            Gap.md,
+          ...version.items
+              .map((e) => _buildVersionItem(e)),
+        ],
+      ),
+    );
+
+    if (!_isMobile) {
+      return [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Gap.md,
+                Text(Display.date(version.date)),
+                versionWidget,
+              ],
+            ),
+            Gap.xl,
+            Expanded(child: content),
+          ],
+        ),
+      ];
+    }
+
+    return [
+      Gap.sm,
+      Text(
+        Display.date(version.date),
+        style: _theme.textTheme.bodyMedium,
+      ),
+      Gap.xs,
+      versionWidget,
+      Gap.xs,
+      content,
+    ];
+  }
+
+  Widget _buildVersionItem(_VersionItem item) {
+    switch (item) {
+      case _NormalVersionItem():
+        return _buildNormalVersionItem(item);
+    }
+  }
+
+  Widget _buildNormalVersionItem(_NormalVersionItem item) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('・', style: TextStyle(fontWeight: FontWeight.bold)),
+        Expanded(
+          child: Text.rich(
+            TextSpan(
+              text: item.description,
+              children: [
+                if (item.onTap != null) ...[
+                  TextSpan(
+                    text: ' Go ',
+                    style: TextStyle(
+                      color: positiveColor,
+                    ),
+                    recognizer: TapGestureRecognizer()..onTap = item.onTap,
+                  ),
+                  // placeholder: 避免前者的 recognizer 導致剩餘的 space 也會觸發 onTap
+                  TextSpan(
+                    text: ' ',
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVersionHeader(_Version version, {
+    bool isFirst = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text.rich(
+        TextSpan(
+          text: version.name,
+          children: [
+            if (isFirst)
+              WidgetSpan(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: _latestLabel(),
+                ),
+              ),
+          ],
+        ),
+        style: _theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _latestLabel() {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: 2,
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: greenColor,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Text(
+        'Latest',
+        style: _theme.textTheme.bodySmall?.copyWith(
+          color: greenColor,
+        ),
+      ),
+    );
+  }
+
+}
+
+class _Version {
+  _Version({
+    required this.name,
+    this.description,
+    required this.items,
+    required this.date,
+  });
+
+  final String name;
+  final String? description;
+  final List<_VersionItem> items;
+  final DateTime date;
+
+}
+
+sealed class _VersionItem {}
+
+class _NormalVersionItem extends _VersionItem {
+  _NormalVersionItem({
+    required this.description,
+    this.onTap,
+  });
+
+  final String description;
+  final VoidCallback? onTap;
+}
+
+
+

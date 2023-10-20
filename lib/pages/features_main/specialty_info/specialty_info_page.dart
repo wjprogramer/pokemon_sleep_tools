@@ -6,7 +6,6 @@ import 'package:pokemon_sleep_tools/pages/features_main/dish_info/dish_info_page
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/search_list_tile.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 
 /// [PokemonSpecialty]

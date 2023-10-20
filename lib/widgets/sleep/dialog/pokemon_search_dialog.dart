@@ -8,9 +8,6 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/field_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/dialog/base_dialog.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 

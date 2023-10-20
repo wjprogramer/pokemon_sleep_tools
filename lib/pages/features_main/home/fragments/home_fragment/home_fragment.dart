@@ -252,6 +252,16 @@ class _HomeFragmentState extends State<HomeFragment> {
           Gap.xl,
           const Wrap(
             children: [
+              Iconify(Codicon.versions, color: Colors.blue),
+              Iconify(Carbon.version, color: Colors.blue),
+              Iconify(SystemUicons.version, color: Colors.blue),
+              Iconify(SystemUicons.versions, color: Colors.blue),
+              Iconify(Bxs.tag, color: Colors.blue),
+              Iconify(Bxs.tag_alt, color: Colors.blue),
+              Iconify(Bxs.tag_x, color: Colors.blue),
+              Iconify(Fa6Solid.tag, color: Colors.blue),
+              Iconify(Fa6Solid.tags, color: Colors.blue),
+
               Iconify(Carbon.increase_level, color: Colors.blue),
               Iconify(Carbon.skill_level, color: Colors.blue),
               Iconify(Carbon.skill_level_advanced, color: Colors.blue),

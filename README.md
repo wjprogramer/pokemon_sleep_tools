@@ -7,11 +7,12 @@
 - 因資料來源，此 App 不能放廣告或其他營利行為
 - 上架的時候需注意不能使用 assets/debug 下的資源，也要手動將 pubspec.yaml 的 assets/debug 刪掉
 
-## 緣由
+## 目標
 
-- 因為過多的圖片，會導致網頁版讀取較慢，因此只考慮離線版；即便需要更新資料，也是透過網路下載資料後，離線瀏覽
-- 透過與遊戲相似介面設計，使學習成本降低
-- 
+- 讀取快速：因為過多的圖片，會導致線上版讀取較慢，因此只考慮離線版（也因此 App 檔案會有點大）；
+  即便需要更新資料，也是透過網路下載資料後離線瀏覽
+- 降低學習成本：透過與遊戲相似介面設計，使學習成本降低
+- 整合資訊：搜集、理解後，盡量將遊戲所需知識都融合
 
 ## Develop 重要
 
@@ -42,6 +43,7 @@ fvm flutter build macos
 
 ## TODO
 
+- 寶可夢進化鏈圖鑑
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）
   - 類似手機 plus, pro, pro max 詳細數據對比
 - 因為反查功能很多，避免過多路由，在路由超過一定數量，Global 顯示按鈕用以 pop 到最上層?
@@ -91,8 +93,13 @@ fvm flutter build macos
 - 之後圖片版本開發的差不多後，回頭修正文字版
   - 修正後上架？
 - 開源
+  - 評估是否可開源 
   - 改善程式碼後開源
   - 開源後，處理多國化
+- CI/CD
+  - Windows build apk/exe/... script
+- 改 icon
+- 進化道具頁面
 
 ### 桌面開發
 
@@ -100,6 +107,9 @@ fvm flutter build macos
   - [Feature Request: add fourth and fifth mouse button to Gesture detector](https://github.com/flutter/flutter/issues/115641)
   - [\[Desktop\] Navigate back with mouse back button](https://github.com/flutter/flutter/issues/56919)
   - 關鍵字: XBUTTON1 和 XBUTTON2
+- 快捷鍵（例如圖鑑按上下可以選不同寶可夢）
+- 
+- 
 
 
 ### TODO (?)

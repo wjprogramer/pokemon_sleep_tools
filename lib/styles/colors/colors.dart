@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 const color1 = Color(0xFFFE6B4E);
 const whiteColor = Colors.white;
 const blackColor = Colors.black;
+const gitColor = Color(0xFFF25334);
 
 const greyColor = Color(0xFFE8EAED);
 const greyColor2 = Color(0xFFC8C8C8);

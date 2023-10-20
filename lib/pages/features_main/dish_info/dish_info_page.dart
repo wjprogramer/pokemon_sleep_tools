@@ -5,7 +5,6 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/dish_card.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:url_launcher/url_launcher.dart';
 

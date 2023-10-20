@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/change_logs/change_logs_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
@@ -29,6 +30,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemon_food_menu_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
@@ -54,6 +56,7 @@ typedef MyRoutesMapping = Map<String, MyRouteBuilder>;
 MyRoutesMapping generateRoutes() {
   final routes = <MyPageRoute>[
     // common
+    ChangeLogsPage.route,
     DataSourcesPage.route,
     NotFoundRoutePage.route,
     // dev
@@ -86,6 +89,7 @@ MyRoutesMapping generateRoutes() {
     PokemonBasicProfilePicker.route,
     ...PokemonMaintainProfilePage.routes,
     PokemonBoxPage.route,
+    PokemonEvolutionIllustratedBookPage.route,
     PokemonFoodMenuPage.route,
     PokemonIllustratedBookPage.route,
     PokemonSliderDetailsPage.route,

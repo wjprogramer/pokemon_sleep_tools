@@ -24,4 +24,11 @@ class Display {
   static String numInt(num value) {
     return _numIntFormat.format(value.toInt());
   }
+
+  static String date(DateTime? date) {
+    if (date == null) {
+      return '----/--/--';
+    }
+    return DateFormat('yyyy/MM/dd').format(date);
+  }
 }

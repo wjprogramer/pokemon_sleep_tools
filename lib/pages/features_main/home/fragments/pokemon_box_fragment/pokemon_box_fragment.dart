@@ -8,6 +8,7 @@ import 'package:pokemon_sleep_tools/data/repositories/main/pokemon_profile_repos
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -111,6 +112,35 @@ class _PokemonBoxFragmentState extends State<PokemonBoxFragment> {
                 },
                 builder: MyOutlinedButton.builderUnboundWidth,
                 child: Text('t_exp_and_candies'.xTr),
+              ),
+            ],
+          ),
+        ),
+        MainMenuSubtitle(
+          icon: const Iconify(Bx.grid_alt, size: 16,),
+          title: Text(
+            '不常用'.xTr,
+          ),
+        ),
+        Wrap(
+          spacing: _menuButtonSpacing,
+          runSpacing: _menuButtonSpacing,
+          alignment: WrapAlignment.start, // default: WrapAlignment.start,
+          runAlignment: WrapAlignment.start, // default: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.start, // default: WrapCrossAlignment.start,
+          verticalDirection: VerticalDirection.down, // default: VerticalDirection.down,
+          children: _wrapMenuItems(
+            children: [
+              MyOutlinedButton(
+                color: color1,
+                onPressed: () {
+                  PokemonEvolutionIllustratedBookPage.go(context);
+                },
+                iconBuilder: (color, size) {
+                  return Icon(Icons.camera_alt_outlined, color: color, size: size,);
+                },
+                builder: MyOutlinedButton.builderUnboundWidth,
+                child: Text('${'t_pokemon_illustrated_book'.xTr} (進化)'),
               ),
             ],
           ),

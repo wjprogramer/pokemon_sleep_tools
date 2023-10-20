@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/change_logs/change_logs_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
 import 'package:pokemon_sleep_tools/persistent/local_storage/local_storage.dart';
@@ -130,6 +131,17 @@ class _SleepFragmentState extends State<SleepFragment> {
                     },
                     builder: MyOutlinedButton.builderUnboundWidth,
                     child: Text('資料匯出'.xTr),
+                  ),
+                  MyOutlinedButton(
+                    color: tmpColor,
+                    onPressed: () async {
+                      ChangeLogsPage.go(context);
+                    },
+                    iconBuilder: (color, size) {
+                      return Icon(Icons.work_history_outlined, color: color, size: size,);
+                    },
+                    builder: MyOutlinedButton.builderUnboundWidth,
+                    child: Text('更新紀錄'.xTr),
                   ),
                   MyOutlinedButton(
                     color: tmpColor,
