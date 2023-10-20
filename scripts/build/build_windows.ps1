@@ -12,6 +12,6 @@ $targetDir = ".\build\jay\sleep_tools_windows_$dateTime"
 New-Item -ItemType Directory -Path $targetDir
 
 # 复制源目录中的文件和子目录到目标目录
-Copy-Item -Path $sourceDir -Destination $targetDir -Recurse
+Copy-Item -Path "$sourceDir\*" -Destination $targetDir -Recurse
 
 Write-Host "Build completed. Files have been copied to $targetDir"

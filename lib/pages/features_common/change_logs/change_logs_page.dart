@@ -43,6 +43,14 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     super.initState();
     _versions = [
       _Version(
+        name: '1.0.2',
+        date: DateTime(2023, 10, 20),
+        description: '修正錯誤',
+        items: [
+          _NormalVersionItem('[Bug] 主計能等級加太多，導致溢出'),
+        ],
+      ),
+      _Version(
         name: '1.0.1',
         date: DateTime(2023, 10, 20),
         description: '更新畫面',
