@@ -46,7 +46,7 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     _versions = [
       _Version(
         name: '1.0.3',
-        date: DateTime(2023, 10, 20),
+        date: DateTime(2023, 10, 21),
         description: '',
         items: [
           _NormalVersionItem('[FatalBug/Windows] 修正無法匯出'),
