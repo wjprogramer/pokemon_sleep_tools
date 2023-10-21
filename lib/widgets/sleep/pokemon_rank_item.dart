@@ -30,9 +30,10 @@ class SnorlaxRankItem extends StatelessWidget {
           vertical: 2, horizontal: 4,
         ),
         decoration: BoxDecoration(
-          color: _getBgColor().withOpacity(.2),
+          color: rank.title.bgColor.withOpacity(.2),
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               decoration: const BoxDecoration(
@@ -53,15 +54,6 @@ class SnorlaxRankItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getBgColor() {
-    return switch (rank.title) {
-      RankTitle.t1 => rankTitle1Color,
-      RankTitle.t2 => rankTitle2Color1,
-      RankTitle.t3 => rankTitle3Color2,
-      RankTitle.t4 => rankTitle4Color1,
-    };
   }
 
 }

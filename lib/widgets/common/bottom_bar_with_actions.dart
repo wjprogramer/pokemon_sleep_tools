@@ -12,6 +12,8 @@ class BottomBarWithActions extends StatelessWidget {
     this.onAscendingChanged,
     this.isAscending = false,
     this.suffixActions,
+    this.onVisibleChanged,
+    this.isVisible,
   });
 
   final Function()? onSearch;
@@ -20,6 +22,8 @@ class BottomBarWithActions extends StatelessWidget {
   final String? sortText;
   final ValueChanged<bool>? onAscendingChanged;
   final bool isAscending;
+  final ValueChanged<bool>? onVisibleChanged;
+  final bool? isVisible;
 
   final List<Widget>? suffixActions;
 
@@ -36,11 +40,25 @@ class BottomBarWithActions extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
-            Gap.mdV, Gap.xsV, 0, Gap.smV,
+            Gap.mdV, Gap.smV, 0, Gap.smV,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              if (onVisibleChanged != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: spacing),
+                  child: MyOutlinedButton2(
+                    onPressed: () => onVisibleChanged?.call((!(isVisible ?? false))),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isVisible ?? false ? Icons.visibility : Icons.visibility_off,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               if (onSearch != null)
                 Padding(
                   padding: const EdgeInsets.only(right: spacing),

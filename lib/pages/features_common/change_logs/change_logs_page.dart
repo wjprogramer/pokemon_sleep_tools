@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -49,6 +51,10 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         items: [
           _NormalVersionItem('[FatalBug/Windows] 修正無法匯出'),
           _NormalVersionItem('[UI/UX] 根據「積極、中立、消極」區分性格類別(ChatGPT 初步區分和個人主觀區分)、改善性格和性格選擇畫面'),
+          _NormalVersionItem('[UI/UX] 改善地圖與睡姿畫面', onTap: () {
+            MapPage.go(context, PokemonField.f1);
+          }),
+
         ],
       ),
       _Version(
@@ -56,7 +62,7 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         date: DateTime(2023, 10, 20),
         description: '修正錯誤',
         items: [
-          _NormalVersionItem('[Bug] 主計能等級加太多，導致溢出'),
+          _NormalVersionItem('[Bug] 主技能等級加太多，導致溢出'),
         ],
       ),
       _Version(
@@ -106,7 +112,7 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
 
     return Scaffold(
       appBar: buildAppBar(
-        titleText: ''.xTr,
+        titleText: '更新紀錄'.xTr,
       ),
       body: buildListView(
         padding: const EdgeInsets.symmetric(
@@ -114,6 +120,7 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         ),
         children: [
           ..._buildListItems(),
+          Gap.trailing,
         ],
       ),
     );

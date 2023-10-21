@@ -144,13 +144,28 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          columns: const [
+          columns: [
             DataColumn(label: Text('LV'),),
             DataColumn(label: Text('EXP')),
-            DataColumn(label: Text('一般糖果')),
-            DataColumn(label: Text('萬能糖果S')),
-            DataColumn(label: Text('萬能糖果M')),
-            DataColumn(label: Text('萬能糖果L')),
+            DataColumn(
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('一般糖果'),
+                  Gap.sm,
+                  Tooltip(
+                    message: '每個寶可夢都有對應的糖果',
+                    child: Icon(
+                      Icons.info_outline,
+                      size: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            DataColumn(label: _candy('S'), tooltip: '萬能糖果 S'),
+            DataColumn(label: _candy('M'), tooltip: '萬能糖果 M'),
+            DataColumn(label: _candy('L'), tooltip: '萬能糖果 L'),
           ],
           rows: [
             ...levels.map((level) {
@@ -169,6 +184,9 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
               ];
 
               final enoughCount = bagCandiesCount >= normalCandyNeedCount;
+              final highlightColor = _simpleMode ? false
+                  : level % 10 == 0 ? true
+                  : false;
 
               return DataRow(
                 cells: [
@@ -176,9 +194,8 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
                     Text(
                       level.toString(),
                       style: TextStyle(
-                        color: _simpleMode ? null
-                            : level % 10 == 0 ? color1
-                            : null,
+                        color: highlightColor ? positiveColor : null,
+                        fontWeight: highlightColor ? FontWeight.bold : null,
                       ),
                     )
                   ),
@@ -270,6 +287,25 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
 
     return List.generate(length, (index) => start + index);
   }
+
+  Widget _candy(String rank) {
+    final text = '萬能糖果$rank';
+    if (!MyEnv.USE_DEBUG_IMAGE) {
+      return Text(text);
+    }
+
+    return Row(
+      children: [
+        Image.asset(
+          AssetsPath.generic('candy'),
+          width: 24,
+        ),
+        Gap.md,
+        Text(rank),
+      ],
+    );
+  }
+
 }
 
 

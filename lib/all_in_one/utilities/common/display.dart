@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/all_in_one/utilities/common/formatter.dart';
 
 class Display {
@@ -34,5 +36,19 @@ class Display {
   /// TODO: timezone
   static String date(DateTime? date) {
     return MyFormatter.date(date);
+  }
+
+  static String seconds(int seconds) {
+    final duration = Duration(seconds: seconds);
+    final minutes = duration.inMinutes;
+    final remainingSeconds = duration.inSeconds.remainder(60);
+
+    // TODO: i18n
+    final locale = SupportLang.zhTW.toLocale();
+    // final locale = Localizations.localeOf(context);
+    final intl = DateFormat('HH:mm:ss', locale.toLanguageTag());
+    final timeString = intl.format(DateTime(0, 0, 0, 0, minutes, remainingSeconds));
+
+    return timeString;
   }
 }

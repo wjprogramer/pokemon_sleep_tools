@@ -28,6 +28,8 @@ class PokemonIconBorderedImage extends StatelessWidget {
     final theme = context.theme;
 
     Widget result = Container(
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         border: Border.all(
           color: theme.dividerColor,

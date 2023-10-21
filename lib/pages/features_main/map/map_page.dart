@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
@@ -11,8 +12,11 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/po
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
+import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
+import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 class _MapPageArgs {
   _MapPageArgs(this.field);
@@ -58,11 +62,13 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
   SleepFaceRepository get _sleepFaceRepo => getIt();
+  MainViewModel get _mainViewModel => context.read<MainViewModel>();
 
   PokemonField get _field => widget._args.field;
 
   // UI
   late ThemeData _theme;
+  var _isMobile = true;
 
   // Page status
   var _initialized = false;
@@ -73,6 +79,9 @@ class _MapPageState extends State<MapPage> {
   var _sleepNamesOf = <int, Map<int, String>>{};
   var _basicProfileOf = <int, PokemonBasicProfile>{};
   var _accumulatePokemonCountOf = <SnorlaxRank, int>{};
+
+  /// 顯示或隱藏已收集到的睡姿
+  var _isVisible = true;
 
   @override
   void initState() {
@@ -114,6 +123,8 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
+    final responsive = ResponsiveBreakpoints.of(context);
+    _isMobile = responsive.isMobile;
 
     final rankSubTitleSize = context.textTheme.bodySmall?.fontSize ?? 16;
     final rankSubIconSize = rankSubTitleSize * 1.2;
@@ -151,117 +162,99 @@ class _MapPageState extends State<MapPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(
-                      width: leadingWidth,
+                  if (!_isMobile) ...[
+                    ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(
+                        width: leadingWidth,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              SnorlaxRankItem(
+                                rank: reward.rank,
+                              ),
+                              const Spacer(),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              EnergyIcon(
+                                size: rankSubIconSize,
+                              ),
+                              Gap.xs,
+                              Expanded(
+                                child: Text(
+                                  Display.numInt(reward.energy),
+                                  style: TextStyle(fontSize: rankSubTitleSize),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              DreamChipIcon(
+                                size: rankSubIconSize,
+                              ),
+                              Gap.xs,
+                              Expanded(
+                                child: Text(
+                                  Display.numInt(reward.dreamChips),
+                                  style: TextStyle(fontSize: rankSubTitleSize),
+                                ),
+                              ),
+                            ],
+                          ),
+                          _accumulatePokemonForRank(reward, rankSubIconSize, rankSubTitleSize),
+                          // _accumulatePokemonCountOf
+                        ],
+                      ),
                     ),
+                    Gap.md,
+                  ],
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Row(
-                          children: [
-                            SnorlaxRankItem(
-                              rank: reward.rank,
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            EnergyIcon(
-                              size: rankSubIconSize,
-                            ),
-                            Gap.xs,
-                            Expanded(
-                              child: Text(
-                                Display.numInt(reward.energy),
-                                style: TextStyle(fontSize: rankSubTitleSize),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            DreamChipIcon(
-                              size: rankSubIconSize,
-                            ),
-                            Gap.xs,
-                            Expanded(
-                              child: Text(
-                                Display.numInt(reward.dreamChips),
-                                style: TextStyle(fontSize: rankSubTitleSize),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.catching_pokemon,
-                              color: color1,
-                              size: rankSubIconSize,
-                            ),
-                            Gap.xs,
-                            Expanded(
-                              child: Text(
-                                '${_accumulatePokemonCountOf[reward.rank]} (+${Display.numInt(_sleepFacesOfRank[reward.rank]?.length ?? 0)})',
-                                style: TextStyle(fontSize: rankSubTitleSize),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // _accumulatePokemonCountOf
-                      ],
-                    ),
-                  ),
-                  Gap.md,
-                  Expanded(
-                    child: Wrap(
-                      spacing: 12,
-                      runSpacing: 4,
-                      children: [
-                      ...?_sleepFacesOfRank[reward.rank]?.map((e) => Container(
-                        decoration: BoxDecoration(
-                          color: yellowLightColor,
-                          borderRadius: pokemonLabelBorderRadius,
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              final basicProfile = _basicProfileOf[e.basicProfileId];
-                              if (basicProfile == null) {
-                                return;
-                              }
-
-                              PokemonBasicProfilePage.go(context, basicProfile);
-                            },
-                            borderRadius: pokemonLabelBorderRadius,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 2,
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    _basicProfileOf[e.basicProfileId]?.nameI18nKey.xTr ?? '',
-                                    style: pokemonTextStyle,
-                                  ),
-                                  Text(
-                                    '#${e.style == -1 ? '卡' : e.style}',
-                                    style: pokemonTextStyle?.copyWith(
-                                      fontSize: (pokemonTextStyle.fontSize ?? 14) * 0.8,
-                                      color: greyColor3,
+                        if (_isMobile)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Wrap(
+                              spacing: 12,
+                              children: [
+                                SnorlaxRankItem(
+                                  rank: reward.rank,
+                                ),
+                                _energyIcon(reward, rankSubIconSize, rankSubTitleSize),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    DreamChipIcon(
+                                      size: rankSubIconSize,
                                     ),
-                                  ),
-                                ],
-                              ),
+                                    Gap.xs,
+                                    Text(
+                                      Display.numInt(reward.dreamChips),
+                                      style: TextStyle(fontSize: rankSubTitleSize),
+                                    ),
+                                  ],
+                                ),
+                                _accumulatePokemonForRank(reward, rankSubIconSize, rankSubTitleSize),
+                              ],
                             ),
                           ),
+                        Wrap(
+                          spacing: 12,
+                          runSpacing: 4,
+                          children: [
+                            ...?_sleepFacesOfRank[reward.rank]?.map((sleepFace) => _buildPokemon(
+                              sleepFace,
+                              pokemonLabelBorderRadius,
+                              pokemonTextStyle,
+                            )),
+                          ],
                         ),
-                      )),
                       ],
                     ),
                   ),
@@ -271,6 +264,164 @@ class _MapPageState extends State<MapPage> {
           )),
           Gap.trailing,
         ],
+      ),
+      // TODO:
+      bottomNavigationBar: !kDebugMode ? null : BottomBarWithActions(
+        onVisibleChanged: (visible) {
+          setState(() {
+            _isVisible = visible;
+          });
+        },
+        isVisible: _isVisible,
+      ),
+    );
+  }
+
+  Widget _energyIcon(SnorlaxReward reward, double rankSubIconSize, double rankSubTitleSize) {
+    Widget textWidget = Text(
+      Display.numInt(reward.energy),
+      style: TextStyle(fontSize: rankSubTitleSize),
+    );
+
+    if (!_isMobile) {
+      textWidget = Expanded(child: textWidget);
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        EnergyIcon(
+          size: rankSubIconSize,
+        ),
+        Gap.xs,
+        textWidget,
+      ],
+    );
+  }
+
+  Widget _accumulatePokemonForRank(SnorlaxReward reward, double rankSubIconSize, double rankSubTitleSize) {
+    Widget textWidget = Text(
+      '${_accumulatePokemonCountOf[reward.rank]} (+${Display.numInt(_sleepFacesOfRank[reward.rank]?.length ?? 0)})',
+      style: TextStyle(fontSize: rankSubTitleSize),
+    );
+
+    if (!_isMobile) {
+      textWidget = Expanded(child: textWidget);
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Tooltip(
+          message: '此等級已累積發現寶可夢數量',
+          child: Icon(
+            Icons.catching_pokemon,
+            color: color1,
+            size: rankSubIconSize,
+          ),
+        ),
+        Gap.xs,
+        textWidget,
+      ],
+    );
+  }
+
+  Widget _buildPokemon(SleepFace sleepFace, BorderRadius pokemonLabelBorderRadius, TextStyle? pokemonTextStyle, ) {
+    final basicProfile = _basicProfileOf[sleepFace.basicProfileId];
+
+    if (MyEnv.USE_DEBUG_IMAGE && basicProfile != null) {
+      return Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8, bottom: 8),
+            child: InkWell(
+              onTap: () {
+                PokemonBasicProfilePage.go(context, basicProfile);
+              },
+              child: PokemonIconBorderedImage(
+                basicProfile: basicProfile,
+                width: 40,
+                height: 40,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: IgnorePointer(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 2,
+                  vertical: 1
+                ),
+                decoration: BoxDecoration(
+                  color: sleepFace.snorlaxRank.title.bgColor.withOpacity(.5),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '#${sleepFace.style == -1 ? '' : sleepFace.style}',
+                      style: pokemonTextStyle?.copyWith(
+                        fontSize: (pokemonTextStyle.fontSize ?? 14) * 0.6,
+                        color: greyColor3,
+                      ),
+                    ),
+                    if (sleepFace.style == -1)
+                      Image.asset(
+                        AssetsPath.generic('snorlax'),
+                        width: 14,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: yellowLightColor,
+        borderRadius: pokemonLabelBorderRadius,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            final basicProfile = _basicProfileOf[sleepFace.basicProfileId];
+            if (basicProfile == null) {
+              return;
+            }
+
+            PokemonBasicProfilePage.go(context, basicProfile);
+          },
+          borderRadius: pokemonLabelBorderRadius,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 4,
+              vertical: 2,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _basicProfileOf[sleepFace.basicProfileId]?.nameI18nKey.xTr ?? '',
+                  style: pokemonTextStyle,
+                ),
+                Text(
+                  '#${sleepFace.style == -1 ? '卡' : sleepFace.style}',
+                  style: pokemonTextStyle?.copyWith(
+                    fontSize: (pokemonTextStyle.fontSize ?? 14) * 0.8,
+                    color: greyColor3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

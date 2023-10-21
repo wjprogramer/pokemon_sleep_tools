@@ -626,7 +626,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           buildWithLabel(
             text: '幫忙間隔'.xTr,
             child: Text(
-              '${basicProfile.helpInterval} 秒',
+              '${basicProfile.helpInterval} 秒 (${Display.seconds(basicProfile.helpInterval)})',
             ),
           ),
           Gap.xl,
@@ -667,54 +667,57 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
               spacing: subSkillItemSpacing,
               runSpacing: subSkillItemSpacing,
               children: [
-                ...widget.profile.subSkills.mapIndexed((subSkillIndex, subSkill) => Container(
-                  constraints: BoxConstraints.tightFor(
-                    width: subSkillWidth,
-                  ),
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: subSkill.bgColor,
-                            width: 2,
-                          ),
-                          color: subSkill.bgColor.withOpacity(.6),
-                        ),
-                        child: Center(
-                          child: Text(subSkill.nameI18nKey.xTr),
-                        ),
-                      ),
-                      Positioned(
-                        left: -8,
-                        top: -8,
-                        child: Container(
+                ...widget.profile.subSkills.mapIndexed((subSkillIndex, subSkill) => Tooltip(
+                  message: subSkill.intro,
+                  child: Container(
+                    constraints: BoxConstraints.tightFor(
+                      width: subSkillWidth,
+                    ),
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 4, vertical: 2,
+                            horizontal: 12,
+                            vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: subSkillLevelLabelColor,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 50,
-                          ),
-                          child: Text(
-                            'Lv. ${SubSkill.levelList[subSkillIndex]}',
-                            style: TextStyle(
-                              fontSize: (_theme.textTheme.bodySmall?.fontSize ?? 16) * 0.7,
-                              color: subSkillLevelLabelColor.fgColor,
+                            border: Border.all(
+                              color: subSkill.bgColor,
+                              width: 2,
                             ),
-                            textAlign: TextAlign.center,
+                            color: subSkill.bgColor.withOpacity(.6),
+                          ),
+                          child: Center(
+                            child: Text(subSkill.nameI18nKey.xTr),
                           ),
                         ),
-                      ),
-                    ],
+                        Positioned(
+                          left: -8,
+                          top: -8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4, vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: subSkillLevelLabelColor,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 50,
+                            ),
+                            child: Text(
+                              'Lv. ${SubSkill.levelList[subSkillIndex]}',
+                              style: TextStyle(
+                                fontSize: (_theme.textTheme.bodySmall?.fontSize ?? 16) * 0.7,
+                                color: subSkillLevelLabelColor.fgColor,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )),
               ],
@@ -727,6 +730,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           Text(
             _profile.character.nameI18nKey.xTr,
           ),
+          _buildCharacterInfo(_profile.character),
           Gap.md,
           MySubHeader(
             titleText: 't_analysis'.xTr,
@@ -806,6 +810,49 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
       ),
       Gap.trailing,
     ];
+  }
+
+  Widget _buildCharacterInfo(PokemonCharacter character) {
+    final positive = character.positive;
+    final negative = character.negative;
+
+    return Text.rich(
+      TextSpan(
+        style: _theme.textTheme.bodySmall?.copyWith(
+          color: greyColor3,
+        ),
+        children: [
+          if (positive == null && negative == null)
+            TextSpan(
+              text: '沒有因性格帶來的特色'.xTr,
+              style: TextStyle(color: _theme.disabledColor),
+            )
+          else ...[
+            if (positive != null) ...[
+              TextSpan(
+                text: positive,
+              ),
+              WidgetSpan(
+                child: Icon(Icons.keyboard_arrow_up, color: dangerColor, size: 14,),
+              ),
+            ],
+            if (negative != null) ...[
+              if (positive != null)
+                TextSpan(
+                  text: '、',
+                ),
+              TextSpan(
+                text: negative,
+              ),
+              WidgetSpan(
+                child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),
+              ),
+            ],
+          ],
+        ],
+      ),
+      maxLines: 1,
+    );
   }
 }
 
