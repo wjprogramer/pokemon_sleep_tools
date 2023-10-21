@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
@@ -78,9 +79,13 @@ class MyLocalStorage implements MyInjectable {
     }
   }
 
+  /// [FileSaver.saveAs] 還不支援 Windows
   Future<void> exportData() async {
-    final dir = await getTemporaryDirectory();
-    final filePath = path.join(dir.path, 'pokemon_sleep.json');
+    final useDownloadFolder = !MyPlatform.isWindows;
+
+    final dir = useDownloadFolder
+        ? await getDownloadsDirectory()
+        : await getTemporaryDirectory();
 
     final res = _LocalStoredDocumentResult(
       profiles: await readPokemonFile(),
@@ -89,22 +94,53 @@ class MyLocalStorage implements MyInjectable {
       fields: await readPokemonFields(),
     );
 
-    final file = File(filePath)
-      ..createSync()
-      ..writeAsStringSync(json.encode(res.toJson()));
+    if (!MyPlatform.isWindows) {
+      final filePath = path.join(dir!.path, 'pokemon_sleep.json');
+      final file = File(filePath)
+        ..createSync()
+        ..writeAsStringSync(json.encode(res.toJson()));
 
-    await FileSaver.instance.saveAs(
-      name: 'sleep_data',
-      ext: 'json',
-      mimeType: MimeType.text,
-      file: file,
-    );
+      await FileSaver.instance.saveAs(
+        name: 'sleep_data',
+        ext: 'json',
+        mimeType: MimeType.text,
+        file: file,
+      );
+    } else {
+      final fileDateTime = MyFormatter.date(
+        MyTimezone.now.toLocal(),
+        type: DateFormatType.fileDateTime,
+      );
+      final fileName = 'pokemon_sleep_$fileDateTime';
+      final filePath = path.join(dir!.path, '$fileName.json');
+
+      String content;
+
+      if (!kDebugMode) {
+        content = json.encode(res.toJson());
+      } else {
+        final spaces = ' ' * 4;
+        final encoder = JsonEncoder.withIndent(spaces);
+        content = encoder.convert(res.toJson());
+      }
+
+      final file = File(filePath)
+        ..createSync()
+        ..writeAsStringSync(content);
+
+      await FileSaver.instance.saveFile(
+        name: fileName,
+        ext: 'json',
+        mimeType: MimeType.text,
+        file: file,
+      );
+    }
   }
 
-  Future<void> importData() async {
+  Future<bool?> importData() async {
     final file = await FileUtility.pickSingleFile();
     if (file == null) {
-      return;
+      return null;
     }
 
     final content = file.readAsStringSync();
@@ -120,6 +156,7 @@ class MyLocalStorage implements MyInjectable {
     if (faceStyles != null) { await writePokemonSleepFaces(faceStyles); }
     if (teams != null) { await writePokemonTeams(teams); }
     if (fields != null) { await writePokemonFields(fields); }
+    return true;
   }
   // endregion
 

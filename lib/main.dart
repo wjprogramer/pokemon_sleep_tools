@@ -8,6 +8,7 @@ import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MyTimezone.init();
 
   await MyEnv.instance.init();
 

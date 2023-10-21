@@ -361,17 +361,10 @@ class _BagPageState extends State<BagPage> {
       onTap: () {
         PokemonBasicProfilePage.go(context, basicProfile);
       },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: _theme.dividerColor,
-          ),
-        ),
-        child: PokemonIconImage(
-          basicProfile: basicProfile,
-          width: 48,
-          disableTooltip: true,
-        ),
+      child: PokemonIconBorderedImage(
+        basicProfile: basicProfile,
+        width: 48,
+        disableTooltip: true,
       ),
     );
   }

@@ -89,7 +89,11 @@ class _SleepFragmentState extends State<SleepFragment> {
                     color: tmpColor,
                     onPressed: () async {
                       try {
-                        await _localStorage.importData();
+                        final res = await _localStorage.importData();
+                        if (res == null) {
+                          return;
+                        }
+
                         final mainViewModel = context.read<MainViewModel>();
 
                         await mainViewModel.loadProfiles(force: true);
@@ -118,8 +122,9 @@ class _SleepFragmentState extends State<SleepFragment> {
                         DialogUtility.text(
                           context,
                           title: Text('資料匯出成功'),
+                          content: MyPlatform.isWindows ? Text('匯出至下載資料夾') : null,
                         );
-                      } catch (e) {
+                      } catch (e, s) {
                         DialogUtility.text(
                           context,
                           title: Text('資料匯出失敗'),

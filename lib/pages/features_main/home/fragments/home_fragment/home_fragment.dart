@@ -8,7 +8,7 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/character_list/characters_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
@@ -186,7 +186,7 @@ class _HomeFragmentState extends State<HomeFragment> {
               MyOutlinedButton(
                 color: tmpColorCharacter,
                 onPressed: () {
-                  CharactersIllustratedBookPage.go(context);
+                  CharacterListPage.go(context);
                 },
                 iconBuilder: (color, size) {
                   return Icon(Icons.face, color: color, size: size,);

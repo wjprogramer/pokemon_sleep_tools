@@ -6,7 +6,7 @@ Invoke-Expression "fvm flutter build apk --release"
 
 # 设置源目录和目标目录
 $sourceDir = ".\build\app\outputs\flutter-apk\app-release.apk"
-$targetDir = ".\build\jay\sleep_tools_windows_$dateTime.apk"
+$targetDir = ".\build\jay\sleep_tools_android_$dateTime.apk"
 
 # 创建目标目录
 # New-Item -ItemType Directory -Path $targetDir

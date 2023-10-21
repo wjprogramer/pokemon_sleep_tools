@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
+import 'package:pokemon_sleep_tools/all_in_one/utilities/common/formatter.dart';
 
 class Display {
   Display._();
@@ -12,9 +13,9 @@ class Display {
 
   static final _numIntFormat = NumberFormat("#,##0", "en_US");
 
-  static String text(dynamic v) {
+  static String text(dynamic v, { String? emptyText }) {
     if (v == null) {
-      return placeHolder;
+      return emptyText ?? placeHolder;
     }
     if (v is String) {
       return v;
@@ -30,10 +31,8 @@ class Display {
     return _numDoubleFormat.format(value);
   }
 
+  /// TODO: timezone
   static String date(DateTime? date) {
-    if (date == null) {
-      return '----/--/--';
-    }
-    return DateFormat('yyyy/MM/dd').format(date);
+    return MyFormatter.date(date);
   }
 }

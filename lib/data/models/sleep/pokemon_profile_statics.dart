@@ -13,7 +13,7 @@ class PokemonProfileStatistics {
     fruitCount = xFruitCount;
     final xFruitEnergy = xFruitCount * basicProfile.fruit.energyIn60;
     fruitEnergy = xFruitEnergy;
-    final xMainSkillEnergy = _getMainSkillEnergy();
+    final xMainSkillEnergy = getMainSkillEnergy();
 
     final xIngredientEnergy1 = ingredient1.energy * ingredientCount1;
     ingredientEnergy1 = xIngredientEnergy1;
@@ -79,10 +79,10 @@ class PokemonProfileStatistics {
     double calcMaxOverflowHoldCount() {
       var res = 0.0;
 
-      final x = ((ingredientCount1 + ingredientCount2 + ingredientCount3) * xIngredientRate) / 3 +
-          ((5 - xIngredientRate) * xFruitCount);
+      final x = (ingredientCount1 + ingredientCount2 + ingredientCount3) * xIngredientRate / 3;
+      final yy = (5 - xIngredientRate) * xFruitCount;
       final y = (30600 / xHelpInterval).round();
-      res += x * y;
+      res += (x + yy) * y;
 
       res -= (
           basicProfile.boxCount +
@@ -237,7 +237,7 @@ class PokemonProfileStatistics {
       500 * getSubSkillsCountMatch(SubSkill.dreamChipBonus);
 
   // region Utils
-  double _getMainSkillEnergy() {
+  double getMainSkillEnergy() {
     final valueIndex = _getMainSkillEnergyIndex();
     final basicEnergy = basicProfile.mainSkill.calcEnergyList()[valueIndex];
     return basicEnergy;

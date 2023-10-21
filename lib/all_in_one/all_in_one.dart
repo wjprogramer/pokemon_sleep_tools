@@ -9,3 +9,4 @@ export 'others/others.dart';
 export 'third/third.dart';
 export 'utilities/utilities.dart';
 export 'utils/utils.dart';
+export 'platform.dart';

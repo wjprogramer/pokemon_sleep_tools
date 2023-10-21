@@ -10,7 +10,7 @@ import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.
 import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/analysis_details/analysis_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/character_illustrated_book/characters_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/character_list/characters_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish/dish_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_energy_calculator/dish_energy_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/dish_info/dish_info_page.dart';
@@ -69,7 +69,7 @@ MyRoutesMapping generateRoutes() {
     AboutPage.route,
     AnalysisDetailsPage.route,
     BagPage.route,
-    CharactersIllustratedBookPage.route,
+    CharacterListPage.route,
     DishPage.route,
     DishEnergyCalculatorPage.route,
     DishInfoPage.route,

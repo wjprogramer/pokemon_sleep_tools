@@ -10,26 +10,54 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
-/// TODO: (Idea) 反查寶可夢盒的對應性格寶可夢 [PokemonBoxPage] (可以帶入初始查詢(篩選)條件)
-class CharactersIllustratedBookPage extends StatefulWidget {
-  const CharactersIllustratedBookPage._();
+enum _PageType {
+  readonly,
+  picker,
+}
 
-  static const MyPageRoute route = ('/CharactersIllustratedBookPage', _builder);
+class _Args {
+  _Args(this.pageType);
+
+  final _PageType pageType;
+}
+
+/// TODO: (Idea) 反查寶可夢盒的對應性格寶可夢 [PokemonBoxPage] (可以帶入初始查詢(篩選)條件)
+class CharacterListPage extends StatefulWidget {
+  const CharacterListPage._(this._args);
+
+  static const MyPageRoute route = ('/CharacterListPage', _builder);
   static Widget _builder(dynamic args) {
-    return const CharactersIllustratedBookPage._();
+    return CharacterListPage._(args);
   }
 
   static void go(BuildContext context) {
     context.nav.push(
       route,
+      arguments: _Args(_PageType.readonly),
     );
   }
 
+  static Future<PokemonCharacter?> pick(BuildContext context) async {
+    final res = await context.nav.push(
+      route,
+      arguments: _Args(_PageType.picker),
+    );
+    return res is PokemonCharacter ? res : null;
+  }
+
+  void _popResult(BuildContext context, PokemonCharacter? character) {
+    context.nav.pop(character);
+  }
+
+  final _Args _args;
+
   @override
-  State<CharactersIllustratedBookPage> createState() => _CharactersIllustratedBookPageState();
+  State<CharacterListPage> createState() => _CharacterListPageState();
 }
 
-class _CharactersIllustratedBookPageState extends State<CharactersIllustratedBookPage> {
+class _CharacterListPageState extends State<CharacterListPage> {
+  _Args get _args => widget._args;
+  _PageType get _pageType => _args.pageType;
 
   // UI
   late ThemeData _theme;
@@ -47,6 +75,15 @@ class _CharactersIllustratedBookPageState extends State<CharactersIllustratedBoo
       _charactersGroupByPositive = groupBy(
         PokemonCharacter.values, (character) => character.positive,
       );
+      for (final positiveToCharacters in _charactersGroupByPositive.entries) {
+        final characters = positiveToCharacters.value;
+        characters.sortByCompare((e) => e, (a, b) {
+          if (a.type.sort == b.type.sort) {
+            return a.id - b.id;
+          }
+          return a.type.sort - b.type.sort;
+        });
+      }
       setState(() { });
     });
   }
@@ -85,7 +122,10 @@ class _CharactersIllustratedBookPageState extends State<CharactersIllustratedBoo
                   children: [
                     Expanded(
                       child: Text(
-                        Display.text(positiveName),
+                        Display.text(
+                          positiveName,
+                          emptyText: '沒有因性格帶來的特色',
+                        ),
                       ),
                     ),
                     if (positiveEffectText != null)
@@ -113,15 +153,40 @@ class _CharactersIllustratedBookPageState extends State<CharactersIllustratedBoo
   Widget _buildCharacterCard(PokemonCharacter character) {
     return InkWell(
       onTap: () {
-        // TODO: 反查寶可夢盒
+        switch (_pageType) {
+          case _PageType.readonly:
+          // TODO: 反查寶可夢盒
+            return;
+          case _PageType.picker:
+            widget._popResult(context, character);
+            return;
+        }
       },
       child: Container(
         padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: character.type.color.withOpacity(.05),
+          border: Border.all(
+            color: character.type.color.withOpacity(.4),
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              character.nameI18nKey.xTr,
+            Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: character.nameI18nKey.xTr,
+                    style: TextStyle(
+                      // decoration: TextDecoration.underline,
+                      // decorationColor: character.type.color.withOpacity(1),
+                      // decorationThickness: 2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
               style: _theme.textTheme.bodyLarge,
             ),
             _buildDescription(
@@ -141,7 +206,7 @@ class _CharactersIllustratedBookPageState extends State<CharactersIllustratedBoo
     final style = _theme.textTheme.bodySmall?.copyWith(
       color: greyColor3,
     );
-    final prefix = positive ? '+ ' : '- ';
+    final prefix = '';// positive ? '+ ' : '- ';
 
     if (effectName == null) {
       return Text(
@@ -151,25 +216,36 @@ class _CharactersIllustratedBookPageState extends State<CharactersIllustratedBoo
       );
     }
 
+    String text = prefix + Display.text(effectName);
+
     return Row(
       children: [
         Expanded(
-          child: Text(
-            prefix + Display.text(effectName),
+          child: Text.rich(
+            TextSpan(
+              text: text,
+              children: [
+                if (!positive) ...[
+                  TextSpan(
+                    text: ' (${_getCharacterEffectTrailing(effectName, positive)}) ',
+                    style: style?.copyWith(
+                      fontSize: 10,
+                    ),
+                  ),
+                  WidgetSpan(
+                    child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),
+                  ),
+                ],
+              ],
+            ),
             style: style?.copyWith(
-              color: positive ? positiveColor : dangerColor,
+              // color: positive ? positiveColor : dangerColor,
+              color: greyColor3,
             ),
             maxLines: 1,
           ),
         ),
-        if (!positive)
-          Text(
-            _getCharacterEffectTrailing(effectName, positive),
-            style: style?.copyWith(
-              color: positive ? positiveColor : dangerColor,
-            ),
-            maxLines: 1,
-          ),
+
       ],
     );
   }

@@ -25,6 +25,7 @@ final starIconColor = Colors.yellow.shade700;
 
 const warningColor = Color(0xFFF5B14F);
 const dangerColor = Colors.red;
+final darkDangerColor = Colors.red.shade800;
 const positiveColor = Colors.blue;
 final dreamChipColor = Colors.yellow.shade700;
 final subSkillLevelLabelColor = Colors.brown.shade700;

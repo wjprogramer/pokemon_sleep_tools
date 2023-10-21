@@ -80,26 +80,38 @@ class _SubSkillsCharacterIllustratedBookPageState extends State<SubSkillsCharact
     );
   }
 
-  Widget _buildItem(SubSkill mainSkill) {
+  Widget _buildItem(SubSkill subSkill) {
     return InkWell(
       onTap: () {
         // TODO: 查詢寶可夢盒裡的寶可夢是否有該副技能
         // .go(context, mainSkill);
       },
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: subSkill.bgColor,
+            width: 2,
+          ),
+          color: subSkill.bgColor.withOpacity(.6),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              mainSkill.nameI18nKey.xTr,
+              subSkill.nameI18nKey.xTr,
               style: _theme.textTheme.bodyLarge,
             ),
-            Text(
-              mainSkill.intro,
-              style: _theme.textTheme.bodySmall?.copyWith(
-                color: greyColor3,
-              ),
+            Stack(
+              children: [
+                Text('\n', style: _theme.textTheme.bodySmall),
+                Text(
+                  subSkill.intro,
+                  style: _theme.textTheme.bodySmall?.copyWith(
+                    color: greyColor3,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

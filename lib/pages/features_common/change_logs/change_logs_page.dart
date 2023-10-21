@@ -43,6 +43,15 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     super.initState();
     _versions = [
       _Version(
+        name: '1.0.3',
+        date: DateTime(2023, 10, 20),
+        description: '',
+        items: [
+          _NormalVersionItem('[FatalBug/Windows] 修正無法匯出'),
+          _NormalVersionItem('[UI/UX] 根據「積極、中立、消極」區分性格類別(ChatGPT 初步區分和個人主觀區分)、改善性格和性格選擇畫面'),
+        ],
+      ),
+      _Version(
         name: '1.0.2',
         date: DateTime(2023, 10, 20),
         description: '修正錯誤',

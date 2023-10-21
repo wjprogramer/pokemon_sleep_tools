@@ -10,6 +10,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/p
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/pokemon_icon_bordered_image.dart';
 import 'package:provider/provider.dart';
 
 class _MainSkillPageArgs {
@@ -116,10 +117,18 @@ class _MainSkillPageState extends State<MainSkillPage> {
               if (_basicProfiles.isEmpty)
                 Hp(child: Text('t_none'.xTr))
               else
-                ..._basicProfiles.map((basicProfile) => _buildPokemonCard(
-                  basicProfile: basicProfile,
-                  profile: null,
-                )),
+                Hp(
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      ..._basicProfiles.map((basicProfile) => _buildPokemonCard(
+                        basicProfile: basicProfile,
+                        profile: null,
+                      ))
+                    ],
+                  ),
+                ),
               Hp(
                 child: MySubHeader(
                   titleText: 't_pokemon_box'.xTr,
@@ -128,10 +137,18 @@ class _MainSkillPageState extends State<MainSkillPage> {
               if (profiles.isEmpty)
                 Hp(child: Text('t_none'.xTr))
               else
-                ...profiles.map((profile) => _buildPokemonCard(
-                  basicProfile: profile.basicProfile,
-                  profile: profile,
-                )),
+                Hp(
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      ...profiles.map((profile) => _buildPokemonCard(
+                        basicProfile: profile.basicProfile,
+                        profile: profile,
+                      )),
+                    ],
+                  ),
+                ),
               Gap.trailing,
             ],
           ),
@@ -152,15 +169,11 @@ class _MainSkillPageState extends State<MainSkillPage> {
           PokemonBasicProfilePage.go(context, basicProfile);
         }
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: HORIZON_PADDING,
-          vertical: 6,
-        ),
-        child: Text(
-          basicProfile.nameI18nKey.xTr,
-        ),
-      ),
+      child: MyEnv.USE_DEBUG_IMAGE ? PokemonIconBorderedImage(
+        basicProfile: basicProfile,
+        width: 48,
+        toolTipMessage: profile?.getDisplayText(),
+      ) : Text(profile?.getDisplayText() ?? basicProfile.nameI18nKey.xTr),
     );
   }
 
