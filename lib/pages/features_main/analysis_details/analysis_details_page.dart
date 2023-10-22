@@ -50,7 +50,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
   int get _profileId => _args.profileId;
 
   // UI
-  var _twoColumn = false;
+  var _multipleColumn = false;
   late LinkedScrollControllerGroup _controllers;
   late ScrollController _leftController;
   late ScrollController _rightController;
@@ -132,7 +132,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
     }
 
     final screenSize = context.mediaQuery.size;
-    _twoColumn = screenSize.width >= COMMON_SIDE_WIDTH * 2;
+    _multipleColumn = screenSize.width >= COMMON_SIDE_WIDTH * 2;
     final profile = _profile;
     final statistics = _statistics;
 
@@ -142,34 +142,44 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
     }
 
     _commentTextStyle = TextStyle(color: greyColor3);
-    final disableMainSkillEnergy = statistics.isMainSkillIn({
-      MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS,
-    });
-    final mainSkillEnergy = statistics.getMainSkillEnergy();
-
-    final a1 = (statistics.ingredientCount1 + statistics.ingredientCount2 + statistics.ingredientCount3) * statistics.ingredientRate / 3;
-    final a2 = (5 - statistics.ingredientRate) * statistics.fruitCount;
 
     final appBar = buildAppBar(
       titleText: '詳細計算過程'.xTr,
     );
 
-    if (_twoColumn) {
+    if (_multipleColumn) {
       return Scaffold(
         appBar: appBar,
-        body: Row(
-          children: [
-            Expanded(
-              child: buildListView(
-                children: _buildLeftItems(statistics, profile),
+        body: SingleChildScrollView(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Expanded(
+              //   child: buildListView(
+              //     controller: _leftController,
+              //     children: _buildLeftItems(statistics, profile),
+              //   ),
+              // ),
+              // Expanded(
+              //   child: buildListView(
+              //     controller: _rightController,
+              //     children: _buildRightItems(statistics, profile),
+              //   ),
+              // ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: _buildLeftItems(statistics, profile),
+                ),
               ),
-            ),
-            Expanded(
-              child: buildListView(
-                children: _buildRightItems(statistics, profile),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: _buildRightItems(statistics, profile),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -182,479 +192,67 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
           ..._ingredientsItems(statistics, profile),
           ...Hp.list(
             children: [
-              
-              MySubHeader(
-                titleText: '技能',
-              ),
-              MySubHeader2(titleText: '額外提升等級',),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(
-                    '${SubSkill.skillLevelS.nameI18nKey.xTr}\n個數',
-                    tooltip: SubSkill.skillLevelS.intro,
-                  ),
-                  _text(''),
-                  _text(
-                    '${SubSkill.skillLevelM.nameI18nKey.xTr}\n個數',
-                    tooltip: SubSkill.skillLevelM.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numInt(
-                    statistics.skillLevel,
-                  )),
-                  _text('='),
-                  _text(
-                    Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.skillLevelS)),
-                  ),
-                  _text('+'),
-                  _text(
-                    Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.skillLevelM)),
-                  ),
-                ]
-              ]),
-              MySubHeader2(titleText: '主技能速度參數'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(
-                    '性格影響\n(主技能)',
-                    // tooltip: '', // TODO:
-                  ),
-                  _text(''),
-                  _text(
-                    '${SubSkill.skillRateS.nameI18nKey.xTr}\n個數',
-                    tooltip: SubSkill.skillRateS.intro,
-                  ),
-                  _text(''),
-                  _text(
-                    '${SubSkill.skillRateM.nameI18nKey.xTr}\n個數',
-                    tooltip: SubSkill.skillRateS.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numDouble(statistics.mainSkillSpeedParameter)),
-                  _text('='),
-                  _text(
-                    '(0.2x${Display.numDouble(
-                        statistics.getOneIf(statistics.character.positive == '主技能')
-                            - statistics.getOneIf(statistics.character.negative == '主技能')
-                    )})',
-                  ),
-                  _text('+'),
-                  _text('(0.18x${statistics.getSubSkillsCountMatch(SubSkill.skillRateS)})'),
-                  _text('+'),
-                  _text('(0.36x${statistics.getSubSkillsCountMatch(SubSkill.skillRateM)})'),
-                ],
-              ]),
-              MySubHeader2(titleText: '主技能能量 (加成後)'),
-              Gap.sm,
-              Row(
-                children: [
-                  // Icon(
-                  //   disableMainSkillEnergy ? Icons.cancel : Icons.check_circle,
-                  //   color: disableMainSkillEnergy ? dangerColor : greenColor,
-                  // ),
-                  // Gap.sm,
-                  Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        text: '如果主技能是「${[MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS].map((mainSkill) => mainSkill.nameI18nKey.xTr).join('t_separator'.xTr)}」，',
-                        children: [
-                          TextSpan(
-                            text: '結果為 0',
-                            style: TextStyle(
-                              color: disableMainSkillEnergy ? darkDangerColor : null,
-                              fontWeight: disableMainSkillEnergy ? FontWeight.bold : null,
-                            ),
-                          ),
-                        ],
-                      ),
-                      style: _commentTextStyle,
-                    ),
-                  ),
-                ],
-              ),
-              Gap.xs,
-              Text(
-                '目前主技能: ${statistics.basicProfile.mainSkill.nameI18nKey.xTr}',
-                style: _commentTextStyle,
-              ),
-              Gap.md,
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text('主技能\n能量'),
-                  _text(''),
-                  _text('基礎值'),
-                  _text(''),
-                  _text('主技能\n速度參數'),
-                ],
-                [
-                  _text(
-                    Display.numDouble(statistics.mainSkillTotalEnergy),
-                    style: TextStyle(
-                      color: disableMainSkillEnergy ? darkDangerColor : null,
-                      fontWeight: disableMainSkillEnergy ? FontWeight.bold : null,
-                    ),
-                  ),
-                  _text('='),
-                  _text(Display.numDouble(mainSkillEnergy)),
-                  _text('x'),
-                  _text('(1'),
-                  _text('+'),
-                  _text('${Display.numDouble(statistics.mainSkillSpeedParameter)})'),
-                ],
-              ]),
-              MySubHeader2(titleText: '主技能活力加速'),
-              Row(
-                children: [
-                  // Icon(
-                  //   disableMainSkillEnergy ? Icons.cancel : Icons.check_circle,
-                  //   color: disableMainSkillEnergy ? dangerColor : greenColor,
-                  // ),
-                  // Gap.sm,
-                  Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        text: '如果主技能不是「${[MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS].map((mainSkill) => mainSkill.nameI18nKey.xTr).join('t_separator'.xTr)}」，',
-                        children: [
-                          TextSpan(
-                            text: '結果為 0',
-                            style: TextStyle(
-                              color: !disableMainSkillEnergy ? darkDangerColor : null,
-                              fontWeight: !disableMainSkillEnergy ? FontWeight.bold : null,
-                            ),
-                          ),
-                        ],
-                      ),
-                      style: _commentTextStyle,
-                    ),
-                  ),
-                ],
-              ),
-              Gap.xs,
-              Text(
-                '目前主技能: ${statistics.basicProfile.mainSkill.nameI18nKey.xTr}',
-                style: _commentTextStyle,
-              ),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(
-                    '自訂權重?',
-                    style: TextStyle(color: positiveColor),
-                  ),
-                  _text(''),
-                  _text('主技能\n能量'),
-                  _text(''),
-                  _text('基礎值'),
-                  _text(''),
-                  _text('主技能\n速度參數'),
-                ],
-                [
-                  _text(
-                    Display.numDouble(statistics.mainSkillAccelerateVitality),
-                    style: TextStyle(color: !disableMainSkillEnergy ? darkDangerColor : null),
-                  ),
-                  _text('='),
-                  _text('(0.015'),
-                  _text('x'),
-                  _text('${Display.numDouble(mainSkillEnergy)})'),
-                  _text('x'),
-                  _text('(1'),
-                  _text('+'),
-                  _text('${Display.numDouble(statistics.mainSkillSpeedParameter)})'),
-                ],
-              ]),
-              MySubHeader(
-                titleText: '持有上限',
-              ),
-              MySubHeader2(titleText: '持有上限溢出數'),
-              _commonTable([
-                [
-                  _text('x'),
-                  _text(''),
-                  _text('食材1~3\n數量'),
-                  _text(''),
-                  _text('食材機率'),
-                  _text(''),
-                  _text(''),
-                ],
-                [
-                  _text(Display.numDouble(a1)),
-                  _text('='),
-                  _text('(${statistics.ingredientCount1}+${statistics.ingredientCount2}+${statistics.ingredientCount3})'),
-                  _text('x'),
-                  _text('${statistics.ingredientRate}'),
-                  _text('/'),
-                  _text('3'),
-                ],
-              ]),
-              _commonTable([
-                [
-                  _text('y'),
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text('食材機率'),
-                  _text(''),
-                  _text('樹果數量'),
-                ],
-                [
-                  _text(Display.numDouble(a2)),
-                  _text('='),
-                  _text('(5'),
-                  _text('-'),
-                  _text('${statistics.ingredientRate})'),
-                  _text('x'),
-                  _text('${statistics.fruitCount}'),
-                ],
-              ]),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text('x'),
-                  _text(''),
-                  _text('y'),
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text('幫忙間隔'),
-                  _text(''),
-                  _text(
-                    '格子數',
-                  ),
-                  _text(''),
-                  _text(
-                    SubSkill.holdMaxS.nameI18nKey.xTr,
-                    tooltip: SubSkill.holdMaxS.intro,
-                  ),
-                  _text(''),
-                  _text(
-                    SubSkill.holdMaxM.nameI18nKey.xTr,
-                    tooltip: SubSkill.holdMaxM.intro,
-                  ),
-                  _text(''),
-                  _text(
-                    SubSkill.holdMaxL.nameI18nKey.xTr,
-                    tooltip: SubSkill.holdMaxL.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numDouble(statistics.maxOverflowHoldCount)),
-                  _text('='),
-                  _text('(${Display.numDouble(a1)}'),
-                  _text('+'),
-                  _text('${Display.numDouble(a2)})'),
-                  _text('x'),
-                  _text('(30600'),
-                  _text('/'),
-                  _text('${Display.numDouble(statistics.helpInterval)})'),
-                  _text('-'),
-                  _text(Display.numInt(statistics.basicProfile.boxCount)),
-                  _text('-'),
-                  _text('(6x${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.holdMaxS))})'),
-                  _text('-'),
-                  _text('(12x${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.holdMaxM))})'),
-                  _text('-'),
-                  _text('(18x${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.holdMaxL))})'),
-                ],
-              ]),
-              MySubHeader2(titleText: '持有上限溢出能量'),
-              _commonTable([
-                [
-                  _text(Display.numInt(statistics.overflowHoldEnergy)),
-                ]
-              ]),
-              MySubHeader(
-                titleText: '活力',
-              ),
-              MySubHeader2(titleText: '活力加速'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(
-                    SubSkill.energyRecoverBonus.nameI18nKey.xTr,
-                    tooltip: SubSkill.energyRecoverBonus.intro,
-                  ),
-                  _text(''),
-                  _text('性格影響'),
-                ],
-                [
-                  _text(Display.numInt(statistics.accelerateVitality)),
-                  _text('='),
-                  _text('0.02 x ${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.energyRecoverBonus))}'),
-                  _text('+'),
-                  _text('0.1 x ${Display.numDouble((statistics.getOneIf(statistics.character.positive == '活力回復') - statistics.getOneIf(statistics.character.negative == '活力回復')))}'),
-                ],
-              ]),
-              MySubHeader(
-                titleText: '夢之碎片',
-              ),
-              MySubHeader2(titleText: '夢之碎片獎勵'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(
-                    '${SubSkill.dreamChipBonus.nameI18nKey.xTr}\n數量',
-                    tooltip: SubSkill.dreamChipBonus.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numInt(statistics.dreamChipsBonus)),
-                  _text('='),
-                  _text('500'),
-                  _text('x'),
-                  _text('${statistics.getSubSkillsCountMatch(SubSkill.dreamChipBonus)}'),
-                ],
-              ]),
-              MySubHeader(
-                titleText: '睡眠EXP',
-              ),
-              MySubHeader2(titleText: '睡眠EXP獎勵'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(
-                    SubSkill.sleepExpBonus.nameI18nKey.xTr,
-                    tooltip: SubSkill.sleepExpBonus.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numInt(statistics.sleepExpBonus)),
-                  _text('='),
-                  _text('1000'),
-                  _text('x'),
-                  _text('${statistics.getSubSkillsCountMatch(SubSkill.sleepExpBonus)}'),
-                ],
-              ]),
-              MySubHeader(
-                titleText: '幫忙',
-              ),
-              MySubHeader2(titleText: '幫忙速度'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(
-                    '${SubSkill.helpSpeedM.nameI18nKey.xTr}\n數量',
-                    tooltip: SubSkill.helpSpeedM.intro,
-                  ),
-                  _text(''),
-                  _text(
-                    '${SubSkill.helpSpeedS.nameI18nKey.xTr}\n數量',
-                    tooltip: SubSkill.helpSpeedS.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numDouble(statistics.totalHelpSpeedM + statistics.totalHelpSpeedS)),
-                  _text('='),
-                  _text('0.14x${Display.numDouble(statistics.totalHelpSpeedM)}'),
-                  _text('+'),
-                  _text('0.07x${Display.numDouble(statistics.totalHelpSpeedS)}'),
-                ],
-              ]),
-              MySubHeader2(titleText: '幫手獎勵'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(
-                    '「${SubSkill.helperBonus.nameI18nKey.xTr}」\n副技能數量',
-                    tooltip: SubSkill.helperBonus.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numDouble(statistics.helperBonus)),
-                  _text('='),
-                  _text('15'),
-                  _text('x'),
-                  _text(Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.helperBonus))),
-                ],
-              ]),
-              MySubHeader2(titleText: '幫忙均能'),
-              Text('等同食材均能', style: _commentTextStyle,),
-              _commonTable([
-                [
-                  _text(Display.numDouble(statistics.ingredientEnergyAvg)),
-                ],
-              ]),
-              MySubHeader2(titleText: '性格速度'),
-              Text(
-                '性格對幫忙速度影響',
-                style: _commentTextStyle,
-              ),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(
-                    '「幫忙速度」\n性格特色',
-                  ),
-                ],
-                [
-                  _text(Display.numDouble(statistics.characterSpeed)),
-                  _text('='),
-                  _text('0.1'),
-                  _text('x'),
-                  _text(Display.numInt(
-                      statistics.getOneIf(statistics.character.positive == '幫忙速度')
-                          - statistics.getOneIf(statistics.character.negative == '幫忙速度')
-                  )),
-                ]
-              ]),
-              ..._helpIntervalItems(statistics, profile),
-              MySubHeader(
-                titleText: '資料來源',
-                color: dataSourceSubHeaderColor,
-              ),
+              ..._skillItems(statistics, profile),
+              ..._maxHoldItems(statistics, profile),
+              ..._dreamChipsItems(statistics, profile),
+              ..._sleepExpItems(statistics, profile),
+              ..._helpItems(statistics, profile),
             ],
           ),
-          ...ListTile.divideTiles(
-            context: context,
-            tiles: [
-              const SearchListTile(
-                titleText: '【攻略】使用能量計算!!更科學的『寶可夢Sleep潛力計算機v4.0』五段評價系統!!',
-                url: 'https://forum.gamer.com.tw/C.php?bsn=36685&snA=913',
-                subTitleText: '主要參考計算方式',
-              ),
-            ],
-          ),
+          ..._dataSourceItems(),
           Gap.trailing,
         ],
       ),
     );
   }
 
+  List<Widget> _dataSourceItems() {
+    return [
+      Hp(
+        child: MySubHeader(
+          titleText: '資料來源',
+          color: dataSourceSubHeaderColor,
+        ),
+      ),
+      ...ListTile.divideTiles(
+        context: context,
+        tiles: [
+          const SearchListTile(
+            titleText: '【攻略】使用能量計算!!更科學的『寶可夢Sleep潛力計算機v4.0』五段評價系統!!',
+            url: 'https://forum.gamer.com.tw/C.php?bsn=36685&snA=913',
+            subTitleText: '主要參考計算方式',
+          ),
+        ],
+      ),
+    ];
+  }
+
   List<Widget> _buildLeftItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
     return [
       ..._fruitItems(statistics),
-
+      ..._ingredientsItems(statistics, profile),
+      ...Hp.list(
+        children: [
+          ..._skillItems(statistics, profile),
+          ..._helpItems(statistics, profile),
+        ],
+      ),
+      Gap.trailing,
     ];
   }
 
   List<Widget> _buildRightItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
     return [
-      ..._ingredientsItems(statistics, profile),
-
+      ...Hp.list(
+        children: [
+          ..._vitalityItems(statistics, profile),
+          ..._dreamChipsItems(statistics, profile),
+          ..._sleepExpItems(statistics, profile),
+          ..._maxHoldItems(statistics, profile),
+        ],
+      ),
+      ..._dataSourceItems(),
+      Gap.trailing,
     ];
   }
 
@@ -736,6 +334,27 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
       // _text(Display.numDouble(statistics.helpInterval)),
       _commonTable([
         [
+          _text('x'),
+          _text(''),
+          _text('幫手獎勵'),
+          _text(''),
+          _text(
+            '${SubSkill.helpSpeedM.nameI18nKey.xTr}\n總加成',
+            tooltip: '(副技能) ${SubSkill.helpSpeedM.intro}',
+          ),
+          _text(''),
+          _text(
+            '${SubSkill.helpSpeedS.nameI18nKey.xTr}\n總加成',
+            tooltip: '(副技能) ${SubSkill.helpSpeedS.intro}',
+          ),
+          _text(''),
+          _text('性格速度'),
+          _text(''),
+          _text('活力加速'),
+          _text(''),
+          _text('主技活力加速'),
+        ],
+        [
           _text(Display.numDouble(x)),
           _text('='),
           _text(Display.numDouble(statistics.helperBonus)),
@@ -753,6 +372,17 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
       ]),
       _commonTable([
         [
+          _text('y'),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text('x'),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(''),
+        ],
+        [
           _text(Display.numDouble(y)),
           _text('='),
           _text('1'),
@@ -766,11 +396,495 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
       ]),
       _commonTable([
         [
+          _text(''),
+          _text(''),
+          _text('加成前幫忙間隔'),
+          _text(''),
+          _text('y'),
+        ],
+        [
           _text(Display.numDouble(statistics.helpInterval)),
           _text('='),
           _text('${profile.basicProfile.helpInterval}'),
           _text('x'),
           _text(Display.numDouble(y)),
+        ],
+      ]),
+    ];
+  }
+
+  List<Widget> _helpItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    return [
+      MySubHeader(
+        titleText: '幫忙',
+      ),
+      MySubHeader2(titleText: '幫忙速度'),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(
+            '${SubSkill.helpSpeedM.nameI18nKey.xTr}\n數量',
+            tooltip: SubSkill.helpSpeedM.intro,
+          ),
+          _text(''),
+          _text(
+            '${SubSkill.helpSpeedS.nameI18nKey.xTr}\n數量',
+            tooltip: SubSkill.helpSpeedS.intro,
+          ),
+        ],
+        [
+          _text(Display.numDouble(statistics.totalHelpSpeedM + statistics.totalHelpSpeedS)),
+          _text('='),
+          _text('0.14x${Display.numDouble(statistics.totalHelpSpeedM)}'),
+          _text('+'),
+          _text('0.07x${Display.numDouble(statistics.totalHelpSpeedS)}'),
+        ],
+      ]),
+      MySubHeader2(titleText: '幫手獎勵'),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(
+            '「${SubSkill.helperBonus.nameI18nKey.xTr}」\n副技能數量',
+            tooltip: SubSkill.helperBonus.intro,
+          ),
+        ],
+        [
+          _text(Display.numDouble(statistics.helperBonus)),
+          _text('='),
+          _text('15'),
+          _text('x'),
+          _text(Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.helperBonus))),
+        ],
+      ]),
+      MySubHeader2(titleText: '幫忙均能'),
+      Text('等同食材均能', style: _commentTextStyle,),
+      _commonTable([
+        [
+          _text(Display.numDouble(statistics.ingredientEnergyAvg)),
+        ],
+      ]),
+      MySubHeader2(titleText: '性格速度'),
+      Text(
+        '性格對幫忙速度影響',
+        style: _commentTextStyle,
+      ),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(
+            '「幫忙速度」\n性格特色',
+          ),
+        ],
+        [
+          _text(Display.numDouble(statistics.characterSpeed)),
+          _text('='),
+          _text('0.1'),
+          _text('x'),
+          _text(Display.numInt(
+              statistics.getOneIf(statistics.character.positive == '幫忙速度')
+                  - statistics.getOneIf(statistics.character.negative == '幫忙速度')
+          )),
+        ]
+      ]),
+      ..._helpIntervalItems(statistics, profile),
+    ];
+  }
+
+  List<Widget> _sleepExpItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    return [
+      MySubHeader(
+        titleText: '睡眠EXP',
+      ),
+      MySubHeader2(titleText: '睡眠EXP獎勵'),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(
+            SubSkill.sleepExpBonus.nameI18nKey.xTr,
+            tooltip: SubSkill.sleepExpBonus.intro,
+          ),
+        ],
+        [
+          _text(Display.numInt(statistics.sleepExpBonus)),
+          _text('='),
+          _text('1000'),
+          _text('x'),
+          _text('${statistics.getSubSkillsCountMatch(SubSkill.sleepExpBonus)}'),
+        ],
+      ]),
+    ];
+  }
+
+  List<Widget> _dreamChipsItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    return [
+      MySubHeader(
+        titleText: '夢之碎片',
+      ),
+      MySubHeader2(titleText: '夢之碎片獎勵'),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text(
+            '${SubSkill.dreamChipBonus.nameI18nKey.xTr}\n數量',
+            tooltip: SubSkill.dreamChipBonus.intro,
+          ),
+        ],
+        [
+          _text(Display.numInt(statistics.dreamChipsBonus)),
+          _text('='),
+          _text('500'),
+          _text('x'),
+          _text('${statistics.getSubSkillsCountMatch(SubSkill.dreamChipBonus)}'),
+        ],
+      ]),
+    ];
+  }
+
+  List<Widget> _vitalityItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    return [
+      MySubHeader(
+        titleText: '活力',
+      ),
+      MySubHeader2(titleText: '活力加速'),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(
+            SubSkill.energyRecoverBonus.nameI18nKey.xTr,
+            tooltip: SubSkill.energyRecoverBonus.intro,
+          ),
+          _text(''),
+          _text('性格影響'),
+        ],
+        [
+          _text(Display.numInt(statistics.accelerateVitality)),
+          _text('='),
+          _text('0.02 x ${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.energyRecoverBonus))}'),
+          _text('+'),
+          _text('0.1 x ${Display.numDouble((statistics.getOneIf(statistics.character.positive == '活力回復') - statistics.getOneIf(statistics.character.negative == '活力回復')))}'),
+        ],
+      ]),
+    ];
+  }
+
+  List<Widget> _maxHoldItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    final a1 = (statistics.ingredientCount1 + statistics.ingredientCount2 + statistics.ingredientCount3) * statistics.ingredientRate / 3;
+    final a2 = (5 - statistics.ingredientRate) * statistics.fruitCount;
+
+    return [
+      MySubHeader(
+        titleText: '持有上限',
+      ),
+      MySubHeader2(titleText: '持有上限溢出數'),
+      _commonTable([
+        [
+          _text('x'),
+          _text(''),
+          _text('食材1~3\n數量'),
+          _text(''),
+          _text('食材機率'),
+          _text(''),
+          _text(''),
+        ],
+        [
+          _text(Display.numDouble(a1)),
+          _text('='),
+          _text('(${statistics.ingredientCount1}+${statistics.ingredientCount2}+${statistics.ingredientCount3})'),
+          _text('x'),
+          _text('${statistics.ingredientRate}'),
+          _text('/'),
+          _text('3'),
+        ],
+      ]),
+      _commonTable([
+        [
+          _text('y'),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text('食材機率'),
+          _text(''),
+          _text('樹果數量'),
+        ],
+        [
+          _text(Display.numDouble(a2)),
+          _text('='),
+          _text('(5'),
+          _text('-'),
+          _text('${statistics.ingredientRate})'),
+          _text('x'),
+          _text('${statistics.fruitCount}'),
+        ],
+      ]),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text('x'),
+          _text(''),
+          _text('y'),
+          _text(''),
+          _text(''),
+          _text(''),
+          _text('幫忙間隔'),
+          _text(''),
+          _text(
+            '格子數',
+          ),
+          _text(''),
+          _text(
+            SubSkill.holdMaxS.nameI18nKey.xTr,
+            tooltip: SubSkill.holdMaxS.intro,
+          ),
+          _text(''),
+          _text(
+            SubSkill.holdMaxM.nameI18nKey.xTr,
+            tooltip: SubSkill.holdMaxM.intro,
+          ),
+          _text(''),
+          _text(
+            SubSkill.holdMaxL.nameI18nKey.xTr,
+            tooltip: SubSkill.holdMaxL.intro,
+          ),
+        ],
+        [
+          _text(Display.numDouble(statistics.maxOverflowHoldCount)),
+          _text('='),
+          _text('(${Display.numDouble(a1)}'),
+          _text('+'),
+          _text('${Display.numDouble(a2)})'),
+          _text('x'),
+          _text('(30600'),
+          _text('/'),
+          _text('${Display.numDouble(statistics.helpInterval)})'),
+          _text('-'),
+          _text(Display.numInt(statistics.basicProfile.boxCount)),
+          _text('-'),
+          _text('(6x${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.holdMaxS))})'),
+          _text('-'),
+          _text('(12x${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.holdMaxM))})'),
+          _text('-'),
+          _text('(18x${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.holdMaxL))})'),
+        ],
+      ]),
+      MySubHeader2(titleText: '持有上限溢出能量'),
+      _commonTable([
+        [
+          _text(Display.numInt(statistics.overflowHoldEnergy)),
+        ]
+      ]),
+    ];
+  }
+
+  List<Widget> _skillItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    final disableMainSkillEnergy = statistics.isMainSkillIn({
+      MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS,
+    });
+    final mainSkillEnergy = statistics.getMainSkillEnergy();
+
+    return [
+      MySubHeader(
+        titleText: '技能',
+      ),
+      MySubHeader2(titleText: '額外提升等級',),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(
+            '${SubSkill.skillLevelS.nameI18nKey.xTr}\n個數',
+            tooltip: SubSkill.skillLevelS.intro,
+          ),
+          _text(''),
+          _text(
+            '${SubSkill.skillLevelM.nameI18nKey.xTr}\n個數',
+            tooltip: SubSkill.skillLevelM.intro,
+          ),
+        ],
+        [
+          _text(Display.numInt(
+            statistics.skillLevel,
+          )),
+          _text('='),
+          _text(
+            Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.skillLevelS)),
+          ),
+          _text('+'),
+          _text(
+            Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.skillLevelM)),
+          ),
+        ]
+      ]),
+      MySubHeader2(titleText: '主技能速度參數'),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(
+            '性格影響\n(主技能)',
+            // tooltip: '', // TODO:
+          ),
+          _text(''),
+          _text(
+            '${SubSkill.skillRateS.nameI18nKey.xTr}\n個數',
+            tooltip: SubSkill.skillRateS.intro,
+          ),
+          _text(''),
+          _text(
+            '${SubSkill.skillRateM.nameI18nKey.xTr}\n個數',
+            tooltip: SubSkill.skillRateS.intro,
+          ),
+        ],
+        [
+          _text(Display.numDouble(statistics.mainSkillSpeedParameter)),
+          _text('='),
+          _text(
+            '(0.2x${Display.numDouble(
+                statistics.getOneIf(statistics.character.positive == '主技能')
+                    - statistics.getOneIf(statistics.character.negative == '主技能')
+            )})',
+          ),
+          _text('+'),
+          _text('(0.18x${statistics.getSubSkillsCountMatch(SubSkill.skillRateS)})'),
+          _text('+'),
+          _text('(0.36x${statistics.getSubSkillsCountMatch(SubSkill.skillRateM)})'),
+        ],
+      ]),
+      MySubHeader2(titleText: '主技能能量 (加成後)'),
+      Gap.sm,
+      Row(
+        children: [
+          // Icon(
+          //   disableMainSkillEnergy ? Icons.cancel : Icons.check_circle,
+          //   color: disableMainSkillEnergy ? dangerColor : greenColor,
+          // ),
+          // Gap.sm,
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                text: '如果主技能是「${[MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS].map((mainSkill) => mainSkill.nameI18nKey.xTr).join('t_separator'.xTr)}」，',
+                children: [
+                  TextSpan(
+                    text: '結果為 0',
+                    style: TextStyle(
+                      color: disableMainSkillEnergy ? darkDangerColor : null,
+                      fontWeight: disableMainSkillEnergy ? FontWeight.bold : null,
+                    ),
+                  ),
+                ],
+              ),
+              style: _commentTextStyle,
+            ),
+          ),
+        ],
+      ),
+      Gap.xs,
+      Text(
+        '目前主技能: ${statistics.basicProfile.mainSkill.nameI18nKey.xTr}',
+        style: _commentTextStyle,
+      ),
+      Gap.md,
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text('主技能\n能量'),
+          _text(''),
+          _text('基礎值'),
+          _text(''),
+          _text('主技能\n速度參數'),
+        ],
+        [
+          _text(
+            Display.numDouble(statistics.mainSkillTotalEnergy),
+            style: TextStyle(
+              color: disableMainSkillEnergy ? darkDangerColor : null,
+              fontWeight: disableMainSkillEnergy ? FontWeight.bold : null,
+            ),
+          ),
+          _text('='),
+          _text(Display.numDouble(mainSkillEnergy)),
+          _text('x'),
+          _text('(1'),
+          _text('+'),
+          _text('${Display.numDouble(statistics.mainSkillSpeedParameter)})'),
+        ],
+      ]),
+      MySubHeader2(titleText: '主技能活力加速'),
+      Row(
+        children: [
+          // Icon(
+          //   disableMainSkillEnergy ? Icons.cancel : Icons.check_circle,
+          //   color: disableMainSkillEnergy ? dangerColor : greenColor,
+          // ),
+          // Gap.sm,
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                text: '如果主技能不是「${[MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS].map((mainSkill) => mainSkill.nameI18nKey.xTr).join('t_separator'.xTr)}」，',
+                children: [
+                  TextSpan(
+                    text: '結果為 0',
+                    style: TextStyle(
+                      color: !disableMainSkillEnergy ? darkDangerColor : null,
+                      fontWeight: !disableMainSkillEnergy ? FontWeight.bold : null,
+                    ),
+                  ),
+                ],
+              ),
+              style: _commentTextStyle,
+            ),
+          ),
+        ],
+      ),
+      Gap.xs,
+      Text(
+        '目前主技能: ${statistics.basicProfile.mainSkill.nameI18nKey.xTr}',
+        style: _commentTextStyle,
+      ),
+      _commonTable([
+        [
+          _text(''),
+          _text(''),
+          _text(
+            '自訂權重?',
+            style: TextStyle(color: positiveColor),
+          ),
+          _text(''),
+          _text('主技能\n能量'),
+          _text(''),
+          _text('基礎值'),
+          _text(''),
+          _text('主技能\n速度參數'),
+        ],
+        [
+          _text(
+            Display.numDouble(statistics.mainSkillAccelerateVitality),
+            style: TextStyle(color: !disableMainSkillEnergy ? darkDangerColor : null),
+          ),
+          _text('='),
+          _text('(0.015'),
+          _text('x'),
+          _text('${Display.numDouble(mainSkillEnergy)})'),
+          _text('x'),
+          _text('(1'),
+          _text('+'),
+          _text('${Display.numDouble(statistics.mainSkillSpeedParameter)})'),
         ],
       ]),
     ];

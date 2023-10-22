@@ -62,8 +62,7 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
           }),
           _NormalVersionItem('[UX] 寶可夢搜尋對話框的關鍵字欄位可以清除'),
           _NormalVersionItem('[Feature] 圖鑑可以反查寶可夢盒'),
-          _NormalVersionItem(''),
-          _NormalVersionItem(''),
+          _NormalVersionItem('[Info] 顯示詳細計算過程'),
         ],
       ),
       _Version(

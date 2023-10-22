@@ -762,16 +762,15 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
             Text(
               '總幫忙速度加成: S(${statistics?.totalHelpSpeedS}), M(${statistics?.totalHelpSpeedM})',
             ),
-            if (kDebugMode)
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    AnalysisDetailsPage.go(context, _profile.id);
-                  },
-                  child: Text('詳細計算過程'),
-                ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  AnalysisDetailsPage.go(context, _profile.id);
+                },
+                child: Text('詳細計算過程'),
               ),
+            ),
           ],
           MySubHeader(
             titleText: 't_others'.xTr,
