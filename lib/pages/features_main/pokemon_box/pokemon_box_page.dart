@@ -557,7 +557,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
     _currPickIndex = (index + 1) % SubSkill.maxCount;
 
     // View
-    _viewPokemonProfile(profile, markDirty: false);
+    // _viewPokemonProfile(profile, markDirty: false);
+    _profile = profile;
     setState(() { });
   }
 
@@ -634,6 +635,26 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                         basicProfile: basicProfile,
                       ),
                     ),
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    child: AnimatedOpacity(
+                      opacity: basicProfile == null ? 0 : 1,
+                      duration: const Duration(milliseconds: 200),
+                      child: IconButton(
+                        onPressed: basicProfile == null ? null : () {
+                          setState(() {
+                            _profilesField[index] = null;
+                            _profileIdToIndex.remove(_indexToProfileId[index]);
+                            _indexToProfileId[index] = -1;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.close,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -647,14 +668,14 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   Future<void> _submit() async {
     final profiles = _profilesField.nonNulls.toList();
 
-    if (profiles.isEmpty) {
-      DialogUtility.text(
-        context,
-        title: Text('t_failed'.xTr),
-        content: Text('t_incomplete'.xTr),
-      );
-      return;
-    }
+    // if (profiles.isEmpty) {
+    //   DialogUtility.text(
+    //     context,
+    //     title: Text('t_failed'.xTr),
+    //     content: Text('t_incomplete'.xTr),
+    //   );
+    //   return;
+    // }
 
     // TODO: 需驗證沒有被刪除?
 

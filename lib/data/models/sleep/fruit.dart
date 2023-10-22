@@ -1,5 +1,8 @@
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
+/// 樹果能量:
+/// https://docs.google.com/spreadsheets/d/1rijx57W-IZ0FFRUJ8os9dGyRgzP7zWyNZehxDGdMk2o/edit#gid=770776656
+
 /// 樹果 (Berry)
 ///
 /// 樹果收集攸關卡比獸升級的速度，每星期卡比獸想吃的樹果都會更新，依據箱子給的提示，提供卡比獸要

@@ -40,11 +40,13 @@ final class StoredPokemonFields implements BaseLocalFile {
   }
 
   Future<StoredPokemonFieldItem> update(PokemonField field, {
-    List<Fruit>? fruits
+    List<Fruit>? fruits,
+    required int? bonus,
   }) async {
     final oldItem = fields[field] ?? StoredPokemonFieldItem.empty();
     final newItem = oldItem.copyWith(
       fruits: fruits,
+      bonus: bonus,
     );
     fields[field] = newItem;
     return newItem;
@@ -55,9 +57,14 @@ final class StoredPokemonFields implements BaseLocalFile {
 class StoredPokemonFieldItem {
   StoredPokemonFieldItem({
     required this.fruits,
+    required this.bonus,
   });
 
   List<Fruit> fruits;
+
+  /// 數值範圍為 0 ~ 100
+  /// 遊戲內實際值為 0 ~ 100 %
+  int? bonus;
 
   factory StoredPokemonFieldItem.fromJson(Map jsonObj) {
     final fruitOf = Fruit.values.toMap((fruit) => fruit.id, (fruit) => fruit);
@@ -65,29 +72,36 @@ class StoredPokemonFieldItem {
         .map((fruitId) => fruitOf[fruitId])
         .whereNotNull()
         .toList();
+    final bonus = jsonObj['bonus'] is num
+        ? (jsonObj['bonus'] as num).toInt() : null;
 
     return StoredPokemonFieldItem(
       fruits: fruits,
+      bonus: bonus,
     );
   }
 
   factory StoredPokemonFieldItem.empty() {
     return StoredPokemonFieldItem(
       fruits: [],
+      bonus: null,
     );
   }
 
   StoredPokemonFieldItem copyWith({
     List<Fruit>? fruits,
+    required int? bonus,
   }) {
     return StoredPokemonFieldItem(
       fruits: fruits ?? this.fruits,
+      bonus: bonus ?? this.bonus,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'fruitIds': fruits.map((fruit) => fruit.id).toList(),
+      'bonus': bonus,
     };
   }
 

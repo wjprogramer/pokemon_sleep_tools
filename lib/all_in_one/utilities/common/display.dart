@@ -8,6 +8,7 @@ class Display {
   Display._();
 
   static String get placeHolder => 't_none'.xTr;
+  static String get placeHolderSign => '-';
 
   // https://stackoverflow.com/questions/14865568/currency-format-in-dart
   // static final _numDoubleFormat = NumberFormat("#,##0.00", "en_US");

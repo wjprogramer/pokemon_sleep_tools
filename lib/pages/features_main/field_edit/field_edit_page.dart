@@ -8,6 +8,7 @@ import 'package:pokemon_sleep_tools/view_models/field_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/fruit_image.dart';
 import 'package:provider/provider.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 /// TOOD: 初始值
 
@@ -47,6 +48,7 @@ class _FieldEditPageState extends State<FieldEditPage> {
   FieldViewModel get _fieldViewModel => context.read<FieldViewModel>();
 
   final _fruitOf = <Fruit>{};
+  final _bonusField = FormControl<int?>();
 
   @override
   void initState() {
@@ -99,6 +101,39 @@ class _FieldEditPageState extends State<FieldEditPage> {
                   ],
                 ),
               ],
+              MySubHeader(
+                titleText: '營地獎勵',
+              ),
+              SliderWithButtons(
+                value: (_bonusField.value ?? 0).toDouble(),
+                onChanged: (v) {
+                  setState(() {
+                    _bonusField.value = v.toInt();
+                  });
+                },
+                max: 100,
+                min: 0,
+                valueBuilder: (context, value) {
+                  return Stack(
+                    children: [
+                      Opacity(
+                        opacity: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text('100 %'),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: Text(
+                          '${value.toInt()} %',
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              Gap.xxl,
               Row(
                 children: [
                   Spacer(),
@@ -114,8 +149,11 @@ class _FieldEditPageState extends State<FieldEditPage> {
                   Gap.md,
                   MyElevatedButton(
                     onPressed: () async {
-                      await _fieldViewModel
-                          .save(_field, fruits: _fruitOf.toList());
+                      await _fieldViewModel.save(
+                        _field,
+                        fruits: _fruitOf.toList(),
+                        bonus: _bonusField.value,
+                      );
                       context.nav.pop();
                     },
                     child: Text(

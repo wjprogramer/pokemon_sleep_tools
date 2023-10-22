@@ -47,6 +47,17 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
       _Version(
         name: '1.0.3',
         date: DateTime(2023, 10, 21),
+        description: null,
+        items: [
+          _NormalVersionItem('[Feature] 可設定各島營地獎勵 (但目前還不會參與計算)'),
+          _NormalVersionItem('[Change] 寶可夢隊伍: 編輯時，可以刪除已加入隊伍的寶可夢、可以新增完全空的隊伍'),
+          _NormalVersionItem(''),
+          _NormalVersionItem(''),
+        ],
+      ),
+      _Version(
+        name: '1.0.3',
+        date: DateTime(2023, 10, 21),
         description: '',
         items: [
           _NormalVersionItem('[FatalBug/Windows] 修正無法匯出'),
@@ -54,7 +65,6 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
           _NormalVersionItem('[UI/UX] 改善地圖與睡姿畫面', onTap: () {
             MapPage.go(context, PokemonField.f1);
           }),
-
         ],
       ),
       _Version(

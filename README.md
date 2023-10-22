@@ -52,6 +52,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 - 主/副技能
   - 提供敘述
   - 反查功能盤點
+  - 列出所有主技能對應的寶可夢
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）
   - 類似手機 plus, pro, pro max 詳細數據對比
 - 因為反查功能很多，避免過多路由，在路由超過一定數量，Global 顯示按鈕用以 pop 到最上層?
@@ -104,6 +105,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
   - Windows build apk/exe/... script
 - 改 icon
 - 副技能不會重複嗎？
+- 刪除寶可夢時，應該把所有隊伍中的相應寶可夢刪除
 
 ### 桌面開發
 
@@ -141,3 +143,12 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 許可：本文來自非營利社群「食神攻略組」多人共同討論製作，使用創用CC授權，轉載引用請告知
 
 https://github.com/RaenonX-PokemonSleep/pokemon-sleep-ui
+
+https://forum.gamer.com.tw/C.php?bsn=36685&snA=89&tnum=16
+
+*寶可夢升級後，幫忙間隔(帳面值)會縮短、撿來的樹果能量也會增加(Lv.60時 +112~150/顆)。
+*寶可夢資訊頁所載幫忙間隔為「該寶可夢活力為0狀態下，產出一次樹果(或食材)所需的時間」，當活力為100%時，實際的幫忙間隔僅需帳面值的1/2以下。活力值會隨時間下降(每10分鐘扣1%)，實際的幫忙間隔也會越趨近於帳面值，此時需要透過睡眠研究或活力枕頭來回復，或指派具有回復活力主動技的寶可夢上場，機率性發動技能回復活力。
+*從低階級進化而來的寶可夢，會比野生版本擁有更高的持有上限，主技能等級也會+1級(每進化一次+1級)，因此若有嚴選寶可夢的需求，建議技能實用的食材型寶可夢(如:初代御三家)要從最低階嚴選培養。
+
+
+

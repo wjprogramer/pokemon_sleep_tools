@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -49,10 +50,15 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
 
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
   SleepFaceRepository get _sleepFaceRepo => getIt();
+  SleepFaceViewModel get _sleepFaceViewModel => context.read();
+
+  final _disposers = <MyDisposable>[];
 
   // UI
   late ThemeData _theme;
 
+  /// [PokemonBasicProfile.id] list (Group by [SleepType])
+  var _metaOfSleepType = <SleepType, _SleepTypeMeta>{};
   var _basicProfileOf = <int, PokemonBasicProfile>{};
 
   /// [PokemonBasicProfile.id] to sleep face names
@@ -64,11 +70,15 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
   /// [PokemonBasicProfile.id] to [PokemonProfile]
   final _profileOf = <int, PokemonProfile>{};
 
+  var _sleepTypes = <SleepType>[];
+
   @override
   void initState() {
     super.initState();
 
     scheduleMicrotask(() async {
+      _sleepTypes = SleepType.values.sorted((a, b) => -1 * (a.id - b.id));
+
       final mainViewModel = context.read<MainViewModel>();
       final profiles = await mainViewModel.loadProfiles();
 
@@ -87,15 +97,58 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
         _sleepFacesOf[sleepFace.basicProfileId]!.add(sleepFace);
       }
 
+      _metaOfSleepType = groupBy(
+        _basicProfileOf.entries.map((e) => e.value).toList(),
+          (e) => e.sleepType,
+      ).map((sleepType, basicProfile) {
+        return MapEntry(sleepType, _SleepTypeMeta(
+          basicProfileIdList: basicProfile
+              .sorted((a, b) => a.boxNo - b.boxNo)
+              .map((x) => x.id).toList(),
+        ));
+      });
+
+      for (final basicProfile in _basicProfileOf.entries.map((e) => e.value)) {
+        _metaOfSleepType[basicProfile.sleepType]!.maxCount +=
+            _sleepFacesOf[basicProfile.id]?.length ?? 0;
+      }
+
+      _update(_metaOfSleepType);
+
       if (mounted) {
         setState(() { });
       }
+
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _disposers.addAll([
+          _sleepFaceViewModel.xAddListener(_listenSleepFaceViewModel)
+        ]);
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    _disposers.disposeAll();
+    super.dispose();
+  }
+
+  void _listenSleepFaceViewModel() {
+    _update(_metaOfSleepType);
+  }
+
+  void _update(Map<SleepType, _SleepTypeMeta> basicProfileIdListOf) {
+    final sleepFaceViewModel = _sleepFaceViewModel;
+    final markStylesOf = sleepFaceViewModel.markStylesOf;
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     _theme = context.theme;
+    final sleepTypes = _sleepTypes
+        .where((e) => (_metaOfSleepType[e]?.basicProfileIdList ?? []).isNotEmpty);
 
     return Consumer2<MainViewModel, SleepFaceViewModel>(
       builder: (context, mainViewModel, sleepFaceViewModel, child) {
@@ -109,10 +162,49 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
           ),
           body: buildListView(
             children: [
-              ..._basicProfileOf.entries.map((entry) => _buildItem(
-                entry.basicProfile,
-                {...markStylesOf[entry.basicProfile.id] ?? []},
-              )),
+              ...sleepTypes.map((sleepType) => <Widget>[
+                Hp(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(
+                      16, 4, 16, 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: sleepType.bgColor,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            sleepType.nameI18nKey.xTr,
+                            style: TextStyle(
+                              color: sleepType.fgColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '${_metaOfSleepType[sleepType]?.markCount ?? 0}/${_metaOfSleepType[sleepType]?.maxCount ?? 0}',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Gap.md,
+                ...?_metaOfSleepType[sleepType]?.basicProfileIdList.map((id) {
+                  final basicProfile = _basicProfileOf[id]!;
+                  // final sleepFaces = _sleepFacesOf[id] ?? [];
+                  // final distinctStyles = {...sleepFaces.map((e) => e.style)};
+                  // final noAnyStyle = distinctStyles.isEmpty;
+                  // final foundAllSleepFaces = distinctStyles.length == markStylesOf[id]?.length;
+
+                  return _buildItem(
+                    basicProfile,
+                    {...markStylesOf[id] ?? []},
+                  );
+                }),
+                Gap.md,
+              ]).expand((e) => e),
               Gap.trailing,
             ],
           ),
@@ -256,4 +348,19 @@ class _SleepFaceHintIcon extends StatelessWidget {
       ],
     );
   }
+}
+
+class _SleepTypeMeta {
+  _SleepTypeMeta({
+    required this.basicProfileIdList,
+  });
+
+  /// Sort by [PokemonBasicProfile.boxNo]
+  List<int> basicProfileIdList;
+
+  /// [SleepFace] count of sleep type
+  var maxCount = 0;
+
+  /// User marked [SleepFace] count of sleep type
+  var markCount = 0;
 }

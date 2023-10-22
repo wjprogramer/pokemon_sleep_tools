@@ -153,27 +153,18 @@ class _MapsPageState extends State<MapsPage> {
             child: _buildFieldContent(field, storedFieldItem),
           ),
         ),
-        if (field == PokemonField.f1)
-          Positioned(
-            top: 0,
-            right: 0,
-            child: TextButton(
-              onPressed: () {
-                FieldEditPage.go(context, field);
-              },
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.edit,
-                  ),
-                  Gap.sm,
-                  Text(
-                    '設定樹果',
-                  ),
-                ],
-              ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: IconButton(
+            onPressed: () {
+              FieldEditPage.go(context, field);
+            },
+            icon: Icon(
+              Icons.edit,
             ),
           ),
+        ),
       ],
     );
   }
@@ -231,7 +222,7 @@ class _MapsPageState extends State<MapsPage> {
             Text(
               '解鎖數量: ${field.unlockCount}\n'
                   '寶可夢數量: ${_pokemonCountOfFiled[field]}\n'
-                  '睡姿數量: ${_sleepFaceCountOfFiled[field]}',
+                  '睡姿數量: ${_sleepFaceCountOfFiled[field]}\n營地獎勵: ${storedFieldItem.bonus ?? Display.placeHolderSign} %',
               style: _theme.textTheme.bodyMedium,
             ),
           ],

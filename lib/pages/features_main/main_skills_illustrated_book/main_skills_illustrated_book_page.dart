@@ -54,6 +54,41 @@ class _MainSkillsIllustratedBookPageState extends State<MainSkillsIllustratedBoo
           horizontal: HORIZON_PADDING,
         ),
         children: [
+          MySubHeader(
+            titleText: '說明'.xTr,
+          ),
+          ListItems(
+            children: [
+              Text('主技能提升等級方式'),
+              ListItems(
+                decoration: ListItemsDecoration.number,
+                children: [
+                  Text('使用主技能種子升級'.xTr),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '副技能: ${[SubSkill.skillLevelS, SubSkill.skillLevelM].map((subSkill) => subSkill.nameI18nKey.xTr).join('t_separator'.xTr)}',
+                        ),
+                      ),
+                      Tooltip(
+                        message: [SubSkill.skillLevelS, SubSkill.skillLevelM].map((subSkill) => '${subSkill.nameI18nKey.xTr}: ${subSkill.intro.xTr}').join('\n'),
+                        child: Icon(
+                          Icons.info_outline,
+                          size: 14,
+                          color: greyColor3,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text('使用糖果進化後，等級提升一等'.xTr),
+                ],
+              ),
+            ],
+          ),
+          MySubHeader(
+            titleText: '列表'.xTr,
+          ),
           Gap.sm,
           Wrap(
             spacing: _itemSpacing,

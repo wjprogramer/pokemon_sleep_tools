@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
+typedef SliderWithButtonsValueBuilder = Widget Function(BuildContext context, double value);
+
 class SliderWithButtons extends StatefulWidget {
   const SliderWithButtons({
     super.key,
@@ -15,6 +17,7 @@ class SliderWithButtons extends StatefulWidget {
     required this.min,
     this.divisions,
     this.hideSlider = false,
+    this.valueBuilder,
   });
 
   final double value;
@@ -23,6 +26,7 @@ class SliderWithButtons extends StatefulWidget {
   final double min;
   final int? divisions;
   final bool hideSlider;
+  final SliderWithButtonsValueBuilder? valueBuilder;
 
   @override
   State<SliderWithButtons> createState() => _SliderWithButtonsState();
@@ -101,25 +105,28 @@ class _SliderWithButtonsState extends State<SliderWithButtons> {
           children: [
             Expanded(child: _buildLevelButton(value: -10)),
             Expanded(child: _buildLevelButton(value: -1)),
-            Stack(
-              children: [
-                Opacity(
-                  opacity: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Text(absMax.toString()),
-                  ),
-                ),
-                Positioned.fill(
-                  child: Center(
-                    child: Text(
-                      _value.toInt().toString(),
-                      textAlign: TextAlign.center,
+            if (widget.valueBuilder != null)
+              widget.valueBuilder!(context, _value)
+            else
+              Stack(
+                children: [
+                  Opacity(
+                    opacity: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(absMax.toString()),
                     ),
                   ),
-                ),
-              ],
-            ),
+                  Positioned.fill(
+                    child: Center(
+                      child: Text(
+                        _value.toInt().toString(),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             Expanded(child: _buildLevelButton(value: 1)),
             Expanded(child: _buildLevelButton(value: 10)),
           ].xMapIndexed((index, e, list) => <Widget>[

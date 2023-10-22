@@ -19,9 +19,10 @@ class FieldViewModel extends ChangeNotifier {
 
   Future<void> save(PokemonField field, {
     List<Fruit>? fruits,
+    required int? bonus,
   }) async {
     final newStored = await _repo.updateField(
-      field, fruits: fruits,
+      field, fruits: fruits, bonus: bonus,
     );
     _stored = newStored;
     notifyListeners();

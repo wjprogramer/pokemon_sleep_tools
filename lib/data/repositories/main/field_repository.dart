@@ -11,10 +11,11 @@ class FieldRepository implements MyInjectable {
 
   Future<StoredPokemonFields> updateField(PokemonField field, {
     List<Fruit>? fruits,
+    required int? bonus,
   }) async {
     final newStored = await _localStorage.readWrite<StoredPokemonFields>(StoredPokemonFields, (stored) async {
       await stored.update(
-        field, fruits: fruits,
+        field, fruits: fruits, bonus: bonus,
       );
       return stored;
     });

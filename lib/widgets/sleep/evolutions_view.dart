@@ -65,7 +65,11 @@ class EvolutionsView extends StatelessWidget {
                     color: greyColor2,
                   ),
                 ),
+                constraints: BoxConstraints(
+                  maxWidth: 100,
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('測試用區塊'),
                     _buildEvolutionCondition(
@@ -277,7 +281,7 @@ Widget buildEvolutionCondition(EvolutionConditionRaw condition, PokemonBasicProf
         child: leading,
       ),
       if (description != null)
-        description,
+        Expanded(child: description),
     ],
   );
 }
