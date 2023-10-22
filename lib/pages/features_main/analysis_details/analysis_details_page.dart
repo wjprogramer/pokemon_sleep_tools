@@ -476,6 +476,26 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
               MySubHeader(
                 titleText: '活力',
               ),
+              MySubHeader2(titleText: '活力加速'),
+              _commonTable([
+                [
+                  _text(''),
+                  _text(''),
+                  _text(
+                    SubSkill.energyRecoverBonus.nameI18nKey.xTr,
+                    tooltip: SubSkill.energyRecoverBonus.intro,
+                  ),
+                  _text(''),
+                  _text('性格影響'),
+                ],
+                [
+                  _text(Display.numInt(statistics.accelerateVitality)),
+                  _text('='),
+                  _text('0.02 x ${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.energyRecoverBonus))}'),
+                  _text('+'),
+                  _text('0.1 x ${Display.numDouble((statistics.getOneIf(statistics.character.positive == '活力回復') - statistics.getOneIf(statistics.character.negative == '活力回復')))}'),
+                ],
+              ]),
               MySubHeader(
                 titleText: '夢之碎片',
               ),
@@ -499,6 +519,32 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
                   _text('${statistics.getSubSkillsCountMatch(SubSkill.dreamChipBonus)}'),
                 ],
               ]),
+              MySubHeader(
+                titleText: '睡眠EXP',
+              ),
+              MySubHeader2(titleText: '睡眠EXP獎勵'),
+              _commonTable([
+                [
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(
+                    SubSkill.sleepExpBonus.nameI18nKey.xTr,
+                    tooltip: SubSkill.sleepExpBonus.intro,
+                  ),
+                ],
+                [
+                  _text(Display.numInt(statistics.sleepExpBonus)),
+                  _text('='),
+                  _text('1000'),
+                  _text('x'),
+                  _text('${statistics.getSubSkillsCountMatch(SubSkill.sleepExpBonus)}'),
+                ],
+              ]),
+              MySubHeader(
+                titleText: '幫忙',
+              ),
               MySubHeader2(titleText: '幫忙速度'),
               _commonTable([
                 [
@@ -522,77 +568,63 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
                   _text('0.07x${Display.numDouble(statistics.totalHelpSpeedS)}'),
                 ],
               ]),
-              MySubHeader2(titleText: '幫忙間隔'),
+              MySubHeader2(titleText: '幫手獎勵'),
               _commonTable([
                 [
-                  _text(Display.numDouble(statistics.helpInterval)),
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(
+                    '「${SubSkill.helperBonus.nameI18nKey.xTr}」\n副技能數量',
+                    tooltip: SubSkill.helperBonus.intro,
+                  ),
+                ],
+                [
+                  _text(Display.numDouble(statistics.helperBonus)),
+                  _text('='),
+                  _text('15'),
+                  _text('x'),
+                  _text(Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.helperBonus))),
                 ],
               ]),
               MySubHeader2(titleText: '幫忙均能'),
+              Text('等同食材均能', style: _commentTextStyle,),
               _commonTable([
                 [
                   _text(Display.numDouble(statistics.ingredientEnergyAvg)),
                 ],
               ]),
-              MySubHeader2(titleText: '幫手獎勵'),
+              MySubHeader2(titleText: '性格速度'),
+              Text(
+                '性格對幫忙速度影響',
+                style: _commentTextStyle,
+              ),
               _commonTable([
                 [
-                  _text(Display.numDouble(statistics.helperBonus)),
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(
+                    '「幫忙速度」\n性格特色',
+                  ),
                 ],
-              ]),
-              MySubHeader2(titleText: '性格速度'),
-              _commonTable([
                 [
                   _text(Display.numDouble(statistics.characterSpeed)),
+                  _text('='),
+                  _text('0.1'),
+                  _text('x'),
+                  _text(Display.numInt(
+                      statistics.getOneIf(statistics.character.positive == '幫忙速度')
+                          - statistics.getOneIf(statistics.character.negative == '幫忙速度')
+                  )),
                 ]
               ]),
-              MySubHeader2(titleText: '活力加速'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(
-                    SubSkill.energyRecoverBonus.nameI18nKey.xTr,
-                    tooltip: SubSkill.energyRecoverBonus.intro,
-                  ),
-                  _text(''),
-                  _text('性格影響'),
-                ],
-                [
-                  _text(Display.numInt(statistics.accelerateVitality)),
-                  _text('='),
-                  _text('0.02 x ${Display.numInt(statistics.getSubSkillsCountMatch(SubSkill.energyRecoverBonus))}'),
-                  _text('+'),
-                  _text('0.1 x ${Display.numDouble((statistics.getOneIf(statistics.character.positive == '活力回復') - statistics.getOneIf(statistics.character.negative == '活力回復')))}'),
-                ],
-              ]),
-              MySubHeader2(titleText: '睡眠EXP獎勵'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(''),
-                  _text(
-                    SubSkill.sleepExpBonus.nameI18nKey.xTr,
-                    tooltip: SubSkill.sleepExpBonus.intro,
-                  ),
-                ],
-                [
-                  _text(Display.numInt(statistics.sleepExpBonus)),
-                  _text('='),
-                  _text('1000'),
-                  _text('x'),
-                  _text('${statistics.getSubSkillsCountMatch(SubSkill.sleepExpBonus)}'),
-                ],
-              ]),
+              ..._helpIntervalItems(statistics, profile),
               MySubHeader(
                 titleText: '資料來源',
                 color: dataSourceSubHeaderColor,
-              ),
-              MySubHeader(
-                titleText: '暫放',
-                color: dangerColor,
               ),
             ],
           ),
@@ -684,6 +716,64 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
         ),
       ],
     ).toList();
+  }
+
+  List<Widget> _helpIntervalItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    final x = statistics.helperBonus +
+        statistics.totalHelpSpeedM +
+        statistics.totalHelpSpeedS +
+        statistics.characterSpeed +
+        statistics.accelerateVitality +
+        statistics.mainSkillAccelerateVitality;
+    final y = 1 - (x + 59 * 0.002);
+
+    return [
+      MySubHeader2(titleText: '幫忙間隔'),
+      Text(
+        '這計算結果有時候會變成0導致後續出錯，需研究原因（目前先暫時讓結果為 0 的時候，強制轉為 1）',
+        style: _commentTextStyle,
+      ),
+      // _text(Display.numDouble(statistics.helpInterval)),
+      _commonTable([
+        [
+          _text(Display.numDouble(x)),
+          _text('='),
+          _text(Display.numDouble(statistics.helperBonus)),
+          _text('+'),
+          _text(Display.numDouble(statistics.totalHelpSpeedM)),
+          _text('+'),
+          _text(Display.numDouble(statistics.totalHelpSpeedS)),
+          _text('+'),
+          _text(Display.numDouble(statistics.characterSpeed)),
+          _text('+'),
+          _text(Display.numDouble(statistics.accelerateVitality)),
+          _text('+'),
+          _text(Display.numDouble(statistics.mainSkillAccelerateVitality)),
+        ],
+      ]),
+      _commonTable([
+        [
+          _text(Display.numDouble(y)),
+          _text('='),
+          _text('1'),
+          _text('-'),
+          _text('(${Display.numDouble(x)}'),
+          _text('+'),
+          _text('59'),
+          _text('x'),
+          _text('0.002)'),
+        ],
+      ]),
+      _commonTable([
+        [
+          _text(Display.numDouble(statistics.helpInterval)),
+          _text('='),
+          _text('${profile.basicProfile.helpInterval}'),
+          _text('x'),
+          _text(Display.numDouble(y)),
+        ],
+      ]),
+    ];
   }
 
   List<Widget> _ingredientsItems(PokemonProfileStatistics statistics, PokemonProfile profile) {

@@ -72,8 +72,12 @@ class PokemonProfileStatistics {
 
       return z.clamp(0, double.infinity);
     }
-    /// FIXME: xHelpInterval.clamp(1, double.infinity) 須修正，研究為何等於0
-    final xHelpInterval = calcHelpInterval().clamp(1.0, double.infinity);
+    /// FIXME: 須修正，研究為何等於0
+    var xHelpInterval = calcHelpInterval();
+    if (xHelpInterval == 0) {
+      xHelpInterval = 1;
+    }
+
     helpInterval = xHelpInterval;
 
     double calcMaxOverflowHoldCount() {
