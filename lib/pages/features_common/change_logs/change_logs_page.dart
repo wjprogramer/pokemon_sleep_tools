@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/fruits_energy/fruits_energy_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
@@ -46,8 +47,8 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     super.initState();
     _versions = [
       _Version(
-        name: '1.0.3',
-        date: DateTime(2023, 10, 21),
+        name: '1.0.4',
+        date: DateTime(2023, 10, 22),
         description: null,
         items: [
           _NormalVersionItem('[Feature] 可設定各島營地獎勵 (但目前還不會參與計算)'),
@@ -55,6 +56,11 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
           _NormalVersionItem('[UI] 改善睡姿圖鑑畫面，顯示寶可夢圖鑑、照睡眠類型區分', onTap: () {
             SleepFacesIllustratedBookPage.go(context);
           }),
+          _NormalVersionItem('[UI/INFO] 樹果頁面: 增加寶可夢圖片、新增屬性資訊、新增適合島嶼'),
+          _NormalVersionItem('[Feature/Info] 增加所有樹果能量列表', onTap: () {
+            FruitsEnergyPage.go(context);
+          }),
+          _NormalVersionItem(''),
           _NormalVersionItem(''),
         ],
       ),

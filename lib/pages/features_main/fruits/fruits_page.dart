@@ -3,6 +3,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/fruits_energy/fruits_energy_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
@@ -58,17 +59,36 @@ class _FruitsPageState extends State<FruitsPage> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: HORIZON_PADDING,
-        ),
         children: [
-          Wrap(
-            spacing: _itemsSpacing,
-            runSpacing: _itemsSpacing,
-            children: _wrapItems(
-              children: Fruit.values.map(_buildItem).toList(),
-            ),
+          ...Hp.list(
+            children: [
+              MySubHeader(titleText: '一覽',),
+              Gap.md,
+              Wrap(
+                spacing: _itemsSpacing,
+                runSpacing: _itemsSpacing,
+                children: _wrapItems(
+                  children: Fruit.values.map(_buildItem).toList(),
+                ),
+              ),
+              MySubHeader(
+                titleText: '進階',
+                color: advancedColor,
+              ),
+            ],
           ),
+          ...ListTile.divideTiles(
+            context: context,
+            tiles: [
+              ListTile(
+                title: Text('樹果能量一覽'.xTr),
+                onTap: () {
+                  FruitsEnergyPage.go(context);
+                },
+              ),
+            ],
+          ),
+          Gap.md,
           Gap.trailing,
         ],
       ),

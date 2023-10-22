@@ -1,15 +1,4 @@
 import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
-import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 
 /// [description] 中的數值會根據技能等級以及 [basicValues] 的數值做變動

@@ -1,19 +1,7 @@
-import 'dart:async';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
-import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
-import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
-import 'package:pokemon_sleep_tools/pages/features_common/common_picker/common_picker_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_main/exp_caculator_result/exp_caculator_result_page.dart';
-import 'package:pokemon_sleep_tools/pages/routes.dart';
-import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 /// 參考 [CheckboxListTile] 整體樣式
 /// 參考 [ListTile] 中的 _LisTileDefaultsM3 文字樣式

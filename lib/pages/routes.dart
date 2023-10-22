@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/change_logs/change_logs_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
@@ -6,6 +7,7 @@ import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_fo
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_two_direction_table/dev_two_direction_table_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/analysis_details/analysis_details_page.dart';
@@ -21,6 +23,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calcu
 import 'package:pokemon_sleep_tools/pages/features_main/field_edit/field_edit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/fruits_energy/fruits_energy_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
@@ -61,10 +64,13 @@ MyRoutesMapping generateRoutes() {
     DataSourcesPage.route,
     NotFoundRoutePage.route,
     // dev
-    DevIconsPage.route,
-    DevPokemonBoxPage.route,
-    DevPokemonEvolutionsPage.route,
-    MyStorybookPage.route,
+    if (kDebugMode) ...[
+      DevIconsPage.route,
+      DevPokemonBoxPage.route,
+      DevPokemonEvolutionsPage.route,
+      DevTwoDirectionTablePage.route,
+      MyStorybookPage.route,
+    ],
     // main
     AboutPage.route,
     AnalysisDetailsPage.route,
@@ -80,6 +86,7 @@ MyRoutesMapping generateRoutes() {
     FieldEditPage.route,
     FruitPage.route,
     FruitsPage.route,
+    FruitsEnergyPage.route,
     HomePage.route,
     IngredientPage.route,
     IngredientsIllustratedBookPage.route,

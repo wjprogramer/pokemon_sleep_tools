@@ -37,7 +37,7 @@ class _MapPageArgs {
 /// TODO:
 /// 可以做滑到哪、顯示目前區塊是哪個寶可夢 Rank
 ///
-///
+/// TODO: 新增適合樹果
 class MapPage extends StatefulWidget {
   const MapPage._(this._args);
 

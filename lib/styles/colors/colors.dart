@@ -30,6 +30,7 @@ const positiveColor = Colors.blue;
 final dreamChipColor = Colors.yellow.shade700;
 final subSkillLevelLabelColor = Colors.brown.shade700;
 final tmpColor = Colors.brown;
+const advancedColor = Color(0xFF916cb6);
 
 // 自己隨便訂的顏色
 const tmpColorSkill = Colors.purple;

@@ -44,6 +44,7 @@ dependencies:
   get_it: ^7.6.4
   iconify_flutter: ^0.0.5
   intl: ^0.18.1
+  linked_scroll_controller: ^0.2.0
   shared_preferences: ^2.2.1
   storybook_flutter: ^0.14.0
   package_info_plus: ^5.0.0

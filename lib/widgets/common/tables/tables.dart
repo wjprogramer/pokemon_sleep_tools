@@ -1,0 +1,1 @@
+export 'multiplication_table/multiplication_table.dart';

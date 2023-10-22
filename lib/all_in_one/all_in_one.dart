@@ -6,7 +6,7 @@ export 'extensions/extensions.dart';
 export 'form/form.dart';
 export 'navigator/navigator.dart';
 export 'others/others.dart';
+export 'platform.dart';
 export 'third/third.dart';
 export 'utilities/utilities.dart';
 export 'utils/utils.dart';
-export 'platform.dart';

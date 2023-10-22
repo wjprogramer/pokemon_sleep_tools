@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -30,6 +31,14 @@ class FieldViewModel extends ChangeNotifier {
 
   StoredPokemonFieldItem getItem(PokemonField field) {
     return _stored!.fields[field] ?? StoredPokemonFieldItem.empty();
+  }
+
+  // PokemonField, StoredPokemonFieldItem
+  List<MapEntry<PokemonField, StoredPokemonFieldItem>> findAllItems() {
+    return _stored!.fields
+        .map((key, value) => MapEntry(key, value))
+        .entries
+        .sorted((a, b) => a.key.id.compareTo(b.key.id));
   }
 
 }
