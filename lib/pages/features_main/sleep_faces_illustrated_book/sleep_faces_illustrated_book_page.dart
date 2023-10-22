@@ -138,10 +138,26 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
   }
 
   void _update(Map<SleepType, _SleepTypeMeta> basicProfileIdListOf) {
+    // Clear
+    for (final entry in _metaOfSleepType.entries) {
+      entry.value.markCount = 0;
+    }
+
+    // Update
     final sleepFaceViewModel = _sleepFaceViewModel;
     final markStylesOf = sleepFaceViewModel.markStylesOf;
 
+    for (final e in markStylesOf.entries) {
+      final basicProfileId = e.key;
+      final markStyles = e.value;
 
+      final basicProfile = _basicProfileOf[basicProfileId];
+      if (basicProfile == null) {
+        continue;
+      }
+
+      basicProfileIdListOf[basicProfile.sleepType]!.markCount += markStyles.length;
+    }
   }
 
   @override
@@ -185,6 +201,9 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
                         ),
                         Text(
                           '${_metaOfSleepType[sleepType]?.markCount ?? 0}/${_metaOfSleepType[sleepType]?.maxCount ?? 0}',
+                          style: TextStyle(
+                            color: sleepType.fgColor,
+                          ),
                         ),
                       ],
                     ),
@@ -262,6 +281,15 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
               noAnyStyle: noAnyStyle,
             ),
             Gap.md,
+            if (MyEnv.USE_DEBUG_IMAGE)
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: PokemonIconBorderedImage(
+                  basicProfile: basicProfile,
+                  width: 36,
+                  disableTooltip: true,
+                ),
+              ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -8,6 +8,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
@@ -51,7 +52,9 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         items: [
           _NormalVersionItem('[Feature] 可設定各島營地獎勵 (但目前還不會參與計算)'),
           _NormalVersionItem('[Change] 寶可夢隊伍: 編輯時，可以刪除已加入隊伍的寶可夢、可以新增完全空的隊伍'),
-          _NormalVersionItem(''),
+          _NormalVersionItem('[UI] 改善睡姿圖鑑畫面，顯示寶可夢圖鑑、照睡眠類型區分', onTap: () {
+            SleepFacesIllustratedBookPage.go(context);
+          }),
           _NormalVersionItem(''),
         ],
       ),
