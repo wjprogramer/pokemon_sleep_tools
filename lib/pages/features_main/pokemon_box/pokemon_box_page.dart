@@ -31,12 +31,14 @@ class _PokemonBoxPageArgs {
     this.onConfirm,
     this.initialTeam,
     this.initialIndex,
+    this.initialSearchOptions,
   });
 
   final _PageType pageType;
   final PokemonBoxSubmitCallback? onConfirm;
   final PokemonTeam? initialTeam;
   final int? initialIndex;
+  final PokemonSearchOptions? initialSearchOptions;
   // TODO: initValues, initialIndex (一開始會優先選中當個)
 }
 
@@ -49,11 +51,14 @@ class PokemonBoxPage extends StatefulWidget {
     return PokemonBoxPage._(args);
   }
 
-  static void go(BuildContext context) {
+  static void go(BuildContext context, {
+    PokemonSearchOptions? initialSearchOptions,
+  }) {
     context.nav.push(
       route,
       arguments: _PokemonBoxPageArgs(
         pageType: _PageType.readonly,
+        initialSearchOptions: initialSearchOptions,
       ),
     );
   }
@@ -119,6 +124,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   @override
   void initState() {
     super.initState();
+    _searchOptions = _args.initialSearchOptions ?? _searchOptions;
 
     scheduleMicrotask(() async {
       final mainViewModel = context.read<MainViewModel>();

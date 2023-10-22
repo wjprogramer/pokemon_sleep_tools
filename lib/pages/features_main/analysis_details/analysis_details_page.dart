@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -47,6 +49,13 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
   _Args get _args => widget._args;
   int get _profileId => _args.profileId;
 
+  // UI
+  var _twoColumn = false;
+  late LinkedScrollControllerGroup _controllers;
+  late ScrollController _leftController;
+  late ScrollController _rightController;
+  var _commentTextStyle = TextStyle();
+
   // Page
   final _disposers = <MyDisposable>[];
   var _isInitialized = false;
@@ -58,6 +67,9 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
   @override
   void initState() {
     super.initState();
+    _controllers = LinkedScrollControllerGroup();
+    _leftController = _controllers.addAndGet();
+    _rightController = _controllers.addAndGet();
 
     scheduleMicrotask(() async {
       final mainViewModel = _mainViewModel;
@@ -108,6 +120,8 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
   @override
   void dispose() {
     _disposers.disposeAll();
+    _leftController.dispose();
+    _rightController.dispose();
     super.dispose();
   }
 
@@ -117,6 +131,8 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
       return LoadingView();
     }
 
+    final screenSize = context.mediaQuery.size;
+    _twoColumn = screenSize.width >= COMMON_SIDE_WIDTH * 2;
     final profile = _profile;
     final statistics = _statistics;
 
@@ -125,7 +141,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
       return Scaffold();
     }
 
-    final commentTextStyle = TextStyle(color: greyColor3);
+    _commentTextStyle = TextStyle(color: greyColor3);
     final disableMainSkillEnergy = statistics.isMainSkillIn({
       MainSkill.vitalityFillS, MainSkill.vitalityS, MainSkill.vitalityAllS,
     });
@@ -134,201 +150,39 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
     final a1 = (statistics.ingredientCount1 + statistics.ingredientCount2 + statistics.ingredientCount3) * statistics.ingredientRate / 3;
     final a2 = (5 - statistics.ingredientRate) * statistics.fruitCount;
 
+    final appBar = buildAppBar(
+      titleText: '詳細計算過程'.xTr,
+    );
+
+    if (_twoColumn) {
+      return Scaffold(
+        appBar: appBar,
+        body: Row(
+          children: [
+            Expanded(
+              child: buildListView(
+                children: _buildLeftItems(statistics, profile),
+              ),
+            ),
+            Expanded(
+              child: buildListView(
+                children: _buildRightItems(statistics, profile),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
-      appBar: buildAppBar(
-        titleText: '詳細計算過程'.xTr,
-      ),
+      appBar: appBar,
       body: buildListView(
         children: [
+          ..._fruitItems(statistics),
+          ..._ingredientsItems(statistics, profile),
           ...Hp.list(
             children: [
-              LicenseSourceCard.t2(),
-              MySubHeader(titleText: '樹果'),
-              MySubHeader2(titleText: '樹果總數量'),
-              _commonTable(
-                [
-                  [
-                    _text(''),
-                    _text(''),
-                    _text('基礎值'),
-                    _text(''),
-                    _text(
-                      '「${SubSkill.berryCountS.nameI18nKey.xTr}」\n技能數量',
-                      tooltip: SubSkill.berryCountS.intro,
-                    ),
-                    _text(''),
-                    _text(
-                      '「${PokemonSpecialty.t3.nameI18nKey.xTr}」\n專長',
-                      // tooltip: '' // TODO: 補充資訊
-                    ),
-                  ],
-                  [
-                    _text('${statistics.fruitCount}'),
-                    _text('='),
-                    _text('1'),
-                    _text('+'),
-                    _text('${statistics.getSubSkillsCountMatch(SubSkill.berryCountS)}'),
-                    _text('+'),
-                    _text('${statistics.getOneIfSpecialtyIs(PokemonSpecialty.t3)}'),
-                  ],
-                ],
-              ),
-              MySubHeader2(titleText: '樹果總能量'),
-              _commonTable(
-                [
-                  [
-                    _text(''),
-                    _text(''),
-                    _text('基礎值'),
-                    _text(''),
-                    _text(
-                      '「${SubSkill.berryCountS.nameI18nKey.xTr}」\n技能數量',
-                      tooltip: SubSkill.berryCountS.intro, // TODO: 補充資訊
-                    ),
-                  ],
-                  [
-                    _text('${statistics.fruitEnergy}'),
-                    _text('='),
-                    _text('${statistics.fruitCount}'),
-                    _text('x'),
-                    _text('${statistics.basicProfile.fruit.energyIn60}'),
-                  ],
-                ],
-              ),
-              MySubHeader(titleText: '食材'),
-              // ..._buildCalcSingleIngredientEnergy(
-              //   number: 1,
-              //   ingredient: statistics.ingredient1,
-              //   count: statistics.ingredientCount1,
-              //   resultFromStatistics: statistics.ingredientEnergy1,
-              // ),
-              // ..._buildCalcSingleIngredientEnergy(
-              //   number: 2,
-              //   ingredient: statistics.ingredient2,
-              //   count: statistics.ingredientCount2,
-              //   resultFromStatistics: statistics.ingredientEnergy2,
-              // ),
-              // ..._buildCalcSingleIngredientEnergy(
-              //   number: 3,
-              //   ingredient: statistics.ingredient3,
-              //   count: statistics.ingredientCount3,
-              //   resultFromStatistics: statistics.ingredientEnergy3,
-              // ),
-              MySubHeader2(titleText: '食材總能量'),
-              Text(
-                '食材能量 = 單一食材能量 x 數量',
-                style: commentTextStyle,
-              ),
-              _commonTable(
-                  [
-                    [
-                      _text(''),
-                      _text(''),
-                      _text('能量'),
-                      _text(''),
-                      _text('數量'),
-                      _text(''),
-                      _text('能量'),
-                      _text(''),
-                      _text('數量'),
-                      _text(''),
-                      _text('能量'),
-                      _text(''),
-                      _text('數量'),
-                    ],
-                    [
-                      _text(Display.numInt(statistics.ingredientEnergySum)),
-                      _text('='),
-                      _text(Display.numInt(profile.ingredient1.energy)),
-                      _text('x'),
-                      _text(Display.numInt(profile.ingredientCount1)),
-                      _text('+'),
-                      _text(Display.numInt(profile.ingredient2.energy)),
-                      _text('x'),
-                      _text(Display.numInt(profile.ingredientCount2)),
-                      _text('+'),
-                      _text(Display.numInt(profile.ingredient3.energy)),
-                      _text('x'),
-                      _text(Display.numInt(profile.ingredientCount3)),
-                    ],
-                    [
-                      _text(''),
-                      _text(''),
-                      _text('(${Display.numInt(statistics.ingredientEnergy1)})'),
-                      _text(''),
-                      _text(''),
-                      _text(''),
-                      _text('(${Display.numInt(statistics.ingredientEnergy2)})'),
-                      _text(''),
-                      _text(''),
-                      _text(''),
-                      _text('(${Display.numInt(statistics.ingredientEnergy3)})'),
-                      _text(''),
-                      _text(''),
-                    ]
-                  ]
-              ),
-              MySubHeader2(titleText: '食材均能'),
-              _commonTable(
-                [
-                  [
-                    _text(''),
-                    _text(''),
-                    _text('食材\n總能量'),
-                    _text(''),
-                    _text('食材\n1~3'),
-                  ],
-                  [
-                    _text(Display.numInt(statistics.ingredientEnergyAvg)),
-                    _text('='),
-                    _text(Display.numInt(statistics.ingredientEnergySum)),
-                    _text('/'),
-                    _text('3'),
-                  ],
-                ],
-              ),
-              MySubHeader2(titleText: '食材機率'),
-              _commonTable([
-                [
-                  _text(''),
-                  _text(''),
-                  _text('基礎'),
-                  _text(''),
-                  _text(
-                    SubSkill.ingredientRateS.nameI18nKey.xTr,
-                    tooltip: SubSkill.ingredientRateS.intro,
-                  ),
-                  _text(''),
-                  _text(
-                    SubSkill.ingredientRateM.nameI18nKey.xTr,
-                    tooltip: SubSkill.ingredientRateM.intro,
-                  ),
-                  _text(''),
-                  _text('性格影響\n(食材發現)'),
-                ],
-                [
-                  _text(Display.numDouble(statistics.ingredientRate)),
-                  _text('='),
-                  _text('1'),
-                  _text('+'),
-                  _text(
-                    '(0.18*${statistics.getSubSkillsCountMatch(SubSkill.ingredientRateS)})',
-                    tooltip: '0.18 * 擁有「${SubSkill.ingredientRateS.nameI18nKey.xTr}」數量',
-                  ),
-                  _text('+'),
-                  _text(
-                    '(0.36*${statistics.getSubSkillsCountMatch(SubSkill.ingredientRateM)})',
-                    tooltip: '0.36 * 擁有「${SubSkill.ingredientRateM.nameI18nKey.xTr}」數量',
-                  ),
-                  _text('+'),
-                  _text(Display.numDouble(
-                      0.2 * (
-                          statistics.getOneIf(profile.character.positive == '食材發現')
-                              - statistics.getOneIf(profile.character.negative == '食材發現')
-                      ),
-                  )),
-                ],
-              ]),
+              
               MySubHeader(
                 titleText: '技能',
               ),
@@ -419,7 +273,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
                           ),
                         ],
                       ),
-                      style: commentTextStyle,
+                      style: _commentTextStyle,
                     ),
                   ),
                 ],
@@ -427,7 +281,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
               Gap.xs,
               Text(
                 '目前主技能: ${statistics.basicProfile.mainSkill.nameI18nKey.xTr}',
-                style: commentTextStyle,
+                style: _commentTextStyle,
               ),
               Gap.md,
               _commonTable([
@@ -478,7 +332,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
                           ),
                         ],
                       ),
-                      style: commentTextStyle,
+                      style: _commentTextStyle,
                     ),
                   ),
                 ],
@@ -486,7 +340,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
               Gap.xs,
               Text(
                 '目前主技能: ${statistics.basicProfile.mainSkill.nameI18nKey.xTr}',
-                style: commentTextStyle,
+                style: _commentTextStyle,
               ),
               _commonTable([
                 [
@@ -628,18 +482,44 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
               MySubHeader2(titleText: '夢之碎片獎勵'),
               _commonTable([
                 [
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(''),
+                  _text(
+                    '${SubSkill.dreamChipBonus.nameI18nKey.xTr}\n數量',
+                    tooltip: SubSkill.dreamChipBonus.intro,
+                  ),
+                ],
+                [
                   _text(Display.numInt(statistics.dreamChipsBonus)),
+                  _text('='),
+                  _text('500'),
+                  _text('x'),
+                  _text('${statistics.getSubSkillsCountMatch(SubSkill.dreamChipBonus)}'),
                 ],
               ]),
-              MySubHeader(
-                titleText: '暫放',
-                color: dangerColor,
-              ),
               MySubHeader2(titleText: '幫忙速度'),
               _commonTable([
                 [
-                  _text(Display.numDouble(statistics.totalHelpSpeedM)),
-                  _text(Display.numDouble(statistics.totalHelpSpeedS)),
+                  _text(''),
+                  _text(''),
+                  _text(
+                    '${SubSkill.helpSpeedM.nameI18nKey.xTr}\n數量',
+                    tooltip: SubSkill.helpSpeedM.intro,
+                  ),
+                  _text(''),
+                  _text(
+                    '${SubSkill.helpSpeedS.nameI18nKey.xTr}\n數量',
+                    tooltip: SubSkill.helpSpeedS.intro,
+                  ),
+                ],
+                [
+                  _text(Display.numDouble(statistics.totalHelpSpeedM + statistics.totalHelpSpeedS)),
+                  _text('='),
+                  _text('0.14x${Display.numDouble(statistics.totalHelpSpeedM)}'),
+                  _text('+'),
+                  _text('0.07x${Display.numDouble(statistics.totalHelpSpeedS)}'),
                 ],
               ]),
               MySubHeader2(titleText: '幫忙間隔'),
@@ -710,6 +590,10 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
                 titleText: '資料來源',
                 color: dataSourceSubHeaderColor,
               ),
+              MySubHeader(
+                titleText: '暫放',
+                color: dangerColor,
+              ),
             ],
           ),
           ...ListTile.divideTiles(
@@ -726,6 +610,221 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
         ],
       ),
     );
+  }
+
+  List<Widget> _buildLeftItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    return [
+      ..._fruitItems(statistics),
+
+    ];
+  }
+
+  List<Widget> _buildRightItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    return [
+      ..._ingredientsItems(statistics, profile),
+
+    ];
+  }
+
+  List<Widget> _fruitItems(PokemonProfileStatistics statistics) {
+    return Hp.list(
+      children: [
+        LicenseSourceCard.t2(),
+        MySubHeader(titleText: '樹果'),
+        MySubHeader2(titleText: '樹果總數量'),
+        _commonTable(
+          [
+            [
+              _text(''),
+              _text(''),
+              _text('基礎值'),
+              _text(''),
+              _text(
+                '「${SubSkill.berryCountS.nameI18nKey.xTr}」\n技能數量',
+                tooltip: SubSkill.berryCountS.intro,
+              ),
+              _text(''),
+              _text(
+                '「${PokemonSpecialty.t3.nameI18nKey.xTr}」\n專長',
+                // tooltip: '' // TODO: 補充資訊
+              ),
+            ],
+            [
+              _text('${statistics.fruitCount}'),
+              _text('='),
+              _text('1'),
+              _text('+'),
+              _text('${statistics.getSubSkillsCountMatch(SubSkill.berryCountS)}'),
+              _text('+'),
+              _text('${statistics.getOneIfSpecialtyIs(PokemonSpecialty.t3)}'),
+            ],
+          ],
+        ),
+        MySubHeader2(titleText: '樹果總能量'),
+        _commonTable(
+          [
+            [
+              _text(''),
+              _text(''),
+              _text('基礎值'),
+              _text(''),
+              _text(
+                '「${SubSkill.berryCountS.nameI18nKey.xTr}」\n技能數量',
+                tooltip: SubSkill.berryCountS.intro, // TODO: 補充資訊
+              ),
+            ],
+            [
+              _text('${statistics.fruitEnergy}'),
+              _text('='),
+              _text('${statistics.fruitCount}'),
+              _text('x'),
+              _text('${statistics.basicProfile.fruit.energyIn60}'),
+            ],
+          ],
+        ),
+      ],
+    ).toList();
+  }
+
+  List<Widget> _ingredientsItems(PokemonProfileStatistics statistics, PokemonProfile profile) {
+    return Hp.list(
+      children: [
+        MySubHeader(titleText: '食材'),
+        // ..._buildCalcSingleIngredientEnergy(
+        //   number: 1,
+        //   ingredient: statistics.ingredient1,
+        //   count: statistics.ingredientCount1,
+        //   resultFromStatistics: statistics.ingredientEnergy1,
+        // ),
+        // ..._buildCalcSingleIngredientEnergy(
+        //   number: 2,
+        //   ingredient: statistics.ingredient2,
+        //   count: statistics.ingredientCount2,
+        //   resultFromStatistics: statistics.ingredientEnergy2,
+        // ),
+        // ..._buildCalcSingleIngredientEnergy(
+        //   number: 3,
+        //   ingredient: statistics.ingredient3,
+        //   count: statistics.ingredientCount3,
+        //   resultFromStatistics: statistics.ingredientEnergy3,
+        // ),
+        MySubHeader2(titleText: '食材總能量'),
+        Text(
+          '食材能量 = 單一食材能量 x 數量',
+          style: _commentTextStyle,
+        ),
+        _commonTable(
+            [
+              [
+                _text(''),
+                _text(''),
+                _text('能量'),
+                _text(''),
+                _text('數量'),
+                _text(''),
+                _text('能量'),
+                _text(''),
+                _text('數量'),
+                _text(''),
+                _text('能量'),
+                _text(''),
+                _text('數量'),
+              ],
+              [
+                _text(Display.numInt(statistics.ingredientEnergySum)),
+                _text('='),
+                _text(Display.numInt(profile.ingredient1.energy)),
+                _text('x'),
+                _text(Display.numInt(profile.ingredientCount1)),
+                _text('+'),
+                _text(Display.numInt(profile.ingredient2.energy)),
+                _text('x'),
+                _text(Display.numInt(profile.ingredientCount2)),
+                _text('+'),
+                _text(Display.numInt(profile.ingredient3.energy)),
+                _text('x'),
+                _text(Display.numInt(profile.ingredientCount3)),
+              ],
+              [
+                _text(''),
+                _text(''),
+                _text('(${Display.numInt(statistics.ingredientEnergy1)})'),
+                _text(''),
+                _text(''),
+                _text(''),
+                _text('(${Display.numInt(statistics.ingredientEnergy2)})'),
+                _text(''),
+                _text(''),
+                _text(''),
+                _text('(${Display.numInt(statistics.ingredientEnergy3)})'),
+                _text(''),
+                _text(''),
+              ]
+            ]
+        ),
+        MySubHeader2(titleText: '食材均能'),
+        _commonTable(
+          [
+            [
+              _text(''),
+              _text(''),
+              _text('食材\n總能量'),
+              _text(''),
+              _text('食材\n1~3'),
+            ],
+            [
+              _text(Display.numInt(statistics.ingredientEnergyAvg)),
+              _text('='),
+              _text(Display.numInt(statistics.ingredientEnergySum)),
+              _text('/'),
+              _text('3'),
+            ],
+          ],
+        ),
+        MySubHeader2(titleText: '食材機率'),
+        _commonTable([
+          [
+            _text(''),
+            _text(''),
+            _text('基礎'),
+            _text(''),
+            _text(
+              SubSkill.ingredientRateS.nameI18nKey.xTr,
+              tooltip: SubSkill.ingredientRateS.intro,
+            ),
+            _text(''),
+            _text(
+              SubSkill.ingredientRateM.nameI18nKey.xTr,
+              tooltip: SubSkill.ingredientRateM.intro,
+            ),
+            _text(''),
+            _text('性格影響\n(食材發現)'),
+          ],
+          [
+            _text(Display.numDouble(statistics.ingredientRate)),
+            _text('='),
+            _text('1'),
+            _text('+'),
+            _text(
+              '(0.18*${statistics.getSubSkillsCountMatch(SubSkill.ingredientRateS)})',
+              tooltip: '0.18 * 擁有「${SubSkill.ingredientRateS.nameI18nKey.xTr}」數量',
+            ),
+            _text('+'),
+            _text(
+              '(0.36*${statistics.getSubSkillsCountMatch(SubSkill.ingredientRateM)})',
+              tooltip: '0.36 * 擁有「${SubSkill.ingredientRateM.nameI18nKey.xTr}」數量',
+            ),
+            _text('+'),
+            _text(Display.numDouble(
+              0.2 * (
+                  statistics.getOneIf(profile.character.positive == '食材發現')
+                      - statistics.getOneIf(profile.character.negative == '食材發現')
+              ),
+            )),
+          ],
+        ]),
+      ],
+    ).toList();
   }
 
   Widget _commonTable(List<List<Widget>> cells) {

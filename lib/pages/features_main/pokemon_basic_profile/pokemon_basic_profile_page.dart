@@ -11,6 +11,7 @@ import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_box/pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/specialty_info/specialty_info_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -398,6 +399,20 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                   ],
                 );
               }),
+              MySubHeader(
+                titleText: '其他'.xTr,
+              ),
+              MyElevatedButton(
+                onPressed: !_existInBox ? null : () {
+                  PokemonBoxPage.go(
+                    context,
+                    initialSearchOptions: PokemonSearchOptions(
+                      keyword: _basicProfile.nameI18nKey.xTr,
+                    ),
+                  );
+                },
+                child: Text('查看寶可夢盒'),
+              ),
               Gap.trailing,
             ],
           );

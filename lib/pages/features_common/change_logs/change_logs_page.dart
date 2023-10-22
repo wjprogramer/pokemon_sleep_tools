@@ -60,6 +60,8 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
           _NormalVersionItem('[Feature/Info] 增加所有樹果能量列表', onTap: () {
             FruitsEnergyPage.go(context);
           }),
+          _NormalVersionItem('[UX] 寶可夢搜尋對話框的關鍵字欄位可以清除'),
+          _NormalVersionItem('[Feature] 圖鑑可以反查寶可夢盒'),
           _NormalVersionItem(''),
           _NormalVersionItem(''),
         ],

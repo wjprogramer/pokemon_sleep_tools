@@ -107,6 +107,8 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
         });
       },
       childrenBuilder: (context, search, searchOptions) {
+        final keywordFieldIsEmpty = _nameField.text.trim().isEmpty;
+
         return [
           ...SleepSearchDialogBaseContent.hpList(
             children: [
@@ -134,6 +136,22 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
               Gap.sm,
               TextField(
                 controller: _nameField,
+                decoration: InputDecoration(
+                  suffixIcon: AnimatedOpacity(
+                    opacity: keywordFieldIsEmpty ? 0 : 1,
+                    duration: const Duration(milliseconds: 200),
+                    child: IconButton(
+                      onPressed: keywordFieldIsEmpty ? null : () {
+                        _nameField.clear();
+                        searchOptions.setKeywordWithoutListen('');
+                        search();
+                      },
+                      icon: Icon(
+                        Icons.clear,
+                      ),
+                    ),
+                  ),
+                ),
               ),
               Gap.xl,
               MySubHeader(
