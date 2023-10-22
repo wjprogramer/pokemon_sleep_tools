@@ -25,6 +25,7 @@ import 'package:provider/provider.dart';
 
 /// - TODO: 要注意 [_PokemonSliderDetailsPageArgs.isView] 後資料更新有沒有問題
 /// - 遊戲內有 "使用道具" 的功能，但這邊應該不需要
+/// TODO: 要顯示所有食材可能性
 class _PokemonSliderDetailsPageArgs {
   _PokemonSliderDetailsPageArgs({
     this.initialProfileId,

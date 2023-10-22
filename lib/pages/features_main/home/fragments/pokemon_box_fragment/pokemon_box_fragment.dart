@@ -176,6 +176,7 @@ class _PokemonBoxFragmentState extends State<PokemonBoxFragment> {
                   basicProfileId: profile.basicProfileId,
                   character: profile.character,
                   customName: profile.customName,
+                  customNote: profile.customNote,
                   subSkills: profile.subSkills,
                   ingredient2: profile.ingredient2,
                   ingredientCount2: profile.ingredientCount2,

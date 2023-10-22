@@ -9,6 +9,7 @@ class PokemonProfile {
     required this.basicProfileId,
     required this.character,
     this.customName,
+    this.customNote,
     required this.subSkillLv10,
     required this.subSkillLv25,
     required this.subSkillLv50,
@@ -26,6 +27,9 @@ class PokemonProfile {
   late PokemonBasicProfile basicProfile;
   final PokemonCharacter character;
   final String? customName;
+
+  /// 使用者可以填寫個人筆記
+  final String? customNote;
 
   final SubSkill subSkillLv10;
   final SubSkill subSkillLv25;
@@ -63,6 +67,7 @@ class PokemonProfile {
       character: PokemonCharacter.values
           .firstWhere((e) => e.id == json['characterId']),
       customName: json['customName'],
+      customNote: json['customNote'],
       subSkillLv10: subSkillMapping[json['subSkillIds'][0]]!,
       subSkillLv25: subSkillMapping[json['subSkillIds'][1]]!,
       subSkillLv50: subSkillMapping[json['subSkillIds'][2]]!,
@@ -81,6 +86,7 @@ class PokemonProfile {
       basicProfileId: basicProfileId,
       character: character,
       customName: customName,
+      customNote: customNote,
       subSkillLv10: subSkillLv10,
       subSkillLv25: subSkillLv25,
       subSkillLv50: subSkillLv50,
@@ -96,6 +102,7 @@ class PokemonProfile {
   PokemonProfile copyWith({
     PokemonCharacter? character,
     required String? customName,
+    required String? customNote,
     SubSkill? subSkillLv10,
     SubSkill? subSkillLv25,
     SubSkill? subSkillLv50,
@@ -111,6 +118,7 @@ class PokemonProfile {
       basicProfileId: basicProfileId,
       character: character ?? this.character,
       customName: customName ?? this.customName,
+      customNote: customNote ?? this.customNote,
       subSkillLv10: subSkillLv10 ?? this.subSkillLv10,
       subSkillLv25: subSkillLv25 ?? this.subSkillLv25,
       subSkillLv50: subSkillLv50 ?? this.subSkillLv50,
@@ -128,6 +136,7 @@ class PokemonProfile {
       'basicProfileId': basicProfileId,
       'characterId': character.id,
       'customName': customName,
+      'customNote': customNote,
       'id': id,
       'subSkillIds': subSkills.map((e) => e.id).toList(),
       'ingredient2Id': ingredient2.id,
@@ -144,6 +153,7 @@ class PokemonProfile {
           '   basicProfileId: $basicProfileId,\n'
           '   character: $character,\n'
           '   customName: $customName,\n'
+          '   customNote: $customNote,\n'
           '   subSkillLv10: $subSkillLv10,\n'
           '   subSkillLv25: $subSkillLv25,\n'
           '   subSkillLv50: $subSkillLv50,\n'

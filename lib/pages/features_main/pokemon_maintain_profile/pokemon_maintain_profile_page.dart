@@ -658,6 +658,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         basicProfileId: _basicProfileField.value!.id,
         character: _characterField.value!,
         customName: _customNameField.value,
+        customNote: null,
         subSkills: _subSkillsField.value!,
         ingredient2: _ingredient2Field.value!,
         ingredientCount2: _ingredient2CountField.value!,
@@ -704,6 +705,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       final newProfile = profile.copyWith(
         character: _characterField.value!,
         customName: _customNameField.value,
+        customNote: null,
         subSkillLv10: _subSkillsField.value![0],
         subSkillLv25: _subSkillsField.value![1],
         subSkillLv50: _subSkillsField.value![2],

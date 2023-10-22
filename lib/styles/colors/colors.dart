@@ -6,6 +6,7 @@ const color1 = Color(0xFFFE6B4E);
 const whiteColor = Colors.white;
 const blackColor = Colors.black;
 const gitColor = Color(0xFFF25334);
+final color2 = Color(0xFFf8e4d4);
 
 const greyColor = Color(0xFFE8EAED);
 const greyColor2 = Color(0xFFC8C8C8);
@@ -18,10 +19,12 @@ const primaryColor = Color(0xFF3AD47A);
 const orangeColor = Color(0xFFF5B14F);
 const orangeColorLight = Color(0xFFF4C267);
 const pinkColor = Colors.pink;
+final pinkColor2 = Colors.pink.shade100;
 const greenColor = Color(0xFF24BE56);
 const friendPointsIconColor = Colors.pink;
 final islandColor = Colors.brown.shade700;
 final starIconColor = Colors.yellow.shade700;
+final greenLightColor = Color(0xFFd2fb9a);
 
 const warningColor = Color(0xFFF5B14F);
 const dangerColor = Colors.red;

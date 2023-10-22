@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
@@ -32,6 +33,15 @@ class _MainSkillsIllustratedBookPageState extends State<MainSkillsIllustratedBoo
   double _itemWidth = 200;
   static const double _itemSpacing = 12;
 
+  // Data
+  var _mainSkills = MainSkill.values;
+
+  @override
+  void initState() {
+    super.initState();
+    _mainSkills = _mainSkills.sorted((a, b) => a.type.compareTo(b.type));
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
@@ -59,6 +69,7 @@ class _MainSkillsIllustratedBookPageState extends State<MainSkillsIllustratedBoo
           ),
           ListItems(
             children: [
+              Text('主技能上限為 Lv 6'),
               Text('主技能提升等級方式'),
               ListItems(
                 decoration: ListItemsDecoration.number,
@@ -94,7 +105,7 @@ class _MainSkillsIllustratedBookPageState extends State<MainSkillsIllustratedBoo
             spacing: _itemSpacing,
             runSpacing: _itemSpacing,
             children: _wrapItems(
-              children: MainSkill.values.map(_buildItem).toList(),
+              children: _mainSkills.map(_buildItem).toList(),
             ),
           ),
           Gap.trailing,
@@ -108,20 +119,34 @@ class _MainSkillsIllustratedBookPageState extends State<MainSkillsIllustratedBoo
       onTap: () {
         MainSkillPage.go(context, mainSkill);
       },
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: mainSkill.color.withOpacity(.1),
+          border: Border.all(
+            color: mainSkill.color.withOpacity(.7),
+            width: 2
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               mainSkill.nameI18nKey.xTr,
-              style: _theme.textTheme.bodyLarge,
-            ),
-            Text(
-              mainSkill.description,
-              style: _theme.textTheme.bodySmall?.copyWith(
-                color: greyColor3,
+              style: _theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            Stack(
+              children: [
+                const Text('\n'),
+                Text(
+                  mainSkill.description,
+                  style: _theme.textTheme.bodySmall?.copyWith(
+                    color: greyColor3,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

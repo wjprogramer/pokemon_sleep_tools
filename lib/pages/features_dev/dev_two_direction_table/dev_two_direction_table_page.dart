@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
 const int maxNumber = 20;
 
+/// https://medium.com/nerd-for-tech/flutter-creating-a-two-direction-scrolling-table-with-fixed-head-and-column-4a34fc01378f
 class DevTwoDirectionTablePage extends StatefulWidget {
   const DevTwoDirectionTablePage._();
 
