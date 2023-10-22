@@ -110,7 +110,7 @@ class _SleepFacesIllustratedBookPageState extends State<SleepFacesIllustratedBoo
 
       for (final basicProfile in _basicProfileOf.entries.map((e) => e.value)) {
         _metaOfSleepType[basicProfile.sleepType]!.maxCount +=
-            _sleepFacesOf[basicProfile.id]?.length ?? 0;
+            {...?_sleepFacesOf[basicProfile.id]?.map((e) => e.style)}.length;
       }
 
       _update(_metaOfSleepType);
