@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/change_lang/change_lang_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/change_logs/change_logs_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
@@ -39,7 +40,7 @@ class _SleepFragmentState extends State<SleepFragment> {
             //   paddingTop: 0,
             //   icon: const Iconify(Carbon.sub_volume, size: 16),
             //   title: Text(
-            //     '常用'.xTr,
+            //     't_commonly_used'.xTr,
             //   ),
             // ),
             // MainMenuSubtitle(
@@ -72,7 +73,7 @@ class _SleepFragmentState extends State<SleepFragment> {
                       return Icon(Icons.file_copy_outlined, color: color, size: size,);
                     },
                     builder: MyOutlinedButton.builderUnboundWidth,
-                    child: Text('版權標記'.xTr),
+                    child: Text('t_copyright_mark'.xTr),
                   ),
                   MyOutlinedButton(
                     color: greyColor3,
@@ -83,7 +84,7 @@ class _SleepFragmentState extends State<SleepFragment> {
                       return Icon(Icons.file_copy_outlined, color: color, size: size,);
                     },
                     builder: MyOutlinedButton.builderUnboundWidth,
-                    child: Text('資料來源'.xTr),
+                    child: Text('t_source'.xTr),
                   ),
                   MyOutlinedButton(
                     color: tmpColor,
@@ -99,12 +100,12 @@ class _SleepFragmentState extends State<SleepFragment> {
                         await mainViewModel.loadProfiles(force: true);
                         DialogUtility.text(
                           context,
-                          title: Text('資料匯入成功'),
+                          title: Text('t_data_import_success'.xTr),
                         );
                       } catch (e) {
                         DialogUtility.text(
                           context,
-                          title: Text('資料匯入失敗'),
+                          title: Text('t_data_import_failed'.xTr),
                         );
                       }
                     },
@@ -112,7 +113,7 @@ class _SleepFragmentState extends State<SleepFragment> {
                       return Icon(Icons.login, color: color, size: size,);
                     },
                     builder: MyOutlinedButton.builderUnboundWidth,
-                    child: Text('資料匯入'.xTr),
+                    child: Text('t_data_import'.xTr),
                   ),
                   MyOutlinedButton(
                     color: tmpColor,
@@ -121,13 +122,15 @@ class _SleepFragmentState extends State<SleepFragment> {
                         await _localStorage.exportData();
                         DialogUtility.text(
                           context,
-                          title: Text('資料匯出成功'),
-                          content: MyPlatform.isWindows ? Text('匯出至下載資料夾') : null,
+                          title: Text('t_data_export_success'.xTr),
+                          content: MyPlatform.isWindows
+                              ? Text('t_export_data_to_download_folder'.xTr)
+                              : null,
                         );
                       } catch (e, s) {
                         DialogUtility.text(
                           context,
-                          title: Text('資料匯出失敗'),
+                          title: Text('t_data_export_failed'.xTr),
                         );
                       }
                     },
@@ -135,7 +138,7 @@ class _SleepFragmentState extends State<SleepFragment> {
                       return Icon(Icons.logout, color: color, size: size,);
                     },
                     builder: MyOutlinedButton.builderUnboundWidth,
-                    child: Text('資料匯出'.xTr),
+                    child: Text('t_data_export'.xTr),
                   ),
                   MyOutlinedButton(
                     color: tmpColor,
@@ -146,7 +149,7 @@ class _SleepFragmentState extends State<SleepFragment> {
                       return Icon(Icons.work_history_outlined, color: color, size: size,);
                     },
                     builder: MyOutlinedButton.builderUnboundWidth,
-                    child: Text('更新紀錄'.xTr),
+                    child: Text('t_update_record'.xTr),
                   ),
                   MyOutlinedButton(
                     color: tmpColor,
@@ -158,7 +161,18 @@ class _SleepFragmentState extends State<SleepFragment> {
                       return Icon(Icons.info_outline, color: color, size: size,);
                     },
                     builder: MyOutlinedButton.builderUnboundWidth,
-                    child: Text('關於'.xTr),
+                    child: Text('t_about'.xTr),
+                  ),
+                  MyOutlinedButton(
+                    color: positiveColor,
+                    onPressed: () async {
+                      ChangeLangPage.go(context);
+                    },
+                    iconBuilder: (color, size) {
+                      return Icon(Icons.language, color: color, size: size,);
+                    },
+                    builder: MyOutlinedButton.builderUnboundWidth,
+                    child: Text('${'t_switch_language'.xTr}\n(${'t_developing'.xTr})'),
                   ),
                 ],
               ),

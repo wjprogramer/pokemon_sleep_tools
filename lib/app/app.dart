@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/helpers/common/my_cache_manager.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/support_lang.dart';
@@ -23,15 +24,17 @@ import 'package:provider/provider.dart';
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // COMMON_SIDE_WIDTH
-
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyApp> createState() => MyAppState();
+
+  static MyAppState of(BuildContext context) => context.findAncestorStateOfType<MyAppState>()!;
+
+  static BuildContext get navContext => _navigatorKey.currentContext!;
 }
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   PokemonBasicProfileRepository get _pokemonBasicProfileRepository => getIt();
   MyLocalStorage get _localStorage => getIt();
   MyCacheManager get _cache => getIt();
@@ -39,6 +42,7 @@ class _MyAppState extends State<MyApp> {
   late MyRoutesMapping _routes;
   late Iterable<Locale> _locales;
   final _initRoute = SplashPage.route;
+  var _initLang = SupportLang.zhTW;
 
   @override
   void initState() {
@@ -75,9 +79,16 @@ class _MyAppState extends State<MyApp> {
     await context.read<FieldViewModel>().init();
   }
 
+  void setLang(SupportLang lang) {
+    // setState(() {
+    //   _currLang = lang;
+    // });
+    Get.updateLocale(lang.toLocale());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: generateTempTheme(),
@@ -86,14 +97,15 @@ class _MyAppState extends State<MyApp> {
           : Platform.isWindows || Platform.isMacOS ? _DesktopAppScrollBehavior()
           : null,
       // i18n
+      translations: MyTranslations(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: _locales,
-      // TODO:
-      locale: SupportLang.zhTW.toLocale(),
+      locale: _initLang.toLocale(),
+      fallbackLocale: SupportLang.enUS.toLocale(),
       // routing
       navigatorKey: _navigatorKey,
       onGenerateRoute: (settings) {

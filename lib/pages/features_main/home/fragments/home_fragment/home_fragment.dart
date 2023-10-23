@@ -47,7 +47,7 @@ class _HomeFragmentState extends State<HomeFragment> {
           paddingTop: 0,
           icon: const Iconify(Carbon.sub_volume, size: 16),
           title: Text(
-            '常用'.xTr,
+            't_commonly_used'.xTr,
           ),
         ),
         Wrap(

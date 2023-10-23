@@ -113,7 +113,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
           ...SleepSearchDialogBaseContent.hpList(
             children: [
               MySubHeader(
-                titleText: '專長'.xTr,
+                titleText: 't_specialty'.xTr,
               ),
               Gap.sm,
               Wrap(
@@ -518,12 +518,12 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 ),
                 Gap.sm,
                 MySubHeader(
-                  titleText: '進化階段'.xTr,
+                  titleText: 't_evolutionary_stage'.xTr,
                 ),
                 Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Text('目前階段'.xTr),
+                    Text('t_current_stage'.xTr),
                     ...[1,2,3].map((evolutionStage) => _buildEvolutionChip(
                       number: evolutionStage,
                       checked: searchOptions.currEvolutionStageOf.contains(evolutionStage),
@@ -537,7 +537,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    Text('最終階段'.xTr),
+                    Text('t_final_stage'.xTr),
                     ...[1,2,3].map((evolutionStage) => _buildEvolutionChip(
                       number: evolutionStage,
                       checked: searchOptions.maxEvolutionStageOf.contains(evolutionStage),
@@ -551,7 +551,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
               ],
               Gap.sm,
               MySubHeader(
-                titleText: '睡眠類型'.xTr,
+                titleText: 't_sleep_type'.xTr,
               ),
               Gap.sm,
               Wrap(

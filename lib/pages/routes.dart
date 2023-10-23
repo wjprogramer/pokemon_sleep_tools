@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
+import 'package:pokemon_sleep_tools/pages/features_common/change_lang/change_lang_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/change_logs/change_logs_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
@@ -60,6 +61,7 @@ typedef MyRoutesMapping = Map<String, MyRouteBuilder>;
 MyRoutesMapping generateRoutes() {
   final routes = <MyPageRoute>[
     // common
+    ChangeLangPage.route,
     ChangeLogsPage.route,
     DataSourcesPage.route,
     NotFoundRoutePage.route,

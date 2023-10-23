@@ -16,8 +16,6 @@ import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-// FIXME: 這樣新增完後，返回上一頁不會馬上重整
-
 enum _PageType {
   create(true),
   edit(true),
@@ -36,7 +34,7 @@ class _PokemonMaintainProfilePageArgs {
   final PokemonProfile? profile;
 }
 
-/// TODO: 切換寶可夢的時候，要清除食材
+/// TODO: [PokemonProfile.customNote]
 class PokemonMaintainProfilePage extends StatefulWidget {
   const PokemonMaintainProfilePage._({
     required _PageType pageType,

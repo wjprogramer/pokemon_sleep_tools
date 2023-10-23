@@ -45,7 +45,7 @@ class _PokemonFoodMenuPageState extends State<PokemonFoodMenuPage> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: HORIZON_PADDING),
         children: [
-          Text('常用'),
+          Text('t_commonly_used'.xTr),
           Gap.md,
           MyElevatedButton(
             onPressed: () {
