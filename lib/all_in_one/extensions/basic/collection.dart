@@ -1,5 +1,19 @@
 import 'package:collection/collection.dart';
 
+/// 會有問題 <T extends num>
+extension IterableIntX on Iterable<int> {
+  int xSum() {
+    return reduce((v, e) => v + e);
+  }
+}
+
+/// 會有問題 <T extends num>
+extension IterableDoubleX on Iterable<double> {
+  double xSum() {
+    return reduce((v, e) => v + e);
+  }
+}
+
 extension IterableX<T> on Iterable<T> {
   Map<K, V> toMap<K, V>(K Function(T) v, V Function(T) k) {
     return {

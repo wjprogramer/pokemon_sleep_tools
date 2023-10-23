@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits_energy/fruits_energy_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient_list_rarity/ingredient_list_rarity_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
@@ -53,6 +54,9 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         items: [
           _NormalVersionItem('[INFO] 修正主技能資訊'),
           _NormalVersionItem('[WIP/Feature] 開始進行多國化'),
+          _NormalVersionItem('[INFO] 新增食材稀有度頁面', onTap: () {
+            IngredientListRarityPage.go(context);
+          }),
         ],
       ),
       _Version(

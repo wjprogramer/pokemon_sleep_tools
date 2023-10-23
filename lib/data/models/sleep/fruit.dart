@@ -5,6 +5,8 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 /// 樹果 (Berry)
 ///
+/// TODO: 之後要全面 rename 改成 Berry
+///
 /// 樹果收集攸關卡比獸升級的速度，每星期卡比獸想吃的樹果都會更新，依據箱子給的提示，提供卡比獸要
 /// 的樹果可以獲得2倍的能量，這樣卡比獸升級的速度就可以加快，卡比獸的等級越高就可以遇到不容易出
 /// 現的寶可夢。

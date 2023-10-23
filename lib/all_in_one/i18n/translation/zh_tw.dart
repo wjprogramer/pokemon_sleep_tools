@@ -71,6 +71,7 @@ Map<String, String> getZhTwTrText() {
     't_overall_rating': '總評價',
     't_upgrade': '提升等級',
     't_seconds': '秒',
+    't_advanced': '進階',
     // endregion
     // endregion
 
@@ -120,6 +121,7 @@ Map<String, String> getZhTwTrText() {
     't_dish_maker': '製作料理',
     't_capacity': '容量',
     't_pot': '鍋子',
+    't_all_ingredients': '全部食材',
     // endregion
     // region ## Dish
     't_set_recipe_level': '設定食譜等級',
@@ -128,6 +130,16 @@ Map<String, String> getZhTwTrText() {
     't_desserts': '點心',
     't_drinks': '飲料',
     't_salad': '沙拉',
+    // endregion
+    // region ## Ingredient
+    't_ingredient': '食材',
+    't_ingredients': '食材',
+    't_ingredient_rarity': '食材稀有度',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
+    '': '',
     // endregion
     // endregion
 
@@ -139,8 +151,6 @@ Map<String, String> getZhTwTrText() {
 
     // region # Others
     't_character': '性格',
-    't_ingredient': '食材',
-    't_ingredients': '食材',
     't_fruit': '樹果',
     't_fruits': '樹果',
     't_food': '料理',

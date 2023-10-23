@@ -27,6 +27,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/fruits/fruits_page.dart'
 import 'package:pokemon_sleep_tools/pages/features_main/fruits_energy/fruits_energy_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/home/home_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient_list_rarity/ingredient_list_rarity_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
@@ -92,6 +93,7 @@ MyRoutesMapping generateRoutes() {
     HomePage.route,
     IngredientPage.route,
     IngredientsIllustratedBookPage.route,
+    IngredientListRarityPage.route,
     MainSkillPage.route,
     MainSkillsIllustratedBookPage.route,
     MapPage.route,

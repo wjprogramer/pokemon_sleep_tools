@@ -3,7 +3,9 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient_list_rarity/ingredient_list_rarity_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/widgets.dart';
 
 class IngredientsIllustratedBookPage extends StatefulWidget {
@@ -44,16 +46,36 @@ class _IngredientsIllustratedBookPageState extends State<IngredientsIllustratedB
         titleText: 't_ingredients'.xTr,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: HORIZON_PADDING,
-        ),
         children: [
-          Wrap(
-            spacing: _itemsSpacing,
-            runSpacing: _itemsSpacing,
-            children: _wrapItems(
-              children: Ingredient.values.map(_buildItem).toList(),
-            ),
+          ...Hp.list(
+            children: [
+              MySubHeader(titleText: 't_all_ingredients'.xTr,),
+              Gap.sm,
+              Wrap(
+                spacing: _itemsSpacing,
+                runSpacing: _itemsSpacing,
+                children: _wrapItems(
+                  children: Ingredient.values.map(_buildItem).toList(),
+                ),
+              ),
+              MySubHeader(
+                titleText: 't_advanced'.xTr,
+                color: advancedColor,
+              ),
+            ],
+          ),
+          ...ListTile.divideTiles(
+            context: context,
+            tiles: [
+              ListTile(
+                title: Text(
+                  't_ingredient_rarity'.xTr,
+                ),
+                onTap: () {
+                  IngredientListRarityPage.go(context);
+                },
+              ),
+            ],
           ),
           Gap.trailing,
         ],
