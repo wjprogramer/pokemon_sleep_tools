@@ -117,7 +117,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
 
       _basicProfileField.valueChanges.listen((basicProfile) {
         _ingredientDisplayTextControllers[0].text =
-            Display.text(basicProfile?.ingredient1.nameI18nKey);
+            Display.text(basicProfile?.ingredient1.nameI18nKey.xTr);
 
         _ingredient1CountField.value = basicProfile?.ingredientCount1;
         _ingredient1Field.value = basicProfile?.ingredient1;
@@ -248,7 +248,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
             ),
             children: [
               MySubHeader(
-                titleText: '基本資訊',
+                titleText: 't_basic_information'.xTr,
               ),
               Gap.xl,
               Row(
@@ -303,7 +303,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
               // _customNameField
               Gap.xl,
               ...ReactiveMyTextField.labelField(
-                label: Text('自訂名稱'.xTr),
+                label: Text('t_custom_name'.xTr),
                 field: ReactiveMyTextField(
                   formControl: _customNameField,
                 ),
@@ -361,7 +361,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                                           text: '${index + 1}. ',
                                         ),
                                         TextSpan(
-                                          text: Display.text(subSkill?.nameI18nKey),
+                                          text: Display.text(subSkill?.nameI18nKey.xTr),
                                           style: TextStyle(
                                             color: subSkill == null ? _theme.disabledColor : null,
                                             backgroundColor: subSkill?.bgColor,
@@ -616,7 +616,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                             ),
                           Expanded(
                             child: Text(
-                              '${ingredientAndCount.$1.nameI18nKey} x${ingredientAndCount.$2}',
+                              '${ingredientAndCount.$1.nameI18nKey.xTr} x${ingredientAndCount.$2}',
                             ),
                           ),
                         ],

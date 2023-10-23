@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -15,7 +16,7 @@ class IngredientValueAccessor extends ControlValueAccessor<Ingredient, String> {
       return '';
     }
     _cache.add(modelValue);
-    return modelValue.nameI18nKey;
+    return modelValue.nameI18nKey.xTr;
   }
 
   @override

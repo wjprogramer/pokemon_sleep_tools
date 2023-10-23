@@ -9,24 +9,24 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 /// 的樹果可以獲得2倍的能量，這樣卡比獸升級的速度就可以加快，卡比獸的等級越高就可以遇到不容易出
 /// 現的寶可夢。
 enum Fruit {
-  f1(1, '柿仔果', 28, 120, '一般', PokemonType.t1),
-  f2(2, '蘋野果', 27, 116, '火', PokemonType.t2),
-  f3(3, '橙橙果', 31, 133, '水', PokemonType.t3),
-  f4(4, '萄葡果', 25, 107, '電', PokemonType.t4),
-  f5(5, '金枕果', 30, 129, '草', PokemonType.t5),
-  f6(6, '莓莓果', 32, 137, '冰', PokemonType.t6),
-  f7(7, '櫻子果', 27, 116, '格鬥', PokemonType.t7),
-  f8(8, '零餘果', 32, 137, '毒', PokemonType.t8),
-  f9(9, '勿花果', 29, 124, '地面', PokemonType.t9),
-  f10(10, '椰木果', 24, 103, '飛行', PokemonType.t10),
-  f11(11, '芒芒果', 26, 112, '超能', PokemonType.t11),
-  f12(12, '木子果', 24, 103, '蟲', PokemonType.t12),
-  f13(13, '文柚果', 30, 129, '岩石', PokemonType.t13),
-  f14(14, '墨莓果', 26, 112, '幽靈', PokemonType.t14),
-  f15(15, '番荔果', 35, 150, '龍', PokemonType.t15),
-  f16(16, '異奇果', 31, 133, '惡', PokemonType.t16),
-  f17(17, '靛莓果', 33, 142, '鋼', PokemonType.t17),
-  f18(18, '桃桃果', 26, 112, '妖精', PokemonType.t18);
+  f1(1, 't_berry_1', 28, 120, '一般', PokemonType.t1),
+  f2(2, 't_berry_2', 27, 116, '火', PokemonType.t2),
+  f3(3, 't_berry_3', 31, 133, '水', PokemonType.t3),
+  f4(4, 't_berry_4', 25, 107, '電', PokemonType.t4),
+  f5(5, 't_berry_5', 30, 129, '草', PokemonType.t5),
+  f6(6, 't_berry_6', 32, 137, '冰', PokemonType.t6),
+  f7(7, 't_berry_7', 27, 116, '格鬥', PokemonType.t7),
+  f8(8, 't_berry_8', 32, 137, '毒', PokemonType.t8),
+  f9(9, 't_berry_9', 29, 124, '地面', PokemonType.t9),
+  f10(10, 't_berry_10', 24, 103, '飛行', PokemonType.t10),
+  f11(11, 't_berry_11', 26, 112, '超能', PokemonType.t11),
+  f12(12, 't_berry_12', 24, 103, '蟲', PokemonType.t12),
+  f13(13, 't_berry_13', 30, 129, '岩石', PokemonType.t13),
+  f14(14, 't_berry_14', 26, 112, '幽靈', PokemonType.t14),
+  f15(15, 't_berry_15', 35, 150, '龍', PokemonType.t15),
+  f16(16, 't_berry_16', 31, 133, '惡', PokemonType.t16),
+  f17(17, 't_berry_17', 33, 142, '鋼', PokemonType.t17),
+  f18(18, 't_berry_18', 26, 112, '妖精', PokemonType.t18);
 
   const Fruit(this.id, this.nameI18nKey, this.energyIn1, this.energyIn60, this.attr, this.pokemonType);
 

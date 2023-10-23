@@ -38,6 +38,7 @@ class _ChangeLangPageState extends State<ChangeLangPage> {
               ...SupportLang.values.map((lang) => ListTile(
                 onTap: () {
                   MyApp.of(context).setLang(lang);
+                  context.nav.pop();
                 },
                 title: Text(lang.displayName),
               )),

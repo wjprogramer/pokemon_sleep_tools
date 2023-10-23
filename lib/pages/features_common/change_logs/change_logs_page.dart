@@ -52,6 +52,7 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         description: null,
         items: [
           _NormalVersionItem('[INFO] 修正主技能資訊'),
+          _NormalVersionItem('[WIP/Feature] 開始進行多國化'),
         ],
       ),
       _Version(

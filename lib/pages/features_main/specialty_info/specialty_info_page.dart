@@ -82,7 +82,7 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
                   rows: [
                     DataRow(
                       cells: [
-                        DataCell(Text(PokemonSpecialty.t2.nameI18nKey.xTr)),
+                        DataCell(SpecialtyLabel(specialty: PokemonSpecialty.t2)),
                         DataCell(Text('一倍')),
                         DataCell(
                           Text(
@@ -98,7 +98,7 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
                     ),
                     DataRow(
                       cells: [
-                        DataCell(Text(PokemonSpecialty.t3.nameI18nKey.xTr)),
+                        DataCell(SpecialtyLabel(specialty: PokemonSpecialty.t3)),
                         DataCell(
                           Text(
                             '兩倍',
@@ -114,7 +114,7 @@ class _SpecialtyInfoPageState extends State<SpecialtyInfoPage> {
                     ),
                     DataRow(
                       cells: [
-                        DataCell(Text(PokemonSpecialty.t1.nameI18nKey.xTr)),
+                        DataCell(SpecialtyLabel(specialty: PokemonSpecialty.t1)),
                         DataCell(Text('一倍')),
                         DataCell(Text('一倍')),
                         DataCell(Text('通用、與某些陣容搭配的時候')),

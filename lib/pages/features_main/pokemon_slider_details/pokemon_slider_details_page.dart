@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
@@ -440,12 +439,6 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
         disableTooltip: true,
       );
     }
-    // if (Platform.isAndroid) {
-    //   image = Hero(
-    //     tag: 'pokemon_image_${widget.profile.id}',
-    //     child: image,
-    //   );
-    // }
 
     Widget buildWithLabel({
       required String text,
@@ -505,15 +498,15 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                 isLarvitarChain: widget.profile.isLarvitarChain,
               );
             },
-            child: const Text('提升等級'),
+            child: Text('t_upgrade'.xTr),
           ),
           Gap.xl,
           MySubHeader(
             titleText: 't_review'.xTr,
           ),
           Gap.xl,
-          Text('能量積分: ${statistics?.energyScore}\n'
-              '總評價: ${statistics?.rank}'),
+          Text('${'t_energy_integral'.xTr}: ${statistics?.energyScore}\n'
+              '${'t_overall_rating'.xTr}: ${statistics?.rank}'),
           Gap.xl,
           MySubHeader(
             titleText: 't_help_ability'.xTr,
@@ -625,14 +618,14 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           ),
           Gap.xl,
           buildWithLabel(
-            text: '幫忙間隔'.xTr,
+            text: 't_help_interval_2'.xTr,
             child: Text(
-              '${basicProfile.helpInterval} 秒 (${Display.seconds(basicProfile.helpInterval)})',
+              '${basicProfile.helpInterval} ${'t_seconds'.xTr} (${Display.seconds(basicProfile.helpInterval)})',
             ),
           ),
           Gap.xl,
           buildWithLabel(
-            text: '持有上限'.xTr,
+            text: 't_max_carry'.xTr,
             child: Text(
               '${widget.profile.basicProfile.maxCarry} 個\n',
             ),

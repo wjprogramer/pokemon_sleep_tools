@@ -3,9 +3,9 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 /// 專長
 enum PokemonSpecialty {
-  t1(1, '技能型', '技能', specialty3Color),
-  t2(2, '食材型', '食材', specialty2Color),
-  t3(3, '樹果型', '樹果', specialty1Color);
+  t1(1, 't_specialty_type_3', 't_specialty_3', specialty3Color),
+  t2(2, 't_specialty_type_2', 't_specialty_2', specialty2Color),
+  t3(3, 't_specialty_type_1', 't_specialty_1', specialty1Color);
 
   const PokemonSpecialty(this.id, this.nameI18nKey, this.shortNameI18nKey, this.color);
 

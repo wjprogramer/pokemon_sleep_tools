@@ -1,25 +1,27 @@
 import 'dart:ui';
 
+import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
+/// ID 不能亂動，[PokemonProfile] 會儲存副技能的 ID
 enum SubSkill {
-  berryCountS(1, '樹果數量s', '一次撿來的樹果數量會增加1個', 3),
-  helperBonus(2, '幫手獎勵', '全隊成員的幫忙間隔都會縮短5%', 3),
-  helpSpeedM(3, '幫忙速度M', '幫忙間隔會縮短14%', 2),
-  helpSpeedS(4, '幫忙速度S', '幫忙間隔會縮短7%', 1),
-  ingredientRateM(5, '食材機率M', '帶回食材的機率會提升36%', 2),
-  ingredientRateS(6, '食材機率S', '帶回食材的機率會提升18%', 1),
-  skillLevelM(7, '技能等級M', '主技能等級會提升2', 3),
-  skillLevelS(8, '技能等級S', '主技能等級會提升1', 2),
-  skillRateM(9, '技能機率M', '發動主技能的機率會提升36%', 2),
-  skillRateS(10, '技能機率S', '發動主技能的機率會提升18%', 1),
-  holdMaxL(11, '持有上限L', '樹果、食材的持有上限會增加18個', 2),
-  holdMaxM(12, '持有上限M', '樹果、食材的持有上限會增加12個', 2),
-  holdMaxS(13, '持有上限S', '樹果、食材的持有上限會增加6個', 1),
-  energyRecoverBonus(14, '活力回復獎勵', '全隊成員透過睡眠回復的活力都會變成1.12倍', 3),
-  sleepExpBonus(15, '睡眠EXP獎勵', '全隊成員透過睡眠獲得的EXP都會增加14%', 3),
-  researchExpBonus(16, '研究EXP獎勵', '透過睡眠研究獲得的研究EXP都會增加6%', 3),
-  dreamChipBonus(17, '夢之碎片獎勵', '透過睡眠研究獲得的夢之碎片會增加6%', 3);
+  berryCountS(1, 't_sub_skill_8', '一次撿來的樹果數量會增加1個', 3),
+  helperBonus(2, 't_sub_skill_2', '全隊成員的幫忙間隔都會縮短5%', 3),
+  helpSpeedM(3, 't_sub_skill_7', '幫忙間隔會縮短14%', 2),
+  helpSpeedS(4, 't_sub_skill_6', '幫忙間隔會縮短7%', 1),
+  ingredientRateM(5, 't_sub_skill_13', '帶回食材的機率會提升36%', 2),
+  ingredientRateS(6, 't_sub_skill_12', '帶回食材的機率會提升18%', 1),
+  skillLevelM(7, 't_sub_skill_18', '主技能等級會提升2', 3),
+  skillLevelS(8, 't_sub_skill_11', '主技能等級會提升1', 2),
+  skillRateM(9, 't_sub_skill_15', '發動主技能的機率會提升36%', 2),
+  skillRateS(10, 't_sub_skill_14', '發動主技能的機率會提升18%', 1),
+  holdMaxL(11, 't_sub_skill_19', '樹果、食材的持有上限會增加18個', 2),
+  holdMaxM(12, 't_sub_skill_10', '樹果、食材的持有上限會增加12個', 2),
+  holdMaxS(13, 't_sub_skill_9', '樹果、食材的持有上限會增加6個', 1),
+  energyRecoverBonus(14, 't_sub_skill_3', '全隊成員透過睡眠回復的活力都會變成1.12倍', 3),
+  sleepExpBonus(15, 't_sub_skill_1', '全隊成員透過睡眠獲得的EXP都會增加14%', 3),
+  researchExpBonus(16, 't_sub_skill_5', '透過睡眠研究獲得的研究EXP都會增加6%', 3),
+  dreamChipBonus(17, 't_sub_skill_4', '透過睡眠研究獲得的夢之碎片會增加6%', 3);
 
   const SubSkill(this.id, this.nameI18nKey, this.intro, this.rarity);
 

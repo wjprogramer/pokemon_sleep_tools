@@ -321,7 +321,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 ..addAll(fruits);
               search();
             },
-            child: Text('卡比獸喜歡的樹果'),
+            child: Text('t_snorlax_s_favorite_tree_fruit'.xTr),
           ),
           ...SleepSearchDialogBaseContent.hpList(
             children: [
@@ -492,7 +492,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                     children: [
                       Expanded(
                         child: Text(
-                          '可發現島嶼'.xTr,
+                          't_discoverable_islands'.xTr,
                         ),
                       ),
                       Tooltip(
@@ -744,7 +744,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
 }
 
 enum _IngredientLabelType {
-  all('不限等級', '搜尋所有食材'),
+  all('t_no_level_limit', '搜尋所有食材'),
   lv1('Lv 1', '只搜尋 Lv 1 的食材'),
   lv30('Lv 30', '只搜尋 Lv 30 的食材'),
   lv60('Lv 60', '只搜尋 Lv 60 的食材');

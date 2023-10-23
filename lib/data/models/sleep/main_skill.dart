@@ -5,18 +5,18 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 /// [description] 中的數值會根據技能等級以及 [basicValues] 的數值做變動
 enum MainSkill {
-  energyFillS(1, '能量填充S', '使卡比獸的能量增加400', 1),
-  energyFillM(2, '能量填充M', '使卡比獸的能量增加880', 1),
-  energyFillSn(5, '能量填充Sn', '使卡比獸的能量增加200 到 800', 1),
-  dreamChipS(3, '夢之碎片獲取S', '獲得88個夢之碎片', 2),
-  dreamChipSn(6, '夢之碎片獲取Sn', '獲得 44 到 176 個夢想碎片', 2),
-  vitalityS(4, '活力療癒S', '隨機讓1隻自己以外的寶可夢回復活力14點', 3),
-  vitalityAllS(8, '活力全體療癒S', '讓幫手隊伍的寶可夢回復活力5點', 3),
-  vitalityFillS(7, '活力填充S', '讓自己恢復12點活力', 3),
-  helpSupportS(9, '幫手支援S', '幫手寶可夢中的某1隻會立刻完成 4 次幫忙', 4),
-  ingredientS(10, '食材獲取S', '隨機獲得食材6個', 4),
-  cuisineS(11, '料理強化S', '增加下一次料理時的鍋子容量，讓鍋子能多放7個食材', 4),
-  finger(12, '揮指', '從全部的主技能中隨機發動1種', 2);
+  energyFillS(1, 't_main_skill_1', '使卡比獸的能量增加400', 1),
+  energyFillM(2, 't_main_skill_2', '使卡比獸的能量增加880', 1),
+  energyFillSn(5, 't_main_skill_5', '使卡比獸的能量增加200 到 800', 1),
+  dreamChipS(3, 't_main_skill_3', '獲得88個夢之碎片', 2),
+  dreamChipSn(6, 't_main_skill_6', '獲得 44 到 176 個夢想碎片', 2),
+  vitalityS(4, 't_main_skill_4', '隨機讓1隻自己以外的寶可夢回復活力14點', 3),
+  vitalityAllS(8, 't_main_skill_8', '讓幫手隊伍的寶可夢回復活力5點', 3),
+  vitalityFillS(7, 't_main_skill7', '讓自己恢復12點活力', 3),
+  helpSupportS(9, 't_main_skill_9', '幫手寶可夢中的某1隻會立刻完成 4 次幫忙', 4),
+  ingredientS(10, 't_main_skill_10', '隨機獲得食材6個', 4),
+  cuisineS(11, 't_main_skill_11', '增加下一次料理時的鍋子容量，讓鍋子能多放7個食材', 4),
+  finger(12, 't_main_skill_13', '從全部的主技能中隨機發動1種', 2);
 
   const MainSkill(this.id, this.nameI18nKey, this.description, this.type);
 

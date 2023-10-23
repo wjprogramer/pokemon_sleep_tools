@@ -267,7 +267,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
                     context,
                     options: PokemonCharacter.values,
                     optionBuilder: (context, character) {
-                      return Text(character.nameI18nKey);
+                      return Text(character.nameI18nKey.xTr);
                     },
                     itemBuilder: (item, onItemTap) {
                       Color? color;

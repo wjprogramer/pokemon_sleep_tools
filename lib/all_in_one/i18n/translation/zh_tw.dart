@@ -61,6 +61,15 @@ Map<String, String> getZhTwTrText() {
     't_attributes': '屬性',
     't_categories': '種類',
     't_commonly_used': '常用',
+    't_custom_name': '自訂名稱',
+    't_basic_information': '基本資訊',
+    't_snorlax_s_favorite_tree_fruit': '卡比獸喜歡的樹果',
+    't_no_level_limit': '不限等級',
+    't_discoverable_islands': '可發現島嶼',
+    't_energy_integral': '能量積分',
+    't_overall_rating': '總評價',
+    't_upgrade': '提升等級',
+    't_seconds': '秒',
     // endregion
     // endregion
 
@@ -84,6 +93,7 @@ Map<String, String> getZhTwTrText() {
     't_sleep_type': '睡眠類型',
     't_specialty': '專長',
     't_help_interval': '間隔時間',
+    't_help_interval_2': '幫忙間隔',
     't_help_interval_base': '間隔時間(基礎)',
     't_max_carry': '持有上限',
     't_help_ability': '幫忙能力',

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -76,13 +77,13 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
         children: [
           Gap.xl,
           ..._pokemonList.map((pokemon) {
-            final character = pokemon.character.nameI18nKey;
-            final subSkills = pokemon.subSkills.mapIndexed((i, e) => 'Lv. ${SubSkill.levelList[i]}: ${e.nameI18nKey}').join('\n');
+            final character = pokemon.character.nameI18nKey.xTr;
+            final subSkills = pokemon.subSkills.mapIndexed((i, e) => 'Lv. ${SubSkill.levelList[i]}: ${e.nameI18nKey.xTr}').join('\n');
             final ingredients = <(Ingredient, int)>[
               (pokemon.ingredient1, pokemon.ingredientCount1),
               (pokemon.ingredient2, pokemon.ingredientCount2),
               (pokemon.ingredient3, pokemon.ingredientCount3),
-            ].mapIndexed((index, ingredient) => '${index + 1}. ${ingredient.$1.nameI18nKey} x${ingredient.$2}').join('\n');
+            ].mapIndexed((index, ingredient) => '${index + 1}. ${ingredient.$1.nameI18nKey.xTr} x${ingredient.$2}').join('\n');
             final statistics = _statisticsOf[pokemon.id]!;
 
             return ListTile(
@@ -101,8 +102,8 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
                             '$ingredients\n'
                             '-----------------\n'
                             '其他:\n'
-                            '類型: ${pokemon.basicProfile.specialty.nameI18nKey} (${pokemon.basicProfile.fruit.nameI18nKey})\n'
-                            '主技能: ${pokemon.basicProfile.mainSkill.nameI18nKey}\n'
+                            '類型: ${pokemon.basicProfile.specialty.nameI18nKey.xTr} (${pokemon.basicProfile.fruit.nameI18nKey.xTr})\n'
+                            '主技能: ${pokemon.basicProfile.mainSkill.nameI18nKey.xTr}\n'
                             '\n'
                     ),
                   ),

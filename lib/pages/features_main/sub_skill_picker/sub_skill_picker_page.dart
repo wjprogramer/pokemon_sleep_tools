@@ -236,7 +236,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
                       onTap: () => _pickSubSkill(subSkill),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: Text(subSkill.nameI18nKey),
+                        child: Text(subSkill.nameI18nKey.xTr),
                       ),
                     ),
                   ),
@@ -299,7 +299,7 @@ class _SubSkillPickerPageState extends State<SubSkillPickerPage> {
               ),
             ),
             child: Text(
-              _subSkillFields[index]?.nameI18nKey ?? '-',
+              _subSkillFields[index]?.nameI18nKey.xTr ?? '-',
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -362,7 +362,7 @@ class _SubSkillGroupItem extends _SubSkillItem {
 class _SubSkillValueItem extends _SubSkillItem {
   _SubSkillValueItem({
     required this.value,
-  }) : super(name: value.nameI18nKey);
+  }) : super(name: value.nameI18nKey.xTr);
 
   SubSkill value;
 }

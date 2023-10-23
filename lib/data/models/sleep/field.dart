@@ -1,13 +1,13 @@
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-/// 地圖 (、場所)
+/// 地圖 (場所)
 enum PokemonField {
-  f1(1, '萌綠之島', [], 0),
-  f2(2, '天青沙灘', [ Fruit.f3, Fruit.f10, Fruit.f18 ], 20),
-  f3(3, '灰褐洞窟', [ Fruit.f2, Fruit.f9, Fruit.f13, ], 70),
-  f4(4, '白花雪原', [ Fruit.f1, Fruit.f6, Fruit.f16, ], 150);
-  // f6(6, '脂紅火山'),
-  // f7(7, '寶藍湖畔');
+  f1(1, 't_field_1', [], 0),
+  f2(2, 't_field_2', [ Fruit.f3, Fruit.f10, Fruit.f18 ], 20),
+  f3(3, 't_field_3', [ Fruit.f2, Fruit.f9, Fruit.f13, ], 70),
+  f4(4, 't_field_4', [ Fruit.f1, Fruit.f6, Fruit.f16, ], 150);
+  // f6(6, 't_field_6'),
+  // f7(7, 't_field_7');
 
   const PokemonField(this.id, this.nameI18nKey, this.fruits, this.unlockCount);
 

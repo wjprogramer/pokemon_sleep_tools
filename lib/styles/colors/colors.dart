@@ -63,7 +63,7 @@ const rankTitle4Color2 = Color(0xFFD672B6);
 /// [PokemonSpecialty]
 const specialty1Color = Color(0xFF24D36C);
 const specialty2Color = Color(0xFFFDBB43);
-const specialty3Color = Color(0xFFFE765A);
+const specialty3Color = positiveColor;
 
 /// [DishType]
 const dishType1Color = Color(0xFFF67316);

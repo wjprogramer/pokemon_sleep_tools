@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 enum RankTitle {
-  t1(1, '普通'),
-  t2(2, '超級'),
-  t3(3, '高級'),
-  t4(4, '大師');
+  t1(1, 't_rank_title_1'),
+  t2(2, 't_rank_title_2'),
+  t3(3, 't_rank_title_3'),
+  t4(4, 't_rank_title_4');
 
   const RankTitle(this.id, this.nameI18nKey);
 
