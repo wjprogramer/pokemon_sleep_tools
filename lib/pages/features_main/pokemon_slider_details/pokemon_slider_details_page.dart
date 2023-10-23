@@ -253,7 +253,6 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
                     Expanded(
                       child: _buildTitle(),
                     ),
-                    ..._buildActions(),
                   ],
                 ),
               ),
@@ -265,7 +264,6 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
         return Scaffold(
           appBar: _isView ? null : buildAppBar(
             title: _buildTitle(),
-            actions: _buildActions(),
           ),
           body: body,
         );
@@ -431,12 +429,17 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
     const subSkillParentExtraMarginValue = 4.0;
     final subSkillWidth = (mainWidth - 2 * subSkillParentExtraMarginValue - subSkillItemSpacing) / 2;
 
-    Widget image = Container();
+    Widget image = const SizedBox(height: 100);
     if (MyEnv.USE_DEBUG_IMAGE) {
-      image = PokemonImage(
-        height: 200,
-        basicProfile: widget.profile.basicProfile,
-        disableTooltip: true,
+      const imageSize = 200.0;
+      image = SizedBox(
+        height: imageSize,
+        width: double.infinity,
+        child: PokemonImage(
+          height: imageSize,
+          basicProfile: widget.profile.basicProfile,
+          disableTooltip: true,
+        ),
       );
     }
 
@@ -489,8 +492,29 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
       Gap.xl,
       ...Hp.list(
         children: [
-          if (MyEnv.USE_DEBUG_IMAGE)
-            image,
+          Stack(
+            children: [
+              image,
+              Positioned.fill(
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  verticalDirection: VerticalDirection.up,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        PokemonMaintainProfilePage.goEdit(context, _profile);
+                      },
+                      icon: const Icon(
+                        Icons.note_alt_outlined,
+                        color: orangeColor,
+                      ),
+                      tooltip: 't_edit'.xTr,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
           MyElevatedButton(
             onPressed: () {
               ExpCalculatorPage.go(

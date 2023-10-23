@@ -89,7 +89,7 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
 
   Future<List<PokemonBasicProfile>> _filter(String keyword) async {
     return _allBasicProfiles
-        .where((pokemon) => pokemon.nameI18nKey.contains(keyword))
+        .where((pokemon) => pokemon.nameI18nKey.xTr.contains(keyword))
         .toList();
   }
 
@@ -164,7 +164,7 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
                                     left: 0,
                                     bottom: 0,
                                     child: Text(
-                                      basicProfile.nameI18nKey,
+                                      basicProfile.nameI18nKey.xTr,
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -176,7 +176,7 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
                       ],
                     ) else ...basicProfiles.map((basicProfile) => MyElevatedButton(
                       onPressed: () => _pickBasicProfile(basicProfile),
-                      child: Text(basicProfile.nameI18nKey),
+                      child: Text(basicProfile.nameI18nKey.xTr),
                     )),
                     Gap.sm,
                   ],

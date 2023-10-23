@@ -41,6 +41,7 @@ Map<String, String> getZhTwTrText() {
     't_delete': '刪除',
     't_create': '建立',
     't_edit': '編輯',
+    't_edit_note': '編輯筆記',
     't_create_success': '建立成功',
     't_create_failed': '建立失敗',
     't_update_success': '更新成功',
