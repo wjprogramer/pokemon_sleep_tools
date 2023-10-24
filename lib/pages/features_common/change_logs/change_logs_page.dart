@@ -11,6 +11,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/ingredient_list_rarity/i
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_with_pokemon_list/main_skills_with_pokemon_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/pokemon_illustrated_book/pokemon_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
@@ -53,17 +54,24 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         date: DateTime(2023, 10, 24),
         description: null,
         items: [
+          _VersionSubTitleItem('一般'),
           _NormalVersionItem('[INFO] 修正主技能資訊'),
-          _NormalVersionItem('[WIP/Feature] 開始進行多國化'),
-          _NormalVersionItem('[Feature] 寶可夢盒內的寶可夢可以新增自訂筆記'),
+          _NormalVersionItem('[WIP/Feature] 開始進行多國化作業', onTap: () {
+            ChangeLogsPage.go(context);
+          }),
           _NormalVersionItem('[INFO] 新增食材稀有度頁面', onTap: () {
             IngredientListRarityPage.go(context);
           }),
           _NormalVersionItem('[INFO] 新增主技能與寶可夢列表頁面', onTap: () {
             MainSkillsWithPokemonListPage.go(context);
           }),
-          _NormalVersionItem('[Feature] 寶可夢盒內，可以用島嶼、目前/最終進化階段搜尋，關鍵字也可以搜尋自訂筆記、自訂名稱 (不分大小寫)'),
-          _NormalVersionItem('[Bug] 寶可夢圖鑑內可以正常搜尋了'),
+          _NormalVersionItem('[Bug] 寶可夢圖鑑內可以正常搜尋了', onTap: () {
+            PokemonIllustratedBookPage.go(context);
+          }),
+          _VersionSubTitleItem('寶可夢盒'),
+          _NormalVersionItem('[Feature] 寶可夢可以新增自訂筆記'),
+          _NormalVersionItem('[Feature] 寶可夢可以收藏、變更為異色（顯示上也會調整）'),
+          _NormalVersionItem('[Feature] 可以用島嶼、目前/最終進化階段搜尋，關鍵字也可以搜尋自訂筆記、自訂名稱 (不分大小寫)'),
         ],
       ),
       _Version(

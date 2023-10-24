@@ -16,6 +16,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../widgets/sleep/list_tiles/list_tiles.dart';
 
+const _pokemonImageSize = 48.0;
+
 class _PageArgs {
   _PageArgs({
     this.isLarvitarChain = false,
@@ -163,9 +165,9 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
         },
         leading: !MyEnv.USE_DEBUG_IMAGE ? null : Padding(
           padding: const EdgeInsets.only(right: 16),
-          child: PokemonIconImage(
+          child: PokemonIconBorderedImage(
             basicProfile: _larvitarChainProfiles[0],
-            width: 48,
+            width: _pokemonImageSize,
           ),
         ),
         title: Text(
@@ -185,7 +187,7 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
         leading: !MyEnv.USE_DEBUG_IMAGE ? null : Padding(
           padding: const EdgeInsets.only(right: 16),
           child: Container(
-            width: 48,
+            width: _pokemonImageSize,
           ),
         ),
         onChanged: (v) {

@@ -55,10 +55,6 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 
 ---
 
-- 搜尋寶可夢
-  - 將功能加至寶可夢圖鑑
-  - 使用者自訂名稱
-    - 關鍵字查詢可以查詢該欄位
 - 搜尋幾星的睡姿
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）
   - 類似手機 plus, pro, pro max 詳細數據對比

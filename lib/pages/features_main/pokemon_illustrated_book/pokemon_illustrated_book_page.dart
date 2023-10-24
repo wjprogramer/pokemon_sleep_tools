@@ -51,6 +51,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
 
   // UI
   late ThemeData _theme;
+  var _isMobile = false;
 
   // Data (fixed)
   /// For search
@@ -100,6 +101,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     final responsive = ResponsiveBreakpoints.of(context);
+    _isMobile = responsive.isMobile;
 
     final mainContent = Consumer<MainViewModel>(
       builder: (context, mainViewModel, child) {
@@ -109,7 +111,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
           children: [
             ..._filteredBasicProfiles.map((e) => Padding(
               padding: const EdgeInsets.only(bottom: Gap.xsV),
-              child: _buildBasicProfile(e, isMobile: responsive.isMobile),
+              child: _buildBasicProfile(e),
             )),
             Gap.trailing,
           ],
@@ -117,7 +119,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
       },
     );
 
-    if (responsive.isMobile) {
+    if (_isMobile) {
       return Scaffold(
         appBar: buildAppBar(
           titleText: 't_pokemon_illustrated_book'.xTr,
@@ -197,12 +199,12 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
     );
   }
 
-  Widget _buildBasicProfile(PokemonBasicProfile basicProfile, {
-    required bool isMobile,
-  }) {
+  Widget _buildBasicProfile(PokemonBasicProfile basicProfile) {
+    const pokemonImageSize = 36.0;
+
     return InkWell(
       onTap: () {
-        if (isMobile) {
+        if (_isMobile) {
           PokemonBasicProfilePage.go(context, basicProfile);
         } else {
           setState(() {
@@ -216,7 +218,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
           vertical: 8,
         ),
         decoration: BoxDecoration(
-          color: _currBasicProfile?.id == basicProfile.id && !isMobile ? yellowColor : null,
+          color: _currBasicProfile?.id == basicProfile.id && !_isMobile ? yellowColor : null,
         ),
         child: Row(
           children: [
@@ -227,31 +229,35 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
                 child: PokemonRecordedIcon(),
               ),
             ),
+            if (_isMobile && MyEnv.USE_DEBUG_IMAGE)
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: PokemonIconBorderedImage(
+                  basicProfile: basicProfile,
+                  disableTooltip: true,
+                  width: pokemonImageSize,
+                ),
+              ),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      text: '#${basicProfile.boxNo} ${basicProfile.nameI18nKey.xTr}  ',
-                      style: _theme.textTheme.bodyLarge,
-                      children: [
-                        if (kDebugMode && !kDebugMode)
-                          WidgetSpan(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 4,
-                              ),
-                              child: PokemonTypeImage(
-                                pokemonType: basicProfile.pokemonType,
-                                width: 24,
-                              ),
-                            ),
+              child: Text.rich(
+                TextSpan(
+                  text: '#${basicProfile.boxNo} ${basicProfile.nameI18nKey.xTr}  ',
+                  style: _theme.textTheme.bodyLarge,
+                  children: [
+                    if (kDebugMode && !kDebugMode)
+                      WidgetSpan(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 4,
                           ),
-                      ],
-                    ),
-                  ),
-                ],
+                          child: PokemonTypeImage(
+                            pokemonType: basicProfile.pokemonType,
+                            width: 24,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ],
