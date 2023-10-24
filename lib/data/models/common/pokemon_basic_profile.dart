@@ -6,7 +6,7 @@ class PokemonBasicProfile {
     required this.boxNo,
     required this.nameI18nKey,
     this.customName,
-    this.subnameI18nKey,
+    this.subNameI18nKey,
     this.styles,
     this.types = const [],
     this.assetPath,
@@ -82,10 +82,12 @@ class PokemonBasicProfile {
   final String nameI18nKey;
 
   /// ex: 拉達, 勞贖
+  /// FIXME: 好像不該有這個？自訂名稱應該是在[PokemonProfile.customName]
+  @deprecated
   final String? customName;
 
   /// ex: 阿羅拉的樣子
-  final String? subnameI18nKey;
+  final String? subNameI18nKey;
 
   /// [PokemonBasicProfile.id], include self id
   /// ex: [拉達, 拉達（阿羅拉的樣子）]

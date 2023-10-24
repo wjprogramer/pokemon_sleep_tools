@@ -15,6 +15,7 @@ Future<PokemonSearchOptions?> showPokemonSearchDialog(BuildContext context, {
   required String titleText,
   required PokemonSearchOptions initialSearchOptions,
   CalculateCounts<PokemonSearchOptions>? calcCounts,
+  bool focusBasicProfile = false,
 }) async {
   final res = await showSleepDialog(
     context,
@@ -23,6 +24,7 @@ Future<PokemonSearchOptions?> showPokemonSearchDialog(BuildContext context, {
       titleText: titleText,
       initialSearchOptions: initialSearchOptions,
       calcCounts: calcCounts,
+      focusBasicProfile: focusBasicProfile,
     ),
   );
 
@@ -36,11 +38,13 @@ class PokemonSearchDialog extends StatefulWidget {
     required this.titleText,
     required this.initialSearchOptions,
     this.calcCounts,
+    required this.focusBasicProfile,
   });
 
   final String titleText;
   final PokemonSearchOptions initialSearchOptions;
   final CalculateCounts<PokemonSearchOptions>? calcCounts;
+  final bool focusBasicProfile;
 
   void popResult(BuildContext context, [ PokemonSearchOptions? value ]) {
     context.nav.pop(value);

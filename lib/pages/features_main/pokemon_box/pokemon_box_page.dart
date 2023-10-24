@@ -108,6 +108,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   final _disposers = <MyDisposable>[];
 
   // Data (fixed)
+  /// For search
   var _basicIdSetGroupByField = <PokemonField, Set<int>>{};
 
   // Data

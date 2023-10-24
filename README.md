@@ -55,6 +55,11 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 
 ---
 
+- 搜尋寶可夢
+  - 將功能加至寶可夢圖鑑
+  - 使用者自訂名稱
+    - 關鍵字查詢可以查詢該欄位
+- 搜尋幾星的睡姿
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）
   - 類似手機 plus, pro, pro max 詳細數據對比
 - 因為反查功能很多，避免過多路由，在路由超過一定數量，Global 顯示按鈕用以 pop 到最上層?
@@ -68,12 +73,6 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 - 寶可夢
   - 排序（包含圖鑑及寶可夢盒）
   - 登錄日期：可讓使用者紀錄遊戲內實際捕獲的時間
-- 搜尋寶可夢
-  - 將功能加至寶可夢圖鑑
-  - 搜尋寶可夢會出現的島嶼
-  - 最終或目前進化階段查詢
-  - 使用者自訂名稱
-    - 關鍵字查詢可以查詢該欄位
 - 共通搜尋
   - 儲存欄位條件？
     - 範圍：部分？全部？

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -51,6 +52,10 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   // UI
   late ThemeData _theme;
 
+  // Data (fixed)
+  /// For search
+  var _basicIdSetGroupByField = <PokemonField, Set<int>>{};
+
   // Data
   var _allBasicProfiles = <PokemonBasicProfile>[];
   var _filteredBasicProfiles = <PokemonBasicProfile>[];
@@ -74,6 +79,13 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
         _profileOf[profile.basicProfileId] = profile;
       }
 
+      final sleepFacesGroupByField = await _sleepFaceRepo.findAllGroupByField();
+      final basicIdSetGroupByField = sleepFacesGroupByField.toMap(
+            (field, basicProfiles) => field,
+            (field, basicProfiles) => {...basicProfiles.map((e) => e.basicProfileId)},
+      );
+      _basicIdSetGroupByField = basicIdSetGroupByField;
+
       _allBasicProfiles = await _basicProfileRepo.findAll();
       _filteredBasicProfiles = [..._allBasicProfiles];
       _sleepFacesOf = await _sleepFaceRepo.findAllNames();
@@ -95,7 +107,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
 
         return buildListView(
           children: [
-            ..._allBasicProfiles.map((e) => Padding(
+            ..._filteredBasicProfiles.map((e) => Padding(
               padding: const EdgeInsets.only(bottom: Gap.xsV),
               child: _buildBasicProfile(e, isMobile: responsive.isMobile),
             )),
@@ -111,9 +123,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
           titleText: 't_pokemon_illustrated_book'.xTr,
         ),
         body: mainContent,
-        bottomNavigationBar: _hideBottomNavigationBar
-            ? null
-            : _buildBottomNavigationBar(_allBasicProfiles),
+        bottomNavigationBar: _buildBottomNavigationBar(_allBasicProfiles),
       );
     }
 
@@ -163,7 +173,10 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
             if (options.isEmptyOptions()) {
               return (profiles.length, profiles.length);
             }
-            return (options.filterBasicProfiles(_allBasicProfiles).length, profiles.length);
+            return (options.filterBasicProfiles(
+              _allBasicProfiles,
+              fieldToBasicProfileIdSet: _basicIdSetGroupByField,
+            ).length, profiles.length);
           },
         );
         if (searchOptions == null) {
@@ -171,9 +184,13 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
         }
 
         _searchOptions = searchOptions;
-        _filteredBasicProfiles = _searchOptions.filterBasicProfiles(_allBasicProfiles);
+        _filteredBasicProfiles = _searchOptions.filterBasicProfiles(
+          _allBasicProfiles,
+          fieldToBasicProfileIdSet: _basicIdSetGroupByField,
+        );
         setState(() { });
       },
+      isSearchOn: !_searchOptions.isEmptyOptions(),
       onSort: () {
 
       },

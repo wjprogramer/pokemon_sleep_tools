@@ -62,7 +62,8 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
           _NormalVersionItem('[INFO] 新增主技能與寶可夢列表頁面', onTap: () {
             MainSkillsWithPokemonListPage.go(context);
           }),
-          _NormalVersionItem('[Feature] 寶可夢盒內，可以用島嶼、目前/最終進化階段搜尋'),
+          _NormalVersionItem('[Feature] 寶可夢盒內，可以用島嶼、目前/最終進化階段搜尋，關鍵字也可以搜尋自訂筆記、自訂名稱 (不分大小寫)'),
+          _NormalVersionItem('[Bug] 寶可夢圖鑑內可以正常搜尋了'),
         ],
       ),
       _Version(

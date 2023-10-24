@@ -158,10 +158,8 @@ class PokemonSearchOptions implements BaseSearchOptions {
       return results.toList();
     }
 
-    if (fruitOf.isNotEmpty) {
-      results = results
-          .where((p) => fruitOf.contains(p.basicProfile.fruit));
-    }
+    results = results
+        .where((profile) => _basicProfileWhere(profile.basicProfile, fieldToBasicProfileIdSet));
 
     void filterIngredients(Set<Ingredient> ingredientSetParam, Function(PokemonProfile profile) gettingIngredients) {
       if (ingredientSetParam.isEmpty) {
@@ -184,50 +182,34 @@ class PokemonSearchOptions implements BaseSearchOptions {
       });
     }
 
-    if (typeof.isNotEmpty) {
-      results = results
-          .where((p) => typeof.contains(p.basicProfile.pokemonType));
-    }
-
-    if (mainSkillOf.isNotEmpty) {
-      results = results
-          .where((p) => mainSkillOf.contains(p.basicProfile.mainSkill));
-    }
-
-    final newKeyword = keyword.trim();
+    final newKeyword = keyword.trim().toLowerCase();
     if (newKeyword.isNotEmpty) {
-      results = results
-          .where((p) => p.basicProfile.nameI18nKey.xTr.contains(newKeyword));
-    }
-
-    if (sleepTypeOf.isNotEmpty) {
-      results = results
-          .where((p) => sleepTypeOf.contains(p.basicProfile.sleepType));
-    }
-
-    if (specialtyOf.isNotEmpty) {
-      results = results
-          .where((p) => specialtyOf.contains(p.basicProfile.specialty));
-    }
-
-    if (currEvolutionStageOf.isNotEmpty) {
-      results = results
-          .where((p) => currEvolutionStageOf.contains(p.basicProfile.currentEvolutionStage));
-    }
-
-    if (maxEvolutionStageOf.isNotEmpty) {
-      results = results
-          .where((p) => maxEvolutionStageOf.contains(p.basicProfile.evolutionMaxCount));
-    }
-
-    if (fieldOf.isNotEmpty) {
       results = results.where((p) {
-        for (final field in fieldOf) {
-          final idSet = fieldToBasicProfileIdSet[field];
-          if (idSet == null) {
-            continue;
-          }
-          if (idSet.contains(p.basicProfileId)) {
+        return _basicProfileKeywordWhere(p.basicProfile, newKeyword) ||
+            (p.customName?.toLowerCase() ?? '').contains(newKeyword) ||
+            (p.customNote?.toLowerCase() ?? '').contains(newKeyword);
+      });
+    }
+
+    return results.toList();
+  }
+
+  List<PokemonBasicProfile> filterBasicProfiles(List<PokemonBasicProfile> profiles, {
+    required Map<PokemonField, Set<int>> fieldToBasicProfileIdSet,
+  }) {
+    Iterable<PokemonBasicProfile> results = [...profiles];
+    if (isEmptyOptions()) {
+      return results.toList();
+    }
+
+    // ingredient
+    void filterIngredients(Set<Ingredient> ingredientSetParam, Iterable<Ingredient> Function(PokemonBasicProfile profile) gettingIngredients) {
+      if (ingredientSetParam.isEmpty) {
+        return;
+      }
+      results = results.where((p) {
+        for (final currIngredient in gettingIngredients(p)) {
+          if (ingredientSetParam.contains(currIngredient)) {
             return true;
           }
         }
@@ -235,11 +217,90 @@ class PokemonSearchOptions implements BaseSearchOptions {
       });
     }
 
-    return results.toList();
+    filterIngredients(ingredientOfLv1, (p) => [ p.ingredient1 ]);
+    filterIngredients(ingredientOfLv30, (p) => p.ingredientOptions2.map((e) => e.$1));
+    filterIngredients(ingredientOfLv60, (p) => p.ingredientOptions3.map((e) => e.$1));
+
+    if (ingredientOf.isNotEmpty) {
+      filterIngredients(ingredientOf, (p) => {
+        p.ingredient1,
+        ...p.ingredientOptions2.map((e) => e.$1),
+        ...p.ingredientOptions3.map((e) => e.$1),
+      });
+    }
+
+    // keyword
+    final newKeyword = keyword.trim();
+    if (newKeyword.isNotEmpty) {
+      results = results.where((p) {
+        return _basicProfileKeywordWhere(p, newKeyword);
+      });
+    }
+
+    return results
+        .where((e) => _basicProfileWhere(e, fieldToBasicProfileIdSet))
+        .toList();
   }
 
-  List<PokemonBasicProfile> filterBasicProfiles(List<PokemonBasicProfile> profiles) {
-    return [];
+  bool _basicProfileWhere(PokemonBasicProfile basicProfile, Map<PokemonField, Set<int>> fieldToBasicProfileIdSet) {
+    if (fruitOf.isNotEmpty &&
+        !fruitOf.contains(basicProfile.fruit)) {
+      return false;
+    }
+
+    if (typeof.isNotEmpty &&
+        !typeof.contains(basicProfile.pokemonType)) {
+      return false;
+    }
+
+    if (mainSkillOf.isNotEmpty &&
+        !mainSkillOf.contains(basicProfile.mainSkill)) {
+      return false;
+    }
+
+    if (sleepTypeOf.isNotEmpty &&
+        !sleepTypeOf.contains(basicProfile.sleepType)) {
+      return false;
+    }
+
+    if (specialtyOf.isNotEmpty &&
+        !specialtyOf.contains(basicProfile.specialty)) {
+      return false;
+    }
+
+    if (currEvolutionStageOf.isNotEmpty &&
+        !currEvolutionStageOf.contains(basicProfile.currentEvolutionStage)) {
+      return false;
+    }
+
+    if (maxEvolutionStageOf.isNotEmpty &&
+        !maxEvolutionStageOf.contains(basicProfile.evolutionMaxCount)) {
+      return false;
+    }
+
+    if (fieldOf.isNotEmpty) {
+      var found = false;
+      for (final field in fieldOf) {
+        final idSet = fieldToBasicProfileIdSet[field];
+        if (idSet == null) {
+          continue;
+        }
+        if (idSet.contains(basicProfile.id)) {
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        return false;
+      }
+    }
+
+    return true;
   }
+
+  bool _basicProfileKeywordWhere(PokemonBasicProfile basicProfile, String keyword) {
+    return basicProfile.nameI18nKey.xTr.toLowerCase().contains(keyword);
+  }
+
 
 }
