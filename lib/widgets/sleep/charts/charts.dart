@@ -1,1 +1,1 @@
-export 'vitality_chart.dart';
+export 'vitality_chart/vitality_chart.dart';

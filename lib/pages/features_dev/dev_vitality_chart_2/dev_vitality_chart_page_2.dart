@@ -7,7 +7,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/vitality_info/vitality_i
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/charts/vitality_chart.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/charts/vitality_chart/vitality_chart.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
