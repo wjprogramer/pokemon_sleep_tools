@@ -30,7 +30,7 @@ class IngredientListRarityPage extends StatefulWidget {
   State<IngredientListRarityPage> createState() => _IngredientListRarityPageState();
 }
 
-class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
+class _IngredientListRarityPageState extends State<IngredientListRarityPage> with TickerProviderStateMixin {
 
   ///
   /// Filter 選項作用到全域 （只考慮一等、考慮 1 到 30 等、只考慮 30 等、....）
@@ -44,6 +44,14 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
   ///
 
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
+
+  final _filterTypeList = [
+    _SortType.regardlessLevel,
+    _SortType.lv1,
+    _SortType.lv30,
+    _SortType.lv60,
+  ];
+  var _filterType = _SortType.regardlessLevel;
 
   // Page status
   var _isInitialized = false;
@@ -109,7 +117,11 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
     }
 
     final ingredientList = _ingredientDataOf.entries.map((e) => e.value).sorted((a, b) {
-      return a.basicProfilesRegardlessLevel.length - b.basicProfilesRegardlessLevel.length;
+      final r = a.getCountBy(_filterType) - b.getCountBy(_filterType);
+      if (r != 0) {
+        return r;
+      }
+      return a.ingredient.id - b.ingredient.id;
     });
 
     return Scaffold(
@@ -121,6 +133,28 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
           horizontal: HORIZON_PADDING,
         ),
         children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                ..._filterTypeList.map((filterType) => Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(filterType.nameI18nKey.xTr),
+                    selected: filterType == _filterType,
+                    onSelected: (v) {
+                      if (v) {
+                        setState(() {
+                          _filterType = filterType;
+                        });
+                      }
+                    },
+                  ),
+                )),
+              ],
+            ),
+          ),
+          Gap.md,
           ...ingredientList.map((e) => _buildItem(e)),
           Gap.trailing,
         ],
@@ -129,6 +163,9 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
   }
 
   Widget _buildItem(_IngredientData data) {
+    final pokemonCount = data.getCountBy(_filterType);
+    const pokemonIconHeight = 48.0;
+
     return Container(
       margin: const EdgeInsets.only(
         bottom: 8
@@ -159,8 +196,15 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
               Expanded(child: Text(data.ingredient.nameI18nKey.xTr)),
               Text.rich(
                 TextSpan(
-                  text: '${data.basicProfilesRegardlessLevel.length}',
+                  text: '',
                   children: [
+                    TextSpan(
+                      text: '$pokemonCount',
+                      style: TextStyle(
+                        color: pokemonCount == 0 ? darkDangerColor : null,
+                        fontWeight: pokemonCount == 0 ? FontWeight.bold : null,
+                      ),
+                    ),
                     TextSpan(
                       text: ' / ${_basicProfileOf.length}',
                       style: TextStyle(
@@ -174,26 +218,29 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
           ),
           Gap.sm,
           _progressBar(
-            data.basicProfilesRegardlessLevel.length,
+            pokemonCount,
             _basicProfileOf.length,
           ),
           Gap.sm,
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                if (MyEnv.USE_DEBUG_IMAGE)
-                  ...data.basicProfilesRegardlessLevel.take(10).map((basicProfile) => Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: InkWell(
-                      onTap: () => PokemonBasicProfilePage.go(context, basicProfile),
-                      child: PokemonIconBorderedImage(
-                        basicProfile: basicProfile,
-                        width: 48,
+            child: SizedBox(
+              height: pokemonIconHeight,
+              child: Row(
+                children: [
+                  if (MyEnv.USE_DEBUG_IMAGE)
+                    ...data.getProfilesBy(_filterType).take(10).map((basicProfile) => Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: InkWell(
+                        onTap: () => PokemonBasicProfilePage.go(context, basicProfile),
+                        child: PokemonIconBorderedImage(
+                          basicProfile: basicProfile,
+                          width: pokemonIconHeight,
+                        ),
                       ),
-                    ),
-                  )),
-              ],
+                    )),
+                ],
+              ),
             ),
           ),
         ],
@@ -216,7 +263,7 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> {
           Expanded(
             flex: value,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 3000),
               decoration: BoxDecoration(
                 color: primaryColor,
                 borderRadius: borderRadius,
@@ -316,13 +363,30 @@ class _IngredientData {
     return a.boxNo - b.boxNo;
   }
 
+  int getCountBy(_SortType sortType) {
+    return getProfilesBy(sortType).length;
+  }
+
+  List<PokemonBasicProfile> getProfilesBy(_SortType sortType) {
+    return switch (sortType) {
+      _SortType.lv1 => basicProfilesLv1,
+      _SortType.lv30 => basicProfilesLv30,
+      _SortType.lv60 => basicProfilesLv60,
+      _SortType.regardlessLevel => basicProfilesRegardlessLevel,
+    };
+  }
+
 }
 
 enum _SortType {
-  lv1,
-  lv30,
-  lv60,
-  regardlessLevel,
+  lv1('Lv 1'),
+  lv30('Lv 30'),
+  lv60('Lv 60'),
+  regardlessLevel('t_no_level_limit');
+
+  const _SortType(this.nameI18nKey);
+
+  final String nameI18nKey;
 }
 
 
