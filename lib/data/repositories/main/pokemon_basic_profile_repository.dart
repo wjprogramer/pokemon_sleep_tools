@@ -157,8 +157,8 @@ class PokemonBasicProfileRepository implements MyInjectable {
     // 110 迷你龍 0147
     // 111 哈克龍 0148
     // 112 快龍 0149
-    // 113 怨影娃娃 353 (確認加入)
-    // 114 詛咒娃娃 354 (確認加入)
+    // 113: /* 怨影娃娃 boxNo: 353 */ PokemonBasicProfile.from(113, 353, 't_pokemon_353', 3900, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 1, 0 /*不確定*/, Ingredient.i5, 1, 36, PokemonType.t18, SleepType.st4, 10, 5, PokemonRecruitRewards.from(25, 27)),
+    // 114: /* 詛咒娃娃 boxNo: 354 */ PokemonBasicProfile.from(114, 354, 't_pokemon_354', 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 2, 2, 0 /*不確定*/, Ingredient.i5, 1, 36, PokemonType.t18, SleepType.st4, 10, 5, PokemonRecruitRewards.from(25, 27)),
   };
 
   final _ingredientChainMap = <int, IngredientChain>{

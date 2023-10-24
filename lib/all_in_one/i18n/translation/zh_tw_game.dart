@@ -144,7 +144,7 @@ Map<String, String> getZhTwTrGameText() {
     't_main_skill_3': '夢之碎片獲取S', //  @value
     't_main_skill_4': '活力療癒S',
     't_main_skill_5': '能量填充Sn', //  (@value1 ~ @value2)
-    't_main_skill_6': '夢之碎片獲取S', // (@value1 ~ @value2)
+    't_main_skill_6': '夢之碎片獲取Sn', // (@value1 ~ @value2)
     't_main_skill_7': '活力填充S',
     't_main_skill_8': '活力全體療癒S',
     't_main_skill_9': '幫手支援S',
