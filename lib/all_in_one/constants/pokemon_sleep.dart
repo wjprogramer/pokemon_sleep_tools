@@ -3,6 +3,9 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 // ignore_for_file: constant_identifier_names
 
+/// 活力最大值，透過道具可以到 150，也許未來可以更高
+const MAX_VITALITY = 150;
+
 /// [MainSkill] 最高等級
 const MAX_MAIN_SKILL_LEVEL = 6;
 

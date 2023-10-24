@@ -15,3 +15,10 @@ class VitalityChartData {
   final String time;
   final String? tooltipText;
 }
+
+enum VitalityChartDataType {
+  /// 起床
+  getUp,
+  /// 睡覺
+  sleep,
+}

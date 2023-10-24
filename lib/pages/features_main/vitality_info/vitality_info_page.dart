@@ -43,8 +43,13 @@ class _VitalityInfoPageState extends State<VitalityInfoPage> {
                   Text('活力 100 以上，2.2 倍幫忙效率（0.45 倍的幫忙時間）'.xTr),
                   Text('活力 0，帳面上的幫忙時間就是實際幫忙時間'.xTr),
                   Text('睡眠分數 = ((睡的時間 / 510) * 100).clamp(0, 100)'.xTr),
+                  Text('睡覺時，效率為 x2.2'.xTr),
 
                   // 2. 每日最多可進行2次的睡眠紀錄。遊戲以每日04:00為換日線，在此時間點之前"開始"的睡眠紀錄，都會被算在前一日的睡眠紀錄額度內 (睡眠"結束"時間不限，可超過04:00)。
+                  Text(''.xTr),
+                  Text(''.xTr),
+                  Text(''.xTr),
+                  Text(''.xTr),
                   Text(''.xTr),
                   Text(''.xTr),
                 ],
@@ -91,11 +96,15 @@ class _VitalityInfoPageState extends State<VitalityInfoPage> {
 ------
 
 # 來源一
+【心得】睡眠研究＆手動補登 基本介紹 (9/28更新)
+2023-09-28 20:22:39 編輯
 https://forum.gamer.com.tw/C.php?bsn=36685&snA=89
 
 1. 需要完成至少1.5小時的睡眠紀錄，才能進行睡眠研究
   => 是代表「二睡也需要睡滿一小時半？」還是一睡加二睡要滿一小時半？
 2. 1分睡眠分數 = 1%活力 + 1點EXP
+
+"關於睡眠分數的限制和計算" => 重要
 
 # 來源二
 https://www.serebii.net/pokemonsleep/sleeptracking.shtml

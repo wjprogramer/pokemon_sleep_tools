@@ -43,7 +43,11 @@ class MyFormatter {
     if (time == null) {
       return DateFormatType.hourMinute.placeholder;
     }
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    var newTime = time;
+    if (time.hour == 24 && time.minute == 0) {
+      newTime = const TimeOfDay(hour: 0, minute: 0);
+    }
+    return '${newTime.hour.toString().padLeft(2, '0')}:${newTime.minute.toString().padLeft(2, '0')}';
   }
 
 }

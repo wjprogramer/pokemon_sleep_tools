@@ -6,6 +6,9 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
+/// 說明
+/// - 副技能種子是從已開放的技能（等級提升後開放）中隨機挑一個提升
+///
 /// TODO:
 ///   可以修改分區標準
 ///   1. 使用 [SubSkill.rarity]，例如稀有度高的為一區
