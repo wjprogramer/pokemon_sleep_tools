@@ -1,7 +1,7 @@
-export 'charts/charts.dart';
 export 'bookmark_icon.dart';
 export 'candy_icon.dart';
 export 'candy_of_pokemon_icon.dart';
+export 'charts/charts.dart';
 export 'dialog/dialog.dart';
 export 'dish_card.dart';
 export 'dish_label.dart';
