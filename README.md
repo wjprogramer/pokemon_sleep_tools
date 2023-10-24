@@ -51,7 +51,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 
 優先處理
 
-- 寶可夢自訂筆記、收藏、異色標籤
+- 寶可夢收藏、異色標籤
 - 活力曲線
 
 

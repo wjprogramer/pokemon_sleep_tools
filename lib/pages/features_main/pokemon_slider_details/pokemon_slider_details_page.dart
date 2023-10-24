@@ -385,6 +385,7 @@ class _PokemonDetailsView extends StatefulWidget {
 }
 
 class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
+  MainViewModel get _mainViewModel => context.read<MainViewModel>();
   PokemonBasicProfile get basicProfile => widget.profile.basicProfile;
   PokemonProfile get _profile => widget.profile;
 
@@ -498,14 +499,22 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
             children: [
               image,
               // 放收藏按鈕
-              // Positioned.fill(
-              //   child: Wrap(
-              //     alignment: WrapAlignment.end,
-              //     verticalDirection: VerticalDirection.up,
-              //     children: [
-              //     ],
-              //   ),
-              // ),
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    verticalDirection: VerticalDirection.up,
+                    children: [
+                      IconButton(
+                        onPressed: () => _showEditNoteDialog(),
+                        tooltip: '筆記'.xTr,
+                        icon: Icon(Icons.comment),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
           MyElevatedButton(
@@ -862,6 +871,85 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
         ],
       ),
       maxLines: 1,
+    );
+  }
+
+  void _showEditNoteDialog() async {
+    final noteEditController = TextEditingController(text: _profile.customNote);
+    var editing = false;
+    var isLoading = false;
+    String? errMsg;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('筆記'),
+          content: StatefulBuilder(
+            builder: (context, innerSetState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller: noteEditController,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: whiteColor,
+                    ),
+                    onChanged: (text) {
+                      innerSetState(() {
+                        editing = true;
+                      });
+                    },
+                  ),
+                  if (errMsg != null)
+                    Text(errMsg ?? '', style: TextStyle(color: dangerColor),),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          context.nav.pop();
+                        },
+                        child: Text('t_cancel'.xTr),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          try {
+                            innerSetState(() {
+                              isLoading = true;
+                              errMsg = null;
+                            });
+
+                            await _mainViewModel.updateProfile(
+                              _profile.copyWith(
+                                customName: null,
+                                customNote: noteEditController.text,
+                              ),
+                            );
+                            context.nav.pop();
+                          } catch (e) {
+                            errMsg = getErrorMessage(e);
+                          } finally {
+                            innerSetState(() {
+                              isLoading = false;
+                            });
+                          }
+                        },
+                        child: isLoading
+                            ? const CircularProgressIndicator()
+                            : Text('t_confirm'.xTr),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

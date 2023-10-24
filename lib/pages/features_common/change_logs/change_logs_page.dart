@@ -49,11 +49,12 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     _versions = [
       _Version(
         name: '1.0.5',
-        date: DateTime(2023, 10, 23),
+        date: DateTime(2023, 10, 24),
         description: null,
         items: [
           _NormalVersionItem('[INFO] 修正主技能資訊'),
           _NormalVersionItem('[WIP/Feature] 開始進行多國化'),
+          _NormalVersionItem('[Feature] 寶可夢盒內的寶可夢可以新增自訂筆記'),
           _NormalVersionItem('[INFO] 新增食材稀有度頁面', onTap: () {
             IngredientListRarityPage.go(context);
           }),

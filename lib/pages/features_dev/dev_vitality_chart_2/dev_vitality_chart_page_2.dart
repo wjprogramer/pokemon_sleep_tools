@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/vitality_info/vitality_info_page.dart';
@@ -153,6 +154,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = context.mediaQuery.size;
     var foundZero = false;
 
     final sleepTime = _sleepTimeField.value!;
@@ -215,7 +217,62 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
         actions: [
           IconButton(
             onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('圖例'.xTr),
+                    content: DataTable(
+                      columns: [
+                        DataColumn(label: Text('')),
+                        DataColumn(label: Text('活力範圍'.xTr)),
+                        DataColumn(label: Text('效率'.xTr)),
+                      ],
+                      rows: [
+                        ...<(int, int, int, double)>[
+                          (-1, 81, 80, 2.2),
+                          (80, 61, 60, 1.9),
+                          (60, 41, 40, 1.6),
+                          (40, 21, 20, 1.4),
+                          (20, 0, 0, 1),
+                        ].map((moodValues) {
+                          final rangeText = moodValues.$1 == -1
+                              ? '${moodValues.$2} 以上'
+                              : '${moodValues.$1} ~ ${moodValues.$2}';
 
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                MyEnv.USE_DEBUG_IMAGE ? MoodImage(
+                                  value: moodValues.$3,
+                                  width: 16,
+                                ) : Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _getVitalityColor(moodValues.$3),
+                                  ),
+                                )
+                              ),
+                              DataCell(
+                                Text(
+                                  rangeText,
+                                ),
+                              ),
+                              DataCell(
+                                Text(
+                                  'x${moodValues.$4}',
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                },
+              );
             },
             icon: Icon(Icons.info_outline),
           ),
