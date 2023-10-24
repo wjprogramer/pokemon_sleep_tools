@@ -1,4 +1,5 @@
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
+import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 
@@ -13,9 +14,22 @@ class SleepFaceRepository implements MyInjectable {
     return _findAll();
   }
 
+  Future<Map<PokemonField, List<SleepFace>>> findAllGroupByField() async {
+    final sleepFaces = await _findAll();
+    final mapping = PokemonField.values.toMap(
+          (field) => field,
+          (field) => <SleepFace>[],
+    );
+    for (final sleepFace in sleepFaces) {
+      mapping[sleepFace.field]!.add(sleepFace);
+    }
+
+    return mapping;
+  }
+
   String? getCommonSleepFaceName(int style) {
     if (style == -1) {
-      return '大肚上睡';
+      return '大肚上睡'.xTr;
     }
     return null;
   }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_maintain_profile/pokemon_maintain_profile_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/pokemon_slider_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -94,6 +95,7 @@ class PokemonBoxPage extends StatefulWidget {
 class _PokemonBoxPageState extends State<PokemonBoxPage> {
   _PokemonBoxPageArgs get _args => widget._args;
   MainViewModel get _mainViewModel => context.read<MainViewModel>();
+  SleepFaceRepository get _sleepFaceRepo => getIt();
 
   final _profileViewKey = const ValueKey('profile_view_key_box_page');
 
@@ -104,6 +106,9 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
   // Page
   final _disposers = <MyDisposable>[];
+
+  // Data (fixed)
+  var _basicIdSetGroupByField = <PokemonField, Set<int>>{};
 
   // Data
   var _allProfiles = <PokemonProfile>[];
@@ -119,17 +124,23 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
   final _profileIdToIndex = <int, int>{};
 
   // Filter properties
-  var _searchOptions = PokemonSearchOptions();
+  late PokemonSearchOptions _searchOptions;
 
   @override
   void initState() {
     super.initState();
-    _searchOptions = _args.initialSearchOptions ?? _searchOptions;
+    _searchOptions = _args.initialSearchOptions ?? PokemonSearchOptions();
 
     scheduleMicrotask(() async {
       final mainViewModel = context.read<MainViewModel>();
       final teamViewModel = context.read<TeamViewModel>();
       final teams = await teamViewModel.loadTeams();
+      final sleepFacesGroupByField = await _sleepFaceRepo.findAllGroupByField();
+      final basicIdSetGroupByField = sleepFacesGroupByField.toMap(
+            (field, basicProfiles) => field,
+            (field, basicProfiles) => {...basicProfiles.map((e) => e.basicProfileId)},
+      );
+      _basicIdSetGroupByField = basicIdSetGroupByField;
 
       _indexToProfileId = List
           .generate(MAX_TEAM_POKEMON_COUNT, (index) => index)
@@ -137,7 +148,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
       _currPickIndex = _args.initialIndex ?? _currPickIndex;
 
       _allProfiles = await mainViewModel.loadProfiles();
-      _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
+      _resultProfiles = _searchOptions
+          .filterProfiles(_allProfiles, fieldToBasicProfileIdSet: basicIdSetGroupByField);
 
       final profileIdList = _args.initialTeam?.profileIdList;
       if (profileIdList != null) {
@@ -175,7 +187,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
 
   void _listenMainViewModel() {
     _allProfiles = _mainViewModel.profiles;
-    _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
+    _resultProfiles = _searchOptions.filterProfiles(_allProfiles, fieldToBasicProfileIdSet: _basicIdSetGroupByField);
     setState(() { });
   }
 
@@ -354,7 +366,10 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
             if (options.isEmptyOptions()) {
               return (profiles.length, profiles.length);
             }
-            return (options.filterProfiles(_allProfiles).length, profiles.length);
+            return (options.filterProfiles(
+              _allProfiles,
+              fieldToBasicProfileIdSet: _basicIdSetGroupByField,
+            ).length, profiles.length);
           },
         );
         if (searchOptions == null) {
@@ -362,7 +377,10 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         }
 
         _searchOptions = searchOptions;
-        _resultProfiles = _searchOptions.filterProfiles(_allProfiles);
+        _resultProfiles = _searchOptions.filterProfiles(
+          _allProfiles,
+          fieldToBasicProfileIdSet: _basicIdSetGroupByField,
+        );
         setState(() { });
       },
       isSearchOn: _searchOptions.isEmptyOptions() ? null : true,

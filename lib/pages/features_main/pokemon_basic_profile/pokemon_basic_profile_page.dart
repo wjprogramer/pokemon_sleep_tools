@@ -76,6 +76,9 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   // Page status
   var _initialized = false;
 
+  // Data (fixed)
+  var _basicIdSetGroupByField = <PokemonField, Set<int>>{};
+
   // Data
   final _sleepFacesOfField = <PokemonField, List<SleepFace>>{};
 
@@ -124,6 +127,13 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     for (final sleepFace in sleepFaces) {
       _sleepFacesOfField[sleepFace.field]?.add(sleepFace);
     }
+
+    final sleepFacesGroupByField = await _sleepFaceRepo.findAllGroupByField();
+    final basicIdSetGroupByField = sleepFacesGroupByField.toMap(
+          (field, basicProfiles) => field,
+          (field, basicProfiles) => {...basicProfiles.map((e) => e.basicProfileId)},
+    );
+    _basicIdSetGroupByField = basicIdSetGroupByField;
 
     final evolutions = await _evolutionRepo.findByBasicProfileId(_basicProfile.id);
     _evolutions = evolutions;

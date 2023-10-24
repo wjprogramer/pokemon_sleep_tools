@@ -146,7 +146,13 @@ class PokemonSearchOptions implements BaseSearchOptions {
     _keywordListeners.clear();
   }
 
-  List<PokemonProfile> filterProfiles(List<PokemonProfile> profiles) {
+  /// [fieldToBasicProfileIdSet]
+  ///
+  /// - is for [fieldOf] searching
+  /// - map [PokemonField] to [PokemonBasicProfile.id] set
+  List<PokemonProfile> filterProfiles(List<PokemonProfile> profiles, {
+    required Map<PokemonField, Set<int>> fieldToBasicProfileIdSet,
+  }) {
     Iterable<PokemonProfile> results = [...profiles];
     if (isEmptyOptions()) {
       return results.toList();
@@ -202,6 +208,21 @@ class PokemonSearchOptions implements BaseSearchOptions {
     if (specialtyOf.isNotEmpty) {
       results = results
           .where((p) => specialtyOf.contains(p.basicProfile.specialty));
+    }
+
+    if (fieldOf.isNotEmpty) {
+      results = results.where((p) {
+        for (final field in fieldOf) {
+          final idSet = fieldToBasicProfileIdSet[field];
+          if (idSet == null) {
+            continue;
+          }
+          if (idSet.contains(p.basicProfileId)) {
+            return true;
+          }
+        }
+        return false;
+      });
     }
 
     return results.toList();

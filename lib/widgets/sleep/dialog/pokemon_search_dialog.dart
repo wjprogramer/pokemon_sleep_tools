@@ -485,38 +485,37 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
           ...SleepSearchDialogBaseContent.hpList(
             children: [
               Gap.xl,
+              MySubHeader(
+                title: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        't_discoverable_islands'.xTr,
+                      ),
+                    ),
+                    Tooltip(
+                      message: '寶可夢可在哪些島嶼上發現'.xTr,
+                      child: Icon(
+                        Icons.info_outline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: PokemonField.values.map((field) => FieldLabel(
+                  field: field,
+                  checked: searchOptions.fieldOf.contains(field),
+                  onTap: () {
+                    searchOptions.fieldOf.toggle(field);
+                    search();
+                  },
+                )).toList(),
+              ),
+              Gap.sm,
               if (kDebugMode) ...[
-                // TODO:
-                MySubHeader(
-                  title: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          't_discoverable_islands'.xTr,
-                        ),
-                      ),
-                      Tooltip(
-                        message: '寶可夢可在哪些島嶼上發現'.xTr,
-                        child: Icon(
-                          Icons.info_outline,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: PokemonField.values.map((field) => FieldLabel(
-                    field: field,
-                    checked: searchOptions.fieldOf.contains(field),
-                    onTap: () {
-                      searchOptions.fieldOf.toggle(field);
-                      search();
-                    },
-                  )).toList(),
-                ),
-                Gap.sm,
                 MySubHeader(
                   titleText: 't_evolutionary_stage'.xTr,
                 ),
