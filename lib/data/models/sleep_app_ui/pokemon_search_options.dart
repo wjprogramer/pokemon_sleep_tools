@@ -210,6 +210,16 @@ class PokemonSearchOptions implements BaseSearchOptions {
           .where((p) => specialtyOf.contains(p.basicProfile.specialty));
     }
 
+    if (currEvolutionStageOf.isNotEmpty) {
+      results = results
+          .where((p) => currEvolutionStageOf.contains(p.basicProfile.currentEvolutionStage));
+    }
+
+    if (maxEvolutionStageOf.isNotEmpty) {
+      results = results
+          .where((p) => maxEvolutionStageOf.contains(p.basicProfile.evolutionMaxCount));
+    }
+
     if (fieldOf.isNotEmpty) {
       results = results.where((p) {
         for (final field in fieldOf) {

@@ -11,6 +11,7 @@ class PokemonBasicProfile {
     this.types = const [],
     this.assetPath,
     this.evolutionId,
+    required this.currentEvolutionStage,
     required this.evolutionMaxCount,
     required this.helpInterval,
     required this.fruit,
@@ -37,6 +38,7 @@ class PokemonBasicProfile {
       Fruit fruit,
       PokemonSpecialty specialty,
       MainSkill mainSkill,
+      int currentEvolutionStage, // 當前進化階段
       int evolutionMaxCount, // 最終進化階段
       int boxCount,
       Ingredient ingredient1,
@@ -56,6 +58,7 @@ class PokemonBasicProfile {
       fruit: fruit,
       specialty: specialty,
       mainSkill: mainSkill,
+      currentEvolutionStage: currentEvolutionStage,
       evolutionMaxCount: evolutionMaxCount,
       boxCount: boxCount,
       ingredient1: ingredient1,
@@ -97,7 +100,10 @@ class PokemonBasicProfile {
   /// [PokemonEvolution.id]
   final int? evolutionId;
 
-  /// 先暫時不用 [evolutionId]
+  /// Pokemon Sleep, 當前進化階段
+  final int currentEvolutionStage;
+
+  /// Pokemon Sleep, 最終進化階段
   final int evolutionMaxCount;
 
   /// Pokemon Sleep, 最終幫忙間隔(秒)

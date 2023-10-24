@@ -515,39 +515,37 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 )).toList(),
               ),
               Gap.sm,
-              if (kDebugMode) ...[
-                MySubHeader(
-                  titleText: 't_evolutionary_stage'.xTr,
-                ),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Text('t_current_stage'.xTr),
-                    ...[1,2,3].map((evolutionStage) => _buildEvolutionChip(
-                      number: evolutionStage,
-                      checked: searchOptions.currEvolutionStageOf.contains(evolutionStage),
-                      onTap: () {
-                        searchOptions.currEvolutionStageOf.toggle(evolutionStage);
-                        search();
-                      },
-                    )),
-                  ],
-                ),
-                Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Text('t_final_stage'.xTr),
-                    ...[1,2,3].map((evolutionStage) => _buildEvolutionChip(
-                      number: evolutionStage,
-                      checked: searchOptions.maxEvolutionStageOf.contains(evolutionStage),
-                      onTap: () {
-                        searchOptions.maxEvolutionStageOf.toggle(evolutionStage);
-                        search();
-                      },
-                    )),
-                  ],
-                ),
-              ],
+              MySubHeader(
+                titleText: 't_evolutionary_stage'.xTr,
+              ),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text('t_current_stage'.xTr),
+                  ...[1,2,3].map((evolutionStage) => _buildEvolutionChip(
+                    number: evolutionStage,
+                    checked: searchOptions.currEvolutionStageOf.contains(evolutionStage),
+                    onTap: () {
+                      searchOptions.currEvolutionStageOf.toggle(evolutionStage);
+                      search();
+                    },
+                  )),
+                ],
+              ),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text('t_final_stage'.xTr),
+                  ...[1,2,3].map((evolutionStage) => _buildEvolutionChip(
+                    number: evolutionStage,
+                    checked: searchOptions.maxEvolutionStageOf.contains(evolutionStage),
+                    onTap: () {
+                      searchOptions.maxEvolutionStageOf.toggle(evolutionStage);
+                      search();
+                    },
+                  )),
+                ],
+              ),
               Gap.sm,
               MySubHeader(
                 titleText: 't_sleep_type'.xTr,
