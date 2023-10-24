@@ -157,6 +157,8 @@ class PokemonBasicProfileRepository implements MyInjectable {
     // 110 迷你龍 0147
     // 111 哈克龍 0148
     // 112 快龍 0149
+    // 113 怨影娃娃 353 (確認加入)
+    // 114 詛咒娃娃 354 (確認加入)
   };
 
   final _ingredientChainMap = <int, IngredientChain>{

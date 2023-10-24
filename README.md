@@ -55,6 +55,7 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 
 ---
 
+- 排序寶可夢
 - 搜尋幾星的睡姿
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）
   - 類似手機 plus, pro, pro max 詳細數據對比
@@ -73,7 +74,6 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
   - 儲存欄位條件？
     - 範圍：部分？全部？
     - 時機：最後一次搜尋（按下搜尋後）？手動？
-- 排序寶可夢
 - 資料 & 網路 & 更版
   - 資料放在 Github，透過網路請求更新寶可夢列表，避免需要一直手動上版
   - 資料：公告、更版訊息、更版判斷（最小支援）（網路上放的資料是否支援目前的 App）

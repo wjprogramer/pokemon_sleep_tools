@@ -245,7 +245,7 @@ class _IngredientPageState extends State<IngredientPage> {
                 ],
               ),
               Gap.sm,
-              Divider(),
+              const Divider(),
               Gap.sm,
               MySubHeader(
                 titleText: 't_hold_someone_pokemon'.trParams({
@@ -270,6 +270,8 @@ class _IngredientPageState extends State<IngredientPage> {
   ///     https://pks.raenonx.cc/ingredient/3
   ///
   Widget _buildBasicProfile(PokemonBasicProfile basicProfile) {
+    const pokemonImageSize = 40.0;
+
     return Hp(
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -281,6 +283,18 @@ class _IngredientPageState extends State<IngredientPage> {
               child: PokemonRecordedIcon(),
             ),
           ),
+          if (MyEnv.USE_DEBUG_IMAGE)
+            Padding(
+              padding: const EdgeInsets.only(right: Gap.mdV),
+              child: SizedBox(
+                width: pokemonImageSize,
+                height: pokemonImageSize,
+                child: PokemonIconBorderedImage(
+                  basicProfile: basicProfile,
+                  width: pokemonImageSize,
+                ),
+              ),
+            ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

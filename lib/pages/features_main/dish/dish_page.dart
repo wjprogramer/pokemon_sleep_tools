@@ -281,15 +281,12 @@ class _DishPageState extends State<DishPage> {
                         onTap: () {
                           PokemonBasicProfilePage.go(context, basicProfile);
                         },
-                        child: Container(
+                        child: SizedBox(
                           height: pokemonItemSize,
                           width: pokemonItemSize,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _theme.dividerColor,
-                            ),
+                          child: PokemonIconBorderedImage(
+                            basicProfile: basicProfile,
                           ),
-                          child: PokemonIconImage(basicProfile: basicProfile),
                         ),
                       )).toList(),
                     ),
