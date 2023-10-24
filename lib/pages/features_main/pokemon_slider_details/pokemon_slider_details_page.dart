@@ -507,9 +507,24 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                     verticalDirection: VerticalDirection.up,
                     children: [
                       IconButton(
+                        onPressed: () => _onTapFavorite(),
+                        tooltip: _profile.isFavorite ? '取消收藏'.xTr : '收藏'.xTr,
+                        icon: Icon(
+                          _profile.isFavorite
+                              ? Icons.star
+                              : Icons.star_border,
+                          color: _profile.isFavorite
+                              ? starIconColor
+                              : greyColor2,
+                        ),
+                      ),
+                      IconButton(
                         onPressed: () => _showEditNoteDialog(),
                         tooltip: '筆記'.xTr,
-                        icon: Icon(Icons.comment),
+                        icon: Icon(
+                          Icons.comment,
+                          color: greyColor2,
+                        ),
                       ),
                     ],
                   ),
@@ -874,9 +889,26 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
     );
   }
 
-  void _showEditNoteDialog() async {
+  Future<void> _onTapFavorite() async {
+    try {
+      await _mainViewModel.updateProfile(_profile.copyWith(
+        isFavorite: !_profile.isFavorite,
+      ));
+    } catch (e) {
+      DialogUtility.text(
+        context,
+        title: Text(
+          _profile.isFavorite
+              ? '取消失敗'.xTr
+              : '收藏失敗'.xTr,
+        ),
+        content: Text(getErrorMessage(e) ?? '未知錯誤'),
+      );
+    }
+  }
+
+  Future<void> _showEditNoteDialog() async {
     final noteEditController = TextEditingController(text: _profile.customNote);
-    var editing = false;
     var isLoading = false;
     String? errMsg;
 
@@ -898,11 +930,6 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                       filled: true,
                       fillColor: whiteColor,
                     ),
-                    onChanged: (text) {
-                      innerSetState(() {
-                        editing = true;
-                      });
-                    },
                   ),
                   if (errMsg != null)
                     Text(errMsg ?? '', style: TextStyle(color: dangerColor),),
@@ -951,6 +978,8 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
         );
       },
     );
+
+    noteEditController.dispose();
   }
 }
 

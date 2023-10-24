@@ -7,6 +7,8 @@ class CreatePokemonProfilePayload {
     required this.character,
     required this.customName,
     required this.customNote,
+    required this.isFavorite,
+    required this.isShiny,
     required this.ingredient2,
     required this.ingredientCount2,
     required this.ingredient3,
@@ -22,6 +24,8 @@ class CreatePokemonProfilePayload {
   final PokemonCharacter character;
   final String? customName;
   final String? customNote;
+  final bool? isFavorite;
+  final bool? isShiny;
   final Ingredient ingredient2;
   final int ingredientCount2;
   final Ingredient ingredient3;

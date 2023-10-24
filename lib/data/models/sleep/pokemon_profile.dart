@@ -2,7 +2,6 @@ import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
-/// TODO: Add user defined name?
 class PokemonProfile {
   PokemonProfile({
     this.id = -1,
@@ -10,6 +9,8 @@ class PokemonProfile {
     required this.character,
     this.customName,
     this.customNote,
+    this.isFavorite = false,
+    this.isShiny = false,
     required this.subSkillLv10,
     required this.subSkillLv25,
     required this.subSkillLv50,
@@ -27,6 +28,10 @@ class PokemonProfile {
   late PokemonBasicProfile basicProfile;
   final PokemonCharacter character;
   final String? customName;
+  /// 收藏
+  final bool isFavorite;
+  /// 是否為異色
+  final bool isShiny;
 
   /// 使用者可以填寫個人筆記
   final String? customNote;
@@ -68,6 +73,8 @@ class PokemonProfile {
           .firstWhere((e) => e.id == json['characterId']),
       customName: json['customName'],
       customNote: json['customNote'],
+      isFavorite: json['isFavorite'] ?? false,
+      isShiny: json['isShiny'] ?? false,
       subSkillLv10: subSkillMapping[json['subSkillIds'][0]]!,
       subSkillLv25: subSkillMapping[json['subSkillIds'][1]]!,
       subSkillLv50: subSkillMapping[json['subSkillIds'][2]]!,
@@ -87,6 +94,8 @@ class PokemonProfile {
       character: character,
       customName: customName,
       customNote: customNote,
+      isFavorite: isFavorite,
+      isShiny: isShiny,
       subSkillLv10: subSkillLv10,
       subSkillLv25: subSkillLv25,
       subSkillLv50: subSkillLv50,
@@ -101,8 +110,10 @@ class PokemonProfile {
 
   PokemonProfile copyWith({
     PokemonCharacter? character,
-    required String? customName,
-    required String? customNote,
+    String? customName,
+    String? customNote,
+    bool? isFavorite,
+    bool? isShiny,
     SubSkill? subSkillLv10,
     SubSkill? subSkillLv25,
     SubSkill? subSkillLv50,
@@ -119,6 +130,8 @@ class PokemonProfile {
       character: character ?? this.character,
       customName: customName ?? this.customName,
       customNote: customNote ?? this.customNote,
+      isFavorite: isFavorite ?? this.isFavorite,
+      isShiny: isShiny ?? this.isShiny,
       subSkillLv10: subSkillLv10 ?? this.subSkillLv10,
       subSkillLv25: subSkillLv25 ?? this.subSkillLv25,
       subSkillLv50: subSkillLv50 ?? this.subSkillLv50,
@@ -137,6 +150,8 @@ class PokemonProfile {
       'characterId': character.id,
       'customName': customName,
       'customNote': customNote,
+      'isFavorite': isFavorite,
+      'isShiny': isShiny,
       'id': id,
       'subSkillIds': subSkills.map((e) => e.id).toList(),
       'ingredient2Id': ingredient2.id,
@@ -154,6 +169,8 @@ class PokemonProfile {
           '   character: $character,\n'
           '   customName: $customName,\n'
           '   customNote: $customNote,\n'
+          '   isFavorite: $isFavorite, \n'
+          '   isShiny: $isShiny, \n'
           '   subSkillLv10: $subSkillLv10,\n'
           '   subSkillLv25: $subSkillLv25,\n'
           '   subSkillLv50: $subSkillLv50,\n'
