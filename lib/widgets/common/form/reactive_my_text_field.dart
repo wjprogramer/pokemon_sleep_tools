@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/ingredient_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/ingredient_image.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 typedef FieldBuilder<T> = Function(BuildContext context, FormControl<T> field);

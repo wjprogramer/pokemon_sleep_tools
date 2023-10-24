@@ -47,7 +47,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   late FormControl<TimeOfDay> _mainGetUpTimeField;
   /// 要用睡覺分數來計算睡覺的起迄時間？
   // late FormControl<int> _sleepScoreField;
-  /// 睡覺前的活力值 (TODO: 這邊變成可切換狀態，睡覺前活力，或上次起床時的活力
+  /// 睡覺前的活力值
   late FormControl<int> _initVitalityField;
   Timer? _initVitalityDebounce;
 
@@ -127,54 +127,28 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
     final getUpMinutes = getUpTime.toMinutes();
     const minutesOfDay = 24 * 60;
 
-    int sleepElapsed;
+    int sleepElapsedMinutes;
     if (sleepMinutes == getUpMinutes) {
-      sleepElapsed = 0;
+      sleepElapsedMinutes = 0;
     } else if (sleepMinutes > getUpMinutes) {
       // 僅列小時: 22 ~ 6, 10,6
-      sleepElapsed = minutesOfDay - sleepMinutes + getUpMinutes;
+      sleepElapsedMinutes = minutesOfDay - sleepMinutes + getUpMinutes;
     } else {
       // 僅列小時: 6 ~ 10
-      sleepElapsed = getUpMinutes - sleepMinutes;
+      sleepElapsedMinutes = getUpMinutes - sleepMinutes;
     }
 
-    if (sleepElapsed < 0) {
-      sleepElapsed += minutesOfDay;
+    if (sleepElapsedMinutes < 0) {
+      sleepElapsedMinutes += minutesOfDay;
     }
 
-    return TimeOfDay(hour: sleepElapsed ~/ 60, minute: sleepElapsed % 60);
+    return TimeOfDay(hour: sleepElapsedMinutes ~/ 60, minute: sleepElapsedMinutes % 60);
   }
 
-  TimeOfDay _toTimeFromMinutes(int minutes) {
-    var newMinutes = minutes % (24 * 60);
-    return TimeOfDay(hour: newMinutes ~/ 60, minute: newMinutes % 60);
-  }
-
-  TimeOfDay _calcTableDuration(TimeOfDay sleepTime, TimeOfDay getUpTime) {
-    final sleepMinutes = sleepTime.toMinutes();
-    final getUpMinutes = getUpTime.toMinutes();
-    const minutesOfDay = 24 * 60;
-
-    return _toTimeFromMinutes(minutesOfDay - getUpMinutes + sleepMinutes);
-  }
-
-  (int, Color) _getVitalityThreshold(num vitality) {
-    return vitality >= 100 ? (100, moodColor80)
-        : vitality >= 80 ? (80, moodColor80)
-        : vitality >= 60 ? (60, moodColor60)
-        : vitality >= 40 ? (40, moodColor40)
-        : vitality >= 20 ? (20, moodColor20)
-        : (0, moodColor0);
-  }
-
-  Color _getVitalityColor(num vitality) {
-    return vitality >= 100 ? moodColor80
-        : vitality >= 80 ? moodColor80
-        : vitality >= 60 ? moodColor60
-        : vitality >= 40 ? moodColor40
-        : vitality >= 20 ? moodColor20
-        : moodColor0;
-  }
+  // TimeOfDay _toTimeFromMinutes(int minutes) {
+  //   var newMinutes = minutes % (24 * 60);
+  //   return TimeOfDay(hour: newMinutes ~/ 60, minute: newMinutes % 60);
+  // }
 
   void _showLegendInfoDialog() {
     showDialog(
@@ -203,7 +177,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                 return DataRow(
                   cells: [
                     DataCell(
-                        MyEnv.USE_DEBUG_IMAGE ? MoodImage(
+                        MyEnv.USE_DEBUG_IMAGE ? MoodIcon(
                           value: moodValues.$3,
                           width: 16,
                         ) : Container(
@@ -211,7 +185,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                           height: 16,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _getVitalityColor(moodValues.$3),
+                            color: MoodIcon.getColorBy(moodValues.$3),
                           ),
                         )
                     ),
@@ -271,9 +245,8 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
     final mainSleepScore = ((elapsedTime.hour * 60.0 + elapsedTime.minute) / 510 * 100).clamp(0.0, 100.0);
 
     // final tableAxisDuration = _calcTableDuration(sleepTime, getUpTime);
-    final tableAxisDuration = TimeOfDay(hour: 24, minute: 0);
+    const tableAxisDuration = TimeOfDay(hour: 24, minute: 0);
     final tableCounts = (tableAxisDuration.hour * 60 + tableAxisDuration.minute) ~/ 5 + 1;
-    final tableSpotsLastIndex = tableCounts - 1;
     final showingTooltipSpotIndexList = <int>[];
 
     final stops = <double>[];
@@ -315,7 +288,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       ).clamp(0.0, 100.0);
       final (vitalityThreshold, vitalityColor) = isSleepTooltipSpot || sleeping
           ? (100, moodColor80)
-          : _getVitalityThreshold(vitality);
+          : MoodIcon.getVitalityThresholdAndColor(vitality);
       final showBottomTitle = index % 30 == 0;
 
       var showTooltip = (vitality != 0 && vitality % 20.0 == 0) ||
@@ -327,7 +300,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       if (tmpVitalityThreshold != vitalityThreshold) {
         final stopValue = (index - 1).clamp(0, double.infinity) / (tableCounts - 1);
         if (tmpVitalityThreshold != null) {
-          colors.add(_getVitalityColor(tmpVitalityThreshold!));
+          colors.add(MoodIcon.getColorBy(tmpVitalityThreshold!));
           stops.add(stopValue);
         }
         colors.add(vitalityColor);
@@ -339,10 +312,6 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       showTooltip = showTooltip || isGetUpTooltipSpot || isSleepTooltipSpot;
       if (showTooltip) {
         showingTooltipSpotIndexList.add(index);
-      }
-
-      if (index == 0) {
-        print('$isGetUpTooltipSpot , $isSleepTooltipSpot');
       }
 
       return VitalityChartData(
@@ -554,10 +523,10 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                                 AnimatedOpacity(
                                   opacity: _isInitVitalityWhenGetUp ? 1 : 0,
                                   duration: const Duration(milliseconds: 200),
-                                  child: Icon(Icons.check),
+                                  child: const Icon(Icons.check),
                                 ),
                                 Gap.md,
-                                Text('起床時'),
+                                Text('起床時'.xTr),
                               ],
                             ),
                           ),
@@ -579,10 +548,10 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                                 AnimatedOpacity(
                                   opacity: !_isInitVitalityWhenGetUp ? 1 : 0,
                                   duration: const Duration(milliseconds: 200),
-                                  child: Icon(Icons.check),
+                                  child: const Icon(Icons.check),
                                 ),
                                 Gap.md,
-                                Text('睡覺前'),
+                                Text('睡覺前'.xTr),
                               ],
                             ),
                           ),

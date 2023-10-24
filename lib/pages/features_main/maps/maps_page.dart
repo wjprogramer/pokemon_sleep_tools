@@ -12,8 +12,8 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 import 'package:pokemon_sleep_tools/view_models/field_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/field_image.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/fruit_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/field_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/fruit_image.dart';
 import 'package:provider/provider.dart';
 
 /// TODO: 可以顯示蒐集率

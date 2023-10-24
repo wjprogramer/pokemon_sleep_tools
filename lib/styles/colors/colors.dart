@@ -101,3 +101,8 @@ const moodColor40 = Color(0xFF49ACFF);
 const moodColor60 = Color(0xFF46D9C2);
 const moodColor80 = Color(0xFF57D236);
 
+/// [PokemonField]
+const fieldColor1 = Color(0xFF97FA77);
+const fieldColor2 = Color(0xFFFFFEEF);
+const fieldColor3 = Color(0xFF999093);
+const fieldColor4 = Color(0xFFACD6FB);

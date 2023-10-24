@@ -164,7 +164,7 @@ class _PokemonBoxFragmentState extends State<PokemonBoxFragment> {
               debugPrint((await _pokemonProfileRepository.getDemoProfile()).getConstructorCode());
 
             },
-            child: const Text('Single Pokemon Profile'),
+            child: const Text('Single Pokemon Profile (Console)'),
           ),
           MyElevatedButton(
             onPressed: () async {

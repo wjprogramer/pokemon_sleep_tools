@@ -5,8 +5,8 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/dish_image.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/ingredient_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/dish_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/ingredient_image.dart';
 
 class DishListTile extends StatelessWidget {
   const DishListTile({

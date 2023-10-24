@@ -6,6 +6,7 @@ import 'package:pokemon_sleep_tools/pages/features_common/change_logs/change_log
 import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons_custom/dev_icons_custom_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_two_direction_table/dev_two_direction_table_page.dart';
@@ -74,6 +75,7 @@ MyRoutesMapping generateRoutes() {
     // dev
     if (kDebugMode) ...[
       DevIconsPage.route,
+      DevIconsCustomPage.route,
       DevPokemonBoxPage.route,
       DevPokemonEvolutionsPage.route,
       DevTwoDirectionTablePage.route,

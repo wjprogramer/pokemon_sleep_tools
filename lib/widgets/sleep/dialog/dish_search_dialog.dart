@@ -7,7 +7,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/base_dialog.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/ingredient_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/ingredient_image.dart';
 
 Future<DishSearchOptions?> showDishSearchDialog(BuildContext context, {
   required String titleText,

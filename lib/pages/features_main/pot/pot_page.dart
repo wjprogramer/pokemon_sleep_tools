@@ -192,20 +192,17 @@ class _PotPageState extends State<PotPage> {
           Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: dishes.map((dish) => InkWell(
-              borderRadius: BorderRadius.circular(8),
+            children: dishes.map((dish) => DishLabel(
+              dish: dish,
               onTap: () {
                 DishPage.go(context, dish);
               },
-              child: DishLabel(dish: dish),
             )).toList(),
           ),
         ],
       ),
     );
   }
-
-
 
   Widget _buildCapacityLeadingPlaceholder() {
     return _buildCapacityLeading(999, isPlaceholder: true);

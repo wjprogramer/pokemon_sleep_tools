@@ -22,8 +22,6 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:provider/provider.dart';
 
-/// - TODO: 要注意 [_PokemonSliderDetailsPageArgs.isView] 後資料更新有沒有問題
-/// - 遊戲內有 "使用道具" 的功能，但這邊應該不需要
 /// TODO: 要顯示所有食材可能性
 class _PokemonSliderDetailsPageArgs {
   _PokemonSliderDetailsPageArgs({
@@ -475,15 +473,16 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
     Widget buildIngredientLevelLabel(int level) {
       return Stack(
         children: [
-          Opacity(
+          // placeholder
+          const Opacity(
             opacity: 0,
             child: Text('Lv 100'),
           ),
           Positioned.fill(
             child: Row(
               children: [
-                Text('Lv'),
-                Spacer(),
+                const Text('Lv'),
+                const Spacer(),
                 Text('${level.clamp(1, 100)}'),
               ],
             ),
@@ -522,7 +521,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                       IconButton(
                         onPressed: () => _showEditNoteDialog(),
                         tooltip: '筆記'.xTr,
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.comment,
                           color: greyColor2,
                         ),
@@ -804,7 +803,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                 onPressed: () {
                   AnalysisDetailsPage.go(context, _profile.id);
                 },
-                child: Text('詳細計算過程'),
+                child: Text('詳細計算過程'.xTr),
               ),
             ),
           ],
@@ -817,7 +816,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
               PokemonBasicProfilePage.go(context, widget.profile.basicProfile);
             },
             child: Text(
-              '查看圖鑑',
+              '查看圖鑑'.xTr,
             ),
           ),
           MyElevatedButton(
@@ -876,19 +875,19 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
               TextSpan(
                 text: positive,
               ),
-              WidgetSpan(
+              const WidgetSpan(
                 child: Icon(Icons.keyboard_arrow_up, color: dangerColor, size: 14,),
               ),
             ],
             if (negative != null) ...[
               if (positive != null)
                 TextSpan(
-                  text: '、',
+                  text: 't_separator'.xTr,
                 ),
               TextSpan(
                 text: negative,
               ),
-              WidgetSpan(
+              const WidgetSpan(
                 child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),
               ),
             ],

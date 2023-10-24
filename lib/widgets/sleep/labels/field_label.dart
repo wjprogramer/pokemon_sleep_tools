@@ -8,13 +8,11 @@ class FieldLabel extends StatelessWidget {
   const FieldLabel({
     super.key,
     required this.field,
-    this.fullName = true,
     this.onTap,
     this.checked,
   });
 
   final PokemonField field;
-  final bool fullName;
   final VoidCallback? onTap;
   final bool? checked;
 
@@ -22,20 +20,21 @@ class FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.theme;
 
-    final baseStyle = theme.textTheme.bodyMedium ?? TextStyle();
+    final baseStyle = theme.textTheme.bodyMedium ?? const TextStyle();
     final evaluatedChecked = checked ?? false;
 
-    return Container(
+    Widget result;
+
+    result = Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        image: DecorationImage(
+        color: !MyEnv.USE_DEBUG_IMAGE ? field.color.withOpacity(.6) : null,
+        image: !MyEnv.USE_DEBUG_IMAGE ? null : DecorationImage(
           image: AssetImage(AssetsPath.field(field)),
           fit: BoxFit.cover,
           opacity: 0.5,
         ),
-        border: Border.all(
-          color: theme.dividerColor,
-        ),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Material(
         color: Colors.transparent,
@@ -53,7 +52,7 @@ class FieldLabel extends StatelessWidget {
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 100),
                   opacity: evaluatedChecked ? 1 : 0,
-                  child: Icon(
+                  child: const Icon(
                     Icons.check,
                     size: 14,
                   ),
@@ -72,5 +71,7 @@ class FieldLabel extends StatelessWidget {
         ),
       ),
     );
+
+    return result;
   }
 }

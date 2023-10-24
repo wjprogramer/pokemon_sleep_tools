@@ -383,7 +383,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                         ),
                         child: Row(
                           children: [
-                            const IslandIcon(),
+                            const FieldMenuIcon(),
                             Gap.md,
                             Expanded(
                               child: Text(

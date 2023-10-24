@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/candy_icon.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/candy_icon.dart';
 
 class CandyOfPokemonIcon extends StatelessWidget {
   const CandyOfPokemonIcon({

@@ -108,6 +108,7 @@ class _MainSkillsWithPokemonListPageState extends State<MainSkillsWithPokemonLis
               Gap.md,
             ];
           }).expand((e) => e),
+          Gap.trailing,
         ],
       ),
     );

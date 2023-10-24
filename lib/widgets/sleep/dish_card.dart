@@ -5,7 +5,6 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/energy_icon.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 
 /// TODO: use and improve InkWell

@@ -21,8 +21,10 @@ class PokemonTypeImage extends StatelessWidget {
   Widget build(BuildContext context) {
     const sizeValue = 12.0;
 
+    Widget result;
+
     if (!MyEnv.USE_DEBUG_IMAGE) {
-      return Container(
+      result = Container(
         constraints: const BoxConstraints.tightFor(
           width: sizeValue, height: sizeValue,
         ),
@@ -31,11 +33,8 @@ class PokemonTypeImage extends StatelessWidget {
           color: pokemonType.color,
         ),
       );
-    }
-
-    return Tooltip(
-      message: pokemonType.nameI18nKey.xTr,
-      child: Image.asset(
+    } else {
+      result = Image.asset(
         AssetsPath.pokemonType(pokemonType),
         width: width,
         height: height,
@@ -43,7 +42,12 @@ class PokemonTypeImage extends StatelessWidget {
         errorBuilder: (context, error, stackTrace) {
           return Container();
         },
-      ),
+      );
+    }
+
+    return Tooltip(
+      message: pokemonType.nameI18nKey.xTr,
+      child: result,
     );
   }
 }

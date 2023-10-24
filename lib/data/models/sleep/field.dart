@@ -1,18 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 
 /// 地圖 (場所)
 enum PokemonField {
-  f1(1, 't_field_1', [], 0),
-  f2(2, 't_field_2', [ Fruit.f3, Fruit.f10, Fruit.f18 ], 20),
-  f3(3, 't_field_3', [ Fruit.f2, Fruit.f9, Fruit.f13, ], 70),
-  f4(4, 't_field_4', [ Fruit.f1, Fruit.f6, Fruit.f16, ], 150);
+  f1(1, 't_field_1', [], 0, fieldColor1),
+  f2(2, 't_field_2', [ Fruit.f3, Fruit.f10, Fruit.f18 ], 20, fieldColor2),
+  f3(3, 't_field_3', [ Fruit.f2, Fruit.f9, Fruit.f13, ], 70, fieldColor3),
+  f4(4, 't_field_4', [ Fruit.f1, Fruit.f6, Fruit.f16, ], 150, fieldColor4);
   // f6(6, 't_field_6'),
   // f7(7, 't_field_7');
 
-  const PokemonField(this.id, this.nameI18nKey, this.fruits, this.unlockCount);
+  const PokemonField(this.id, this.nameI18nKey, this.fruits, this.unlockCount, this.color);
 
   final int id;
   final String nameI18nKey;
+  final Color color;
 
   // region Map Meta
   final List<Fruit> fruits;

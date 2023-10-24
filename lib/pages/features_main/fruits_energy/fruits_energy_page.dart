@@ -8,7 +8,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_two_direction_table/dev_two_direction_table_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
-import 'package:pokemon_sleep_tools/widgets/sleep/images/fruit_image.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/fruit_image.dart';
 
 const _cellWidth = 60.0;
 const _cellHeight = 50.0;

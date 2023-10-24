@@ -12,11 +12,13 @@ class DishLabel extends StatelessWidget {
   const DishLabel({
     super.key,
     required this.dish,
+    this.onTap,
   });
 
   static const defaultImageSize = 32.0;
 
   final Dish dish;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +47,22 @@ class DishLabel extends StatelessWidget {
       );
     }
 
-    return Container(
+    result = Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         color: dish.dishType.color.withOpacity(.2),
       ),
       child: result,
     );
+
+    if (onTap != null) {
+      result = InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: result,
+      );
+    }
+
+    return result;
   }
 }

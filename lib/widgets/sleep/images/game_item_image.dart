@@ -17,7 +17,7 @@ class GameItemImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final newSize = width != null? width! * 1.7 : null;
+    final newSize = width != null ? width! * 1.7 : null;
 
     Widget result = Image.asset(
       AssetsPath.gameItem(gameItem),

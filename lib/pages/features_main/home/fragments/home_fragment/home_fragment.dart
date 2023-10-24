@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons_custom/dev_icons_custom_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart/dev_vitality_chart_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart_2/dev_vitality_chart_page_2.dart';
@@ -221,7 +222,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                   onPressed: () {
                     context.nav.push(DevIconsPage.route);
                   },
-                  child: const Text('Icons'),
+                  child: const Text('套件Icons'),
                 ),
                 MyElevatedButton(
                   onPressed: () {
@@ -249,8 +250,13 @@ class _HomeFragmentState extends State<HomeFragment> {
                   child: const Text('活力曲線 v2'),
                 ),
                 MyElevatedButton(
-                  onPressed: () {},
-                  child: const Text(''),
+                  onPressed: () {
+                    DevIconsCustomPage.go(context);
+                  },
+                  child: const Text(
+                    'Icon/Label/Image\n(Custom)',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 MyElevatedButton(
                   onPressed: () {},
