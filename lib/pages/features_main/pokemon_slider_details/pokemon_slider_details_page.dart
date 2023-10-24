@@ -832,6 +832,15 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                   }),
                 ),
                 onConfirm: () async {
+                  if (_profile.isFavorite) {
+                    DialogUtility.text(
+                      context,
+                      title: Text('無法刪除'.xTr),
+                      content: Text('請先取消收藏'.xTr),
+                    );
+                    return;
+                  }
+
                   await context.read<MainViewModel>().deleteProfile(widget.profile.id);
                   widget.onDeletedSuccess();
                 },

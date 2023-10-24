@@ -402,11 +402,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         alignment: const Alignment(0, -0.3),
         child: IgnorePointer(
           // Ignore image tooltip
-          child: Hero(
-            tag: 'pokemon_image_${profile.id}',
-            child: PokemonImage(
-              basicProfile: profile.basicProfile,
-            ),
+          child: PokemonImage(
+            basicProfile: profile.basicProfile,
           ),
         ),
       );
@@ -427,9 +424,9 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
             decoration: BoxDecoration(
               border: Border.all(
                 color: _theme.primaryColorLight,
-              )
+              ),
             ),
-            child: child
+            child: child,
           ),
           if (MyEnv.USE_DEBUG_IMAGE)
             Positioned(
@@ -438,9 +435,18 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
               bottom: 0,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Text(
-                  profile.getDisplayText(),
+                child: Text.rich(
+                  TextSpan(
+                    text: '',
+                    children: [
+                      TextSpan(
+                        text: profile.getDisplayText(),
+                      ),
+                    ],
+                  ),
                   textAlign: TextAlign.center,
+                  maxLines: 1,
+                  // overflow: TextOverflow.fade,
                 ),
               ),
             ),
@@ -462,20 +468,23 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                 ),
               ),
             ),
-          if (index != null)
+          if (index != null || profile.isFavorite)
             Positioned(
               right: 0,
               top: -8,
               left: -8,
               child: Align(
                 alignment: Alignment.topLeft,
-                child: Container(
+                child: index == null ? Icon(
+                  Icons.star,
+                  color: starIconColor,
+                ) : Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: whiteColor,
                     boxShadow: [
                       BoxShadow(
-                        color: color1,
+                        color: profile.isFavorite ? starIconColor : color1,
                         blurRadius: 10,
                       )
                     ],
@@ -486,7 +495,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                       child: Text(
                         '${index + 1}',
                         style: TextStyle(
-                          color: color1,
+                          color: profile.isFavorite ? orangeColor : color1,
                         ),
                       ),
                     ),
