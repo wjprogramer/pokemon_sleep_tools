@@ -134,7 +134,7 @@ class _VitalityChartState extends State<VitalityChart> {
       final data = widget.spots[spotIndex];
 
       return LineTooltipItem(
-        '${data.tooltipText ?? data.time} ',
+        data.tooltipText ?? data.time,
         const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,

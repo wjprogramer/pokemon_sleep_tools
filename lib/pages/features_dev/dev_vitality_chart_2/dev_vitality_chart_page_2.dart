@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +49,10 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   // late FormControl<int> _sleepScoreField;
   /// 睡覺前的活力值 (TODO: 這邊變成可切換狀態，睡覺前活力，或上次起床時的活力
   late FormControl<int> _initVitalityField;
+  Timer? _initVitalityDebounce;
+
+  // Form other options
+  var _isInitVitalityWhenGetUp = true;
 
   // Table Data
   var _colors = <Color>[];
@@ -83,7 +89,15 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
         Validators.max(MAX_VITALITY),
         Validators.min(0),
       ],
-    );
+    )..valueChanges.listen((event) {
+      if (_initVitalityDebounce?.isActive ?? false) {
+        _initVitalityDebounce?.cancel();
+      }
+      _initVitalityDebounce = Timer(const Duration(milliseconds: 200), () {
+        _prepareChartData();
+        setState(() { });
+      });
+    });
 
     _prepareChartData();
   }
@@ -233,21 +247,22 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   void _prepareChartData() {
     var foundZero = false;
     var sleeping = false;
-    final initVitality = _initVitalityField.value?.toDouble();
+    final double? initVitality = _initVitalityField.value?.clamp(0.0, MAX_VITALITY).toDouble();
     double lastVitalitySpotValue;
     final sleepTime = _mainSleepTimeField.value!;
     final getUpTime = _mainGetUpTimeField.value!;
     var lastTimeSpot = const TimeOfDay(hour: 0, minute: 0);
     var lastTimeSpotIndex = 0;
 
-    if (initVitality == null) {
+    print(initVitality);
+    if (_isInitVitalityWhenGetUp) {
       sleeping = false;
       lastTimeSpot = getUpTime;
-      lastVitalitySpotValue = 100.0;
+      lastVitalitySpotValue = initVitality ?? 100.0;
     } else {
       sleeping = true;
       lastTimeSpot = sleepTime;
-      lastVitalitySpotValue = initVitality;
+      lastVitalitySpotValue = initVitality ?? 100.0;
     }
 
     final elapsedTime = _calcTimeElapsed(sleepTime, getUpTime);
@@ -324,9 +339,8 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
         showingTooltipSpotIndexList.add(index);
       }
 
-      if (index == tableSpotsLastIndex) {
-        print(1234);
-        print(1234);
+      if (index == 0) {
+        print('$isGetUpTooltipSpot , $isSleepTooltipSpot');
       }
 
       return VitalityChartData(
@@ -334,8 +348,8 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
           time: timeText,
           isShowBottomTitle: showBottomTitle,
           isShowTooltip: showTooltip,
-          tooltipText: isGetUpTooltipSpot ? '$timeText 起床'
-              : isSleepTooltipSpot ? '$timeText 睡覺'
+          tooltipText: isGetUpTooltipSpot ? '$timeText 起床\n${vitality.toInt()}'
+              : isSleepTooltipSpot ? '$timeText 睡覺\n${vitality.toInt()}'
               : null
       );
     }
@@ -520,9 +534,63 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                       style: TextStyle(color: greyColor3),
                     ),
                     MySubHeader(titleText: '額外資訊'.xTr,),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: MyElevatedButton(
+                            onPressed: () {
+                              if (_isInitVitalityWhenGetUp) {
+                                return;
+                              }
+                              _isInitVitalityWhenGetUp = true;
+                              _prepareChartData();
+                              setState(() { });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AnimatedOpacity(
+                                  opacity: _isInitVitalityWhenGetUp ? 1 : 0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Icon(Icons.check),
+                                ),
+                                Gap.md,
+                                Text('睡覺前'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Gap.md,
+                        Expanded(
+                          child: MyElevatedButton(
+                            onPressed: () {
+                              if (!_isInitVitalityWhenGetUp) {
+                                return;
+                              }
+                              _isInitVitalityWhenGetUp = false;
+                              _prepareChartData();
+                              setState(() { });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AnimatedOpacity(
+                                  opacity: !_isInitVitalityWhenGetUp ? 1 : 0,
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Icon(Icons.check),
+                                ),
+                                Gap.md,
+                                Text('起床後'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Gap.sm,
                     ReactiveMyTextField(
-                      label: '初始活力'.xTr,
                       formControl: _initVitalityField,
+                      label: '初始活力'.xTr,
                     ),
                     if (kDebugMode) ...[
                       const MySubHeader(titleText: '測試區'),
