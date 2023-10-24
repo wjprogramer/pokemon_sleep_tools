@@ -49,6 +49,14 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 
 ## TODO
 
+優先處理
+
+- 寶可夢自訂筆記、收藏、異色標籤
+- 活力曲線
+
+
+---
+
 - 主/副技能
   - 提供敘述
   - 反查功能盤點

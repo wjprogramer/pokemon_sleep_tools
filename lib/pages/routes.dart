@@ -9,6 +9,8 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_two_direction_table/dev_two_direction_table_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart/dev_vitality_chart_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart_2/dev_vitality_chart_page_2.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/analysis_details/analysis_details_page.dart';
@@ -44,6 +46,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_slider_details/p
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_teams/pokemon_teams_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pot/pot_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/research_rank/research_rank_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_face/sleep_face_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/specialty_info/specialty_info_page.dart';
@@ -51,6 +54,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/splash/splash_page.dart'
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/team_analysis/team_analysis_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/vitality_info/vitality_info_page.dart';
 
 typedef MyRouteBuilder<T extends Object?> = Widget Function(dynamic args);
 
@@ -72,6 +76,8 @@ MyRoutesMapping generateRoutes() {
       DevPokemonBoxPage.route,
       DevPokemonEvolutionsPage.route,
       DevTwoDirectionTablePage.route,
+      DevVitalityChartPage.route,
+      DevVitalityChartPage2.route,
       MyStorybookPage.route,
     ],
     // main
@@ -109,6 +115,7 @@ MyRoutesMapping generateRoutes() {
     PokemonTeamsPage.route,
     PotPage.route,
     ResearchNotesPage.route,
+    ResearchRankPage.route,
     SleepFacePage.route,
     SleepFacesIllustratedBookPage.route,
     SpecialtyInfoPage.route,
@@ -116,6 +123,7 @@ MyRoutesMapping generateRoutes() {
     SubSkillPickerPage.route,
     SubSkillsCharacterIllustratedBookPage.route,
     TeamAnalysisPage.route,
+    VitalityInfoPage.route,
   ];
 
   // final Map<Type, Map<String, MyRouteBuilder>> x = {

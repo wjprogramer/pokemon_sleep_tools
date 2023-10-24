@@ -12,7 +12,7 @@ enum MainSkill {
   dreamChipSn(6, 't_main_skill_6', '獲得 44 到 176 個夢想碎片', 2),
   vitalityS(4, 't_main_skill_4', '隨機讓1隻自己以外的寶可夢回復活力14點', 3),
   vitalityAllS(8, 't_main_skill_8', '讓幫手隊伍的寶可夢回復活力5點', 3),
-  vitalityFillS(7, 't_main_skill7', '讓自己恢復12點活力', 3),
+  vitalityFillS(7, 't_main_skill_7', '讓自己恢復12點活力', 3),
   helpSupportS(9, 't_main_skill_9', '幫手寶可夢中的某1隻會立刻完成 4 次幫忙', 4),
   ingredientS(10, 't_main_skill_10', '隨機獲得食材6個', 4),
   cuisineS(11, 't_main_skill_11', '增加下一次料理時的鍋子容量，讓鍋子能多放7個食材', 4),

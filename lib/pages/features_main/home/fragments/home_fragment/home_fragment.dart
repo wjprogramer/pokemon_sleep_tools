@@ -6,6 +6,8 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart/dev_vitality_chart_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart_2/dev_vitality_chart_page_2.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_list/characters_list_page.dart';
@@ -235,8 +237,16 @@ class _HomeFragmentState extends State<HomeFragment> {
                   child: const Text('進化'),
                 ),
                 MyElevatedButton(
-                  onPressed: () {},
-                  child: const Text(''),
+                  onPressed: () {
+                    DevVitalityChartPage.go(context);
+                  },
+                  child: const Text('活力曲線 v1'),
+                ),
+                MyElevatedButton(
+                  onPressed: () {
+                    DevVitalityChartPage2.go(context);
+                  },
+                  child: const Text('活力曲線 v2'),
                 ),
                 MyElevatedButton(
                   onPressed: () {},

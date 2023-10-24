@@ -38,7 +38,7 @@ class PokemonIconBorderedImage extends StatelessWidget {
       child: PokemonIconImage(
         basicProfile: basicProfile,
         width: width,
-        disableTooltip: disableTooltip,
+        disableTooltip: true,
       ),
     );
 

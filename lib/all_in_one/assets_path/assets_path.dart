@@ -37,6 +37,10 @@ class AssetsPath {
     return '$_prefix/field/${field.id}.png';
   }
 
+  static mood(int value) {
+    return '$_prefix/mood/$value.png';
+  }
+
   static candy(int pokemonBoxNo) {
     pokemonBoxNo = switch (pokemonBoxNo) {
       447 => 448,

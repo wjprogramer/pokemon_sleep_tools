@@ -253,6 +253,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
                     Expanded(
                       child: _buildTitle(),
                     ),
+                    ..._buildActions(),
                   ],
                 ),
               ),
@@ -264,6 +265,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
         return Scaffold(
           appBar: _isView ? null : buildAppBar(
             title: _buildTitle(),
+            actions: _buildActions(),
           ),
           body: body,
         );
@@ -495,24 +497,15 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           Stack(
             children: [
               image,
-              Positioned.fill(
-                child: Wrap(
-                  alignment: WrapAlignment.end,
-                  verticalDirection: VerticalDirection.up,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        PokemonMaintainProfilePage.goEdit(context, _profile);
-                      },
-                      icon: const Icon(
-                        Icons.note_alt_outlined,
-                        color: orangeColor,
-                      ),
-                      tooltip: 't_edit'.xTr,
-                    ),
-                  ],
-                ),
-              ),
+              // 放收藏按鈕
+              // Positioned.fill(
+              //   child: Wrap(
+              //     alignment: WrapAlignment.end,
+              //     verticalDirection: VerticalDirection.up,
+              //     children: [
+              //     ],
+              //   ),
+              // ),
             ],
           ),
           MyElevatedButton(

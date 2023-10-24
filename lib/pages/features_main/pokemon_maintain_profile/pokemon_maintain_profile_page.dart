@@ -598,8 +598,11 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                       ingredientField?.value = ingredientAndCount.$1;
                       countField.value = ingredientAndCount.$2;
                     },
-                    child: Padding(
+                    child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
+                      color: countField.value == ingredientAndCount.$2 && ingredientField?.value == ingredientAndCount.$1
+                          ? primaryColor.withOpacity(.09)
+                          : null,
                       child: Row(
                         children: [
                           if (MyEnv.USE_DEBUG_IMAGE)

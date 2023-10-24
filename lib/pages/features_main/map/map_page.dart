@@ -342,6 +342,7 @@ class _MapPageState extends State<MapPage> {
                 basicProfile: basicProfile,
                 width: 40,
                 height: 40,
+                toolTipMessage: '${basicProfile.nameI18nKey.xTr}\n${_sleepNamesOf[basicProfile.id]?[sleepFace.style]?.xTr ?? _sleepFaceRepo.getCommonSleepFaceName(sleepFace.style)}',
               ),
             ),
           ),

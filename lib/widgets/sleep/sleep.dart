@@ -1,3 +1,4 @@
+export 'charts/charts.dart';
 export 'bookmark_icon.dart';
 export 'candy_icon.dart';
 export 'candy_of_pokemon_icon.dart';

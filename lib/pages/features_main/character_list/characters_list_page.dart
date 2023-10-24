@@ -10,6 +10,9 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
+/// TODO: 重要 https://wikiwiki.jp/poke_sleep/%E3%81%9B%E3%81%84%E3%81%8B%E3%81%8F
+///       根據這個修正 （裡面有張表還不錯）
+
 enum _PageType {
   readonly,
   picker,

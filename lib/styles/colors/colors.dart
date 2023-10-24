@@ -93,3 +93,11 @@ final rankColorSSS = Colors.grey.shade700;
 
 /// 資料來源 [MySubHeader] 顏色
 const dataSourceSubHeaderColor = Colors.blue;
+
+/// Vitality mood
+const moodColor0 = Color(0xFFADADAD);
+const moodColor20 = Color(0xFFCBA5FF);
+const moodColor40 = Color(0xFF49ACFF);
+const moodColor60 = Color(0xFF46D9C2);
+const moodColor80 = Color(0xFF57D236);
+
