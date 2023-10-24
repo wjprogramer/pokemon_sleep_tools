@@ -404,6 +404,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
           // Ignore image tooltip
           child: PokemonImage(
             basicProfile: profile.basicProfile,
+            isShiny: profile.isShiny,
           ),
         ),
       );

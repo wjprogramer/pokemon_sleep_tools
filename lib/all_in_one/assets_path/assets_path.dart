@@ -9,6 +9,10 @@ class AssetsPath {
     return '$_prefix/pokemon/portrait/$boxNo.png';
   }
 
+  static String pokemonPortraitShiny(int boxNo) {
+    return '$_prefix/pokemon/portrait/shiny/$boxNo.png';
+  }
+
   static String pokemonIcon(int boxNo) {
     return '$_prefix/pokemon/icons/$boxNo.png';
   }

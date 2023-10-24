@@ -11,6 +11,7 @@ class PokemonImage extends StatelessWidget {
     this.height,
     this.fit,
     this.disableTooltip = false,
+    this.isShiny = false,
   });
 
   final PokemonBasicProfile basicProfile;
@@ -18,11 +19,14 @@ class PokemonImage extends StatelessWidget {
   final double? height;
   final BoxFit? fit;
   final bool disableTooltip;
+  final bool isShiny;
 
   @override
   Widget build(BuildContext context) {
     Widget result = Image.asset(
-      AssetsPath.pokemonPortrait(basicProfile.boxNo),
+      isShiny
+          ? AssetsPath.pokemonPortraitShiny(basicProfile.boxNo)
+          : AssetsPath.pokemonPortrait(basicProfile.boxNo),
       width: width,
       height: height,
       fit: fit,

@@ -75,10 +75,12 @@ class MyListTile extends StatelessWidget {
             if (onCheckedChanged != null)
               SizedBox(
                 height: CHECKBOX_SIZE,
-                child: Checkbox(
-                  value: checked,
-                  onChanged: onCheckedChanged!,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                child: IgnorePointer(
+                  child: Checkbox(
+                    value: checked,
+                    onChanged: onCheckedChanged!,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                 ),
               ),
             Gap.h,

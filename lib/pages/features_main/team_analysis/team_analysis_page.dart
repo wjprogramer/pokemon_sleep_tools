@@ -206,9 +206,9 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                           child: Transform(
                             transform: Matrix4.identity()
                               ..scale(1.5),
-                            child: Image.asset(
-                              AssetsPath.pokemonPortrait(profile.basicProfile.boxNo),
-                              errorBuilder: (context, error, stackTrace) => Container(),
+                            child: PokemonImage(
+                              basicProfile: profile.basicProfile,
+                              isShiny: profile.isShiny,
                             ),
                           ),
                         ),

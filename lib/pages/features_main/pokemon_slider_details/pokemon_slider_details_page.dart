@@ -442,6 +442,7 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
           height: imageSize,
           basicProfile: widget.profile.basicProfile,
           disableTooltip: true,
+          isShiny: _profile.isShiny,
         ),
       );
     }
@@ -935,9 +936,14 @@ class _PokemonDetailsViewState extends State<_PokemonDetailsView> {
                   TextField(
                     controller: noteEditController,
                     maxLines: 5,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       filled: true,
                       fillColor: whiteColor,
+                      border: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      focusedErrorBorder: InputBorder.none,
                     ),
                   ),
                   if (errMsg != null)

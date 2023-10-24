@@ -96,6 +96,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
   late FormControl<PokemonBasicProfile> _basicProfileField;
   late FormControl<PokemonCharacter> _characterField;
   late FormControl<String?> _customNameField;
+  late FormControl<bool> _shinyField;
   late FormControl<List<SubSkill>> _subSkillsField;
 
   late FormControl<Ingredient> _ingredient1Field;
@@ -152,6 +153,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       validators: [ Validators.required ],
     );
     _customNameField = FormControl();
+    _shinyField = FormControl();
     _subSkillsField = FormControl(
       validators: [
         Validators.required,
@@ -180,6 +182,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       '_basicProfile': _basicProfileField,
       '_character': _characterField,
       '_customNameField': _customNameField,
+      '_shinyField': _shinyField,
       '_subSkills': _subSkillsField,
       '_ingredient1': _ingredient1Field,
       '_ingredient2': _ingredient2Field,
@@ -243,255 +246,266 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         body: ReactiveForm(
           formGroup: _form,
           child: buildListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: HORIZON_PADDING,
-            ),
             children: [
-              MySubHeader(
-                titleText: 't_basic_information'.xTr,
-              ),
-              Gap.xl,
-              Row(
+              ...Hp.list(
                 children: [
-                  Expanded(
-                    child: ReactiveMyTextField<PokemonBasicProfile>(
-                      label: 't_pokemon'.xTr,
-                      formControl: _basicProfileField,
-                      wrapFieldBuilder: (context, fieldWidget) {
-                        return InkWell(
-                          onTap: () async {
-                            // TODO: 要可以改進化前後的寶可夢，例如原本是皮卡丘，進來後要可以改成皮丘或雷丘
-                            final baseProfile = await PokemonBasicProfilePicker.go(context);
-                            if (baseProfile == null) {
-                              return;
-                            }
-                            _basicProfileField.value = baseProfile;
+                  MySubHeader(
+                    titleText: 't_basic_information'.xTr,
+                  ),
+                  Gap.xl,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ReactiveMyTextField<PokemonBasicProfile>(
+                          label: 't_pokemon'.xTr,
+                          formControl: _basicProfileField,
+                          wrapFieldBuilder: (context, fieldWidget) {
+                            return InkWell(
+                              onTap: () async {
+                                // TODO: 要可以改進化前後的寶可夢，例如原本是皮卡丘，進來後要可以改成皮丘或雷丘
+                                final baseProfile = await PokemonBasicProfilePicker.go(context);
+                                if (baseProfile == null) {
+                                  return;
+                                }
+                                _basicProfileField.value = baseProfile;
+                              },
+                              child: IgnorePointer(
+                                child: fieldWidget,
+                              ),
+                            );
                           },
-                          child: IgnorePointer(
-                            child: fieldWidget,
+                        ),
+                      ),
+                      if (_basicProfileField.value != null && MyEnv.USE_DEBUG_IMAGE)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: greyColor,
+                              ),
+                              color: whiteColor,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 15,
+                                  color: _theme.shadowColor.withOpacity(.05),
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: PokemonIconImage(
+                              basicProfile: _basicProfileField.value!,
+                              width: 64,
+                              disableTooltip: true,
+                            ),
                           ),
+                        ),
+                    ],
+                  ),
+                  // _customNameField
+                  Gap.xl,
+                  ...ReactiveMyTextField.labelField(
+                    label: Text('t_custom_name'.xTr),
+                    field: ReactiveMyTextField(
+                      formControl: _customNameField,
+                    ),
+                  ),
+                  Gap.xl,
+                  ...ReactiveMyTextField.labelField(
+                      label: Text('t_ingredient'.xTr),
+                      field: Column(
+                        children: [
+                          Gap.xl,
+                          ..._buildIngredientField(
+                            index: 0,
+                            ingredientField: _ingredient1Field,
+                            countField: _ingredient1CountField,
+                          ),
+                          ..._buildIngredientField(
+                            index: 1,
+                            countField: _ingredient2CountField,
+                            ingredientField: _ingredient2Field,
+                          ),
+                          ..._buildIngredientField(
+                            index: 2,
+                            countField: _ingredient3CountField,
+                            ingredientField: _ingredient3Field,
+                          ),
+                        ],
+                      )
+                  ),
+                  Gap.xl,
+                  ReactiveMyTextField<List<SubSkill>>(
+                    label: 't_sub_skills'.xTr,
+                    formControl: _subSkillsField,
+                    fieldWidget: ReactiveValueListenableBuilder(
+                      formControl: _subSkillsField,
+                      builder: (context, field, child) {
+                        final List<SubSkill?> subSkills = _subSkillsField.value ??
+                            List.generate(SubSkill.maxCount, (index) => null);
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Gap.xl,
+                            ...subSkills.mapIndexed((index, subSkill) {
+                              final level = SubSkill.levelList[index];
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: '${index + 1}. ',
+                                            ),
+                                            TextSpan(
+                                              text: Display.text(subSkill?.nameI18nKey.xTr),
+                                              style: TextStyle(
+                                                color: subSkill == null ? _theme.disabledColor : null,
+                                                backgroundColor: subSkill?.bgColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Lv. $level',
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                            if (_subSkillsField.hasErrors && _subSkillsField.touched)
+                              Text(
+                                _subSkillsField.getAnyErrorKey() ?? '',
+                                style: TextStyle(
+                                  color: _theme.colorScheme.error,
+                                ),
+                              ),
+                          ],
                         );
                       },
                     ),
                   ),
-                  if (_basicProfileField.value != null && MyEnv.USE_DEBUG_IMAGE)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: greyColor,
-                          ),
-                          color: whiteColor,
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 15,
-                              color: _theme.shadowColor.withOpacity(.05),
-                              offset: Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: PokemonIconImage(
-                          basicProfile: _basicProfileField.value!,
-                          width: 64,
-                          disableTooltip: true,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              // _customNameField
-              Gap.xl,
-              ...ReactiveMyTextField.labelField(
-                label: Text('t_custom_name'.xTr),
-                field: ReactiveMyTextField(
-                  formControl: _customNameField,
-                ),
-              ),
-              Gap.xl,
-              ...ReactiveMyTextField.labelField(
-                  label: Text('t_ingredient'.xTr),
-                  field: Column(
+                  Gap.md,
+                  Row(
                     children: [
-                      Gap.xl,
-                      ..._buildIngredientField(
-                        index: 0,
-                        ingredientField: _ingredient1Field,
-                        countField: _ingredient1CountField,
-                      ),
-                      ..._buildIngredientField(
-                        index: 1,
-                        countField: _ingredient2CountField,
-                        ingredientField: _ingredient2Field,
-                      ),
-                      ..._buildIngredientField(
-                        index: 2,
-                        countField: _ingredient3CountField,
-                        ingredientField: _ingredient3Field,
+                      const Spacer(),
+                      MyElevatedButton(
+                        onPressed: () async {
+                          final result = await SubSkillPickerPage.go(
+                            context,
+                            initialValue: _subSkillsField.value,
+                          );
+                          if (result == null) {
+                            return;
+                          }
+                          _subSkillsField.value = result;
+                        },
+                        child: Text('t_edit'.xTr),
                       ),
                     ],
-                  )
-              ),
-              Gap.xl,
-              ReactiveMyTextField<List<SubSkill>>(
-                label: 't_sub_skills'.xTr,
-                formControl: _subSkillsField,
-                fieldWidget: ReactiveValueListenableBuilder(
-                  formControl: _subSkillsField,
-                  builder: (context, field, child) {
-                    final List<SubSkill?> subSkills = _subSkillsField.value ??
-                        List.generate(SubSkill.maxCount, (index) => null);
+                  ),
+                  Gap.xl,
+                  ReactiveMyTextField<PokemonCharacter>(
+                    label: 't_character'.xTr,
+                    formControl: _characterField,
+                    wrapFieldBuilder: (context, fieldWidget) {
+                      return InkWell(
+                        onTap: () async {
+                          final result = await CharacterListPage.pick(context);
+                          // final result = await CommonPickerPage.go<PokemonCharacter>(
+                          //   context,
+                          //   options: PokemonCharacter.values,
+                          //   optionBuilder: (context, character) {
+                          //     return Text(character.nameI18nKey);
+                          //   },
+                          // );
+                          if (result == null) {
+                            return;
+                          }
+                          _characterField.value = result;
+                        },
+                        child: IgnorePointer(
+                          child: fieldWidget,
+                        ),
+                      );
+                    },
+                  ),
+                  ReactiveValueListenableBuilder(
+                    formControl: _characterField,
+                    builder: (context, control, child) {
+                      final character = control.value;
+                      if (character == null) {
+                        return Container();
+                      }
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Gap.xl,
-                        ...subSkills.mapIndexed((index, subSkill) {
-                          final level = SubSkill.levelList[index];
+                      final positive = character.positive;
+                      final negative = character.negative;
+                      if (positive == null && negative == null) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            '沒有因性格帶來的特色'.xTr, style: TextStyle(color: _theme.disabledColor),
+                          ),
+                        );
+                      }
 
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: '${index + 1}. ',
-                                        ),
-                                        TextSpan(
-                                          text: Display.text(subSkill?.nameI18nKey.xTr),
-                                          style: TextStyle(
-                                            color: subSkill == null ? _theme.disabledColor : null,
-                                            backgroundColor: subSkill?.bgColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text.rich(
+                          TextSpan(
+                            style: _theme.textTheme.bodySmall?.copyWith(
+                              color: greyColor3,
+                            ),
+                            children: [
+                              if (positive != null) ...[
+                                TextSpan(
+                                  text: positive,
                                 ),
-                                Text(
-                                  'Lv. $level',
+                                WidgetSpan(
+                                  child: Icon(Icons.keyboard_arrow_up, color: dangerColor, size: 14,),
                                 ),
                               ],
-                            ),
-                          );
-                        }),
-                        if (_subSkillsField.hasErrors && _subSkillsField.touched)
-                          Text(
-                            _subSkillsField.getAnyErrorKey() ?? '',
-                            style: TextStyle(
-                              color: _theme.colorScheme.error,
-                            ),
+                              if (negative != null) ...[
+                                if (positive != null)
+                                  TextSpan(
+                                    text: '、',
+                                  ),
+                                TextSpan(
+                                  text: negative,
+                                ),
+                                WidgetSpan(
+                                  child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),
+                                ),
+                              ],
+                            ],
                           ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              Gap.md,
-              Row(
-                children: [
-                  const Spacer(),
-                  MyElevatedButton(
-                    onPressed: () async {
-                      final result = await SubSkillPickerPage.go(
-                        context,
-                        initialValue: _subSkillsField.value,
+                        ),
                       );
-                      if (result == null) {
-                        return;
-                      }
-                      _subSkillsField.value = result;
                     },
-                    child: Text('t_edit'.xTr),
+                  ),
+                  MySubHeader(
+                    titleText: 't_others'.xTr,
                   ),
                 ],
               ),
-              Gap.xl,
-              ReactiveMyTextField<PokemonCharacter>(
-                label: 't_character'.xTr,
-                formControl: _characterField,
-                wrapFieldBuilder: (context, fieldWidget) {
-                  return InkWell(
-                    onTap: () async {
-                      final result = await CharacterListPage.pick(context);
-                      // final result = await CommonPickerPage.go<PokemonCharacter>(
-                      //   context,
-                      //   options: PokemonCharacter.values,
-                      //   optionBuilder: (context, character) {
-                      //     return Text(character.nameI18nKey);
-                      //   },
-                      // );
-                      if (result == null) {
-                        return;
-                      }
-                      _characterField.value = result;
-                    },
-                    child: IgnorePointer(
-                      child: fieldWidget,
-                    ),
-                  );
+              MyListTile(
+                title: Text(
+                  '是否異色'.xTr,
+                ),
+                checked: _shinyField.value ?? false,
+                onCheckedChanged: (v) {
+                  setState(() {
+                    _shinyField.value = v ?? false;
+                  });
                 },
               ),
-              ReactiveValueListenableBuilder(
-                formControl: _characterField,
-                builder: (context, control, child) {
-                  final character = control.value;
-                  if (character == null) {
-                    return Container();
-                  }
-
-                  final positive = character.positive;
-                  final negative = character.negative;
-                  if (positive == null && negative == null) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        '沒有因性格帶來的特色'.xTr, style: TextStyle(color: _theme.disabledColor),
-                      ),
-                    );
-                  }
-
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text.rich(
-                      TextSpan(
-                        style: _theme.textTheme.bodySmall?.copyWith(
-                          color: greyColor3,
-                        ),
-                        children: [
-                          if (positive != null) ...[
-                            TextSpan(
-                              text: positive,
-                            ),
-                            WidgetSpan(
-                              child: Icon(Icons.keyboard_arrow_up, color: dangerColor, size: 14,),
-                            ),
-                          ],
-                          if (negative != null) ...[
-                            if (positive != null)
-                              TextSpan(
-                                text: '、',
-                              ),
-                            TextSpan(
-                              text: negative,
-                            ),
-                            WidgetSpan(
-                              child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-              // TODO: 相遇的日子，紀錄使用者實際發現寶可夢的時間
-              // MySubHeader(
-              //   titleText: 't_others'.xTr,
-              // ),
               Gap.trailing,
             ],
           ),
@@ -710,7 +724,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         customName: _customNameField.value,
         customNote: null,
         isFavorite: profile.isFavorite, // TODO:
-        isShiny: profile.isShiny, // TODO:
+        isShiny: _shinyField.value ?? false,
         subSkillLv10: _subSkillsField.value![0],
         subSkillLv25: _subSkillsField.value![1],
         subSkillLv50: _subSkillsField.value![2],

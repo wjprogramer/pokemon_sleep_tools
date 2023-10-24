@@ -12,6 +12,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/view_models/team_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/pokemon_image.dart';
 import 'package:provider/provider.dart';
 
 /// TODO: 可以讓使用者自訂標籤，例如對特定某個地圖、對某些樹果
@@ -464,9 +465,9 @@ class _PokemonTeamsPageState extends State<PokemonTeamsPage> {
                     child: Transform(
                       transform: Matrix4.identity()
                         ..scale(1.5),
-                      child: Image.asset(
-                        AssetsPath.pokemonPortrait(profile.basicProfile.boxNo),
-                        errorBuilder: (context, error, stackTrace) => Container(),
+                      child: PokemonImage(
+                        basicProfile: profile.basicProfile,
+                        isShiny: profile.isShiny,
                       ),
                     ),
                   ),
