@@ -212,6 +212,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     _basicProfileField.value = profile.basicProfile;
     _characterField.value = profile.character;
     _customNameField.value = profile.customName;
+    _shinyField.value = profile.isShiny;
     _subSkillsField.value = profile.subSkills;
 
     _ingredient1Field.value = profile.ingredient1;
@@ -675,7 +676,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         customName: _customNameField.value,
         customNote: null,
         isFavorite: false, // TODO:
-        isShiny: false, // TODO:
+        isShiny: _shinyField.value ?? false,
         subSkills: _subSkillsField.value!,
         ingredient2: _ingredient2Field.value!,
         ingredientCount2: _ingredient2CountField.value!,
@@ -723,7 +724,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         character: _characterField.value!,
         customName: _customNameField.value,
         customNote: null,
-        isFavorite: profile.isFavorite, // TODO:
+        isFavorite: profile.isFavorite,
         isShiny: _shinyField.value ?? false,
         subSkillLv10: _subSkillsField.value![0],
         subSkillLv25: _subSkillsField.value![1],
