@@ -253,16 +253,18 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
     final getUpTime = _mainGetUpTimeField.value!;
     var lastTimeSpot = const TimeOfDay(hour: 0, minute: 0);
     var lastTimeSpotIndex = 0;
+    TimeOfDay tableInitTime;
 
-    print(initVitality);
     if (_isInitVitalityWhenGetUp) {
       sleeping = false;
       lastTimeSpot = getUpTime;
       lastVitalitySpotValue = initVitality ?? 100.0;
+      tableInitTime = getUpTime;
     } else {
       sleeping = true;
       lastTimeSpot = sleepTime;
       lastVitalitySpotValue = initVitality ?? 100.0;
+      tableInitTime = sleepTime;
     }
 
     final elapsedTime = _calcTimeElapsed(sleepTime, getUpTime);
@@ -308,7 +310,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
 
       final vitality = sleeping ? (
         lastVitalitySpotValue + (_calcTimeElapsed(lastTimeSpot, time).toMinutes() / 510 * 100)
-      ): (
+      ).clamp(0.0, 100.0) : (
           lastVitalitySpotValue - ((index - lastTimeSpotIndex) * _spotStepValue) / 10
       ).clamp(0.0, 100.0);
       final (vitalityThreshold, vitalityColor) = isSleepTooltipSpot || sleeping
@@ -354,7 +356,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       );
     }
 
-    final tableDataList = List.generate(tableCounts, (index) => getSpotValue(getUpTime, index));
+    final tableDataList = List.generate(tableCounts, (index) => getSpotValue(tableInitTime, index));
 
     _showingTooltipSpotIndexList = showingTooltipSpotIndexList;
     _tableDataList = tableDataList;
@@ -555,7 +557,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                                   child: Icon(Icons.check),
                                 ),
                                 Gap.md,
-                                Text('睡覺前'),
+                                Text('起床時'),
                               ],
                             ),
                           ),
@@ -580,7 +582,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                                   child: Icon(Icons.check),
                                 ),
                                 Gap.md,
-                                Text('起床後'),
+                                Text('睡覺前'),
                               ],
                             ),
                           ),
