@@ -8,6 +8,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruits_energy/fruits_energy_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient_list_rarity/ingredient_list_rarity_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skills_with_pokemon_list/main_skills_with_pokemon_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_evolution_illustrated_book/pokemon_evolution_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
@@ -57,6 +58,9 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
           _NormalVersionItem('[Feature] 寶可夢盒內的寶可夢可以新增自訂筆記'),
           _NormalVersionItem('[INFO] 新增食材稀有度頁面', onTap: () {
             IngredientListRarityPage.go(context);
+          }),
+          _NormalVersionItem('[INFO] 新增主技能與寶可夢列表頁面', onTap: () {
+            MainSkillsWithPokemonListPage.go(context);
           }),
         ],
       ),

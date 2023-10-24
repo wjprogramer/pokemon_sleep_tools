@@ -49,16 +49,11 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 
 ## TODO
 
-優先處理
-
-- 寶可夢收藏、異色標籤
 - 活力曲線
-
 
 ---
 
 - 主/副技能
-  - 提供敘述
   - 反查功能盤點
   - 列出所有主技能對應的寶可夢
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）

@@ -33,6 +33,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/ingredient_list_rarity/i
 import 'package:pokemon_sleep_tools/pages/features_main/ingredients_illustrated_book/ingredients_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skills_illustrated_book/main_skills_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skills_with_pokemon_list/main_skills_with_pokemon_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/maps/maps_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile/pokemon_basic_profile_page.dart';
@@ -102,6 +103,7 @@ MyRoutesMapping generateRoutes() {
     IngredientListRarityPage.route,
     MainSkillPage.route,
     MainSkillsIllustratedBookPage.route,
+    MainSkillsWithPokemonListPage.route,
     MapPage.route,
     MapsPage.route,
     PokemonBasicProfilePage.route,

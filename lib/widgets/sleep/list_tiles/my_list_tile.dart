@@ -13,11 +13,13 @@ class MyListTile extends StatelessWidget {
     this.leading,
     this.checked,
     this.onCheckedChanged,
+    this.onTap,
   });
 
   final Widget title;
   final Widget? subtitle;
   final Widget? leading;
+  final VoidCallback? onTap;
 
   // Checkbox properties
   final bool? checked;
@@ -94,8 +96,7 @@ class MyListTile extends StatelessWidget {
     if (onCheckedChanged != null) {
       return () => onCheckedChanged?.call(!(checked ?? false));
     }
-
-    return null;
+    return onTap;
   }
 
 }

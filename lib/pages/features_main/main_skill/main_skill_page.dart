@@ -104,8 +104,18 @@ class _MainSkillPageState extends State<MainSkillPage> {
                   MySubHeader(
                     titleText: '等級'.xTr,
                   ),
-                  ...List.generate(MAX_MAIN_SKILL_LEVEL, (index) => Text(
-                    _args.mainSkill.getDisplayTextByLevel(index + 1),
+                  ...List.generate(MAX_MAIN_SKILL_LEVEL, (index) => Row(
+                    children: [
+                      SizedBox(
+                        width: 48,
+                        child: Text('Lv ${index + 1}'),
+                      ),
+                      Expanded(
+                        child: Text(
+                          _args.mainSkill.getDisplayTextByLevel(index + 1),
+                        ),
+                      ),
+                    ],
                   )),
                 ],
               ),

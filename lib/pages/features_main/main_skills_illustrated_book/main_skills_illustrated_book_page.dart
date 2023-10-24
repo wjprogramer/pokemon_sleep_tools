@@ -4,9 +4,11 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/main_skills_with_pokemon_list/main_skills_with_pokemon_list_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/list_tiles.dart';
 
 class MainSkillsIllustratedBookPage extends StatefulWidget {
   const MainSkillsIllustratedBookPage._();
@@ -60,53 +62,64 @@ class _MainSkillsIllustratedBookPageState extends State<MainSkillsIllustratedBoo
         titleText: 't_main_skills'.xTr,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: HORIZON_PADDING,
-        ),
         children: [
-          MySubHeader(
-            titleText: '說明'.xTr,
-          ),
-          ListItems(
+          ...Hp.list(
             children: [
-              Text('主技能上限為 Lv 6'),
-              Text('主技能提升等級方式'),
+              MySubHeader(
+                titleText: '說明'.xTr,
+              ),
               ListItems(
-                decoration: ListItemsDecoration.number,
                 children: [
-                  Text('使用主技能種子升級'.xTr),
-                  Row(
+                  Text('主技能上限為 Lv 6'),
+                  Text('主技能提升等級方式'),
+                  ListItems(
+                    decoration: ListItemsDecoration.number,
                     children: [
-                      Expanded(
-                        child: Text(
-                          '副技能: ${[SubSkill.skillLevelS, SubSkill.skillLevelM].map((subSkill) => subSkill.nameI18nKey.xTr).join('t_separator'.xTr)}',
-                        ),
+                      Text('使用主技能種子升級'.xTr),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '副技能: ${[SubSkill.skillLevelS, SubSkill.skillLevelM].map((subSkill) => subSkill.nameI18nKey.xTr).join('t_separator'.xTr)}',
+                            ),
+                          ),
+                          Tooltip(
+                            message: [SubSkill.skillLevelS, SubSkill.skillLevelM].map((subSkill) => '${subSkill.nameI18nKey.xTr}: ${subSkill.intro.xTr}').join('\n'),
+                            child: Icon(
+                              Icons.info_outline,
+                              size: 14,
+                              color: greyColor3,
+                            ),
+                          ),
+                        ],
                       ),
-                      Tooltip(
-                        message: [SubSkill.skillLevelS, SubSkill.skillLevelM].map((subSkill) => '${subSkill.nameI18nKey.xTr}: ${subSkill.intro.xTr}').join('\n'),
-                        child: Icon(
-                          Icons.info_outline,
-                          size: 14,
-                          color: greyColor3,
-                        ),
-                      ),
+                      Text('使用糖果進化後，等級提升一等'.xTr),
                     ],
                   ),
-                  Text('使用糖果進化後，等級提升一等'.xTr),
                 ],
+              ),
+              MySubHeader(
+                titleText: '列表'.xTr,
+              ),
+              Gap.sm,
+              Wrap(
+                spacing: _itemSpacing,
+                runSpacing: _itemSpacing,
+                children: _wrapItems(
+                  children: _mainSkills.map(_buildItem).toList(),
+                ),
+              ),
+              MySubHeader(
+                titleText: 't_advanced'.xTr,
+                color: advancedColor,
               ),
             ],
           ),
-          MySubHeader(
-            titleText: '列表'.xTr,
-          ),
-          Gap.sm,
-          Wrap(
-            spacing: _itemSpacing,
-            runSpacing: _itemSpacing,
-            children: _wrapItems(
-              children: _mainSkills.map(_buildItem).toList(),
-            ),
+          MyListTile(
+            title: Text('主技能與寶可夢列表'.xTr),
+            onTap: () {
+              MainSkillsWithPokemonListPage.go(context);
+            },
           ),
           Gap.trailing,
         ],
