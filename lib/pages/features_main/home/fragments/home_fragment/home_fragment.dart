@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
+import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons_custom/dev_icons_custom_page.dart';
@@ -257,6 +258,20 @@ class _HomeFragmentState extends State<HomeFragment> {
                     'Icon/Label/Image\n(Custom)',
                     textAlign: TextAlign.center,
                   ),
+                ),
+                MyElevatedButton(
+                  onPressed: () {
+                    // PokemonProfileStatistics2().tempTest();
+                  },
+                  child: const Text('tmp'),
+                ),
+                MyElevatedButton(
+                  onPressed: () {},
+                  child: const Text(''),
+                ),
+                MyElevatedButton(
+                  onPressed: () {},
+                  child: const Text(''),
                 ),
                 MyElevatedButton(
                   onPressed: () {},

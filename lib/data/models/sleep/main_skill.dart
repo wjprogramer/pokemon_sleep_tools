@@ -99,7 +99,7 @@ extension MainSkillX on MainSkill {
       case MainSkill.energyFillS: return [400, 569, 785, 1083, 1496, 2066, ];
       case MainSkill.energyFillM: return [880, 1251, 1726, 2383, 3290, 4546, ];
       case MainSkill.dreamChipS: return [88, 125, 173, 274, 395, 568, ];
-      case MainSkill.vitalityS: return [14, 17, 23, 29, 38, 51, ]; // TODO: 和不同網站數值有出入
+      case MainSkill.vitalityS: return [14, 17, 23, 29, 38, 51, ]; // TODO: NGA和狼大為同個值，但和攻略站數值有出入
       /*
         活力療癒S
         隨機讓隊伍的1隻寶可夢回復活力 {#1}

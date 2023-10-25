@@ -450,6 +450,15 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             titleText: 't_others'.xTr,
             color: dangerColor,
           ),
+          if (kDebugMode)
+            MyElevatedButton(
+              onPressed: () {
+                PokemonProfileStatistics2(_profile).init();
+              },
+              child: Text(
+                '測試'.xTr,
+              ),
+            ),
           MyElevatedButton(
             onPressed: () {
               PokemonBasicProfilePage.go(context, widget.profile.basicProfile);

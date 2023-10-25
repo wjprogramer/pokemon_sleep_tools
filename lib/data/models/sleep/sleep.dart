@@ -11,6 +11,7 @@ export 'main_skill.dart';
 export 'pokemon_character.dart';
 export 'pokemon_profile.dart';
 export 'pokemon_profile_statics.dart';
+export 'pokemon_profile_statics_2.dart';
 export 'pokemon_specialty.dart';
 export 'pokemon_team.dart';
 export 'pokemon_type.dart';

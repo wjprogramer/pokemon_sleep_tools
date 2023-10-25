@@ -109,10 +109,10 @@ class _FruitsEnergyPageState extends State<FruitsEnergyPage> {
                   }
 
                   if (rowIndex >= 1 && colIndex >= 1) {
-                    final level = _fruitToLevels[colIndex - 1].levels[rowIndex - 1];
+                    final energy = _fruitToLevels[colIndex - 1].levels[rowIndex - 1];
                     return Center(
                       child: Text(
-                        '${level.energy}',
+                        '$energy',
                       ),
                     );
                   }
@@ -154,7 +154,7 @@ class _FruitData {
   });
 
   final Fruit fruit;
-  final List<FruitLevelInfo> levels;
+  final List<int> levels;
 }
 
 

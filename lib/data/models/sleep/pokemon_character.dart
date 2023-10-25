@@ -29,6 +29,7 @@ enum PokemonCharacterType {
 /// '食材發現' => '食材發現率'
 /// 'EXP' => 'EXP獲得量'
 /// '活力回復' => '活力回復量'
+/// '幫忙速度'
 ///
 /// 性格 = nature
 enum PokemonCharacter {
