@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -50,10 +49,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
 
   // UI
   var _multipleColumn = false;
-  late LinkedScrollControllerGroup _controllers;
-  late ScrollController _leftController;
-  late ScrollController _rightController;
-  var _commentTextStyle = TextStyle();
+  var _commentTextStyle = const TextStyle();
 
   // Page
   final _disposers = <MyDisposable>[];
@@ -66,9 +62,6 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
   @override
   void initState() {
     super.initState();
-    _controllers = LinkedScrollControllerGroup();
-    _leftController = _controllers.addAndGet();
-    _rightController = _controllers.addAndGet();
 
     scheduleMicrotask(() async {
       final mainViewModel = _mainViewModel;
@@ -119,15 +112,13 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
   @override
   void dispose() {
     _disposers.disposeAll();
-    _leftController.dispose();
-    _rightController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (!_isInitialized) {
-      return LoadingView();
+      return const LoadingView();
     }
 
     final screenSize = context.mediaQuery.size;
@@ -137,7 +128,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
 
     if (profile == null || statistics == null) {
       // TODO: Error handling
-      return Scaffold();
+      return const Scaffold();
     }
 
     _commentTextStyle = TextStyle(color: greyColor3);
@@ -153,18 +144,6 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Expanded(
-              //   child: buildListView(
-              //     controller: _leftController,
-              //     children: _buildLeftItems(statistics, profile),
-              //   ),
-              // ),
-              // Expanded(
-              //   child: buildListView(
-              //     controller: _rightController,
-              //     children: _buildRightItems(statistics, profile),
-              //   ),
-              // ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -20,3 +20,4 @@ export 'my_sub_header_2.dart';
 export 'my_text_button.dart';
 export 'slider_with_buttons.dart';
 export 'tables/tables.dart';
+export 'widget_view.dart';
