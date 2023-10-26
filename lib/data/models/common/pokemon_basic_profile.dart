@@ -14,6 +14,7 @@ class PokemonBasicProfile {
     required this.currentEvolutionStage,
     required this.evolutionMaxCount,
     required this.helpInterval,
+    required this.maxHelpInterval,
     required this.fruit,
     required this.specialty,
     required this.mainSkill,
@@ -55,7 +56,8 @@ class PokemonBasicProfile {
       id: id,
       boxNo: boxNo,
       nameI18nKey: nameI18nKey,
-      helpInterval: maxHelpInterval,
+      helpInterval: helpInterval,
+      maxHelpInterval: maxHelpInterval,
       fruit: fruit,
       specialty: specialty,
       mainSkill: mainSkill,
@@ -109,8 +111,11 @@ class PokemonBasicProfile {
   /// Pokemon Sleep, 最終進化階段
   final int evolutionMaxCount;
 
-  /// Pokemon Sleep, 最終幫忙間隔(秒)
+  /// Pokemon Sleep, 幫忙間隔(秒)
   final int helpInterval;
+
+  /// Pokemon Sleep, 最終幫忙間隔(秒)
+  final int maxHelpInterval;
 
   /// Pokemon Sleep, 樹果
   final Fruit fruit;

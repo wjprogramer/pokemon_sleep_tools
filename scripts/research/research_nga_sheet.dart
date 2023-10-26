@@ -4,7 +4,6 @@
 
 import 'package:collection/collection.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/basic/collection.dart';
-import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 const _useTaiwanName = true;
 
@@ -297,7 +296,8 @@ void main() {
       return '3600/${m.gn('BA')}*${m.gn('BQ')}';
     }),
     ('(白板計算) 食材1個數/h', '', '', (m) {
-      // =IFERROR(BR7*IF(AU7=2,2,1),)*IF(I7>59,1/3,IF(I7>29,1/2,1))
+      // BS
+      // =(BR7*IF(AU7=2,2,1),) * IF(I7>59,1/3,IF(I7>29,1/2,1))
       return '';
     }),
     ('(白板計算) 食材2個數/h', '', '', (m) {
@@ -553,21 +553,33 @@ void main() {
       // )
       return '';
     }),
-    ('食材M確認', '', '', (m) {
+    ('食材M確認', '', 'v', (m) {
       // =IFERROR(IF(OR($EF7=9,$EG7=9,$EH7=9,$EI7=9,$EJ7=9),1.36,1),)
       // EN 食材M確認:
       return '';
     }),
-    ('食材S+M確認', '', '', (m) {
+    /* EO */ ('食材S+M確認', '', 'v', (m) {
+      // IF(
+      //    OR($EF7=10,$EG7=10,$EH7=10,$EI7=10,$EJ7=10),
+      //    IF(EN7=1.36,1.54,1.18),
+      //    IF(EN7=1.36,1.36,1)
+      // ),
       return '';
     }),
     ('技能幾率M確認', '', '', (m) {
       return '';
     }),
     ('技能幾率S+M確認', '', '', (m) {
+      // IF(
+      //      OR($EF7=18,$EG7=18,$EH7=18,$EI7=18,$EJ7=18),
+      //      IF(EP7=1.36,1.54,1.18),
+      //      IF(EP7=1.36,1.36,1)
+      // ),
       return '';
     }),
     ('加成後主技能等級', '', '', (m) {
+      // ER
+      // =FW7 + IF(OR($EF7=15,$EG7=15,$EH7=15,$EI7=15,$EJ7=15),2,0)+IF(OR($EF7=16,$EG7=16,$EH7=16,$EI7=16,$EJ7=16),1,0)
       return '';
     }),
     ('SSk10Ix', '', '', (m) {
@@ -769,19 +781,20 @@ void main() {
 
   final calcSuccess = {
     'AX', 'DW', 'DX', 'DY', 'BQ', 'BO',  'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'D', 'T', 'EK'
-    'AL', 'AO', 'AR', 'AM', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EM',
+    'AL', 'AO', 'AR', 'AM', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EM', 'EN', 'EK', 'EO', 'AL', 'AN', 'EV', 'AP', 'AQ', 'FI', 'AS', 'AT', 'CC',
+    'FQ', 'FR', 'FS', 'FT', 'FU', 'FV', 'FW', 'FX', 'FY', 'FZ', 'GA', 'GB', 'GC', 'CA', 'AV', 'AW', 'BB',
   };
 
   for (final column in columns) {
-    if (calcSuccess.contains(column.columnCode)) {
-      continue;
-    }
+    // if (calcSuccess.contains(column.columnCode)) {
+    //   continue;
+    // }
     // if (column.status == 'v') {
     //   continue;
     // }
-    print('(${column.status}) ${column.columnCode} ${column.name}: ${column.formulaBuilder(columnCodeMapping)}');
+    // print('(${column.status}) ${column.columnCode} ${column.name}: ${column.formulaBuilder(columnCodeMapping)}');
+    print('${column.columnCode} ${column.name}');
   }
-
 
 }
 

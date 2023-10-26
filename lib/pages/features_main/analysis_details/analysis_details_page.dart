@@ -383,7 +383,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
         [
           _text(Display.numDouble(statistics.helpInterval)),
           _text('='),
-          _text('${profile.basicProfile.helpInterval}'),
+          _text('${profile.basicProfile.maxHelpInterval}'),
           _text('x'),
           _text(Display.numDouble(y)),
         ],

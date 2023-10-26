@@ -300,7 +300,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
           buildWithLabel(
             text: 't_help_interval_2'.xTr,
             child: Text(
-              '${basicProfile.helpInterval} ${'t_seconds'.xTr} (${Display.seconds(basicProfile.helpInterval)})',
+              '${basicProfile.maxHelpInterval} ${'t_seconds'.xTr} (${Display.seconds(basicProfile.maxHelpInterval)})',
             ),
           ),
           Gap.xl,

@@ -296,7 +296,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
               Gap.md,
               buildWithLabel(
                 text: 't_help_interval_base'.xTr,
-                child: Text(Display.numInt(_basicProfile.helpInterval)),
+                child: Text(Display.numInt(_basicProfile.maxHelpInterval)),
               ),
               Gap.md,
               buildWithLabel(

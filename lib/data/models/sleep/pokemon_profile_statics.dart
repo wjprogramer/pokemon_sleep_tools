@@ -68,7 +68,7 @@ class PokemonProfileStatistics {
           xAccelerateVitality +
           xMainSkillAccelerateVitality;
       final y = 1 - (x + 59 * 0.002);
-      final z = basicProfile.helpInterval * y;
+      final z = basicProfile.maxHelpInterval * y;
 
       return z.clamp(0, double.infinity);
     }
