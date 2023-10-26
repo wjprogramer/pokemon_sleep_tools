@@ -9,6 +9,7 @@ import 'package:get/utils.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_statics_2/dev_pokemon_statics_2_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/analysis_details/analysis_details_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/exp_calculator/exp_calculator_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/fruit/fruit_page.dart';

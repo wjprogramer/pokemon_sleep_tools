@@ -1,5 +1,7 @@
 part of '../pokemon_slider_details_page.dart';
 
+/// TODO: 增加睡姿星星數、增加睡姿圖片
+
 class _PokemonDetails extends StatefulWidget {
   const _PokemonDetails({
     required this.profile,
@@ -450,7 +452,15 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             titleText: 't_others'.xTr,
             color: dangerColor,
           ),
-          if (kDebugMode)
+          if (kDebugMode) ...[
+            MyElevatedButton(
+              onPressed: () {
+                DevPokemonStatics2Page.go(context, _profile);
+              },
+              child: Text(
+                '測試'.xTr,
+              ),
+            ),
             MyElevatedButton(
               onPressed: () {
                 PokemonProfileStatistics2(_profile).init();
@@ -459,6 +469,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                 '測試'.xTr,
               ),
             ),
+          ],
           MyElevatedButton(
             onPressed: () {
               PokemonBasicProfilePage.go(context, widget.profile.basicProfile);

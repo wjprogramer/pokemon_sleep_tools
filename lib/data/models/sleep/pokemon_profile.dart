@@ -79,7 +79,7 @@ class PokemonProfile {
       customNote: json['customNote'],
       isFavorite: json['isFavorite'] ?? false,
       isShiny: json['isShiny'] ?? false,
-      customDate: json['customDate'] == null ? null : MyTimezone.parseZero(json['customDate']),
+      customDate: json['customDate'] == null ? null : MyTimezone.tryParseZero(json['customDate']),
       subSkillLv10: subSkillMapping[json['subSkillIds'][0]]!,
       subSkillLv25: subSkillMapping[json['subSkillIds'][1]]!,
       subSkillLv50: subSkillMapping[json['subSkillIds'][2]]!,

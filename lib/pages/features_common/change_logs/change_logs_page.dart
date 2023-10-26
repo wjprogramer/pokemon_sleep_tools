@@ -50,6 +50,14 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     super.initState();
     _versions = [
       _Version(
+        name: '1.0.6',
+        date: DateTime(2023, 10, 26),
+        description: null,
+        items: [
+          _NormalVersionItem('[Feature] 寶可夢可自訂登陸日期'),
+        ],
+      ),
+      _Version(
         name: '1.0.5',
         date: DateTime(2023, 10, 24),
         description: null,
