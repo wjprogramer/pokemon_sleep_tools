@@ -32,7 +32,7 @@ class PokemonProfileStatistics2 {
   SubSkill get subSkillLv75 => profile.subSkillLv75;
   SubSkill get subSkillLv100 => profile.subSkillLv100;
   /// 之後 profile 要可以設定等級，先暫時固定
-  /* I */ static int _level = 25;
+  /* I */ static int _level = 1;
 
   // 其他
   /* AV 喜愛的果子 */
@@ -74,18 +74,8 @@ class PokemonProfileStatistics2 {
     // 帮手计算估分
     /* $O$4 */ final o4 = _helperAvgScore * 5 * 0.05 * q4;
 
-
-
-    /* AA 食材1/1級 */
-    /* AB 食材1/1級 */
-    /* AC 食材2/30級 */
-    /* AD 食材2/30級 */
     /* AE 個數 */ final ae = ingredientCount2;
-    /* AF 食材3/60級 */
-    /* AG 食材3/60級 */
     /* AH 個數 */ final ah = ingredientCount3;
-
-
 
     /* (當前等級) AL 果子/顆 */ final fruitEnergyLvCurr = _getSingleFruitEnergy(_level);
     /* (當前等級) EK 樹果+1確認 */ final fruitBonusEnergy = _subSkillsContains(SubSkill.berryCountS, _level) ? fruitEnergyLvCurr : 0.0;
@@ -144,9 +134,6 @@ class PokemonProfileStatistics2 {
     /* DZ 食材1能量 */ final dz = ingredient1.energy;
     /* EA 食材2能量 */ final ea = ingredient2.energy;
     /* EB 食材3能量 */ final eb = ingredient3.energy;
-    /* EC 性格編號 */
-    /* ED 性格增 */
-    /* EE 性格減 */
 
     /* (當前等級) EN 食材M確認 */ final ingredientMLvCurr = _subSkillsContains(SubSkill.ingredientRateM, _level) ? 1.36 : 1.0;
     /* (當前等級) EO 食材S+M確認 */ final ingredientSMLvCurr = _subSkillsContains(SubSkill.ingredientRateS, _level)
@@ -161,15 +148,14 @@ class PokemonProfileStatistics2 {
         (_subSkillsContains(SubSkill.skillLevelM, _level) ? 2 : 0) +
         (_subSkillsContains(SubSkill.skillLevelS, _level) ? 1 : 0);
 
-    /* (Lv 50) --------- ES, ET, EU SSk50Ix */ // 副技能
     /* (Lv 50) EY 食材M確認 */ final ingredientMLv50 = _subSkillsContains(SubSkill.ingredientRateM, 50) ? 1.36 : 1.0;
     /* (Lv 50) EZ 食材S+M確認 */ final ingredientSMLv50 = _subSkillsContains(SubSkill.ingredientRateS, 50)
-        ? (ingredientMLvCurr == 1.36 ? 1.54 : 1.18)
-        : (ingredientMLvCurr == 1.36 ? 1.36 : 1.00);
+        ? (ingredientMLv50 == 1.36 ? 1.54 : 1.18)
+        : (ingredientMLv50 == 1.36 ? 1.36 : 1.00);
     /* (Lv 50) FA 技能幾率M確認 */ final skillRateMLv50 = _subSkillsContains(SubSkill.skillRateM, 50) ? 1.36 : 1.0;
     /* (Lv 50) FB 技能幾率S+M確認 */ final skillRateSMLv50 = _subSkillsContains(SubSkill.skillRateS, 50)
-        ? (skillRateMLvCurr == 1.36 ? 1.54 : 1.18)
-        : (skillRateMLvCurr == 1.36 ? 1.36 : 1.00);
+        ? (skillRateMLv50 == 1.36 ? 1.54 : 1.18)
+        : (skillRateMLv50 == 1.36 ? 1.36 : 1.00);
     /* (Lv 50) FC 加成後主技能等級 */
     final fc = _mainSkillLv +
         (_subSkillsContains(SubSkill.skillLevelM, 50) ? 2 : 0) +
@@ -204,7 +190,6 @@ class PokemonProfileStatistics2 {
     /* AI 食材個/h */ final ai = bl + bm + bn;
     /* AK 食材換算成碎片/h */ final ak = _tc(() => bl * iPrice1 + bm * iPrice2 + bn * iPrice3);
 
-    /* --------- FD, FE, FF, FG, FH (Lv 100) 副技能 */
     /* FJ (Lv 100) 幫忙M確認 */ final helpSpeedMLv100 = _subSkillsContains(SubSkill.helpSpeedM, 100) ? 0.86 : 1.0;
     /* FK (Lv 100) 幫忙S+M確認 */ final helpSpeedSMLv100 = _subSkillsContains(SubSkill.helpSpeedS, 100)
         ? (helpSpeedMLv50 == 0.86 ? 0.79 : 0.93)
@@ -491,6 +476,7 @@ class PokemonProfileStatistics2 {
     c >= 0 ? 'E' :
     c < 0 ? 'F' : '-') + gx + gy + gz;
 
+    debugPrint('~');
     debugPrint('~');
   }
 
