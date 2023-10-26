@@ -98,6 +98,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
   late FormControl<String?> _customNameField;
   late FormControl<bool> _shinyField;
   late FormControl<List<SubSkill>> _subSkillsField;
+  late FormControl<DateTime> _customDateField;
 
   late FormControl<Ingredient> _ingredient1Field;
   late FormControl<Ingredient> _ingredient2Field;
@@ -154,6 +155,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     );
     _customNameField = FormControl();
     _shinyField = FormControl();
+    _customDateField = FormControl();
     _subSkillsField = FormControl(
       validators: [
         Validators.required,
@@ -183,6 +185,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       '_character': _characterField,
       '_customNameField': _customNameField,
       '_shinyField': _shinyField,
+      '_customDateField': _customDateField,
       '_subSkills': _subSkillsField,
       '_ingredient1': _ingredient1Field,
       '_ingredient2': _ingredient2Field,
@@ -213,6 +216,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     _characterField.value = profile.character;
     _customNameField.value = profile.customName;
     _shinyField.value = profile.isShiny;
+    _customDateField.value = profile.customDate;
     _subSkillsField.value = profile.subSkills;
 
     _ingredient1Field.value = profile.ingredient1;
@@ -507,6 +511,62 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                   });
                 },
               ),
+              Gap.sm,
+              Hp(
+                child: ReactiveMyTextField(
+                  label: '登錄日期'.xTr,
+                  formControl: _customDateField,
+                  valueAccessor: MyDateTimeValueAccessor(DateFormatType.date),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.calendar_today),
+                  ),
+                  wrapFieldBuilder: (context, fieldWidget) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () async {
+                              final res = await showDatePicker(
+                                context: context,
+                                // 7/19 是台灣上線日期
+                                initialDate: _customDateField.value ?? MyTimezone.clientNow,
+                                firstDate: DateTime(2023, 7, 19),
+                                lastDate: MyTimezone.clientNow,
+                              );
+
+                              if (res == null) {
+                                return;
+                              }
+                              _customDateField.value = res;
+                            },
+                            child: IgnorePointer(
+                              child: fieldWidget,
+                            ),
+                          ),
+                        ),
+                        Gap.md,
+                        ReactiveValueListenableBuilder(
+                          formControl: _customDateField,
+                          builder: (context, control, child) {
+                            final date = control.value;
+
+                            return AnimatedOpacity(
+                              opacity: date == null ? 0 : 1,
+                              duration: const Duration(milliseconds: 200),
+                              child: IconButton(
+                                onPressed: () {
+                                  _customDateField.value = null;
+                                },
+                                icon: const Icon(Icons.clear),
+                              ),
+                            );
+                          },
+                        )
+                      ],
+                    );
+                  },
+                ),
+              ),
               Gap.trailing,
             ],
           ),
@@ -677,6 +737,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         customNote: null,
         isFavorite: false, // TODO:
         isShiny: _shinyField.value ?? false,
+        customDate: _customDateField.value,
         subSkills: _subSkillsField.value!,
         ingredient2: _ingredient2Field.value!,
         ingredientCount2: _ingredient2CountField.value!,
@@ -726,6 +787,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         customNote: null,
         isFavorite: profile.isFavorite,
         isShiny: _shinyField.value ?? false,
+        customDate: _customDateField.value,
         subSkillLv10: _subSkillsField.value![0],
         subSkillLv25: _subSkillsField.value![1],
         subSkillLv50: _subSkillsField.value![2],

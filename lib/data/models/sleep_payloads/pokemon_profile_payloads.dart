@@ -9,6 +9,7 @@ class CreatePokemonProfilePayload {
     required this.customNote,
     required this.isFavorite,
     required this.isShiny,
+    required this.customDate,
     required this.ingredient2,
     required this.ingredientCount2,
     required this.ingredient3,
@@ -26,6 +27,7 @@ class CreatePokemonProfilePayload {
   final String? customNote;
   final bool? isFavorite;
   final bool? isShiny;
+  final DateTime? customDate;
   final Ingredient ingredient2;
   final int ingredientCount2;
   final Ingredient ingredient3;

@@ -1,3 +1,4 @@
+import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -11,6 +12,7 @@ class PokemonProfile {
     this.customNote,
     this.isFavorite = false,
     this.isShiny = false,
+    this.customDate,
     required this.subSkillLv10,
     required this.subSkillLv25,
     required this.subSkillLv50,
@@ -32,6 +34,8 @@ class PokemonProfile {
   final bool isFavorite;
   /// 是否為異色
   final bool isShiny;
+  /// 使用者自訂的登錄日期 (遊戲內日期)
+  final DateTime? customDate;
 
   /// 使用者可以填寫個人筆記
   final String? customNote;
@@ -75,6 +79,7 @@ class PokemonProfile {
       customNote: json['customNote'],
       isFavorite: json['isFavorite'] ?? false,
       isShiny: json['isShiny'] ?? false,
+      customDate: json['customDate'] == null ? null : MyTimezone.parseZero(json['customDate']),
       subSkillLv10: subSkillMapping[json['subSkillIds'][0]]!,
       subSkillLv25: subSkillMapping[json['subSkillIds'][1]]!,
       subSkillLv50: subSkillMapping[json['subSkillIds'][2]]!,
@@ -96,6 +101,7 @@ class PokemonProfile {
       customNote: customNote,
       isFavorite: isFavorite,
       isShiny: isShiny,
+      customDate: customDate,
       subSkillLv10: subSkillLv10,
       subSkillLv25: subSkillLv25,
       subSkillLv50: subSkillLv50,
@@ -114,6 +120,7 @@ class PokemonProfile {
     String? customNote,
     bool? isFavorite,
     bool? isShiny,
+    DateTime? customDate,
     SubSkill? subSkillLv10,
     SubSkill? subSkillLv25,
     SubSkill? subSkillLv50,
@@ -132,6 +139,7 @@ class PokemonProfile {
       customNote: customNote ?? this.customNote,
       isFavorite: isFavorite ?? this.isFavorite,
       isShiny: isShiny ?? this.isShiny,
+      customDate: customDate ?? this.customDate,
       subSkillLv10: subSkillLv10 ?? this.subSkillLv10,
       subSkillLv25: subSkillLv25 ?? this.subSkillLv25,
       subSkillLv50: subSkillLv50 ?? this.subSkillLv50,
@@ -152,6 +160,7 @@ class PokemonProfile {
       'customNote': customNote,
       'isFavorite': isFavorite,
       'isShiny': isShiny,
+      'customDate': customDate == null ? null : MyFormatter.date(customDate!),
       'id': id,
       'subSkillIds': subSkills.map((e) => e.id).toList(),
       'ingredient2Id': ingredient2.id,
@@ -171,6 +180,7 @@ class PokemonProfile {
           '   customNote: $customNote,\n'
           '   isFavorite: $isFavorite, \n'
           '   isShiny: $isShiny, \n'
+          '   customDate: $customDate, \n'
           '   subSkillLv10: $subSkillLv10,\n'
           '   subSkillLv25: $subSkillLv25,\n'
           '   subSkillLv50: $subSkillLv50,\n'

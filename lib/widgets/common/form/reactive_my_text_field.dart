@@ -18,6 +18,7 @@ class ReactiveMyTextField<T> extends StatelessWidget {
     this.label,
     this.validationMessages,
     this.decoration = const InputDecoration(),
+    this.valueAccessor,
   });
 
   final FormControl<T> formControl;
@@ -26,6 +27,7 @@ class ReactiveMyTextField<T> extends StatelessWidget {
   final String? label;
   final Map<String, ValidationMessageFunction>? validationMessages;
   final InputDecoration decoration;
+  final ControlValueAccessor<T, String>? valueAccessor;
 
   static List<Widget> labelField({
     required Widget? label,
@@ -63,7 +65,7 @@ class ReactiveMyTextField<T> extends StatelessWidget {
     return ReactiveTextField(
       formControl: formControl,
       validationMessages: validationMessages,
-      valueAccessor: _getValueAccessor(),
+      valueAccessor: valueAccessor ?? _getValueAccessor(),
       keyboardType: _getKeyboardType(),
       inputFormatters: _getInputFormatters(),
       decoration: newDecoration,
