@@ -169,6 +169,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
         var searchOptions = await DialogUtility.searchPokemon(
           context,
           initialSearchOptions: _searchOptions,
+          filterBasicProfile: true,
           calcCounts: (options) {
             if (options.isEmptyOptions()) {
               return (profiles.length, profiles.length);

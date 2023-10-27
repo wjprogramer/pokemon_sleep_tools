@@ -102,7 +102,7 @@ class DialogUtility {
   static Future<PokemonSearchOptions?> searchPokemon(BuildContext context, {
     required PokemonSearchOptions initialSearchOptions,
     CalculateCounts<PokemonSearchOptions>? calcCounts,
-    bool filterBasicProfile = false,
+    required bool filterBasicProfile, //  = false,
   }) async {
     return showPokemonSearchDialog(
       context,

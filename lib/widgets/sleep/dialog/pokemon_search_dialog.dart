@@ -115,7 +115,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
         return [
           ...SleepSearchDialogBaseContent.hpList(
             children: [
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_specialty'.xTr,
               ),
               Gap.sm,
@@ -133,7 +133,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                   )),
                 ],
               ),
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_name_and_nickname'.xTr,
               ),
               Gap.sm,
@@ -157,7 +157,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 ),
               ),
               Gap.xl,
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_attributes'.xTr,
               ),
               Gap.sm,
@@ -213,7 +213,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
               // Gap.sm,
               // Text('我的最愛、能進化、異色'),
               // Gap.xl,
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_fruits'.xTr,
               ),
               Gap.sm,
@@ -329,7 +329,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
           ...SleepSearchDialogBaseContent.hpList(
             children: [
               Gap.xl,
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_ingredients'.xTr,
               ),
               Gap.sm,
@@ -431,7 +431,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
           ...SleepSearchDialogBaseContent.hpList(
             children: [
               Gap.xl,
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_main_skills'.xTr,
               ),
               Gap.sm,
@@ -488,7 +488,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
           ...SleepSearchDialogBaseContent.hpList(
             children: [
               Gap.xl,
-              MySubHeader(
+              MySubHeader2(
                 title: Row(
                   children: [
                     Expanded(
@@ -518,7 +518,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 )).toList(),
               ),
               Gap.sm,
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_evolutionary_stage'.xTr,
               ),
               Wrap(
@@ -550,7 +550,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 ],
               ),
               Gap.sm,
-              MySubHeader(
+              MySubHeader2(
                 titleText: 't_sleep_type'.xTr,
               ),
               Gap.sm,
@@ -568,8 +568,76 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                   )),
                 ],
               ),
+              Gap.sm,
+              if (!widget.focusBasicProfile) ...[
+                MySubHeader2(
+                  titleText: '種類'.xTr,
+                ),
+                Gap.sm,
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        searchOptions.isFavorite = !searchOptions.isFavorite;
+                        search();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IgnorePointer(
+                            child: Checkbox(
+                              value: searchOptions.isFavorite,
+                              onChanged: (_) {},
+                            ),
+                          ),
+                          Text('我的最愛'.xTr),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        searchOptions.canEvolution = !searchOptions.canEvolution;
+                        search();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IgnorePointer(
+                            child: Checkbox(
+                              value: searchOptions.canEvolution,
+                              onChanged: (_) {},
+                            ),
+                          ),
+                          Text('能進化'.xTr),
+                        ],
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        searchOptions.isShiny = !searchOptions.isShiny;
+                        search();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IgnorePointer(
+                            child: Checkbox(
+                              value: searchOptions.isShiny,
+                              onChanged: (_) {},
+                            ),
+                          ),
+                          Text('異色'.xTr),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
+
           Gap.xl,
         ];
       },

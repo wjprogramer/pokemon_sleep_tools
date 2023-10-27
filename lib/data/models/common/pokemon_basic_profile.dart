@@ -105,10 +105,10 @@ class PokemonBasicProfile {
   /// [PokemonEvolution.id]
   final int? evolutionId;
 
-  /// Pokemon Sleep, 當前進化階段
+  /// Pokemon Sleep, 當前進化階段, value is 1~3
   final int currentEvolutionStage;
 
-  /// Pokemon Sleep, 最終進化階段
+  /// Pokemon Sleep, 最終進化階段, value is 1~3
   final int evolutionMaxCount;
 
   /// Pokemon Sleep, 幫忙間隔(秒)

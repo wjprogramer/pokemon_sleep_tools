@@ -363,6 +363,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
         var searchOptions = await DialogUtility.searchPokemon(
           context,
           initialSearchOptions: _searchOptions,
+          filterBasicProfile: false,
           calcCounts: (options) {
             if (options.isEmptyOptions()) {
               return (profiles.length, profiles.length);

@@ -5,6 +5,9 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 class PokemonSearchOptions implements BaseSearchOptions {
   PokemonSearchOptions({
     String keyword = '',
+    bool? isFavorite,
+    bool? canEvolution,
+    bool? isShiny,
     Set<Fruit>? fruitOf,
     Set<PokemonType>? typeof,
     Set<MainSkill>? mainSkillOf,
@@ -19,6 +22,9 @@ class PokemonSearchOptions implements BaseSearchOptions {
     Set<int>? currEvolutionStageOf,
     Set<int>? maxEvolutionStageOf,
   }) :_keyword = keyword,
+        isFavorite = isFavorite ?? false,
+        canEvolution = canEvolution ?? false,
+        isShiny = isShiny ?? false,
         fruitOf = fruitOf ?? {},
         typeof = typeof ?? {},
         mainSkillOf = mainSkillOf ?? {},
@@ -33,6 +39,12 @@ class PokemonSearchOptions implements BaseSearchOptions {
         currEvolutionStageOf = currEvolutionStageOf ?? {},
         maxEvolutionStageOf = maxEvolutionStageOf ?? {};
 
+  /// 我的最愛
+  var isFavorite = false;
+  /// 能進化
+  var canEvolution = false;
+  /// 異色
+  var isShiny = false;
   /// 搜尋樹果
   Set<Fruit> fruitOf;
   /// 搜尋屬性
@@ -76,6 +88,9 @@ class PokemonSearchOptions implements BaseSearchOptions {
   PokemonSearchOptions clone() {
     return PokemonSearchOptions(
       keyword: keyword,
+      isFavorite: isFavorite,
+      canEvolution: canEvolution,
+      isShiny: isShiny,
       fruitOf: fruitOf,
       typeof: typeof,
       mainSkillOf: mainSkillOf,
@@ -95,6 +110,9 @@ class PokemonSearchOptions implements BaseSearchOptions {
   @override
   bool isEmptyOptions() {
     return !(keyword.trim().isNotEmpty ||
+        !isFavorite ||
+        !canEvolution ||
+        !isShiny ||
         fruitOf.isNotEmpty ||
         typeof.isNotEmpty ||
         mainSkillOf.isNotEmpty ||
@@ -114,6 +132,9 @@ class PokemonSearchOptions implements BaseSearchOptions {
   @override
   void clear() {
     keyword = '';
+    isFavorite = false;
+    canEvolution = false;
+    isShiny = false;
     fruitOf.clear();
     typeof.clear();
     mainSkillOf.clear();
@@ -189,6 +210,18 @@ class PokemonSearchOptions implements BaseSearchOptions {
             (p.customName?.toLowerCase() ?? '').contains(newKeyword) ||
             (p.customNote?.toLowerCase() ?? '').contains(newKeyword);
       });
+    }
+
+    if (isFavorite) {
+      results = results.where((p) => p.isFavorite);
+    }
+
+    if (canEvolution) {
+      results = results.where((p) => p.basicProfile.currentEvolutionStage < p.basicProfile.evolutionMaxCount);
+    }
+
+    if (isShiny) {
+      results = results.where((p) => p.isShiny);
     }
 
     return results.toList();
@@ -301,6 +334,5 @@ class PokemonSearchOptions implements BaseSearchOptions {
   bool _basicProfileKeywordWhere(PokemonBasicProfile basicProfile, String keyword) {
     return basicProfile.nameI18nKey.xTr.toLowerCase().contains(keyword);
   }
-
 
 }

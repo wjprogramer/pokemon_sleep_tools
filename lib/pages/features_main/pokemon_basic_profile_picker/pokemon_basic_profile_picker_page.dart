@@ -215,6 +215,7 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
           var searchOptions = await DialogUtility.searchPokemon(
             context,
             initialSearchOptions: _searchOptions,
+            filterBasicProfile: true,
             calcCounts: (options) {
               if (options.isEmptyOptions()) {
                 return (_allBasicProfiles.length, _allBasicProfiles.length);

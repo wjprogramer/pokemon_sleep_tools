@@ -55,12 +55,14 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         date: DateTime(2023, 10, 27),
         description: null,
         items: [
+          _NormalVersionItem('[Feature] 可以用進化、異色、我的最愛搜尋寶可夢盒'),
           _NormalVersionItem('[Feature] 建立寶可夢時，可以篩選'),
           _NormalVersionItem('[Feature] 寶可夢可自訂登陸日期'),
           _NormalVersionItem('[Feature] 全面採用新方法計算，參考來源: ', onTap: () {
             launchUrl(Uri.parse('https://bbs.nga.cn/read.php?tid=37305277&rand=768'));
           }),
           _NormalVersionItem('[INFO] 新增詛咒娃娃、怨影娃娃、皮卡丘(萬聖節)'),
+          _NormalVersionItem('[INFO] 新增樹果機率'),
         ],
       ),
       _Version(
