@@ -11,7 +11,7 @@ class LicenseSourceCard extends StatelessWidget {
   final String text;
 
   static Widget t1() => const LicenseSourceCard(text: _t1,);
-  static Widget t2() => const LicenseSourceCard(text: _t2,);
+  // static Widget t2() => const LicenseSourceCard(text: _t2,);
 
   @override
   Widget build(BuildContext context) {
@@ -35,5 +35,5 @@ class LicenseSourceCard extends StatelessWidget {
       '原資料編修：SteveH、Nicole、熬夜撿樹果的寶可夢、謎擬Q、史蒂芬、夏青、繆小狼、養樂多男孩、睡著了、Veil、璃璃、Pail\n\n'
       '本頁面沿用該作之創用CC條款';
 
-  static const _t2 = '本分析採用「寶可夢Sleep潛力計算機v4.0」，作者為繆小狼，原文「歡迎轉傳至各論壇使用，請附上來源，本文及計算機禁止內容農場網站及Youtube等...任何營利目的使用。」本頁面沿用該作之條款';
+  // static const _t2 = '本分析採用「寶可夢Sleep潛力計算機v4.0」，作者為繆小狼，原文「歡迎轉傳至各論壇使用，請附上來源，本文及計算機禁止內容農場網站及Youtube等...任何營利目的使用。」本頁面沿用該作之條款';
 }

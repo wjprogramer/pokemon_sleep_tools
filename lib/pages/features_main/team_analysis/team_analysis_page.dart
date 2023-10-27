@@ -185,7 +185,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
         children: [
           ...Hp.list(
             children: [
-              LicenseSourceCard.t2(),
+              // LicenseSourceCard.t2(),
               Gap.md,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

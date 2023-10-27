@@ -238,7 +238,7 @@ class _AnalysisDetailsPageState extends State<AnalysisDetailsPage> {
   List<Widget> _fruitItems(PokemonProfileStatistics statistics) {
     return Hp.list(
       children: [
-        LicenseSourceCard.t2(),
+        // LicenseSourceCard.t2(),
         MySubHeader(titleText: '樹果'),
         MySubHeader2(titleText: '樹果總數量'),
         _commonTable(
