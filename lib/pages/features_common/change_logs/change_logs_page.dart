@@ -17,6 +17,7 @@ import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChangeLogsPage extends StatefulWidget {
   const ChangeLogsPage._();
@@ -51,10 +52,15 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     _versions = [
       _Version(
         name: '1.0.6',
-        date: DateTime(2023, 10, 26),
+        date: DateTime(2023, 10, 27),
         description: null,
         items: [
+          _NormalVersionItem('[Feature] 建立寶可夢時，可以篩選'),
           _NormalVersionItem('[Feature] 寶可夢可自訂登陸日期'),
+          _NormalVersionItem('[Feature] 全面採用新方法計算，參考來源: ', onTap: () {
+            launchUrl(Uri.parse('https://bbs.nga.cn/read.php?tid=37305277&rand=768'));
+          }),
+          _NormalVersionItem('[INFO] 新增詛咒娃娃、怨影娃娃、皮卡丘(萬聖節)'),
         ],
       ),
       _Version(

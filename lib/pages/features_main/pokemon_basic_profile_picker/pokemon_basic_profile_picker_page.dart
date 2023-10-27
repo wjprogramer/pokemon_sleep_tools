@@ -43,17 +43,26 @@ class PokemonBasicProfilePicker extends StatefulWidget {
 
 class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
   PokemonBasicProfileRepository get _pokemonBasicProfileRepo => getIt();
+  SleepFaceRepository get _sleepFaceRepo => getIt();
 
   final _searchTerms = BehaviorSubject<String>();
-  late Stream<List<PokemonBasicProfile>> _basicProfileStream;
+  // late Stream<List<PokemonBasicProfile>> _basicProfileStream;
 
   var _allBasicProfiles = <PokemonBasicProfile>[];
+  var _filteredBasicProfiles = <PokemonBasicProfile>[];
+  var _sleepFacesOf = <int, Map<int, String>>{};
   PokemonBasicProfile? _currBasicProfile;
-  final _keywordController = TextEditingController();
 
   // UI
   static const _baseChildWidth = 100.0;
   static const _spacing = 12.0;
+
+  // Filter properties
+  var _searchOptions = PokemonSearchOptions();
+
+  // Data (fixed)
+  /// For search
+  var _basicIdSetGroupByField = <PokemonField, Set<int>>{};
 
   @override
   void initState() {
@@ -65,23 +74,33 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
 
   @override
   void dispose() {
-    _keywordController.dispose();
     super.dispose();
   }
 
   Future<void> _init() async {
-    _allBasicProfiles = await _pokemonBasicProfileRepo.findAll();
-    _basicProfileStream = _searchTerms
-        // TODO: 目前沒有打算用網路搜尋，時間設短一點
-        .debounce((_) => TimerStream(true, const Duration(milliseconds: 100)))
-        .switchMap((query) async* {
-          yield await _filter(query);
-        })
-        .startWith(_allBasicProfiles);
 
-    _keywordController.addListener(() {
-      _onKeywordChanged(_keywordController.text);
-    });
+    final sleepFacesGroupByField = await _sleepFaceRepo.findAllGroupByField();
+    final basicIdSetGroupByField = sleepFacesGroupByField.toMap(
+          (field, basicProfiles) => field,
+          (field, basicProfiles) => {...basicProfiles.map((e) => e.basicProfileId)},
+    );
+    _basicIdSetGroupByField = basicIdSetGroupByField;
+
+    _allBasicProfiles = await _pokemonBasicProfileRepo.findAll();
+    _filteredBasicProfiles = [..._allBasicProfiles];
+    _sleepFacesOf = await _sleepFaceRepo.findAllNames();
+
+    // _basicProfileStream = _searchTerms
+    //     // TODO: 目前沒有打算用網路搜尋，時間設短一點
+    //     .debounce((_) => TimerStream(true, const Duration(milliseconds: 100)))
+    //     .switchMap((query) async* {
+    //       yield await _filter(query);
+    //     })
+    //     .startWith(_allBasicProfiles);
+
+    // _keywordController.addListener(() {
+    //   _onKeywordChanged(_keywordController.text);
+    // });
 
     if (mounted) {
       setState(() { });
@@ -94,9 +113,9 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
         .toList();
   }
 
-  void _onKeywordChanged(String keyword) {
-    _searchTerms.add(keyword);
-  }
+  // void _onKeywordChanged(String keyword) {
+  //   _searchTerms.add(keyword);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,104 +134,123 @@ class _PokemonBasicProfilePickerState extends State<PokemonBasicProfilePicker> {
       spacing: _spacing,
     );
 
+    // _buildSearchBar(),
+
+    // BottomBarWithConfirmButton(
+    //   submit: _submit,
+    //   childrenAtStart: [
+    //     Expanded(
+    //       child: Text(
+    //         Display.text(_currBasicProfile?.nameI18nKey),
+    //         maxLines: 1,
+    //         overflow: TextOverflow.ellipsis,
+    //       ),
+    //     ),
+    //     Gap.xl,
+    //   ],
+    // )
+
+    // StreamBuilder(
+    //           stream: _basicProfileStream,
+    //           builder: (context, snapshot) {
+
     return Scaffold(
       appBar: buildAppBar(
         titleText: '選擇寶可夢',
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: buildListView(
+        padding: const EdgeInsets.symmetric(
+          horizontal: HORIZON_PADDING,
+        ),
         children: [
-          _buildSearchBar(),
-          Expanded(
-            child: StreamBuilder(
-              stream: _basicProfileStream,
-              builder: (context, snapshot) {
-                final basicProfiles = snapshot.data ?? [];
-
-                return buildListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: HORIZON_PADDING,
-                  ),
-                  children: [
-                    Gap.sm,
-                    if (MyEnv.USE_DEBUG_IMAGE) Wrap(
-                      spacing: _spacing,
-                      runSpacing: _spacing,
+          Gap.sm,
+          if (MyEnv.USE_DEBUG_IMAGE) Wrap(
+            spacing: _spacing,
+            runSpacing: _spacing,
+            children: [
+              ..._filteredBasicProfiles.map((basicProfile) => SizedBox(
+                width: childWidth,
+                child: InkWell(
+                  onTap: () => _pickBasicProfile(basicProfile),
+                  onLongPress: () => PokemonBasicProfilePage.go(context, basicProfile),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
                       children: [
-                        ...basicProfiles.map((basicProfile) => SizedBox(
-                          width: childWidth,
-                          child: InkWell(
-                            onTap: () => _pickBasicProfile(basicProfile),
-                            onLongPress: () => PokemonBasicProfilePage.go(context, basicProfile),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Stack(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 12,
-                                    ),
-                                    child: IgnorePointer(
-                                      // ignore image tooltip
-                                      child: PokemonImage(
-                                        basicProfile: basicProfile,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    left: 0,
-                                    bottom: 0,
-                                    child: Text(
-                                      basicProfile.nameI18nKey.xTr,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 12,
+                          ),
+                          child: IgnorePointer(
+                            // ignore image tooltip
+                            child: PokemonImage(
+                              basicProfile: basicProfile,
                             ),
                           ),
-                        ))
+                        ),
+                        Positioned(
+                          right: 0,
+                          left: 0,
+                          bottom: 0,
+                          child: Text(
+                            basicProfile.nameI18nKey.xTr,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ],
-                    ) else ...basicProfiles.map((basicProfile) => MyElevatedButton(
-                      onPressed: () => _pickBasicProfile(basicProfile),
-                      child: Text(basicProfile.nameI18nKey.xTr),
-                    )),
-                    Gap.sm,
-                  ],
-                );
-              },
-            ),
-          ),
-          // BottomBarWithConfirmButton(
-          //   submit: _submit,
-          //   childrenAtStart: [
-          //     Expanded(
-          //       child: Text(
-          //         Display.text(_currBasicProfile?.nameI18nKey),
-          //         maxLines: 1,
-          //         overflow: TextOverflow.ellipsis,
-          //       ),
-          //     ),
-          //     Gap.xl,
-          //   ],
-          // ),
+                    ),
+                  ),
+                ),
+              ))
+            ],
+          ) else ..._filteredBasicProfiles.map((basicProfile) => MyElevatedButton(
+            onPressed: () => _pickBasicProfile(basicProfile),
+            child: Text(basicProfile.nameI18nKey.xTr),
+          )),
+          Gap.sm,
         ],
+      ),
+      bottomNavigationBar: BottomBarWithActions(
+        onSearch: () async {
+          var searchOptions = await DialogUtility.searchPokemon(
+            context,
+            initialSearchOptions: _searchOptions,
+            calcCounts: (options) {
+              if (options.isEmptyOptions()) {
+                return (_allBasicProfiles.length, _allBasicProfiles.length);
+              }
+              return (options.filterBasicProfiles(
+                _allBasicProfiles,
+                fieldToBasicProfileIdSet: _basicIdSetGroupByField,
+              ).length, _allBasicProfiles.length);
+            },
+          );
+          if (searchOptions == null) {
+            return;
+          }
+
+          _searchOptions = searchOptions;
+          _filteredBasicProfiles = _searchOptions.filterBasicProfiles(
+            _allBasicProfiles,
+            fieldToBasicProfileIdSet: _basicIdSetGroupByField,
+          );
+          setState(() { });
+        },
+        isSearchOn: !_searchOptions.isEmptyOptions(),
       ),
     );
   }
 
-  Widget _buildSearchBar() {
-    return TextField(
-      controller: _keywordController,
-      decoration: InputDecoration(
-        prefixIcon: Icon(
-          Icons.search,
-        ),
-      ),
-    );
-  }
+  // Widget _buildSearchBar() {
+  //   return TextField(
+  //     controller: _keywordController,
+  //     decoration: InputDecoration(
+  //       prefixIcon: Icon(
+  //         Icons.search,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _pickBasicProfile(PokemonBasicProfile basicProfile) {
     // setState(() {

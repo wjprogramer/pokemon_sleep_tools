@@ -28,6 +28,7 @@ class AnalysisDetailsPage extends StatefulWidget {
     return AnalysisDetailsPage._(args);
   }
 
+  @deprecated
   static void go(BuildContext context, int profileId) {
     context.nav.push(
       route,

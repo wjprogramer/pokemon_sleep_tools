@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
@@ -45,8 +46,6 @@ class PokemonIllustratedBookPage extends StatefulWidget {
 class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage> {
   PokemonBasicProfileRepository get _basicProfileRepo => getIt();
   SleepFaceRepository get _sleepFaceRepo => getIt();
-
-  static const _hideBottomNavigationBar = kDebugMode;
 
   // UI
   late ThemeData _theme;
@@ -100,7 +99,8 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
   Widget build(BuildContext context) {
     _theme = Theme.of(context);
     final responsive = ResponsiveBreakpoints.of(context);
-    _isMobile = responsive.isMobile;
+    final screenSize = context.mediaQuery.size;
+    _isMobile = screenSize.width < COMMON_SIDE_WIDTH * 2;
 
     final mainContent = Consumer<MainViewModel>(
       builder: (context, mainViewModel, child) {
@@ -142,8 +142,7 @@ class _PokemonIllustratedBookPageState extends State<PokemonIllustratedBookPage>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(child: mainContent),
-                if (!_hideBottomNavigationBar)
-                  _buildBottomNavigationBar(_allBasicProfiles),
+                _buildBottomNavigationBar(_allBasicProfiles),
               ],
             ),
           ),
