@@ -13,7 +13,7 @@ class _PokemonDetails extends StatefulWidget {
   });
 
   final PokemonProfile profile;
-  final PokemonProfileStatistics? statistics;
+  final PokemonProfileStatistics2? statistics;
   final Function() onDeletedSuccess;
   final double initialOffset;
   final ValueChanged<double> onScroll;
@@ -63,7 +63,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
   ScrollController get _scrollController => s._scrollController;
   ThemeData get _theme => s._theme;
 
-  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics? statistics, {
+  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics2? statistics, {
     required double leadingWidth,
     required double mainWidth,
   }) {
@@ -187,8 +187,8 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             titleText: 't_review'.xTr,
           ),
           Gap.xl,
-          Text('${'t_energy_integral'.xTr}: ${statistics?.energyScore}\n'
-              '${'t_overall_rating'.xTr}: ${statistics?.rank}'),
+          Text('${'Lv 50 評價'.xTr}: ${statistics?.result?.rankLv50}\n'
+              '${'Lv 100 評價'.xTr}: ${statistics?.result?.rankLv100}'),
           Gap.xl,
           MySubHeader(
             titleText: 't_help_ability'.xTr,
@@ -412,42 +412,67 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             titleText: 't_analysis'.xTr,
           ),
           Gap.xl,
+          MyElevatedButton(
+            onPressed: () {
+              DevPokemonStatics2Page.go(context, _profile);
+            },
+            child: Text('詳細分析數據'),
+          ),
           ...[
-            Text(
-              '幫忙均能/次: ${statistics?.helpPerAvgEnergy.toStringAsFixed(2)}\n'
-                  '數量: ${statistics?.fruitCount}\n'
-                  '幫忙間隔: ${statistics?.helpInterval}\n'
-                  '樹果能量: ${statistics?.fruitEnergy}\n'
-                  '食材1能量: ${statistics?.ingredientEnergy1}\n'
-                  '食材2能量: ${statistics?.ingredientEnergy2}\n'
-                  '食材3能量: ${statistics?.ingredientEnergy3}\n'
-                  '食材均能: ${statistics?.ingredientEnergyAvg}\n'
-                  '幫手獎勵: ${statistics?.helperBonus}\n'
-                  '食材機率: ${statistics?.ingredientRate}\n'
-                  '技能等級: ${statistics?.skillLevel}\n'
-                  '主技能速度參數: ${statistics?.mainSkillSpeedParameter}\n'
-                  '持有上限溢出數: ${statistics?.maxOverflowHoldCount}\n'
-                  '持有上限溢出能量: ${statistics?.overflowHoldEnergy}\n'
-                  '性格速度: ${statistics?.characterSpeed}\n'
-                  '活力加速: ${statistics?.accelerateVitality}\n'
-                  '睡眠EXP獎勵: ${statistics?.sleepExpBonus}\n'
-                  '夢之碎片獎勵: ${statistics?.dreamChipsBonus}\n'
-                  '主技能能量: ${statistics?.mainSkillTotalEnergy}\n'
-                  '主技活力加速: ${statistics?.mainSkillAccelerateVitality}\n',
-            ),
-            Text(
-              '總幫忙速度加成: S(${statistics?.totalHelpSpeedS}), M(${statistics?.totalHelpSpeedM})',
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  AnalysisDetailsPage.go(context, _profile.id);
-                },
-                child: Text('詳細計算過程'.xTr),
-              ),
-            ),
+            // Text(
+            //   '幫忙均能/次: ${statistics?.helpPerAvgEnergy.toStringAsFixed(2)}\n'
+            //       '數量: ${statistics?.fruitCount}\n'
+            //       '幫忙間隔: ${statistics?.helpInterval}\n'
+            //       '樹果能量: ${statistics?.fruitEnergy}\n'
+            //       '食材1能量: ${statistics?.ingredientEnergy1}\n'
+            //       '食材2能量: ${statistics?.ingredientEnergy2}\n'
+            //       '食材3能量: ${statistics?.ingredientEnergy3}\n'
+            //       '食材均能: ${statistics?.ingredientEnergyAvg}\n'
+            //       '幫手獎勵: ${statistics?.helperBonus}\n'
+            //       '食材機率: ${statistics?.ingredientRate}\n'
+            //       '技能等級: ${statistics?.skillLevel}\n'
+            //       '主技能速度參數: ${statistics?.mainSkillSpeedParameter}\n'
+            //       '持有上限溢出數: ${statistics?.maxOverflowHoldCount}\n'
+            //       '持有上限溢出能量: ${statistics?.overflowHoldEnergy}\n'
+            //       '性格速度: ${statistics?.characterSpeed}\n'
+            //       '活力加速: ${statistics?.accelerateVitality}\n'
+            //       '睡眠EXP獎勵: ${statistics?.sleepExpBonus}\n'
+            //       '夢之碎片獎勵: ${statistics?.dreamChipsBonus}\n'
+            //       '主技能能量: ${statistics?.mainSkillTotalEnergy}\n'
+            //       '主技活力加速: ${statistics?.mainSkillAccelerateVitality}\n',
+            // ),
+            // Text(
+            //   '總幫忙速度加成: S(${statistics?.totalHelpSpeedS}), M(${statistics?.totalHelpSpeedM})',
+            // ),
+            // Align(
+            //   alignment: Alignment.centerRight,
+            //   child: TextButton(
+            //     onPressed: () {
+            //       AnalysisDetailsPage.go(context, _profile.id);
+            //     },
+            //     child: Text('詳細計算過程'.xTr),
+            //   ),
+            // ),
           ],
+          Gap.xl,
+          MySubHeader(
+            titleText: 't_source'.xTr,
+            color: dataSourceSubHeaderColor,
+          ),
+        ],
+      ),
+      ...ListTile.divideTiles(
+        context: context,
+        tiles: [
+          const SearchListTile(
+            titleText: 'Pokemon Sleep 理想向收益計算表',
+            subTitleText: '參考版本 20231004v2，作為此 App 的演算法',
+            url: 'https://bbs.nga.cn/read.php?tid=37305277&rand=768',
+          ),
+        ],
+      ),
+      ...Hp.list(
+        children: [
           MySubHeader(
             titleText: 't_others'.xTr,
             color: dangerColor,
@@ -463,7 +488,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             ),
             MyElevatedButton(
               onPressed: () {
-                PokemonProfileStatistics2(_profile).init();
+                // PokemonProfileStatistics2(_profile).calc();
               },
               child: Text(
                 '測試'.xTr,
@@ -508,7 +533,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             child: Text('t_delete'.xTr),
           ),
           Gap.xl,
-        ],
+        ]
       ),
       Gap.trailing,
     ];

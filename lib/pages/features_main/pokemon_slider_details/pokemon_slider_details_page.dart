@@ -22,6 +22,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/view_models/main_view_model.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/search_list_tile.dart';
 import 'package:provider/provider.dart';
 
 part 'src/pokemon_details.dart';
@@ -85,12 +86,16 @@ class PokemonSliderDetailsPage extends StatefulWidget {
 }
 
 class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
+  MainViewModel get _mainViewModel => context.read<MainViewModel>();
   _Args get _args => widget._args;
   bool get _isView => _args.isView;
 
   late PageController _pageController;
 
-  final _cache = ListQueue<PokemonProfileStatistics>(5);
+  // final _cache = ListQueue<PokemonProfileStatistics2>(10);
+  /// [PokemonProfile.id] to statistics
+  final _cache = <int, PokemonProfileStatistics2>{};
+
   var _previousPage = 0;
   var _currIndex = 0;
 
@@ -114,37 +119,25 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
       final mainViewModel = context.read<MainViewModel>();
       await mainViewModel.loadProfiles();
 
-      // Utils (with profiles)
-      updateProfileMapping() {
-        final newProfiles = mainViewModel.profiles;
-        for (final profile in newProfiles) {
-          _profileOf[profile.id] = profile;
-        }
-      }
+      // Update profiles
+      _updateProfileMapping();
+      _updateProfiles();
 
-      if (widget._args.initialProfileIds != null) {
-        updateProfileMapping();
+      // Update according profiles
+      _updateProfileStatistics();
 
-        _disposers.add(
-          mainViewModel.xAddListener(() {
-            updateProfileMapping();
-          }),
-        );
-      }
-
+      // Update index
       if (_args.initialProfileId != null) {
+        _updateProfiles();
         int? index;
-        if (widget._args.initialProfileIds != null) {
-          _profiles = (widget._args.initialProfileIds ?? []).map((e) => _profileOf[e]).whereNotNull().toList();
-          index = widget._args.initialProfileIds?.indexOrNullWhere((profileId) => profileId == _args.initialProfileId);
+        if (_args.initialProfileIds != null) {
+          index = _args.initialProfileIds?.indexOrNullWhere((profileId) => profileId == _args.initialProfileId);
         } else {
-          _profiles = mainViewModel.profiles;
           index = _profiles.indexOrNullWhere((e) => e.id == _args.initialProfileId);
         }
 
         _previousPage = index ?? _previousPage;
         _currIndex = index ?? 0;
-        _loadData(index ?? 0, _profiles);
       }
 
       _pageController = PageController(initialPage: _currIndex);
@@ -154,6 +147,26 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
         setState(() { });
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _disposers.add(
+        _mainViewModel.xAddListener(() {
+          // Update profiles
+          _updateProfiles();
+          _updateProfileMapping();
+
+          // Update according profiles
+          _updateProfileStatistics();
+        }),
+      );
+    });
+  }
+
+  void _updateProfileMapping() {
+    final newProfiles = _mainViewModel.profiles;
+    for (final profile in newProfiles) {
+      _profileOf[profile.id] = profile;
+    }
   }
 
   /// TODO: [initState] 的 load data 需要這裡使用？
@@ -177,6 +190,21 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     super.dispose();
   }
 
+  void _updateProfileStatistics() {
+    for (final profile in _profiles) {
+      _cache[profile.id] = PokemonProfileStatistics2(profile)..calcForUser();
+    }
+  }
+
+  void _updateProfiles() {
+    final initialProfileIds = _args.initialProfileIds;
+    if (initialProfileIds != null) {
+      _profiles = initialProfileIds.map((e) => _profileOf[e]).whereNotNull().toList();
+    } else {
+      _profiles = _mainViewModel.profiles;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!_initialized) {
@@ -185,15 +213,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
     return Consumer<MainViewModel>(
       builder: (context, viewModel, child) {
-        final initialProfileIds = widget._args.initialProfileIds;
-        if (initialProfileIds != null) {
-          _profiles = initialProfileIds.map((e) => _profileOf[e]).whereNotNull().toList();
-        } else {
-          _profiles = viewModel.profiles;
-        }
-
         _currIndex = _currIndex.clamp(0, _profiles.lastIndex ?? 0);
-        _isView;
 
         if (_profiles.isEmpty) {
           return Scaffold(
@@ -307,60 +327,56 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     _currIndex = page;
     setState(() { });
 
-    scheduleMicrotask(() {
-      _loadData(page, profiles);
-    });
+    // scheduleMicrotask(() {
+    //   _loadData(page, profiles);
+    // });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     });
   }
 
   Future<void> _loadData(int index, List<PokemonProfile> profiles) async {
-    var delta = index - _previousPage;
-    var preloadIndex = delta == 0 && profiles.length > 1 ? null : (
-        (profiles.length + index + delta) % profiles.length
-    );
-
-    PokemonProfileStatistics? currentStatistics;
-    PokemonProfileStatistics? preloadStatistics;
-
-    for (final data in [..._cache]) {
-      if (data.profile.id == profiles[index].id) {
-        currentStatistics = data;
-      } else if (preloadIndex != null &&
-          data.profile.id == profiles[preloadIndex].id) {
-        preloadStatistics = data;
-      }
-
-      if (currentStatistics != null && preloadStatistics != null) {
-        break;
-      }
-    }
-
-    _cache.removeWhere((statistics) {
-      return statistics.profile.id == currentStatistics?.profile.id ||
-          statistics.profile.id == preloadStatistics?.profile.id;
-    });
-
-    if (currentStatistics == null) {
-      currentStatistics = PokemonProfileStatistics.from(profiles[index]);
-      currentStatistics.init();
-    }
-    if (preloadIndex != null && preloadStatistics == null) {
-      preloadStatistics = PokemonProfileStatistics.from(profiles[preloadIndex]);
-      preloadStatistics.init();
-    }
-
-    _cache.add(currentStatistics);
-    if (preloadStatistics != null) {
-      _cache.add(preloadStatistics);
-    }
-
-    setState(() { });
+    // var delta = index - _previousPage;
+    // var preloadIndex = delta == 0 && profiles.length > 1 ? null : (
+    //     (profiles.length + index + delta) % profiles.length
+    // );
+    //
+    // PokemonProfileStatistics2? currentStatistics;
+    // PokemonProfileStatistics2? preloadStatistics;
+    //
+    // for (final data in [..._cache]) {
+    //   if (data.profile.id == profiles[index].id) {
+    //     currentStatistics = data;
+    //   } else if (preloadIndex != null &&
+    //       data.profile.id == profiles[preloadIndex].id) {
+    //     preloadStatistics = data;
+    //   }
+    //
+    //   if (currentStatistics != null && preloadStatistics != null) {
+    //     break;
+    //   }
+    // }
+    //
+    // _cache.removeWhere((statistics) {
+    //   return statistics.profile.id == currentStatistics?.profile.id ||
+    //       statistics.profile.id == preloadStatistics?.profile.id;
+    // });
+    //
+    // if (currentStatistics == null) {
+    //   currentStatistics = PokemonProfileStatistics2(profiles[index])..calcForUser();
+    //   _cache.add(currentStatistics);
+    // }
+    // if (preloadIndex != null && preloadStatistics == null) {
+    //   preloadStatistics = PokemonProfileStatistics2(profiles[preloadIndex])..calcForUser();
+    //   _cache.add(preloadStatistics);
+    // }
+    //
+    // setState(() { });
   }
 
-  PokemonProfileStatistics? _getStatistics(PokemonProfile profile) {
-    return _cache.firstWhereOrNull((e) => e.profile.id == profile.id);
+  PokemonProfileStatistics2? _getStatistics(PokemonProfile profile) {
+    return _cache[profile.id];
+    // return _cache.firstWhereOrNull((e) => e.profile.id == profile.id);
   }
 
 }

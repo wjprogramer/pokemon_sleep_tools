@@ -50,7 +50,7 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
     _statistics2 = PokemonProfileStatistics2(_profile);
 
     scheduleMicrotask(() {
-      _statisticsResuls = _statistics2.init();
+      _statisticsResuls = _statistics2.calcForDev();
 
       setState(() { });
     });
@@ -64,7 +64,7 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
 
     return Scaffold(
       appBar: buildAppBar(
-        titleText: '新版計算方式'.xTr,
+        titleText: '計算'.xTr,
       ),
       body: buildListView(
         children: [
@@ -77,7 +77,7 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _statisticsResuls = _statistics2.init();
+          _statisticsResuls = _statistics2.calcForDev();
           setState(() { });
         },
         child: const Icon(Icons.refresh),

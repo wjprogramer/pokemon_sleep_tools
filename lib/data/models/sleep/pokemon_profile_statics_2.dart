@@ -3,12 +3,28 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
+class PokemonProfileStatistics2Result {
+  PokemonProfileStatistics2Result(this.profile, this.rankLv50, this.rankLv100);
+
+  final String rankLv50;
+  final String rankLv100;
+  final PokemonProfile profile;
+}
+
+enum _Type {
+  dev,
+  userView,
+}
+
 /// 運算公式來源：「https://bbs.nga.cn/read.php?tid=37305277」
 class PokemonProfileStatistics2 {
   PokemonProfileStatistics2(this.profile);
 
   var _isInitialized = false;
   bool get isInitialized => _isInitialized;
+
+  PokemonProfileStatistics2Result? _result;
+  PokemonProfileStatistics2Result? get result => _result;
 
   // Profile properties
   final PokemonProfile profile;
@@ -68,8 +84,18 @@ class PokemonProfileStatistics2 {
   /* $AM$4 */ final _ccc1 = 0.25;
   /* $AL$4 */ final _ccc2 = 0.25;
 
-  List<dynamic> init() {
-    final res = <dynamic>[];
+  List<dynamic> calcForDev() {
+    return _calc(_Type.dev);
+  }
+
+  PokemonProfileStatistics2Result calcForUser() {
+    _result = _calc(_Type.userView);
+    return _result!;
+  }
+
+  // PokemonProfileStatistics2Result calc() {
+
+  dynamic _calc(_Type type) {
 
     /* $GY$4 */ final gy4 = _helperAvgScoreLv50 * 5 * 0.05;
     /* $HA$4 */ final ha4 = _helperAvgScoreLv100 * 5 * 0.05;
@@ -469,385 +495,388 @@ class PokemonProfileStatistics2 {
     c < 0 ? 'F' : '-') + gx + gy + gz;
 
     _isInitialized = true;
-    if (!kDebugMode) {
-      return res;
-    }
 
-    return [
-      {
-        'type': 'table',
-        'title': '樹果',
-        'cells': [
-          [
-            '',
-            '能量/顆',
-            '能量/顆\n(+專長/技能加成)',
-            '能量/顆\n(+卡比獸喜好)',
+
+    return switch (type) {
+      _Type.userView => PokemonProfileStatistics2Result(
+        profile, gx, gy,
+      ),
+      _Type.dev => [
+        {
+          'type': 'table',
+          'title': '樹果',
+          'cells': [
+            [
+              '',
+              '能量/顆',
+              '能量/顆\n(+專長/技能加成)',
+              '能量/顆\n(+卡比獸喜好)',
+            ],
+            [
+              '當前等級',
+              Display.numDouble(fruitEnergyLvCurr),
+              Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLvCurr),
+              Display.numDouble(fruitEnergyAfterSnorlaxFavorite),
+            ],
+            [
+              'Lv50',
+              Display.numDouble(fruitEnergyLv50),
+              Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLv50),
+              Display.numDouble(fruitEnergyAfterSnorlaxFavoriteLv50),
+            ],
+            [
+              'Lv100',
+              Display.numDouble(fruitEnergyLv100),
+              Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLv100),
+              Display.numDouble(fruitEnergyAfterSnorlaxFavoriteLv100),
+            ],
+            // [
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            // ],
           ],
-          [
-            '當前等級',
-            Display.numDouble(fruitEnergyLvCurr),
-            Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLvCurr),
-            Display.numDouble(fruitEnergyAfterSnorlaxFavorite),
+        },
+        {
+          'type': 'table',
+          'title': '幫忙時間',
+          'cells': [
+            [
+              '',
+              '基礎',
+              '+等級調整',
+              '+性格/技能調整',
+              '+活力影響',
+            ],
+            [
+              '',
+              Display.numDouble(helpInterval),
+              '',
+              '',
+              '',
+            ],
+            [
+              '當前等級',
+              '',
+              Display.numDouble(helpIntervalLvCurr1),
+              Display.numDouble(helpIntervalLvCurr2),
+              Display.numDouble(helpIntervalLvCurr3),
+            ],
+            [
+              'Lv50',
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+            ],
+            [
+              'Lv100',
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+            ],
+            // [
+            //   '',
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            // ],
           ],
-          [
-            'Lv50',
-            Display.numDouble(fruitEnergyLv50),
-            Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLv50),
-            Display.numDouble(fruitEnergyAfterSnorlaxFavoriteLv50),
+        },
+        {
+          'type': 'table',
+          'subtitle': '幫忙時間 (白版)',
+          'cells': [
+            [
+              '',
+              '基礎',
+              '+等級調整',
+              '+活力調整',
+              '',
+            ],
+            [
+              '',
+              Display.numDouble(helpInterval),
+              '',
+              '',
+              '',
+            ],
+            [
+              '當前等級',
+              '',
+              Display.numDouble(helpIntervalLvCurr1),
+              Display.numDouble(helpIntervalPureLvCurr),
+              Display.numDouble(0),
+            ],
+            [
+              'Lv50',
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+            ],
+            [
+              'Lv100',
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+            ],
+            // [
+            //   '',
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            // ],
           ],
-          [
-            'Lv100',
-            Display.numDouble(fruitEnergyLv100),
-            Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLv100),
-            Display.numDouble(fruitEnergyAfterSnorlaxFavoriteLv100),
+        },
+        {
+          'type': 'table',
+          'subtitle': '幫忙時間 (最高階進化)',
+          'cells': [
+            [
+              '',
+              '基礎',
+              '+性格/活力調整',
+              '+等級/副技能調整',
+              '',
+            ],
+            [
+              '',
+              Display.numDouble(maxHelpInterval),
+              Display.numDouble(maxHelpIntervalAdjust1),
+              '',
+              '',
+            ],
+            [
+              '當前等級',
+              '',
+              Display.numDouble(0),
+              Display.numDouble(0),
+              Display.numDouble(0),
+            ],
+            [
+              'Lv50',
+              '',
+              '',
+              Display.numDouble(bd),
+              Display.numDouble(000000),
+            ],
+            [
+              'Lv100',
+              '',
+              Display.numDouble(000000),
+              Display.numDouble(bf),
+              Display.numDouble(000000),
+            ],
+            // [
+            //   '',
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            //   Display.numDouble(000000),
+            // ],
           ],
-          // [
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          // ],
-        ],
-      },
-      {
-        'type': 'table',
-        'title': '幫忙時間',
-        'cells': [
-          [
-            '',
-            '基礎',
-            '+等級調整',
-            '+性格/技能調整',
-            '+活力影響',
+        },
+        {
+          'type': 'table',
+          'subtitle': '幫忙時間 (最高階進化、白板)',
+          'cells': [
+            [
+              '',
+              '基礎',
+              '+等級/活力調整',
+              '',
+              '',
+            ],
+            [
+              '',
+              Display.numDouble(maxHelpInterval),
+              Display.numDouble(0),
+              '',
+              '',
+            ],
+            [
+              '當前等級',
+              '',
+              Display.numDouble(0),
+              Display.numDouble(0),
+              Display.numDouble(0),
+            ],
+            [
+              'Lv50',
+              '',
+              Display.numDouble(be),
+              '',
+              Display.numDouble(000000),
+            ],
+            [
+              'Lv100',
+              '',
+              Display.numDouble(maxHelpIntervalLv100),
+              Display.numDouble(000000),
+              Display.numDouble(000000),
+            ],
           ],
-          [
-            '',
-            Display.numDouble(helpInterval),
-            '',
-            '',
-            '',
+        },
+        {
+          'type': 'table',
+          'title': '樹果 & 食材',
+          'cells': [
+            [
+              '',
+              '樹果機率\n(+副技能/性格)',
+              '果實預期次數/h',
+              '食材機率\n(+副技能/性格)',
+              '食材預期次數/h',
+              '食材1\n個數',
+              '食材2\n個數',
+              '食材3\n個數',
+            ],
+            [
+              '',
+              Display.numDouble(0),
+              Display.numDouble(0),
+              '',
+              '',
+              Display.numDouble(0),
+              Display.numDouble(0),
+              Display.numDouble(0),
+            ],
+            [
+              '當前等級\n(加成後)',
+              Display.numDouble(fruitRateLvCurr1),
+              Display.numDouble(bi),
+              Display.numDouble(bj),
+              Display.numDouble(ingredientCountPerHourLvCurr),
+              Display.numDouble(ingredient1CountPerHourAfterAdjustLvCurr),
+              Display.numDouble(ingredient2CountPerHourAfterAdjustLvCurr),
+              Display.numDouble(ingredient3CountPerHourAfterAdjustLvCurr),
+            ],
+            [
+              '當前等級\n(白板)',
+              Display.numDouble(fruitRate),
+              Display.numDouble(bp),
+              Display.numDouble(ingredientRate),
+              Display.numDouble(br),
+              Display.numDouble(bs),
+              Display.numDouble(bt),
+              Display.numDouble(bu),
+            ],
+            [
+              'Lv50\n(加成後)',
+              Display.numDouble(fruitRateLv50),
+              Display.numDouble(cb),
+              Display.numDouble(ingredientRateLv50),
+              Display.numDouble(cd),
+              Display.numDouble(ce),
+              Display.numDouble(cf),
+              Display.numDouble(cg),
+            ],
+            [
+              'Lv50\n(白板)',
+              Display.numDouble(cm),
+              Display.numDouble(cn),
+              Display.numDouble(co),
+              Display.numDouble(cp),
+              Display.numDouble(cq),
+              Display.numDouble(cr),
+              Display.numDouble(cs),
+            ],
+            [
+              'Lv100\n(加成後)',
+              Display.numDouble(cy),
+              Display.numDouble(cz),
+              Display.numDouble(da),
+              Display.numDouble(db),
+              Display.numDouble(dc),
+              Display.numDouble(dd),
+              Display.numDouble(de),
+            ],
+            [
+              'Lv100\n(白板)',
+              Display.numDouble(dk),
+              Display.numDouble(dl),
+              Display.numDouble(dm),
+              Display.numDouble(dn),
+              Display.numDouble(doX),
+              Display.numDouble(dp),
+              Display.numDouble(dq),
+            ],
           ],
-          [
-            '當前等級',
-            '',
-            Display.numDouble(helpIntervalLvCurr1),
-            Display.numDouble(helpIntervalLvCurr2),
-            Display.numDouble(helpIntervalLvCurr3),
+        },
+        {
+          'type': 'table',
+          'subtitle': '樹果 & 食材收益',
+          'cells': [
+            [
+              '',
+              '樹果能量/h',
+              '食材個/h',
+              '食材能量/h',
+              '次數/h',
+              '主技能效益/h',
+              '食材換算成碎片/h',
+            ],
+            [
+              '當前等級\n(加成後)',
+              Display.numDouble(z),
+              Display.numDouble(ai),
+              Display.numDouble(aj),
+              Display.numDouble(v), // TODO: 原 sheet 是 '次數/d'，但其他都是 `/h`，可是個人感覺像是 `/d`?
+              Display.numDouble(w),
+              Display.numDouble(ak),
+            ],
+            [
+              '當前等級\n(白板)',
+              Display.numDouble(bv),
+              Display.numDouble(bw),
+              Display.numDouble(bx),
+              Display.numDouble(by),
+              Display.numDouble(bz),
+              '',
+            ],
+            [
+              'Lv50\n(加成後)',
+              Display.numDouble(ch),
+              Display.numDouble(ci),
+              Display.numDouble(cj),
+              Display.numDouble(ck),
+              Display.numDouble(cl),
+              '',
+            ],
+            [
+              'Lv50\n(白板)',
+              Display.numDouble(ct),
+              Display.numDouble(cu),
+              Display.numDouble(cv),
+              Display.numDouble(cw),
+              Display.numDouble(cx),
+              '',
+            ],
+            [
+              'Lv100\n(加成後)',
+              Display.numDouble(df),
+              Display.numDouble(dg),
+              Display.numDouble(dh),
+              Display.numDouble(di),
+              Display.numDouble(dj),
+              '',
+            ],
+            [
+              'Lv100\n(白板)',
+              Display.numDouble(dr),
+              Display.numDouble(ds),
+              Display.numDouble(dt),
+              Display.numDouble(du),
+              Display.numDouble(dv),
+              '',
+            ],
           ],
-          [
-            'Lv50',
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-          ],
-          [
-            'Lv100',
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-          ],
-          // [
-          //   '',
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          // ],
-        ],
-      },
-      {
-        'type': 'table',
-        'subtitle': '幫忙時間 (白版)',
-        'cells': [
-          [
-            '',
-            '基礎',
-            '+等級調整',
-            '+活力調整',
-            '',
-          ],
-          [
-            '',
-            Display.numDouble(helpInterval),
-            '',
-            '',
-            '',
-          ],
-          [
-            '當前等級',
-            '',
-            Display.numDouble(helpIntervalLvCurr1),
-            Display.numDouble(helpIntervalPureLvCurr),
-            Display.numDouble(0),
-          ],
-          [
-            'Lv50',
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-          ],
-          [
-            'Lv100',
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-          ],
-          // [
-          //   '',
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          // ],
-        ],
-      },
-      {
-        'type': 'table',
-        'subtitle': '幫忙時間 (最高階進化)',
-        'cells': [
-          [
-            '',
-            '基礎',
-            '+性格/活力調整',
-            '+等級/副技能調整',
-            '',
-          ],
-          [
-            '',
-            Display.numDouble(maxHelpInterval),
-            Display.numDouble(maxHelpIntervalAdjust1),
-            '',
-            '',
-          ],
-          [
-            '當前等級',
-            '',
-            Display.numDouble(0),
-            Display.numDouble(0),
-            Display.numDouble(0),
-          ],
-          [
-            'Lv50',
-            '',
-            '',
-            Display.numDouble(bd),
-            Display.numDouble(000000),
-          ],
-          [
-            'Lv100',
-            '',
-            Display.numDouble(000000),
-            Display.numDouble(bf),
-            Display.numDouble(000000),
-          ],
-          // [
-          //   '',
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          //   Display.numDouble(000000),
-          // ],
-        ],
-      },
-      {
-        'type': 'table',
-        'subtitle': '幫忙時間 (最高階進化、白板)',
-        'cells': [
-          [
-            '',
-            '基礎',
-            '+等級/活力調整',
-            '',
-            '',
-          ],
-          [
-            '',
-            Display.numDouble(maxHelpInterval),
-            Display.numDouble(0),
-            '',
-            '',
-          ],
-          [
-            '當前等級',
-            '',
-            Display.numDouble(0),
-            Display.numDouble(0),
-            Display.numDouble(0),
-          ],
-          [
-            'Lv50',
-            '',
-            Display.numDouble(be),
-            '',
-            Display.numDouble(000000),
-          ],
-          [
-            'Lv100',
-            '',
-            Display.numDouble(maxHelpIntervalLv100),
-            Display.numDouble(000000),
-            Display.numDouble(000000),
-          ],
-        ],
-      },
-      {
-        'type': 'table',
-        'title': '樹果 & 食材',
-        'cells': [
-          [
-            '',
-            '樹果機率\n(+副技能/性格)',
-            '果實預期次數/h',
-            '食材機率\n(+副技能/性格)',
-            '食材預期次數/h',
-            '食材1\n個數',
-            '食材2\n個數',
-            '食材3\n個數',
-          ],
-          [
-            '',
-            Display.numDouble(0),
-            Display.numDouble(0),
-            '',
-            '',
-            Display.numDouble(0),
-            Display.numDouble(0),
-            Display.numDouble(0),
-          ],
-          [
-            '當前等級\n(加成後)',
-            Display.numDouble(fruitRateLvCurr1),
-            Display.numDouble(bi),
-            Display.numDouble(bj),
-            Display.numDouble(ingredientCountPerHourLvCurr),
-            Display.numDouble(ingredient1CountPerHourAfterAdjustLvCurr),
-            Display.numDouble(ingredient2CountPerHourAfterAdjustLvCurr),
-            Display.numDouble(ingredient3CountPerHourAfterAdjustLvCurr),
-          ],
-          [
-            '當前等級\n(白板)',
-            Display.numDouble(fruitRate),
-            Display.numDouble(bp),
-            Display.numDouble(ingredientRate),
-            Display.numDouble(br),
-            Display.numDouble(bs),
-            Display.numDouble(bt),
-            Display.numDouble(bu),
-          ],
-          [
-            'Lv50\n(加成後)',
-            Display.numDouble(fruitRateLv50),
-            Display.numDouble(cb),
-            Display.numDouble(ingredientRateLv50),
-            Display.numDouble(cd),
-            Display.numDouble(ce),
-            Display.numDouble(cf),
-            Display.numDouble(cg),
-          ],
-          [
-            'Lv50\n(白板)',
-            Display.numDouble(cm),
-            Display.numDouble(cn),
-            Display.numDouble(co),
-            Display.numDouble(cp),
-            Display.numDouble(cq),
-            Display.numDouble(cr),
-            Display.numDouble(cs),
-          ],
-          [
-            'Lv100\n(加成後)',
-            Display.numDouble(cy),
-            Display.numDouble(cz),
-            Display.numDouble(da),
-            Display.numDouble(db),
-            Display.numDouble(dc),
-            Display.numDouble(dd),
-            Display.numDouble(de),
-          ],
-          [
-            'Lv100\n(白板)',
-            Display.numDouble(dk),
-            Display.numDouble(dl),
-            Display.numDouble(dm),
-            Display.numDouble(dn),
-            Display.numDouble(doX),
-            Display.numDouble(dp),
-            Display.numDouble(dq),
-          ],
-        ],
-      },
-      {
-        'type': 'table',
-        'subtitle': '樹果 & 食材收益',
-        'cells': [
-          [
-            '',
-            '樹果能量/h',
-            '食材個/h',
-            '食材能量/h',
-            '次數/h',
-            '主技能效益/h',
-            '食材換算成碎片/h',
-          ],
-          [
-            '當前等級\n(加成後)',
-            Display.numDouble(z),
-            Display.numDouble(ai),
-            Display.numDouble(aj),
-            Display.numDouble(v), // TODO: 原 sheet 是 '次數/d'，但其他都是 `/h`，可是個人感覺像是 `/d`?
-            Display.numDouble(w),
-            Display.numDouble(ak),
-          ],
-          [
-            '當前等級\n(白板)',
-            Display.numDouble(bv),
-            Display.numDouble(bw),
-            Display.numDouble(bx),
-            Display.numDouble(by),
-            Display.numDouble(bz),
-            '',
-          ],
-          [
-            'Lv50\n(加成後)',
-            Display.numDouble(ch),
-            Display.numDouble(ci),
-            Display.numDouble(cj),
-            Display.numDouble(ck),
-            Display.numDouble(cl),
-            '',
-          ],
-          [
-            'Lv50\n(白板)',
-            Display.numDouble(ct),
-            Display.numDouble(cu),
-            Display.numDouble(cv),
-            Display.numDouble(cw),
-            Display.numDouble(cx),
-            '',
-          ],
-          [
-            'Lv100\n(加成後)',
-            Display.numDouble(df),
-            Display.numDouble(dg),
-            Display.numDouble(dh),
-            Display.numDouble(di),
-            Display.numDouble(dj),
-            '',
-          ],
-          [
-            'Lv100\n(白板)',
-            Display.numDouble(dr),
-            Display.numDouble(ds),
-            Display.numDouble(dt),
-            Display.numDouble(du),
-            Display.numDouble(dv),
-            '',
-          ],
-        ],
-      }
-    ];
+        }
+      ],
+    };
   }
 
   // region Formulas

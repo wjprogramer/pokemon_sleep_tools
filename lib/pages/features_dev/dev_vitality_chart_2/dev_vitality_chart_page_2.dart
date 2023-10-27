@@ -505,6 +505,12 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                       style: TextStyle(color: greyColor3),
                     ),
                     MySubHeader(titleText: '額外資訊'.xTr,),
+                    MySubHeader2(
+                      titleText: '額外睡眠'.xTr,
+                    ),
+                    MySubHeader2(
+                      titleText: '初始活力'.xTr,
+                    ),
                     Row(
                       children: [
                         Expanded(
@@ -561,7 +567,6 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                     Gap.sm,
                     ReactiveMyTextField(
                       formControl: _initVitalityField,
-                      label: '初始活力'.xTr,
                     ),
                     if (kDebugMode) ...[
                       const MySubHeader(titleText: '測試區'),
