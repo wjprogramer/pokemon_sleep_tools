@@ -330,6 +330,8 @@ Map<String, String> getZhTwTrGameText() {
     't_pokemon_317': '吞食獸',
     't_pokemon_333': '青綿鳥',
     't_pokemon_334': '七夕青鳥',
+    't_pokemon_353': '怨影娃娃',
+    't_pokemon_354': '詛咒娃娃',
     't_pokemon_359': '阿勃梭魯',
     't_pokemon_360': '小果然',
     't_pokemon_363': '海豹球',

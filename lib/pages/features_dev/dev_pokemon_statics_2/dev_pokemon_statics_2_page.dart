@@ -42,7 +42,7 @@ class DevPokemonStatics2Page extends StatefulWidget {
 class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
   PokemonProfile get _profile => widget._args.profile;
   late PokemonProfileStatistics2 _statistics2;
-  var _statisticsResuls = <dynamic>[];
+  var _statisticsResults = <dynamic>[];
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
     _statistics2 = PokemonProfileStatistics2(_profile);
 
     scheduleMicrotask(() {
-      _statisticsResuls = _statistics2.calcForDev();
+      _statisticsResults = _statistics2.calcForDev();
 
       setState(() { });
     });
@@ -68,7 +68,7 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
       ),
       body: buildListView(
         children: [
-          ..._statisticsResuls
+          ..._statisticsResults
               .map((e) => _buildItem(e))
               .whereNotNull()
               .expand((e) => e),
@@ -77,7 +77,7 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _statisticsResuls = _statistics2.calcForDev();
+          _statisticsResults = _statistics2.calcForDev();
           setState(() { });
         },
         child: const Icon(Icons.refresh),

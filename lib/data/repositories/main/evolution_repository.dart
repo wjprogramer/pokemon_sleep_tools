@@ -3,6 +3,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 class EvolutionRepository implements MyInjectable {
+  /// [PokemonBasicProfile.id] to [Evolution]
   Future<Map<int, Evolution>> findAllMapping() async {
     return {
       1: Evolution.from(1, 1, null, [ EvolutionStage.from(2, [ EvolutionConditionRaw('{"type":"candy","count":40}'), EvolutionConditionRaw('{"type":"level","level":12}') ], ), ]),
@@ -23,8 +24,6 @@ class EvolutionRepository implements MyInjectable {
       16: Evolution.from(16, 2, 15, [ ]),
       18: Evolution.from(18, 2, 17, [ EvolutionStage.from(19, [ EvolutionConditionRaw('{"type":"candy","count":80}'), EvolutionConditionRaw('{"type":"item","item":24}') ], ), ]),
       19: Evolution.from(19, 3, 18, [ ]),
-      107: Evolution.from(107, 2, 109, [ EvolutionStage.from(108, [ EvolutionConditionRaw('{"type":"candy","count":80}'), EvolutionConditionRaw('{"type":"item","item":27}') ], ), ]),
-      108: Evolution.from(108, 3, 107, [ ]),
       21: Evolution.from(21, 2, 20, [ EvolutionStage.from(22, [ EvolutionConditionRaw('{"type":"item","item":27}'), EvolutionConditionRaw('{"type":"candy","count":80}') ], ), ]),
       22: Evolution.from(22, 3, 21, [ ]),
       23: Evolution.from(23, 1, 21, [ EvolutionStage.from(24, [ EvolutionConditionRaw('{"type":"candy","count":40}'), EvolutionConditionRaw('{"type":"level","level":20}') ], ), ]),
@@ -114,6 +113,11 @@ class EvolutionRepository implements MyInjectable {
       62: Evolution.from(62, 2, 55, [ ]),
       63: Evolution.from(63, 2, 55, [ ]),
       56: Evolution.from(56, 2, 55, [ ]),
+      107: Evolution.from(107, 2, 109, [ EvolutionStage.from(108, [ EvolutionConditionRaw('{"type":"candy","count":80}'), EvolutionConditionRaw('{"type":"item","item":27}') ], ), ]),
+      108: Evolution.from(108, 3, 107, [ ]),
+
+      113: Evolution.from(113, 1, null, [ EvolutionStage.from(108, [ EvolutionConditionRaw('{"type":"level","level":28}'), EvolutionConditionRaw('{"type":"candy","count":40}') ], ), ]),
+      114: Evolution.from(114, 2, 113, [ ]),
     };
   }
 

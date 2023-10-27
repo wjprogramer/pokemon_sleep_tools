@@ -8,7 +8,7 @@ class PokemonBasicProfileRepository implements MyInjectable {
       final pokemonId = entry.key;
       final basicProfile = entry.value;
 
-      basicProfile.ingredientChain = _ingredientChainMap[basicProfile.ingredientChainId]!;
+      basicProfile.ingredientChain = _ingredientChainMap[basicProfile.ingredientChainId];
     }
   }
 
@@ -157,8 +157,8 @@ class PokemonBasicProfileRepository implements MyInjectable {
     // 110 迷你龍 0147
     // 111 哈克龍 0148
     // 112 快龍 0149
-    // 113: /* 怨影娃娃 boxNo: 353 */ PokemonBasicProfile.from(113, 353, 't_pokemon_353', 3900, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 1, 0 /*不確定*/, Ingredient.i5, 1, 36, PokemonType.t18, SleepType.st4, 10, 5, PokemonRecruitRewards.from(25, 27)),
-    // 114: /* 詛咒娃娃 boxNo: 354 */ PokemonBasicProfile.from(114, 354, 't_pokemon_354', 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 2, 2, 0 /*不確定*/, Ingredient.i5, 1, 36, PokemonType.t18, SleepType.st4, 10, 5, PokemonRecruitRewards.from(25, 27)),
+    113: /* 怨影娃娃 boxNo: 353 */ PokemonBasicProfile.from(113, 353, 't_pokemon_353', 3900, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 5 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(8, 17)),
+    114: /* 詛咒娃娃 boxNo: 354 */ PokemonBasicProfile.from(114, 354, 't_pokemon_354', 2600, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 2, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 16 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(186, 393)),
   };
 
   final _ingredientChainMap = <int, IngredientChain>{

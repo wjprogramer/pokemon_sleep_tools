@@ -45,6 +45,11 @@ powershell.exe -ExecutionPolicy Bypass -File .\scripts\build\build_android.ps1
 
 ```
 
+https://serebii.net/pokemonsleep/befriendingpokemon.shtml
+
+https://github.com/jeancroy/RP-fit
+
+
 ---
 
 ## TODO

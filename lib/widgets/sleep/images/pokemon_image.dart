@@ -23,17 +23,7 @@ class PokemonImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget result = Image.asset(
-      isShiny
-          ? AssetsPath.pokemonPortraitShiny(basicProfile.boxNo)
-          : AssetsPath.pokemonPortrait(basicProfile.boxNo),
-      width: width,
-      height: height,
-      fit: fit,
-      errorBuilder: (context, error, stackTrace) {
-        return Container();
-      },
-    );
+    Widget result = _buildImage(shiny: isShiny);
 
     if (!disableTooltip) {
       result = Tooltip(
@@ -43,5 +33,24 @@ class PokemonImage extends StatelessWidget {
     }
 
     return result;
+  }
+
+  Widget _buildImage({
+    bool shiny = false,
+}) {
+    return Image.asset(
+      shiny
+          ? AssetsPath.pokemonPortraitShiny(basicProfile.boxNo)
+          : AssetsPath.pokemonPortrait(basicProfile.boxNo),
+      width: width,
+      height: height,
+      fit: fit,
+      errorBuilder: (context, error, stackTrace) {
+        if (shiny) {
+          _buildImage(shiny: false);
+        }
+        return Container();
+      },
+    );
   }
 }

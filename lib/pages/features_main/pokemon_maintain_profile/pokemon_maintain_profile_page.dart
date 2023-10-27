@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/all_in_one/form/validation/validation.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_list/characters_list_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/ingredient_picker/ingredient_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/pokemon_basic_profile_picker/pokemon_basic_profile_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skill_picker/sub_skill_picker_page.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
@@ -605,12 +606,19 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       }
     }
 
+    final ignoringIngredientField = index == 0 || (
+        ingredientOptions != null && ingredientOptions.isNotEmpty
+    );
+
     if (ingredientField != null) {
       field = ReactiveMyTextField<Ingredient>(
         formControl: ingredientField,
         wrapFieldBuilder: (context, fieldWidget) {
-          return IgnorePointer(
-            child: fieldWidget,
+          return GestureDetector(
+            onTap: index == 0 || ignoringIngredientField ? null : () async {
+              final pickedIngredient = await IngredientPickerPage.pick(context);
+            },
+            child: IgnorePointer(child: fieldWidget),
           );
         },
       );
@@ -651,6 +659,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       flex: 2,
@@ -660,6 +669,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                     Expanded(
                       flex: 1,
                       child: IgnorePointer(
+                        ignoring: ignoringIngredientField,
                         child: ReactiveMyTextField(
                           formControl: countField,
                         ),
