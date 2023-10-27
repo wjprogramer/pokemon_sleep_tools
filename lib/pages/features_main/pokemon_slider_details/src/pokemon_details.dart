@@ -148,6 +148,11 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                     verticalDirection: VerticalDirection.up,
                     children: [
                       IconButton(
+                        onPressed: () => _viewBook(),
+                        tooltip: '圖鑑'.xTr,
+                        icon: const Iconify(Codicon.book, color: greyColor2),
+                      ),
+                      IconButton(
                         onPressed: () => _onTapFavorite(),
                         tooltip: _profile.isFavorite ? '取消收藏'.xTr : '收藏'.xTr,
                         icon: Icon(
@@ -496,9 +501,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             ),
           ],
           MyElevatedButton(
-            onPressed: () {
-              PokemonBasicProfilePage.go(context, widget.profile.basicProfile);
-            },
+            onPressed: () => _viewBook(),
             child: Text(
               '查看圖鑑'.xTr,
             ),
@@ -537,6 +540,10 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
       ),
       Gap.trailing,
     ];
+  }
+
+  void _viewBook() {
+    PokemonBasicProfilePage.go(context, widget.profile.basicProfile);
   }
 
   Widget _buildCharacterInfo(PokemonCharacter character) {

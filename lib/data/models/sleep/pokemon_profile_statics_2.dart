@@ -1099,7 +1099,6 @@ class PokemonProfileStatistics2 {
 
     if (level == 25) {
       final a = fruit.getLevels();
-      print(123);
     }
 
     return fruit.getLevels()[level - 1];
