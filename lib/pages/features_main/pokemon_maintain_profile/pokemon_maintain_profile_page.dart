@@ -595,7 +595,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
     FormControl<Ingredient>? ingredientField,
   }) {
     final basicProfile = _basicProfileField.value;
-    List<(Ingredient, int)>? ingredientOptions;
+    List<(Ingredient, int)> ingredientOptions = [];
     Widget field;
 
     if (basicProfile != null) {
@@ -606,17 +606,20 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
       }
     }
 
-    final ignoringIngredientField = index == 0 || (
-        ingredientOptions != null && ingredientOptions.isNotEmpty
-    );
+    final ignoringIngredientField = index == 0 || ingredientOptions.isNotEmpty;
 
     if (ingredientField != null) {
       field = ReactiveMyTextField<Ingredient>(
         formControl: ingredientField,
         wrapFieldBuilder: (context, fieldWidget) {
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: index == 0 || ignoringIngredientField ? null : () async {
               final pickedIngredient = await IngredientPickerPage.pick(context);
+              if (pickedIngredient == null) {
+                return;
+              }
+              ingredientField.value = pickedIngredient;
             },
             child: IgnorePointer(child: fieldWidget),
           );

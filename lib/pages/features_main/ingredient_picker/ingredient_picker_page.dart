@@ -4,8 +4,8 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/pages/routes.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images_private/ingredient_image.dart';
 
-// TODO: 未完成
 class _Args {
   const _Args(this.initIngredient);
 
@@ -51,7 +51,22 @@ class _IngredientPickerPageState extends State<IngredientPickerPage> {
         children: [
           ...ListTile.divideTiles(
             context: context,
-            tiles: [],
+            tiles: [
+              for (final ingredient in Ingredient.values)
+                ListTile(
+                  leading: !MyEnv.USE_DEBUG_IMAGE ? null : IngredientImage(
+                    ingredient: ingredient,
+                    width: 24,
+                    disableTooltip: true,
+                  ),
+                  title: Text(
+                    ingredient.nameI18nKey.xTr,
+                  ),
+                  onTap: () {
+                    widget._pop(context, ingredient);
+                  },
+                ),
+            ],
           ),
         ],
       ),
