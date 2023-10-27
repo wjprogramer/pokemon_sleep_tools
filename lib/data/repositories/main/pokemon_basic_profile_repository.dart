@@ -159,6 +159,7 @@ class PokemonBasicProfileRepository implements MyInjectable {
     // 112 快龍 0149
     113: /* 怨影娃娃 boxNo: 353 */ PokemonBasicProfile.from(113, 353, 't_pokemon_353', 3900, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 5 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(8, 17)),
     114: /* 詛咒娃娃 boxNo: 354 */ PokemonBasicProfile.from(114, 354, 't_pokemon_354', 2600, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 2, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 16 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(186, 393)),
+    115: /* 萬聖節皮卡丘 */ PokemonBasicProfile.from(115, 25, 't_pokemon_25_halloween', 2600, 2600, Fruit.f4, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 1, 0 /*TODO: 不確定*/, Ingredient.i5, 1, 26, PokemonType.t4, SleepType.st1, 0 /*TODO: 不確定*/, 0 /*TODO: 不確定*/, PokemonRecruitRewards.from(0, 0) /*TODO: 不確定*/),
   };
 
   final _ingredientChainMap = <int, IngredientChain>{

@@ -118,6 +118,7 @@ class EvolutionRepository implements MyInjectable {
 
       113: Evolution.from(113, 1, null, [ EvolutionStage.from(114, [ EvolutionConditionRaw('{"type":"level","level":28}'), EvolutionConditionRaw('{"type":"candy","count":40}') ], ), ]),
       114: Evolution.from(114, 2, 113, [ ]),
+      115: Evolution.from(115, 1, null, [ ]),
     };
   }
 

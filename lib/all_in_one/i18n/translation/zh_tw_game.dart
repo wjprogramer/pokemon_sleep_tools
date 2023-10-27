@@ -251,6 +251,7 @@ Map<String, String> getZhTwTrGameText() {
     't_pokemon_23': '阿柏蛇',
     't_pokemon_24': '阿柏怪',
     't_pokemon_25': '皮卡丘',
+    't_pokemon_25_halloween': '皮卡丘 (萬聖節)',
     't_pokemon_26': '雷丘',
     't_pokemon_35': '皮皮',
     't_pokemon_36': '皮可西',
