@@ -88,6 +88,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
   var _existInBox = false;
 
   var _currPokemonLevel = 1;
+  double? _ingredientRate;
 
   // Data evolutions
   List<List<Evolution>> _evolutions = List.generate(MAX_POKEMON_EVOLUTION_STAGE, (index) => []);
@@ -148,6 +149,8 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
     _basicProfileWithSmallestBoxNoInChain = _basicProfilesInEvolutionChain
         .entries.map((e) => e.value)
         .firstWhereByCompare((a, b) => a.boxNo < b.boxNo);
+
+    _ingredientRate = (await _basicProfileRepo.findAllIngredientRateOf())[_basicProfile.id];
 
     _initialized = true;
     if (mounted) {
@@ -277,7 +280,9 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                         ),
                       ),
                     Expanded(
-                      child: Text(_basicProfile.fruit.nameI18nKey.xTr),
+                      child: Text(
+                        '${_basicProfile.fruit.nameI18nKey.xTr} (${'機率'.xTr}: ${Display.numDouble(_ingredientRate == null ? null : 100.0 - _ingredientRate!)}%)'
+                      ),
                     ),
                   ],
                 ),

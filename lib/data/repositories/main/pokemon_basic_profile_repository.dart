@@ -3,6 +3,11 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 class PokemonBasicProfileRepository implements MyInjectable {
+
+  Future<Map<int, double>> findAllIngredientRateOf() async {
+    return _ingredientRateOf;
+  }
+
   PokemonBasicProfileRepository() {
     for (final entry in _allPokemonMapping.entries) {
       final pokemonId = entry.key;
@@ -154,12 +159,14 @@ class PokemonBasicProfileRepository implements MyInjectable {
     107: PokemonBasicProfile.from(107, 35, 't_pokemon_35', 4000, 2800, Fruit.f18, PokemonSpecialty.t3, MainSkill.finger, 2, 3, 24, Ingredient.i5, 1, 36, PokemonType.t18, SleepType.st1, 16, 7, PokemonRecruitRewards.from(49, 53)),
     108: PokemonBasicProfile.from(108, 36, 't_pokemon_36', 2800, 2800, Fruit.f18, PokemonSpecialty.t3, MainSkill.finger, 3, 3, 24, Ingredient.i5, 1, 36, PokemonType.t18, SleepType.st1, 24, 20, PokemonRecruitRewards.from(677, 847)),
     109: PokemonBasicProfile.from(109, 173, 't_pokemon_173', 5600, 2800, Fruit.f18, PokemonSpecialty.t3, MainSkill.finger, 1, 3, 24, Ingredient.i5, 1, 36, PokemonType.t18, SleepType.st0, 10, 5, PokemonRecruitRewards.from(25, 27)),
+    113: PokemonBasicProfile.from(113, 353, 't_pokemon_353', 3900, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 5 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(8, 17)),
+    114: PokemonBasicProfile.from(114, 354, 't_pokemon_354', 2600, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 2, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 16 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(186, 393)),
+    115: PokemonBasicProfile.from(115, 25, 't_pokemon_25_halloween', 2600, 2600, Fruit.f4, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 1, 0 /*TODO: 不確定*/, Ingredient.i5, 1, 26, PokemonType.t4, SleepType.st1, 0 /*TODO: 不確定*/, 0 /*TODO: 不確定*/, PokemonRecruitRewards.from(0, 0) /*TODO: 不確定*/),
+
+
     // 110 迷你龍 0147
     // 111 哈克龍 0148
     // 112 快龍 0149
-    113: /* 怨影娃娃 boxNo: 353 */ PokemonBasicProfile.from(113, 353, 't_pokemon_353', 3900, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 5 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(8, 17)),
-    114: /* 詛咒娃娃 boxNo: 354 */ PokemonBasicProfile.from(114, 354, 't_pokemon_354', 2600, 2600, Fruit.f14, PokemonSpecialty.t3, MainSkill.energyFillSn, 2, 2, 0 /*TODO: 不確定*/, Ingredient.i1 /* TODO: 食材三個都須確認 */, 1 /* TODO: 須確認 */, -1 /* TODO: 須確認 */, PokemonType.t14, SleepType.st4, -1 /* TODO: maxCarry */, 16 /* TODO: 友好點數需確認 */, PokemonRecruitRewards.from(186, 393)),
-    115: /* 萬聖節皮卡丘 */ PokemonBasicProfile.from(115, 25, 't_pokemon_25_halloween', 2600, 2600, Fruit.f4, PokemonSpecialty.t3, MainSkill.energyFillSn, 1, 1, 0 /*TODO: 不確定*/, Ingredient.i5, 1, 26, PokemonType.t4, SleepType.st1, 0 /*TODO: 不確定*/, 0 /*TODO: 不確定*/, PokemonRecruitRewards.from(0, 0) /*TODO: 不確定*/),
   };
 
   final _ingredientChainMap = <int, IngredientChain>{
@@ -219,3 +226,122 @@ class PokemonBasicProfileRepository implements MyInjectable {
     700: const IngredientChain(700, [(Ingredient.i8, 2),(Ingredient.i13, 1)], [(Ingredient.i7, 3),(Ingredient.i8, 4),(Ingredient.i13, 2)])
   };
 }
+
+/// 食材機率（只是推算值）
+/// [PokemonBasicProfile.id] to ingredient rate
+///
+/// 資料來源：https://docs.google.com/spreadsheets/d/1JkV2QxGGFDBzUfDxfOhTD3hrJJzu9qCS4A6c_HicIDc/edit#gid=1070055809
+final _ingredientRateOf = <int, double>{
+  1: 25.63, // boxNo: 1
+  2: 25.46, // boxNo: 2
+  3: 26.6, // boxNo: 3
+  4: 20.05, // boxNo: 4
+  5: 22.67, // boxNo: 5
+  6: 22.43, // boxNo: 6
+  7: 27.01, // boxNo: 7
+  8: 27.07, // boxNo: 8
+  9: 27.47, // boxNo: 9
+  10: 17.89, // boxNo: 10
+  11: 20.71, // boxNo: 11
+  12: 19.71, // boxNo: 12
+  13: 23.6, // boxNo: 19
+  14: 23.51, // boxNo: 20
+  15: 23.33, // boxNo: 23
+  16: 26.34, // boxNo: 24
+  17: 21, // boxNo: 172
+  18: 20.67, // boxNo: 25
+  19: 22.4, // boxNo: 26
+  20: 16.95, // boxNo: 174
+  21: 18.23, // boxNo: 39
+  22: 17.4, // boxNo: 40
+  23: 19.18, // boxNo: 50
+  24: 18.96, // boxNo: 51
+  25: 16.31, // boxNo: 52
+  26: 16.94, // boxNo: 53
+  27: 13.57, // boxNo: 54
+  28: 13.45, // boxNo: 55
+  29: 19.69, // boxNo: 56
+  30: 20.92, // boxNo: 57
+  31: 13.76, // boxNo: 58
+  32: 13.72, // boxNo: 59
+  33: 23.2, // boxNo: 69
+  34: 23.47, // boxNo: 70
+  35: 23.27, // boxNo: 71
+  36: 28.1, // boxNo: 74
+  37: 27.13, // boxNo: 75
+  38: 28, // boxNo: 76
+  39: 15.04, // boxNo: 79
+  40: 15.03, // boxNo: 80
+  41: 16.47, // boxNo: 199
+  42: 18.17, // boxNo: 81
+  43: 18.13, // boxNo: 82
+  44: 17.92, // boxNo: 462
+  45: 18.3, // boxNo: 84
+  46: 18.31, // boxNo: 85
+  47: 14.37, // boxNo: 92
+  48: 15.66, // boxNo: 93
+  49: 16.1, // boxNo: 94
+  50: 22.2, // boxNo: 104
+  51: 22.44, // boxNo: 105
+  52: 22.18, // boxNo: 115
+  53: 19.49, // boxNo: 127
+  54: 20.06, // boxNo: 132
+  55: 19.22, // boxNo: 133
+  56: 18.01, // boxNo: 700
+  57: 21.38, // boxNo: 134
+  58: 15.42, // boxNo: 135
+  59: 18.76, // boxNo: 136
+  60: 16.46, // boxNo: 196
+  61: 22.52, // boxNo: 197
+  62: 20.26, // boxNo: 470
+  63: 21.56, // boxNo: 471
+  64: 16.87, // boxNo: 152
+  65: 16.72, // boxNo: 153
+  66: 17.33, // boxNo: 154
+  67: 18.62, // boxNo: 155
+  68: 21.08, // boxNo: 156
+  69: 18.86, // boxNo: 157
+  70: 25.2, // boxNo: 158
+  71: 25.32, // boxNo: 159
+  72: 25.85, // boxNo: 160
+  73: 15.09, // boxNo: 175
+  74: 16.31, // boxNo: 176
+  75: 15.87, // boxNo: 468
+  76: 12.74, // boxNo: 179
+  77: 12.72, // boxNo: 180
+  78: 12.99, // boxNo: 181
+  79: 19.08, // boxNo: 438
+  80: 19.66, // boxNo: 185
+  81: 21.48, // boxNo: 360
+  82: 21.12, // boxNo: 202
+  83: 15.77, // boxNo: 214
+  84: 20.04, // boxNo: 228
+  85: 20.14, // boxNo: 229
+  86: 23.73, // boxNo: 246
+  87: 24.69, // boxNo: 247
+  88: 26.21, // boxNo: 248
+  89: 21.29, // boxNo: 287
+  90: 20.36, // boxNo: 288
+  91: 9.55, // boxNo: 289
+  92: 16.98, // boxNo: 302
+  93: 21.24, // boxNo: 316
+  94: 20.84, // boxNo: 317
+  95: 17.58, // boxNo: 333
+  96: 25.76, // boxNo: 334
+  97: 17.81, // boxNo: 359
+  98: 22.37, // boxNo: 363
+  99: 21.47, // boxNo: 364
+  100: 22.2, // boxNo: 365
+  101: 12.58, // boxNo: 447
+  102: 14.98, // boxNo: 448
+  103: 22.71, // boxNo: 453
+  104: 22.94, // boxNo: 454
+  105: 20.06, // boxNo: 439
+  106: 21.66, // boxNo: 122
+  107: 16.81, // boxNo: 35
+  108: 20, // boxNo: 36
+  109: 16.3, // boxNo: 173
+  113: 20.0, // TODO: 暫定值：怨影娃娃
+  114: 20.0, // TODO: 暫定值：詛咒娃娃
+  115: 20.67, // TODO: 暫定值：萬聖節皮卡丘 (感覺資料來源是直接採用「皮卡丘」的)
+};

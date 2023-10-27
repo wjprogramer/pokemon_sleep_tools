@@ -28,7 +28,10 @@ class Display {
     return _numIntFormat.format(value.toInt());
   }
 
-  static String numDouble(num value) {
+  static String numDouble(num? value) {
+    if (value == null) {
+      return placeHolderSign;
+    }
     return _numDoubleFormat.format(value);
   }
 
