@@ -68,6 +68,12 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
       ),
       body: buildListView(
         children: [
+          Hp(
+            child: Text(
+              '可視化數據還需要補齊，公式本身沒問題，未來會有更多可調整選項'.xTr,
+            ),
+          ),
+          Gap.md,
           ..._statisticsResults
               .map((e) => _buildItem(e))
               .whereNotNull()

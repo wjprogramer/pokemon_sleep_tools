@@ -82,7 +82,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   var _dishesLv60 = <Dish>{};
 
   var _fruitMapping = <Fruit, (int, List<PokemonBasicProfile>)>{};
-  final List<PokemonProfileStatistics?> _statistics = List
+  final List<PokemonProfileStatistics2?> _statistics = List
       .generate(MAX_TEAM_POKEMON_COUNT, (index) => null);
   var _dishListTileWidth = _dishBaseWidth;
 
@@ -205,7 +205,8 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                           height: double.infinity,
                           child: Transform(
                             transform: Matrix4.identity()
-                              ..scale(1.5),
+                              ..translate(20.0)
+                              ..scale(1.3),
                             child: PokemonImage(
                               basicProfile: profile.basicProfile,
                               isShiny: profile.isShiny,
@@ -246,13 +247,13 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                                   child: Stack(
                                     fit: StackFit.expand,
                                     children: [
-                                      child,
                                       if (statistics != null)
                                         Positioned(
                                           left: 16,
                                           top: 8,
-                                          child: _buildRank(statistics),
+                                          child: _buildRanks(statistics),
                                         ),
+                                      child,
                                     ],
                                   ),
                                 ),
@@ -559,9 +560,9 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
       final profile = profiles[profileIndex];
       final statistics = profile == null
           ? null
-          : PokemonProfileStatistics.from(profile);
+          : PokemonProfileStatistics2(profile);
       _statistics[profileIndex] = statistics;
-      statistics?.init();
+      statistics?.calcForUser();
     }
 
     Map<Dish, List<Ingredient>> initDishAndRemainIngredients(List<Dish> dishes) {
@@ -667,12 +668,49 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
         ?? PokemonTeam.getDefaultName(index: _teamIndex);
   }
 
+  Widget _buildRanks(PokemonProfileStatistics2 statistics) {
+    final rankLv50 = statistics.result?.rankLv50;
+    final rankLv100 = statistics.result?.rankLv100;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            rankLv50 == null
+                ? Text(Display.placeHolderSign)
+                : _buildRank(rankLv50),
+            Gap.md,
+            const Text(
+              'Lv 50',
+              style: TextStyle(color: greyColor2),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            rankLv100 == null
+                ? Text(Display.placeHolderSign)
+                : _buildRank(rankLv100),
+            Gap.md,
+            const Text(
+              'Lv 100',
+              style: TextStyle(color: greyColor2),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+
   /// 參考 osu 樣式
-  Widget _buildRank(PokemonProfileStatistics statistics) {
-    final hasDream = statistics.rank.startsWith('夢');
-    final rank = hasDream
-        ? statistics.rank.substring(1)
-        : statistics.rank;
+  Widget _buildRank(String rank) {
+    // final hasDream = statistics.rank.startsWith('夢');
+    // final rank = hasDream
+    //     ? statistics.rank.substring(1)
+    //     : statistics.rank;
     final style = TextStyle(
       fontSize: 25,
     );
