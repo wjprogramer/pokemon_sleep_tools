@@ -13,7 +13,7 @@ import 'package:pokemon_sleep_tools/widgets/sleep/charts/vitality_chart/vitality
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-part 'src/vitality_utils.dart';
+part 'src/vitality_helper.dart';
 
 /// TODO: 增加放大縮小的按鈕，控制 table 寬度
 class DevVitalityChartPage2 extends StatefulWidget {
@@ -123,6 +123,8 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
     final res = _vitalityHelper.prepareData(
       mainSleepTime: _mainSleepTimeField.value!,
       mainGetUpTime: _mainGetUpTimeField.value!,
+      extraSleepTime: _extraSleepTimeField.value,
+      extraGetUpTime: _extraGetUpTimeField.value,
       initVitality: _initVitalityField.value?.clamp(0.0, MAX_VITALITY).toDouble(),
       isInitVitalityWhenGetUp: _isInitVitalityWhenGetUp,
     );

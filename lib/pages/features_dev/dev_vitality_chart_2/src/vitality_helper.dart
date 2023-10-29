@@ -11,6 +11,8 @@ class _VitalityHelper {
   _VitalityChartResult prepareData({
     required TimeOfDay mainSleepTime,
     required TimeOfDay mainGetUpTime,
+    required TimeOfDay? extraSleepTime,
+    required TimeOfDay? extraGetUpTime,
     required double? initVitality,
     required bool isInitVitalityWhenGetUp,
   }) {
