@@ -16,8 +16,14 @@ class _VitalityHelper {
     required double? initVitality,
     required bool isInitVitalityWhenGetUp,
   }) {
+    // # declare / fixed data
+    final sleepElapsed = calcTimeElapsed(mainSleepTime, mainGetUpTime);
+    final mainSleepScore = ((sleepElapsed.hour * 60.0 + sleepElapsed.minute) / 510 * 100).clamp(0.0, 100.0).ceil().toInt();
+    final extraMaxSleepScore = (100 - mainSleepScore).toInt();
+
     // # declare / logic data
     var sleeping = isInitVitalityWhenGetUp;
+    int? lastTooltipIndex;
 
     var preVitality = 0.0;
     var tableInitTime = isInitVitalityWhenGetUp ? mainGetUpTime : mainSleepTime;
@@ -26,14 +32,15 @@ class _VitalityHelper {
     // # declare / logic data / key point
     var lastKeyPointTime = tableInitTime;
     var lastKeyPointIndex = 0;
-    var lastKeyPointVitality = initVitality ?? 100.0;
+    var lastKeyPointVitality = initVitality ?? (isInitVitalityWhenGetUp ? 100.0 : 0.0);
 
     // # declare / ui data
     final stops = <double>[];
     final colors = <Color>[];
 
     final counts = (_chartDuration.hour * 60 + _chartDuration.minute) ~/ 5 + 1;
-    final showingTooltipSpotIndices = <int>[];
+    final showingTooltipIndices = <int>[];
+    final showingKeyTooltipIndices = <int>[];
 
     VitalityChartData buildChartData(TimeOfDay initTime, int index) {
       final time = initTime.add(minute: index * _spotStepValue);
@@ -44,14 +51,14 @@ class _VitalityHelper {
         if (sleeping) {
           res = lastKeyPointVitality + (calcTimeElapsed(lastKeyPointTime, time).toMinutes() / 510 * 100);
         } else {
-          final x = isKeyPoint ? 1 : lastKeyPointIndex;
+          final x = isKeyPoint ? lastKeyPointIndex + 1 : lastKeyPointIndex + 1;
           res = lastKeyPointVitality - ((index - x) * _spotStepValue) / 10;
         }
         return res.clamp(0, 100.0);
       }
 
       // [TimePoint] Time to start sleeping
-      final isSleepTimePoint = time == mainSleepTime;
+      final isSleepTimePoint = time == mainSleepTime || time == extraSleepTime;
       if (isSleepTimePoint) {
         if (index > 0) {
           lastKeyPointVitality = calcVitality(false, true);
@@ -60,14 +67,15 @@ class _VitalityHelper {
       }
 
       // [TimePoint] Time to wake up
-      final isGetUpTimePoint = time == mainGetUpTime;
+      final isGetUpTimePoint = time == mainGetUpTime || time == extraGetUpTime;
       if (isGetUpTimePoint) {
         lastKeyPointVitality = calcVitality(true, true);
         sleeping = false;
       }
 
       // [TimePoint] Time to start sleeping or wake up
-      if (isGetUpTimePoint || isSleepTimePoint) {
+      final isKeyPoint = isSleepTimePoint || isGetUpTimePoint || time == extraGetUpTime || time == extraSleepTime;
+      if (isKeyPoint) {
         lastKeyPointTime = time;
         lastKeyPointIndex = index;
       }
@@ -79,8 +87,8 @@ class _VitalityHelper {
           : MoodIcon.getVitalityThresholdAndColor(vitality);
 
       // Build chart data / Threshold stops & colors
-      if (preVitalityThreshold != vitalityThreshold) {
-        final stopValue = (index - 1).clamp(0, double.infinity) / (counts - 1);
+      if (preVitalityThreshold != null && preVitalityThreshold != vitalityThreshold) {
+        final stopValue = (index - 0).clamp(0, double.infinity) / (counts - 1);
         if (preVitalityThreshold != null) {
           colors.add(MoodIcon.getColorBy(preVitalityThreshold!));
           stops.add(stopValue);
@@ -93,9 +101,10 @@ class _VitalityHelper {
       final showTooltip = index == 0  ||
           isGetUpTimePoint ||
           isSleepTimePoint ||
-          (vitality % 20.0 == 0 && preVitality != vitality);
+          (preVitalityThreshold != vitalityThreshold);
       if (showTooltip) {
-        showingTooltipSpotIndices.add(index);
+        showingTooltipIndices.add(index);
+        lastTooltipIndex = index;
       }
 
       // Assign pre values
@@ -109,20 +118,40 @@ class _VitalityHelper {
         time: timeText,
         isShowBottomTitle: index % 30 == 0,
         isShowTooltip: showTooltip,
-        tooltipText: isGetUpTimePoint ? '$timeText 起床\n${vitality.toInt()}'
-            : isSleepTimePoint ? '$timeText 睡覺\n${vitality.toInt()}'
-            : null,
+        tooltipText: isGetUpTimePoint ? '$timeText\n起床\n${vitality.toInt()}'
+            : isSleepTimePoint ? '$timeText\n睡覺\n${vitality.toInt()}'
+            : '$timeText\n${vitality.toInt()}',
       );
     }
+    
+    // Showing tooltip indices
+    // final tooltipIsKeypointOf = showingTooltipIndices.toMap((i) => i, (_) => false);
+    // for (final keyIndex in showingKeyTooltipIndices) {
+    //   tooltipIsKeypointOf[keyIndex] = true;
+    // }
+    // final tooltipIndices = tooltipIsKeypointOf.entries.map((e) => (e.key, e.value)).sorted((a, b) {
+    //   return a.$1 - b.$1;
+    // });
+    // final resultTooltipIndices = <int>[];
+    // for (var i = 0; i < tooltipIndices.length; i++) {
+    //
+    // }
+
+    // final newSet = <int>{}
+    //   ..addAll(showingKeyTooltipIndices)
+    //   ..addAll(showingTooltipIndices);
+
+    print('${showingKeyTooltipIndices.length}, ${showingTooltipIndices.length}');
 
     return _VitalityChartResult(
-      showingTooltipSpotIndexList: showingTooltipSpotIndices,
+      showingTooltipSpotIndexList: showingTooltipIndices,
       tableDataList: List.generate(counts, (index) => buildChartData(
         tableInitTime, index,
       )),
       stops: stops,
       colors: colors,
-      sleepElapsed: calcTimeElapsed(mainSleepTime, mainGetUpTime),
+      sleepElapsed: sleepElapsed,
+      mainSleepScore: mainSleepScore,
     );
   }
 
@@ -158,13 +187,13 @@ class _VitalityChartResult {
     required this.stops,
     required this.colors,
     required this.sleepElapsed,
-  }) : mainSleepScore = ((sleepElapsed.hour * 60.0 + sleepElapsed.minute) / 510 * 100).clamp(0.0, 100.0);
+    required this.mainSleepScore,
+  });
 
   List<int> showingTooltipSpotIndexList;
   List<VitalityChartData> tableDataList;
   List<double> stops;
   List<Color> colors;
   TimeOfDay sleepElapsed;
-  double mainSleepScore;
-
+  int mainSleepScore;
 }

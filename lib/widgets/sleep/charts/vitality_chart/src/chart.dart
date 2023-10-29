@@ -13,6 +13,8 @@ class VitalityChart extends StatefulWidget {
     required this.stops,
     required this.spots,
     required this.showingTooltipIndexOnSpots,
+    required this.onLineTouch,
+    required this.scale,
   })  : indicatorStrokeColor = indicatorStrokeColor ?? whiteColor;
 
   final Color indicatorStrokeColor;
@@ -20,6 +22,8 @@ class VitalityChart extends StatefulWidget {
   final List<double>? stops;
   final List<VitalityChartData> spots;
   final List<int> showingTooltipIndexOnSpots;
+  final ValueChanged<int> onLineTouch;
+  final double scale;
 
   @override
   State<VitalityChart> createState() => _VitalityChartState();
@@ -170,7 +174,7 @@ class _VitalityChartState extends State<VitalityChart> {
     final tooltipsOnBar = lineBarsData[0];
 
     return AspectRatio(
-      aspectRatio: 4,
+      aspectRatio: 4 * widget.scale,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           24, 20, 24, 10,
@@ -192,6 +196,10 @@ class _VitalityChartState extends State<VitalityChart> {
               touchCallback: (FlTouchEvent event, LineTouchResponse? response) {
                 if (response == null || response.lineBarSpots == null) {
                   return;
+                }
+                if (event is FlTapUpEvent) {
+                  final spotIndex = response.lineBarSpots!.first.spotIndex;
+                  widget.onLineTouch(spotIndex);
                 }
               },
               mouseCursorResolver: (FlTouchEvent event, LineTouchResponse? response) {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/charts/vitality_chart/vitality_chart.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/list_tiles/list_tiles.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 part 'src/vitality_helper.dart';
@@ -60,16 +62,21 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   // Form other options
   var _isInitVitalityWhenGetUp = true;
 
-  // Table Data
+  // Chart Data
   var _colors = <Color>[];
   var _stops = <double>[];
   var _tableDataList = <VitalityChartData>[];
   var _showingTooltipSpotIndexList = <int>[];
   var _sleepElapsed = const TimeOfDay(hour: 0, minute: 0);
   /// 一睡分數
-  var _mainSleepScore = 0.0;
+  var _mainSleepScore = 0;
   /// 二睡分數，加上一睡分數不可超過 100
-  var _extraSleepScore = 0.0;
+  var _extraSleepScore = 0;
+  var _shouldExtraSleep = false;
+
+  // Chart common options
+  var _chartScale = 1.0;
+  int? _touchIndex;
 
   @override
   void initState() {
@@ -78,26 +85,28 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       value: _fixOffsetTimeOfDay(const TimeOfDay(hour: 21, minute: 0)),
       validators: [ Validators.required ],
     )..valueChanges.listen((event) {
-      prepareData();
+      _prepareData();
       setState(() { });
     });
     _mainGetUpTimeField = FormControl(
       value: _fixOffsetTimeOfDay(const TimeOfDay(hour: 5, minute: 0)),
       validators: [ Validators.required ],
     )..valueChanges.listen((event) {
-      prepareData();
+      _prepareData();
       setState(() { });
     });
     _extraSleepTimeField = FormControl(
+      value: _fixOffsetTimeOfDay(const TimeOfDay(hour: 12, minute: 0)),
       validators: [],
     )..valueChanges.listen((event) {
-      prepareData();
+      _prepareData();
       setState(() { });
     });
     _extraGetUpTimeField = FormControl(
+      value: _fixOffsetTimeOfDay(const TimeOfDay(hour: 13, minute: 0)),
       validators: [],
     )..valueChanges.listen((event) {
-      prepareData();
+      _prepareData();
       setState(() { });
     });
     // _sleepScoreField = FormControl();
@@ -111,20 +120,25 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
         _initVitalityDebounce?.cancel();
       }
       _initVitalityDebounce = Timer(const Duration(milliseconds: 200), () {
-        prepareData();
+        _prepareData();
         setState(() { });
       });
     });
 
-    prepareData();
+    _prepareData();
   }
 
-  void prepareData() {
+  void _prepareData() {
+    final validExtraTime = _shouldExtraSleep &&
+        _isValidExtraTimeField() &&
+        _extraSleepTimeField.value != null &&
+        _extraGetUpTimeField.value != null;
+
     final res = _vitalityHelper.prepareData(
       mainSleepTime: _mainSleepTimeField.value!,
       mainGetUpTime: _mainGetUpTimeField.value!,
-      extraSleepTime: _extraSleepTimeField.value,
-      extraGetUpTime: _extraGetUpTimeField.value,
+      extraSleepTime: validExtraTime ? _extraSleepTimeField.value : null,
+      extraGetUpTime: validExtraTime ? _extraGetUpTimeField.value : null,
       initVitality: _initVitalityField.value?.clamp(0.0, MAX_VITALITY).toDouble(),
       isInitVitalityWhenGetUp: _isInitVitalityWhenGetUp,
     );
@@ -155,6 +169,31 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       hour: time.hour,
       minute: time.minute - time.minute % 5,
     );
+  }
+
+  bool _isValidExtraTimeField() {
+    final extraSleepTime = _extraSleepTimeField.value?.toMinutes();
+    final extraGetUpTime = _extraGetUpTimeField.value?.toMinutes();
+
+    if (extraGetUpTime == null || extraSleepTime == null) {
+      return false;
+    }
+
+    final mainSleepTime = _mainSleepTimeField.value!.toMinutes();
+    final mainGetUpTime = _mainGetUpTimeField.value!.toMinutes();
+
+    // Avoid overlap between mainSleepTime to mainGetUpTime and extraSleepTime to extraGetUpTime.
+    if (mainSleepTime > mainGetUpTime) {
+      return mainGetUpTime < extraSleepTime &&
+          extraSleepTime < extraGetUpTime &&
+          extraGetUpTime < mainSleepTime;
+    }
+
+    // mainSleepTime <= mainGetUpTime
+    if (extraGetUpTime >= mainGetUpTime && extraSleepTime >= mainGetUpTime) {
+      return extraGetUpTime >= extraSleepTime;
+    }
+    return extraGetUpTime >= extraSleepTime;
   }
 
   // TimeOfDay _toTimeFromMinutes(int minutes) {
@@ -295,6 +334,11 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
     debugPrint('====================');
   }
 
+  void _scaleChanged(double delta) {
+    _chartScale = (_chartScale + delta).clamp(0.5, 3.0);
+    setState(() { });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -322,19 +366,55 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
               Center(
                 child: Text('活力曲線'.xTr),
               ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Hp(
-                  child: SizedBox(
-                    height: 250,
-                    child: VitalityChart(
-                      colors: _colors,
-                      stops: _stops,
-                      spots: _tableDataList,
-                      showingTooltipIndexOnSpots: _showingTooltipSpotIndexList,
+              Stack(
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 270,
+                        child: IgnorePointer(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 24.0),
+                            child: VitalityChart(
+                              colors: _colors,
+                              stops: _stops,
+                              spots: _tableDataList,
+                              showingTooltipIndexOnSpots: _showingTooltipSpotIndexList,
+                              onLineTouch: (spotIndex) {
+                                // setState(() {
+                                //   if (_showingTooltipSpotIndexList.contains(spotIndex)) {
+                                //     _showingTooltipSpotIndexList.remove(spotIndex);
+                                //   } else {
+                                //     _showingTooltipSpotIndexList.add(spotIndex);
+                                //   }
+                                // });
+                              },
+                              scale: _chartScale,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  Positioned(
+                    right: 8,
+                    bottom: 8,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => _scaleChanged(-0.5),
+                          icon: Icon(Icons.remove),
+                        ),
+                        IconButton(
+                          onPressed: () => _scaleChanged(0.5),
+                          icon: Icon(Icons.add),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -413,7 +493,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                                 return;
                               }
                               _isInitVitalityWhenGetUp = true;
-                              prepareData();
+                              _prepareData();
                               setState(() { });
                             },
                             child: Row(
@@ -438,7 +518,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                                 return;
                               }
                               _isInitVitalityWhenGetUp = false;
-                              prepareData();
+                              _prepareData();
                               setState(() { });
                             },
                             child: Row(
@@ -465,50 +545,69 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                       titleText: '額外睡眠'.xTr,
                     ),
                     Gap.sm,
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: ReactiveMyTextField(
-                            label: '睡覺時間'.xTr,
-                            formControl: _extraSleepTimeField,
-                            wrapFieldBuilder: (context, field) {
-                              return InkWell(
-                                onTap: () async {
-                                  final newTime = await _pickTime(initialTime: _extraSleepTimeField.value);
-                                  if (newTime != null) {
-                                    _extraSleepTimeField.value = newTime;
-                                  }
-                                },
-                                child: IgnorePointer(
-                                  child: field,
-                                ),
-                              );
-                            },
+                  ],
+                ),
+                MyListTile(
+                  title: Text('是否納入額外睡眠'.xTr),
+                  checked: _shouldExtraSleep,
+                  onCheckedChanged: (v) {
+                    if (v == null) {
+                      return;
+                    }
+                    _shouldExtraSleep = v;
+                    _prepareData();
+                    setState(() { });
+                  },
+                ),
+                ...Hp.list(
+                  children: [
+                    if (_shouldExtraSleep) ...[
+                      Gap.sm,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ReactiveMyTextField(
+                              label: '睡覺時間'.xTr,
+                              formControl: _extraSleepTimeField,
+                              wrapFieldBuilder: (context, field) {
+                                return InkWell(
+                                  onTap: () async {
+                                    final newTime = await _pickTime(initialTime: _extraSleepTimeField.value);
+                                    if (newTime != null) {
+                                      _extraSleepTimeField.value = newTime;
+                                    }
+                                  },
+                                  child: IgnorePointer(
+                                    child: field,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                        Gap.md,
-                        Expanded(
-                          child: ReactiveMyTextField(
-                            label: '起床時間'.xTr,
-                            formControl: _extraGetUpTimeField,
-                            wrapFieldBuilder: (context, field) {
-                              return InkWell(
-                                onTap: () async {
-                                  final newTime = await _pickTime(initialTime: _extraGetUpTimeField.value);
-                                  if (newTime != null) {
-                                    _extraGetUpTimeField.value = newTime;
-                                  }
-                                },
-                                child: IgnorePointer(
-                                  child: field,
-                                ),
-                              );
-                            },
+                          Gap.md,
+                          Expanded(
+                            child: ReactiveMyTextField(
+                              label: '起床時間'.xTr,
+                              formControl: _extraGetUpTimeField,
+                              wrapFieldBuilder: (context, field) {
+                                return InkWell(
+                                  onTap: () async {
+                                    final newTime = await _pickTime(initialTime: _extraGetUpTimeField.value);
+                                    if (newTime != null) {
+                                      _extraGetUpTimeField.value = newTime;
+                                    }
+                                  },
+                                  child: IgnorePointer(
+                                    child: field,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                     if (kDebugMode) ...[
                       const MySubHeader(titleText: '測試區'),
                       MyElevatedButton(

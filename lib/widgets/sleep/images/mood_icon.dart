@@ -19,20 +19,18 @@ class MoodIcon extends StatelessWidget {
   final bool disableTooltip;
 
   static Color getColorBy(num vitality) {
-    return vitality >= 100 ? moodColor80
-        : vitality >= 80 ? moodColor80
-        : vitality >= 60 ? moodColor60
-        : vitality >= 40 ? moodColor40
-        : vitality >= 20 ? moodColor20
+    return vitality >= 81 ? moodColor80
+        : vitality >= 61 ? moodColor60
+        : vitality >= 41 ? moodColor40
+        : vitality >= 21 ? moodColor20
         : moodColor0;
   }
 
   static (int, Color) getVitalityThresholdAndColor(num vitality) {
-    return vitality >= 100 ? (100, moodColor80)
-        : vitality >= 80 ? (80, moodColor80)
-        : vitality >= 60 ? (60, moodColor60)
-        : vitality >= 40 ? (40, moodColor40)
-        : vitality >= 20 ? (20, moodColor20)
+    return vitality >= 81 ? (81, moodColor80)
+        : vitality >= 61 ? (61, moodColor60)
+        : vitality >= 41 ? (41, moodColor40)
+        : vitality >= 21 ? (21, moodColor20)
         : (0, moodColor0);
   }
 
