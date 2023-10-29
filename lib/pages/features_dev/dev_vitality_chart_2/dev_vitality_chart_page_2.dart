@@ -15,9 +15,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 part 'src/vitality_utils.dart';
 
-/// 每一個 table spot step 代表 5 分鐘
-const _spotStepValue = 5;
-
 /// TODO: 增加放大縮小的按鈕，控制 table 寬度
 class DevVitalityChartPage2 extends StatefulWidget {
   const DevVitalityChartPage2._();
