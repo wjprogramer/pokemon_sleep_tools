@@ -45,6 +45,10 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   late FormControl<TimeOfDay> _mainSleepTimeField;
   /// (一睡) 起床時間
   late FormControl<TimeOfDay> _mainGetUpTimeField;
+  /// (二睡) 開始睡覺時間
+  late FormControl<TimeOfDay> _extraSleepTimeField;
+  /// (二睡) 起床時間
+  late FormControl<TimeOfDay> _extraGetUpTimeField;
   /// 要用睡覺分數來計算睡覺的起迄時間？
   // late FormControl<int> _sleepScoreField;
   /// 睡覺前的活力值
@@ -63,7 +67,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   /// 一睡分數
   var _mainSleepScore = 0.0;
   /// 二睡分數，加上一睡分數不可超過 100
-  var _subSleepScore = 0.0;
+  var _extraSleepScore = 0.0;
 
   @override
   void initState() {
@@ -82,10 +86,21 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       _prepareChartData();
       setState(() { });
     });
+    _extraSleepTimeField = FormControl(
+      validators: [],
+    )..valueChanges.listen((event) {
+      _prepareChartData();
+      setState(() { });
+    });
+    _extraGetUpTimeField = FormControl(
+      validators: [],
+    )..valueChanges.listen((event) {
+      _prepareChartData();
+      setState(() { });
+    });
     // _sleepScoreField = FormControl();
     _initVitalityField = FormControl(
       validators: [
-        Validators.required,
         Validators.max(MAX_VITALITY),
         Validators.min(0),
       ],
@@ -228,6 +243,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
     var lastTimeSpot = const TimeOfDay(hour: 0, minute: 0);
     var lastTimeSpotIndex = 0;
     TimeOfDay tableInitTime;
+    var preVitality = 0.0;
 
     if (_isInitVitalityWhenGetUp) {
       sleeping = false;
@@ -291,8 +307,10 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
           : MoodIcon.getVitalityThresholdAndColor(vitality);
       final showBottomTitle = index % 30 == 0;
 
-      var showTooltip = (vitality != 0 && vitality % 20.0 == 0) ||
+
+      var showTooltip = (vitality != 0 && vitality % 20.0 == 0 && preVitality != vitality) ||
           (vitality == 0 && !foundZero);
+      preVitality = vitality;
       if (vitality == 0) {
         foundZero = true;
       }
@@ -506,11 +524,9 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                     ),
                     MySubHeader(titleText: '額外資訊'.xTr,),
                     MySubHeader2(
-                      titleText: '額外睡眠'.xTr,
-                    ),
-                    MySubHeader2(
                       titleText: '初始活力'.xTr,
                     ),
+                    Gap.sm,
                     Row(
                       children: [
                         Expanded(
@@ -568,6 +584,54 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                     ReactiveMyTextField(
                       formControl: _initVitalityField,
                     ),
+                    MySubHeader2(
+                      titleText: '額外睡眠'.xTr,
+                    ),
+                    Gap.sm,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ReactiveMyTextField(
+                            label: '睡覺時間'.xTr,
+                            formControl: _extraSleepTimeField,
+                            wrapFieldBuilder: (context, field) {
+                              return InkWell(
+                                onTap: () async {
+                                  final newTime = await _pickTime(initialTime: _extraSleepTimeField.value);
+                                  if (newTime != null) {
+                                    _extraSleepTimeField.value = newTime;
+                                  }
+                                },
+                                child: IgnorePointer(
+                                  child: field,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Gap.md,
+                        Expanded(
+                          child: ReactiveMyTextField(
+                            label: '起床時間'.xTr,
+                            formControl: _extraGetUpTimeField,
+                            wrapFieldBuilder: (context, field) {
+                              return InkWell(
+                                onTap: () async {
+                                  final newTime = await _pickTime(initialTime: _extraGetUpTimeField.value);
+                                  if (newTime != null) {
+                                    _extraGetUpTimeField.value = newTime;
+                                  }
+                                },
+                                child: IgnorePointer(
+                                  child: field,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                     if (kDebugMode) ...[
                       const MySubHeader(titleText: '測試區'),
                       MyElevatedButton(
@@ -596,6 +660,12 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                     ),
                   ],
                 ),
+                ...Hp.list(
+                  children: [
+                    // MySubHeader(),
+                  ],
+                ),
+                Gap.trailing,
               ],
             ),
           ),
@@ -607,8 +677,8 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
 
 class _TestData {
   _TestData(
-      this.sleepTime,
-      this.getUpTime,
+    this.sleepTime,
+    this.getUpTime,
   );
 
   final TimeOfDay sleepTime;

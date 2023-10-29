@@ -419,6 +419,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
           Gap.xl,
           MyElevatedButton(
             onPressed: () {
+              /// 需要從 kDebugMode
               DevPokemonStatics2Page.go(context, _profile);
             },
             child: Text('詳細分析數據'),

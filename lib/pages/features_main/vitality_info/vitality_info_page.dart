@@ -46,7 +46,7 @@ class _VitalityInfoPageState extends State<VitalityInfoPage> {
                   Text('睡覺時，效率為 x2.2'.xTr),
 
                   // 2. 每日最多可進行2次的睡眠紀錄。遊戲以每日04:00為換日線，在此時間點之前"開始"的睡眠紀錄，都會被算在前一日的睡眠紀錄額度內 (睡眠"結束"時間不限，可超過04:00)。
-                  Text(''.xTr),
+                  Text('主要睡眠和額外睡眠當天總分上限為 100'.xTr),
                   Text(''.xTr),
                   Text(''.xTr),
                   Text(''.xTr),

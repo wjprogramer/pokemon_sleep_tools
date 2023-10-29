@@ -203,6 +203,33 @@ class _HomeFragmentState extends State<HomeFragment> {
         ),
         if (kDebugMode) ...[
           MainMenuSubtitle(
+            icon: const Iconify(Bx.grid_alt, size: 16,),
+            title: Text(
+              't_others'.xTr,
+            ),
+          ),
+          Wrap(
+            spacing: _menuButtonSpacing,
+            runSpacing: _menuButtonSpacing,
+            children: _wrapMenuItems(
+              children: [
+                MyOutlinedButton(
+                  color: greenColor,
+                  onPressed: () {
+                    DevVitalityChartPage2.go(context);
+                  },
+                  iconBuilder: (color, size) {
+                    return Icon(Icons.tag_faces, color: color, size: size,);
+                  },
+                  builder: MyOutlinedButton.builderUnboundWidth,
+                  child: Text('活力曲線'.xTr),
+                ),
+              ],
+            ),
+          ),
+        ],
+        if (kDebugMode) ...[
+          MainMenuSubtitle(
             icon: const Icon(Icons.bug_report_outlined, size: 16,),
             title: Text(
               't_developing'.xTr,
