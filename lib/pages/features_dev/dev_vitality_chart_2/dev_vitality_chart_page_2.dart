@@ -39,6 +39,9 @@ class DevVitalityChartPage2 extends StatefulWidget {
 
 class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
 
+  // Form helper
+  final _vitalityHelper = _VitalityHelper();
+
   // Form
   late FormGroup _form;
 
@@ -120,7 +123,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   }
 
   void prepareData() {
-    final res = _VitalityUtils.prepareData(
+    final res = _vitalityHelper.prepareData(
       mainSleepTime: _mainSleepTimeField.value!,
       mainGetUpTime: _mainGetUpTimeField.value!,
       initVitality: _initVitalityField.value?.clamp(0.0, MAX_VITALITY).toDouble(),
@@ -233,7 +236,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       final sleepTime = TimeOfDay(hour: sleepHour, minute: sleepMinute);
       final getUpTime = TimeOfDay(hour: getUpHour, minute: getUpMinute);
 
-      final elapsed = _VitalityUtils.calcTimeElapsed(sleepTime, getUpTime);
+      final elapsed = _vitalityHelper.calcTimeElapsed(sleepTime, getUpTime);
       const display = MyFormatter.time;
       debugPrint('${display(sleepTime)} 睡覺 , 經過 ${display(elapsed)} 後，起床 ${display(getUpTime)}');
     }
@@ -251,7 +254,7 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
       final sleepTime = data.sleepTime;
       final getUpTime = data.getUpTime;
       const minutesOfDay = 24 * 60;
-      final elapsed = _VitalityUtils.calcTimeElapsed(sleepTime, getUpTime);
+      final elapsed = _vitalityHelper.calcTimeElapsed(sleepTime, getUpTime);
       final elapsedMinutes = elapsed.toMinutes();
 
       var result = false;

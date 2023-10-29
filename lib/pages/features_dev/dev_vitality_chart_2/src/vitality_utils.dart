@@ -1,9 +1,9 @@
 part of '../dev_vitality_chart_page_2.dart';
 
-class _VitalityUtils {
-  _VitalityUtils._();
+class _VitalityHelper {
+  _VitalityHelper();
 
-  static _VitalityChartResult prepareData({
+  _VitalityChartResult prepareData({
     required TimeOfDay mainSleepTime,
     required TimeOfDay mainGetUpTime,
     required double? initVitality,
@@ -34,7 +34,6 @@ class _VitalityUtils {
     final elapsedTime = calcTimeElapsed(sleepTime, getUpTime);
     final mainSleepScore = ((elapsedTime.hour * 60.0 + elapsedTime.minute) / 510 * 100).clamp(0.0, 100.0);
 
-    // final tableAxisDuration = _calcTableDuration(sleepTime, getUpTime);
     const tableAxisDuration = TimeOfDay(hour: 24, minute: 0);
     final tableCounts = (tableAxisDuration.hour * 60 + tableAxisDuration.minute) ~/ 5 + 1;
     final showingTooltipSpotIndexList = <int>[];
@@ -107,17 +106,19 @@ class _VitalityUtils {
       }
 
       return VitalityChartData(
-          spot: FlSpot(index.toDouble(), vitality),
-          time: timeText,
-          isShowBottomTitle: showBottomTitle,
-          isShowTooltip: showTooltip,
-          tooltipText: isGetUpTooltipSpot ? '$timeText 起床\n${vitality.toInt()}'
-              : isSleepTooltipSpot ? '$timeText 睡覺\n${vitality.toInt()}'
-              : null
+        spot: FlSpot(index.toDouble(), vitality),
+        time: timeText,
+        isShowBottomTitle: showBottomTitle,
+        isShowTooltip: showTooltip,
+        tooltipText: isGetUpTooltipSpot ? '$timeText 起床\n${vitality.toInt()}'
+            : isSleepTooltipSpot ? '$timeText 睡覺\n${vitality.toInt()}'
+            : null,
       );
     }
 
-    final tableDataList = List.generate(tableCounts, (index) => getSpotValue(tableInitTime, index));
+    final tableDataList = List.generate(tableCounts, (index) => getSpotValue(
+      tableInitTime, index,
+    ));
 
     return _VitalityChartResult(
       showingTooltipSpotIndexList: showingTooltipSpotIndexList,
@@ -129,7 +130,7 @@ class _VitalityUtils {
     );
   }
 
-  static TimeOfDay calcTimeElapsed(TimeOfDay sleepTime, TimeOfDay getUpTime) {
+  TimeOfDay calcTimeElapsed(TimeOfDay sleepTime, TimeOfDay getUpTime) {
     final sleepMinutes = sleepTime.toMinutes();
     final getUpMinutes = getUpTime.toMinutes();
     const minutesOfDay = 24 * 60;
