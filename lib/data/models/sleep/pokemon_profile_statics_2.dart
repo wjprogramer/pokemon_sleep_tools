@@ -117,6 +117,9 @@ class PokemonProfileStatistics {
     /* BO (白板計算) 果子機率 */ const fruitRate = 1 - ingredientRate;
     // endregion
 
+    // NOTES:
+    // - Lv 50 與 Lv 100 假設為進化到最終階段
+
     final statisticsLvCurr = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.levelCurr, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: _level).calc();
     final statisticsLv50 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level50, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: 50).calc();
     final statisticsLv100 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level100, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: 100).calc();
@@ -142,33 +145,25 @@ class PokemonProfileStatistics {
     /* FK (Lv 100) 幫忙S+M確認 */ final helpSpeedSMLv100 = statisticsLv100.helpSpeedSM;
 
 
-    /* BC (進化後) 性格+活力調整 */
-    final maxHelpIntervalAdjust1 = _tc(() => maxHelpInterval *
-        (
-            character.positive == '幫忙速度' ? 0.9
-                : character.negative == '幫忙速度' ? 1.1
-                : 1.0
-        ) * _transUserVitality()
-    );
 
     // 幫忙間隔 ---- 1
     /* (當前等級) AX 等級調整 */ final helpIntervalLvCurr1 = _tc(() => helpInterval - (helpInterval * ((_level - 1) * 0.002)));
-    /* (Lv 50) BD 間隔 */ final helpIntervalLv50_1 = _tc(() => maxHelpIntervalAdjust1 - (maxHelpIntervalAdjust1 * ((50-1) * 0.002)));
-    /* BF 100間隔 */ final helpIntervalLv100_1 = _tc(() => maxHelpIntervalAdjust1 - (maxHelpIntervalAdjust1 * ((100-1) * 0.002)));
+    /* (Lv 50) BD 間隔 */ final helpIntervalLv50_1 = _tc(() => maxHelpInterval - (maxHelpInterval * ((50-1) * 0.002)));
+    /* BF 100間隔 */ final helpIntervalLv100_1 = _tc(() => maxHelpInterval - (maxHelpInterval * ((100-1) * 0.002)));
 
     // 幫忙間隔 ---- 2
-    /* (當前等級) AY 性格+技能調整 */ final helpIntervalLvCurr2 = _tc(() => helpIntervalLvCurr1 * helpSpeedSMLvCurr
-        * (
-            character.positive == '幫忙速度' ? 0.9
-                : character.negative == '幫忙速度' ? 1.1
-                : 1.0
-        ),
-    );
-    final helpIntervalLv50_2 = helpIntervalLv50_1 * helpSpeedSMLv50;
-    final helpIntervalLv100_2 = helpIntervalLv100_1 * helpSpeedSMLv100;
+    final xxx = character.positive == '幫忙速度' ? 0.9
+        : character.negative == '幫忙速度' ? 1.1
+        : 1.0;
+
+    /* (當前等級) AY 性格+技能調整 */ final helpIntervalLvCurr2 = _tc(() => helpIntervalLvCurr1 * helpSpeedSMLvCurr * xxx);
+    final helpIntervalLv50_2 = _tc(() => helpIntervalLv50_1 * helpSpeedSMLv50 * xxx);
+    final helpIntervalLv100_2 = _tc(() => helpIntervalLv100_1 * helpSpeedSMLv100 * xxx);
 
     // 幫忙間隔 ---- 3
     /* (當前等級) AZ 活力影響後 */ final helpIntervalLvCurr3 = helpIntervalLvCurr2 * _transUserVitality();
+    final helpIntervalLv50_3 = helpIntervalLv50_2 * _transUserVitality();
+    final helpIntervalLv100_3 = helpIntervalLv100_2 * _transUserVitality();
 
     // 幫忙間隔 ---- 4
     /* (當前等級) BA 白板-活力影響 */ final helpIntervalPureLvCurr = _tc(() => helpIntervalLvCurr1 * _transUserVitality());
@@ -181,11 +176,10 @@ class PokemonProfileStatistics {
     /* (Lv 50) FB 技能幾率S+M確認 */ final skillRateSMLv50 = statisticsLv50.skillRateSM;
     /* FO (Lv 100) 技能幾率S+M確認 */ final skillRateSMLv100 = statisticsLv100.skillRateSM;
 
-    /* ER 加成後主技能等級 */
+    /* ER, U 加成後主技能等級 */
     final erLvCurr = _mainSkillLv +
         (_subSkillsContains(SubSkill.skillLevelM, _level) ? 2 : 0) +
         (_subSkillsContains(SubSkill.skillLevelS, _level) ? 1 : 0);
-    /* U 主技能等級 */ final uLvCurr = erLvCurr;
     /* (Lv 50) FC 加成後主技能等級 */
     final fcLv50 = _mainSkillLv
         + (_subSkillsContains(SubSkill.skillLevelM, 50) ? 2 : 0)
@@ -307,7 +301,7 @@ class PokemonProfileStatistics {
     final vLvCurr = _tc(() =>
     (skillRateSMLvCurr * 3600 / helpIntervalLvCurr2*
         (character.negative == '主技能' ?  0.8 : character.positive == '主技能' ? 1.2 : 1))+
-        _ccc2 * (uLvCurr - 1)+
+        _ccc2 * (erLvCurr - 1)+
         (isSkillSpecialty ?0.5:0)+
         (basicProfile.currentEvolutionStage - 2)*_ccc1
     );
@@ -316,8 +310,8 @@ class PokemonProfileStatistics {
     final wLvCurr = _tc(() =>
     (
         basicProfile.mainSkill == MainSkill.vitalityFillS
-            ? (zLvCurr + ajLvCurr)* _calcMainSkillEnergyList(basicProfile.mainSkill)[uLvCurr.toInt() - 1]
-            : _calcMainSkillEnergyList(basicProfile.mainSkill)[uLvCurr.toInt() - 1]
+            ? (zLvCurr + ajLvCurr)* _calcMainSkillEnergyList(basicProfile.mainSkill)[erLvCurr.toInt() - 1]
+            : _calcMainSkillEnergyList(basicProfile.mainSkill)[erLvCurr.toInt() - 1]
     )) * vLvCurr;
     /* BZ (白板收益) 主技能效益/h */
     final bzLvCurr = _tc(() {
@@ -669,7 +663,7 @@ class PokemonProfileStatistics {
             [
               '',
               Display.numDouble(maxHelpInterval),
-              Display.numDouble(maxHelpIntervalAdjust1),
+              Display.numDouble(0000),
               '',
               '',
             ],
