@@ -82,7 +82,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   var _dishesLv60 = <Dish>{};
 
   var _fruitMapping = <Fruit, (int, List<PokemonBasicProfile>)>{};
-  final List<PokemonProfileStatistics2?> _statistics = List
+  final List<PokemonProfileStatistics?> _statistics = List
       .generate(MAX_TEAM_POKEMON_COUNT, (index) => null);
   var _dishListTileWidth = _dishBaseWidth;
 
@@ -560,7 +560,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
       final profile = profiles[profileIndex];
       final statistics = profile == null
           ? null
-          : PokemonProfileStatistics2(profile);
+          : PokemonProfileStatistics(profile);
       _statistics[profileIndex] = statistics;
       statistics?.calcForUser();
     }
@@ -668,7 +668,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
         ?? PokemonTeam.getDefaultName(index: _teamIndex);
   }
 
-  Widget _buildRanks(PokemonProfileStatistics2 statistics) {
+  Widget _buildRanks(PokemonProfileStatistics statistics) {
     final rankLv50 = statistics.result?.rankLv50;
     final rankLv100 = statistics.result?.rankLv100;
 

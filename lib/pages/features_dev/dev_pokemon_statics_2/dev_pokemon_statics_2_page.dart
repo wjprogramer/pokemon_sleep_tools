@@ -41,13 +41,13 @@ class DevPokemonStatics2Page extends StatefulWidget {
 
 class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
   PokemonProfile get _profile => widget._args.profile;
-  late PokemonProfileStatistics2 _statistics2;
+  late PokemonProfileStatistics _statistics2;
   var _statisticsResults = <dynamic>[];
 
   @override
   void initState() {
     super.initState();
-    _statistics2 = PokemonProfileStatistics2(_profile);
+    _statistics2 = PokemonProfileStatistics(_profile);
 
     scheduleMicrotask(() {
       _statisticsResults = _statistics2.calcForDev();

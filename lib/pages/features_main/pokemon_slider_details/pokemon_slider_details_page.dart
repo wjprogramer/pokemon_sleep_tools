@@ -95,7 +95,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   // final _cache = ListQueue<PokemonProfileStatistics2>(10);
   /// [PokemonProfile.id] to statistics
-  final _cache = <int, PokemonProfileStatistics2>{};
+  final _cache = <int, PokemonProfileStatistics>{};
 
   var _previousPage = 0;
   var _currIndex = 0;
@@ -193,7 +193,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   void _updateProfileStatistics() {
     for (final profile in _profiles) {
-      _cache[profile.id] = PokemonProfileStatistics2(profile)..calcForUser();
+      _cache[profile.id] = PokemonProfileStatistics(profile)..calcForUser();
     }
   }
 
@@ -375,7 +375,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     // setState(() { });
   }
 
-  PokemonProfileStatistics2? _getStatistics(PokemonProfile profile) {
+  PokemonProfileStatistics? _getStatistics(PokemonProfile profile) {
     return _cache[profile.id];
     // return _cache.firstWhereOrNull((e) => e.profile.id == profile.id);
   }

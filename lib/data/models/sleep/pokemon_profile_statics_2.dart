@@ -22,8 +22,8 @@ enum _Type {
 ///
 /// - 部分主技能發動次數欄位為 `次數/h`，但實際上是 `次數/d`
 ///
-class PokemonProfileStatistics2 {
-  PokemonProfileStatistics2(this.profile);
+class PokemonProfileStatistics {
+  PokemonProfileStatistics(this.profile);
 
   var _isInitialized = false;
   bool get isInitialized => _isInitialized;

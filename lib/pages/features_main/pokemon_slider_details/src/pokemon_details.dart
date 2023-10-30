@@ -13,7 +13,7 @@ class _PokemonDetails extends StatefulWidget {
   });
 
   final PokemonProfile profile;
-  final PokemonProfileStatistics2? statistics;
+  final PokemonProfileStatistics? statistics;
   final Function() onDeletedSuccess;
   final double initialOffset;
   final ValueChanged<double> onScroll;
@@ -63,7 +63,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
   ScrollController get _scrollController => s._scrollController;
   ThemeData get _theme => s._theme;
 
-  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics2? statistics, {
+  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics? statistics, {
     required double leadingWidth,
     required double mainWidth,
   }) {
