@@ -19,4 +19,12 @@ class FoodRepository implements MyInjectable {
     return newStored;
   }
 
+  Future<StoredFood> resetAllAmounts() async {
+    final newStored = await _localStorage.readWrite<StoredFood>(StoredFood, (stored) async {
+      await stored.resetAllAmounts();
+      return stored;
+    });
+    return newStored;
+  }
+
 }

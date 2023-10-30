@@ -38,6 +38,7 @@ class DialogUtility {
     Widget? content,
     bool? barrierDismissible,
     List<Widget>? actions,
+    VoidCallback? onConfirm,
   }) async {
     final res = await showAdaptiveDialog(
       context: context,
@@ -55,6 +56,7 @@ class DialogUtility {
           TextButton(
             onPressed: () {
               context.nav.pop(true);
+              onConfirm?.call();
             },
             child: Text('t_confirm'.xTr),
           ),

@@ -5,14 +5,18 @@ typedef IngredientAmountChanged = void Function(Ingredient ingredient, int amoun
 class _IngredientsOfPotView extends StatelessWidget {
   const _IngredientsOfPotView({
     super.key,
+    required this.totalStoredIngredientsCount,
     required this.itemWidth,
     required this.onAmountChanged,
     required this.storedIngredientOf,
+    required this.onReset,
   });
 
+  final int totalStoredIngredientsCount;
   final double itemWidth;
   final IngredientAmountChanged onAmountChanged;
   final Map<Ingredient, StoredIngredientItem> storedIngredientOf;
+  final VoidCallback onReset;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,35 @@ class _IngredientsOfPotView extends StatelessWidget {
       ),
       children: [
         Gap.lg,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: totalStoredIngredientsCount == 0 ? null : () {
+                DialogUtility.confirm(
+                  context,
+                  title: Text('確定要清空?'.xTr),
+                  onConfirm: () {
+                    onReset();
+                  },
+                );
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      right: Gap.smV,
+                    ),
+                    child: Icon(Icons.delete_forever),
+                  ),
+                  Text('清空'.xTr),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Gap.md,
         Wrap(
           spacing: _spacing,
           runSpacing: _spacing,
@@ -34,6 +67,14 @@ class _IngredientsOfPotView extends StatelessWidget {
                   context, ingredient,
                 ),
               )).toList(),
+        ),
+        Gap.md,
+        Text(
+          '食材庫存總數: ${Display.numInt(totalStoredIngredientsCount)}',
+          style: TextStyle(
+            fontSize: 24,
+          ),
+          textAlign: TextAlign.end,
         ),
         Gap.trailing,
       ],

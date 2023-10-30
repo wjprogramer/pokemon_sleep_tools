@@ -5,7 +5,7 @@ final class StoredFood implements BaseLocalFile {
     required this.ingredientOf,
   });
 
-  final StoredIngredientItems ingredientOf;
+  StoredIngredientItems ingredientOf;
 
   factory StoredFood.fromJson(Map<String, dynamic> json) {
     return StoredFood(
@@ -33,6 +33,17 @@ final class StoredFood implements BaseLocalFile {
     ingredientOf.mapping[ingredient] = newItem;
   }
 
+  Future<void> resetAllAmounts() async {
+    final newMapping = <Ingredient, StoredIngredientItem>{};
+    for (final item in ingredientOf.mapping.entries) {
+      newMapping[item.key] = item.value.copyWith(amount: 0);
+    }
+    final newIngredientOf = ingredientOf.copyWith(
+      mapping: newMapping,
+    );
+    ingredientOf = newIngredientOf;
+  }
+
 }
 
 class StoredIngredientItems {
@@ -53,6 +64,13 @@ class StoredIngredientItems {
       }
     }
     return StoredIngredientItems()..mapping.addAll(mapping);
+  }
+
+  StoredIngredientItems copyWith({
+    Map<Ingredient, StoredIngredientItem>? mapping,
+  }) {
+    return StoredIngredientItems()
+      ..mapping.addAll(mapping ?? this.mapping);
   }
 
   Map<String, dynamic> toJson() {

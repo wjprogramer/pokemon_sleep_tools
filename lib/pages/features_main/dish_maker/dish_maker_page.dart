@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
@@ -19,6 +20,8 @@ part 'src/result_dishes_view.dart';
 
 const _spacing = 12.0;
 
+/// TODO: 須包含 地圖加成，可參考: https://pks.raenonx.cc/zh/cooking/prepare
+/// TODO: 等級、能量處理
 class DishMakerPage extends StatefulWidget {
   const DishMakerPage._();
 
@@ -58,6 +61,7 @@ class _DishMakerPageState extends State<DishMakerPage> with SingleTickerProvider
 
   // Data
   late StoredFood _storedFood;
+  var _totalStoredIngredientsCount = 0;
   var _searchOptions = DishSearchOptions();
   var _dishLevelInfoOf = <Dish, DishLevelInfo>{};
   var _currLevel = 1;
@@ -90,6 +94,7 @@ class _DishMakerPageState extends State<DishMakerPage> with SingleTickerProvider
 
       // Load
       _storedFood = _foodViewModel.stored;
+      _totalStoredIngredientsCount = _calcTotalStoredIngredientsCount(_storedFood);
       await _updatePage();
 
       // Load finish
@@ -108,8 +113,13 @@ class _DishMakerPageState extends State<DishMakerPage> with SingleTickerProvider
 
   Future<void> _listenFoodViewModel() async {
     _storedFood = _foodViewModel.stored;
+    _totalStoredIngredientsCount = _calcTotalStoredIngredientsCount(_storedFood);
     await _updatePage();
     setState(() { });
+  }
+
+  int _calcTotalStoredIngredientsCount(StoredFood stored) {
+    return _storedFood.ingredientOf.mapping.entries.map((e) => e.value.amount).whereNotNull().reduce((value, element) => value + element.toInt());
   }
 
   Future<void> _updatePage() async {
@@ -152,12 +162,16 @@ class _DishMakerPageState extends State<DishMakerPage> with SingleTickerProvider
   }) {
     return switch (tab) {
       _Tab.potIngredients => _IngredientsOfPotView(
+        totalStoredIngredientsCount: _totalStoredIngredientsCount,
         itemWidth: ingredientItemWidth,
         onAmountChanged: (ingredient, amount) {
           /// TODO: use Debounce?
           _onIngredientAmountChanged(ingredient, amount);
         },
         storedIngredientOf: _storedFood.ingredientOf.mapping,
+        onReset: () {
+          _foodViewModel.resetAllAmounts();
+        },
       ),
       _Tab.resultDishes => _ResultDishesView(
         dishes: _searchedDishes,

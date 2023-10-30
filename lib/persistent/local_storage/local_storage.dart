@@ -163,7 +163,7 @@ class MyLocalStorage implements MyInjectable {
     if (teams != null) { await writePokemonTeams(teams); }
     if (fields != null) { await writePokemonFields(fields); }
     if (foods != null) { await writeFood(foods); }
-    
+
     return true;
   }
   // endregion

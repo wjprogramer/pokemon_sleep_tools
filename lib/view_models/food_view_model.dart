@@ -24,4 +24,10 @@ class FoodViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> resetAllAmounts() async {
+    final newStored = await _repo.resetAllAmounts();
+    _stored = newStored;
+    notifyListeners();
+  }
+
 }
