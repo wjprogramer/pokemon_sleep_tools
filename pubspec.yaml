@@ -61,7 +61,9 @@ dependencies:
 #  device_preview: ^1.1.0
 #  sizer: ^2.0.15
 #  jiffy: ^6.2.1
-#  bitsdojo_window: ^0.1.5
+
+#  bitsdojo_window: ^0.1.5 # 與 file_picker 版本相衝
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6

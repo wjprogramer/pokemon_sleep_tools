@@ -34,6 +34,14 @@ fvm dart pub global activate dhttpd
 fvm dhttpd --path doc/api
 ```
 
+Generate controlled widget
+
+```shell
+fvm dart .\scripts\develop\generated_controlled_widget.dart ____
+# example: fvm dart .\scripts\develop\generated_controlled_widget.dart FooPage
+```
+
+
 ## Build
 
 ```shell
