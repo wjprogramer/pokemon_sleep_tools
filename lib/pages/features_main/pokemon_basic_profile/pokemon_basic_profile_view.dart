@@ -11,6 +11,10 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
   Map<int, String> get _sleepNamesOfBasicProfile => s._sleepNamesOfBasicProfile;
 
   Widget _buildAppBarTitle() {
+    final titleStyle = (
+        _isView ? _theme.appBarTheme.titleTextStyle : const TextStyle()
+    ) ?? const TextStyle();
+
     return Row(
       children: [
         if (MyEnv.USE_DEBUG_IMAGE)
@@ -27,10 +31,20 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
             child: PokemonRecordedIcon(),
           ),
         Expanded(
-          child: Text(
-            // TODO: 攻略網站的 "#圖鑑編號" 會比較小、且為灰色
-            '${_basicProfile.nameI18nKey.xTr} #${_basicProfile.boxNo}',
-            style: _isView ? _theme.appBarTheme.titleTextStyle : null,
+          child: Text.rich(
+            TextSpan(
+              text: _basicProfile.nameI18nKey.xTr,
+              style: titleStyle,
+              children: [
+                TextSpan(
+                  text: ' #${_basicProfile.boxNo}',
+                  style: titleStyle.copyWith(
+                    fontSize: (titleStyle.fontSize ?? 18) * 0.7,
+                    color: greyColor3,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -64,7 +78,7 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
 
   Widget _buildIngredient(Ingredient ingredient, int count) {
     return InkWell(
-      onTap: () => IngredientPage.go(context, ingredient),
+      onTap: s._getAddToBoxCallback(ingredient),
       borderRadius: BorderRadius.circular(8),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -99,15 +113,7 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
         Row(
           children: [
             IconButton(
-              onPressed: () {
-                final facesViewModels = context.read<SleepFaceViewModel>();
-
-                if (markStyles.contains(sleepFace.style)) {
-                  facesViewModels.removeMark(sleepFace.basicProfileId, sleepFace.style);
-                } else {
-                  facesViewModels.mark(sleepFace.basicProfileId, sleepFace.style);
-                }
-              },
+              onPressed: () => s._onSleepFaceMarkToggled(sleepFace, markStyles),
               icon: BookmarkIcon(marked: marked),
             ),
             Text(
@@ -286,7 +292,6 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
                 ),
               ),
               Gap.md,
-              // TODO: 主技能反查
               _buildWithLabel(
                 text: 't_main_skill'.xTr,
                 child: InkWell(
@@ -337,7 +342,6 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
               MySubHeader(
                 titleText: 't_ingredients'.xTr,
               ),
-              // TODO: 反查食材
               if (kDebugMode && !kDebugMode)
                 SliderWithButtons(
                   value: s._currPokemonLevel.toDouble(),
@@ -416,14 +420,7 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
                 titleText: '其他'.xTr,
               ),
               MyElevatedButton(
-                onPressed: !_existInBox ? null : () {
-                  PokemonBoxPage.go(
-                    context,
-                    initialSearchOptions: PokemonSearchOptions(
-                      keyword: _basicProfile.nameI18nKey.xTr,
-                    ),
-                  );
-                },
+                onPressed: s._getViewPokedexCallback(),
                 child: Text('查看寶可夢盒'.xTr),
               ),
               Gap.trailing,

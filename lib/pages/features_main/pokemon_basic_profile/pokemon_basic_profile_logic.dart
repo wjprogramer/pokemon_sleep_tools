@@ -106,6 +106,37 @@ class _PokemonBasicProfileLogic extends State<PokemonBasicProfilePage> {
     _load();
   }
 
+  VoidCallback? _getViewPokedexCallback() {
+    if (!_existInBox) {
+      return null;
+    }
+
+    return () {
+      PokemonBoxPage.go(
+        context,
+        initialSearchOptions: PokemonSearchOptions(
+          keyword: _basicProfile.nameI18nKey.xTr,
+        ),
+      );
+    };
+  }
+
+  VoidCallback _getAddToBoxCallback(Ingredient ingredient) {
+    return () {
+      IngredientPage.go(context, ingredient);
+    };
+  }
+
+  void _onSleepFaceMarkToggled(SleepFace sleepFace, List<int> markStyles) {
+    final facesViewModels = context.read<SleepFaceViewModel>();
+
+    if (markStyles.contains(sleepFace.style)) {
+      facesViewModels.removeMark(sleepFace.basicProfileId, sleepFace.style);
+    } else {
+      facesViewModels.mark(sleepFace.basicProfileId, sleepFace.style);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _theme = context.theme;
