@@ -1,8 +1,3 @@
-import 'dart:ui';
-
-import 'package:pokemon_sleep_tools/data/models/models.dart';
-import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
-
 /// ID 不能亂動，[PokemonProfile] 會儲存副技能的 ID
 enum SubSkill {
   berryCountS(1, 't_sub_skill_8', '一次撿來的樹果數量會增加1個', 3),
@@ -31,15 +26,6 @@ enum SubSkill {
 
   /// 遊戲內有黃藍灰背景的副技能，應該是用於區分稀有度?
   final int rarity;
-
-  Color get bgColor {
-    switch (rarity) {
-      case 1: return greyColor;
-      case 2: return blueColor;
-      case 3: return yellowColor;
-    }
-    return greyColor;
-  }
 
   static const maxCount = 5;
 

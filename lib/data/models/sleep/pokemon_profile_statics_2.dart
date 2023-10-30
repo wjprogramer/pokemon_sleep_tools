@@ -34,7 +34,7 @@ class PokemonProfileStatistics2 {
   // Profile properties
   final PokemonProfile profile;
   PokemonBasicProfile get basicProfile => profile.basicProfile;
-  /* AW 基礎間隔 */int get helpInterval => basicProfile.maxHelpInterval;
+  /* AW 基礎間隔 */int get helpInterval => basicProfile.helpInterval;
   Fruit get fruit => basicProfile.fruit;
   /* BB 最高進化階段基礎間隔 */ int get maxHelpInterval => basicProfile.maxHelpInterval;
   PokemonSpecialty get specialty => basicProfile.specialty;
@@ -125,7 +125,8 @@ class PokemonProfileStatistics2 {
     /* AQ (Lv 50) +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv50 = fruitEnergyAfterSpecialtyAndSubSkillLv50 * (_isSnorlaxFavorite && _shouldConsiderSnorlaxFavorite ? 2 : 1);
 
     /* AR (Lv 100) 果子/顆 */ final fruitEnergyLv100 = _getSingleFruitEnergy(100);
-    /* FI (Lv 100) 樹果+1確認 */ final fruitBonusEnergyLv100 = _subSkillsContains(SubSkill.berryCountS, 100) ? fruitEnergyLv100 : 0.0;
+    /* FI (Lv 100) 樹果+1確認 */ final fruitBonusEnergyLv100 = _subSkillsContains(SubSkill.berryCountS, 100)
+        ? fruitEnergyLv100 : 0.0;
     /* AS (Lv 100) 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLv100 = fruitEnergyLv100 * (isBerrySpecialty ? 2 : 1) + fruitBonusEnergyLv100;
     /* AT (Lv 100) +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv100 = fruitEnergyAfterSpecialtyAndSubSkillLv100 * (_isSnorlaxFavorite && _shouldConsiderSnorlaxFavorite ? 2 : 1);
 
@@ -234,8 +235,8 @@ class PokemonProfileStatistics2 {
         : (ingredientMLvCurr == 1.36 ? 1.36 : 1.00);
     /* FN (Lv 100) 技能幾率M確認 */ final skillRateMLv100 = _subSkillsContains(SubSkill.skillRateM, 100) ? 1.36 : 1.0;
     /* FO (Lv 100) 技能幾率S+M確認 */ final skillRateSMLv100 = _subSkillsContains(SubSkill.skillRateS, 100)
-        ? (skillRateMLvCurr == 1.36 ? 1.54 : 1.18)
-        : (skillRateMLvCurr == 1.36 ? 1.36 : 1.00);
+        ? (skillRateMLv100 == 1.36 ? 1.54 : 1.18)
+        : (skillRateMLv100 == 1.36 ? 1.36 : 1.00);
     /* FP (Lv 100) 加成後主技能等級 */
     final fp = _mainSkillLv +
         (_subSkillsContains(SubSkill.skillLevelM, 100) ? 2 : 0) +
@@ -425,7 +426,9 @@ class PokemonProfileStatistics2 {
         (basicProfile.mainSkill == MainSkill.vitalityAllS || basicProfile.mainSkill == MainSkill.vitalityS ? 0 : 1) +
         (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 / 5 : 0)
     );
-    /* (Lv50Result) GK 50收益/h */ final gk = _tc(() => ch + cj + cl + (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 : 0));
+    /* (Lv50Result) GK 50收益/h */ final gk = _tc(
+            () => ch + cj + cl + (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 : 0)
+    );
     /* (Lv50Result) GJ 50輔助隊友收益/h */ final gj = gk - gi;
     /* (Lv50Result) GL 50白板/h */ final gl = ct + cv + cx;
     /* (Lv50Result) GM 影響 */ final gm = b == 0 ? 0 : (gk - gl) / gl;
@@ -489,7 +492,7 @@ class PokemonProfileStatistics2 {
 
     /* A 評級 */
     // IF(B7=0,"-",IFS(C7>=0.3,"S",C7>=0.24,"A",C7>=0.18,"B",C7>=0.12,"C",C7>=0.06,"D",C7>=0,"E",C7<0,"F")&GX7&GY7&CHAR(10)&GZ7)
-    final a = (b == 0 ? '-' :
+    final a = (b == 0 ? '-' : // 代表白板計算有問題?
     c >= 0.3 ? 'S' :
     c >= 0.24 ? 'A' :
     c >= 0.18 ? 'B' :

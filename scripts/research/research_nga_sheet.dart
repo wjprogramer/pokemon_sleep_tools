@@ -4,6 +4,10 @@
 
 import 'package:collection/collection.dart';
 import 'package:pokemon_sleep_tools/all_in_one/extensions/basic/collection.dart';
+import 'package:pokemon_sleep_tools/data/models/sleep/main_skill.dart';
+import 'package:pokemon_sleep_tools/data/models/sleep/sub_skill.dart';
+
+// ignore_for_file: avoid_print
 
 const _useTaiwanName = true;
 
@@ -11,22 +15,65 @@ typedef SheetFormulaBuilder = String Function(Map<String, DataColumn> columnCode
 
 final _successColumnCodeSet = <String>{};
 
+extension _SubSkillX on SubSkill {
+  String _getName() {
+    return switch (this) {
+      SubSkill.berryCountS => '樹果數量S',
+      SubSkill.helperBonus => '幫手獎勵',
+      SubSkill.helpSpeedM => '幫忙速度M',
+      SubSkill.helpSpeedS => '幫忙速度S',
+      SubSkill.ingredientRateM => '食材機率提升M',
+      SubSkill.ingredientRateS => '食材機率提升S',
+      SubSkill.skillLevelM => '技能等級提升M',
+      SubSkill.skillLevelS => '技能等級提升S',
+      SubSkill.skillRateM => '技能機率提升M',
+      SubSkill.skillRateS => '技能機率提升S',
+      SubSkill.holdMaxL => '持有上限提升L',
+      SubSkill.holdMaxM => '持有上限提升M',
+      SubSkill.holdMaxS => '持有上限提升S',
+      SubSkill.energyRecoverBonus => '活力回復獎勵',
+      SubSkill.sleepExpBonus => '睡眠EXP獎勵',
+      SubSkill.researchExpBonus => '研究EXP獎勵',
+      SubSkill.dreamChipBonus => '夢之碎片獎勵',
+    };
+  }
+}
+
+extension _MainSkillX on MainSkill {
+  String _getName() {
+    return switch (this) {
+      MainSkill.energyFillS => '能量填充S',
+      MainSkill.energyFillM => '能量填充M',
+      MainSkill.energyFillSn => '能量填充Sn',
+      MainSkill.dreamChipS => '夢之碎片獲取S',
+      MainSkill.dreamChipSn => '夢之碎片獲取Sn',
+      MainSkill.vitalityS => '活力療癒S',
+      MainSkill.vitalityAllS => '活力全體療癒S',
+      MainSkill.vitalityFillS => '活力填充S',
+      MainSkill.helpSupportS => '幫手支援S',
+      MainSkill.ingredientS => '食材獲取S',
+      MainSkill.cuisineS => '料理強化S',
+      MainSkill.finger => '揮指',
+    };
+  }
+}
+
 // note: sheet IFERROR => 如果沒給錯誤的值，發生錯誤時，預設會給予零
 void main() {
   final columns = <(String, String, String, SheetFormulaBuilder)>[
-    ('評級', '', '', (m) {
+    /* A */ ('評級', '', 'vv', (m) {
       // =IF(B7=0,"-",IFS(C7>=0.3,"S",C7>=0.24,"A",C7>=0.18,"B",C7>=0.12,"C",C7>=0.06,"D",C7>=0,"E",C7<0,"F")&GX7&GY7&CHAR(10)&GZ7)
-      return '';
+      return '根據 ${m.gn('C')} 決定評級，並同時列出 ${m.gn('GX')}、${m.gn('GY')}、${m.gn('GZ')}';
     }),
-    /* B */ ('白板收益/h', '', 'v', (m) {
+    /* B */ ('白板收益/h', '', 'vv', (m) {
       return '${m.gn('BV')} + ${m.gn('BX')} + ${m.gn('BZ')}';
     }),
-    ('性格技能影響', '', 'v', (m) {
+    ('性格技能影響', '', 'vv', (m) {
       // =IF(B7=0,0,(E7-B7)/B7)
       return '${m.gn('B')} == 0 ? 0 : (${m.gn('E')} - ${m.gn('B')}) / ${m.gn('B')}'; // 為比例，呈現上可以乘上 100 加上 %
     }),
-    ('活力檔', '', 'v', (m) {
-      return 'int, 值為 1~5';
+    ('活力檔', '', 'vv', (m) {
+      return 'int, 值為 1~5，使用者設定';
     }),
     ('理想總收益/h', '', '', (m) {
       // =Z7+AJ7+W7+IF(OR(EF7=6,EG7=6,EH7=6,EI7=6,EJ7=6),$O$4,),
@@ -111,7 +158,6 @@ void main() {
         =====> 以幫忙支援S來說，數值為 18.33, 22.92, ...., 41.25
         =====> 根據 U7，以及 PokemonProfileStatistics2._calcMainSkillEnergyList 求值
 
-
        =IFERROR(
           IF(
             如果主技能是「活力填充S」,
@@ -130,37 +176,37 @@ void main() {
           'y = 如果主技能是「活力填充S」 ? (${m.gn('Z')}+${m.gn('AJ')}) * x : x\n'
           'z = y * ${m.gn('V')}';
     }),
-    ('樹果', '', 'v', (m) {
+    ('樹果', '', 'vv', (m) {
       return '_';
     }),
-    ('樹果', '', 'v', (m) {
+    ('樹果', '', 'vv', (m) {
       return '_';
     }),
-    ('樹果能量/h', '', 'v', (m) {
+    ('樹果能量/h', '', 'vv', (m) {
       return '${m.gn('BI')} * ${m.gn('AN')}';
     }),
-    ('食材1/1級', '', 'v', (m) {
+    ('食材1/1級', '', 'vv', (m) {
       return '';
     }),
-    ('食材1/1級', '', 'v', (m) {
+    ('食材1/1級', '', 'vv', (m) {
       return '';
     }),
-    ('食材2/30級', '', 'v', (m) {
+    ('食材2/30級', '', 'vv', (m) {
       return '';
     }),
-    ('食材2/30級', '', 'v', (m) {
+    ('食材2/30級', '', 'vv', (m) {
       return '';
     }),
-    ('個數', '', 'v', (m) {
+    ('個數', '', 'vv', (m) {
       return '';
     }),
-    ('食材3/60級', '', 'v', (m) {
+    ('食材3/60級', '', 'vv', (m) {
       return '';
     }),
-    ('食材3/60級', '', 'v', (m) {
+    ('食材3/60級', '', 'vv', (m) {
       return '';
     }),
-    ('個數', '', 'v', (m) {
+    ('個數', '', 'vv', (m) {
       return '';
     }),
     ('食材個/h', '', 'v', (m) {
@@ -200,13 +246,13 @@ void main() {
     ('(Lv 100) +喜愛加成/顆', '', 'v', (m) {
       return '';
     }),
-    ('專長編號', '', 'v', (m) {
+    ('專長編號', '', 'vv', (m) {
       return '查表：根據寶可夢決定 （表上的編號：樹果1, 食材2, 技能3）';
     }),
-    /* AV */ ('喜愛的果子', '卡比獸喜愛的樹果', 'v', (m) {
+    /* AV */ ('喜愛的果子', '卡比獸喜愛的樹果', 'vv', (m) {
       return '為布林值，是否為當週卡比的喜愛樹果，會有全域變數決定是否要將其納入考量；如果不考慮，恆等於 false';
     }),
-    ('基礎間隔', '', 'v', (m) {
+    ('基礎間隔', '', 'vv', (m) {
       return '查表：像是雷丘為 2200S，皮卡丘為 2700S';
     }),
     ('等級調整', '', 'v', (m) {
@@ -405,121 +451,121 @@ void main() {
     ('(50白板收益) 主技能效益/h', '', '', (m) {
       return '';
     }),
-    ('果子機率', '', '', (m) {
+    ('(Lv100計算) 果子機率', '', '', (m) {
       return '';
     }),
-    ('果實預期次數/h', '', '', (m) {
+    ('(Lv100計算) 果實預期次數/h', '', '', (m) {
       return '';
     }),
-    ('食材機率', '', '', (m) {
+    ('(Lv100計算) 食材機率', '', '', (m) {
       return '';
     }),
-    ('食材預期次數/h', '', '', (m) {
+    ('(Lv100計算) 食材預期次數/h', '', '', (m) {
       return '';
     }),
-    ('食材1個數/h', '', '', (m) {
+    ('(Lv100計算) 食材1個數/h', '', '', (m) {
       return '';
     }),
-    ('食材2個數/h', '', '', (m) {
+    ('(Lv100計算) 食材2個數/h', '', '', (m) {
       return '';
     }),
-    ('食材3個數/h', '', '', (m) {
+    ('(Lv100計算) 食材3個數/h', '', '', (m) {
       return '';
     }),
-    ('樹果能量/h', '', '', (m) {
+    ('(Lv100收益) 樹果能量/h', '', '', (m) {
       return '';
     }),
-    ('食材個/h', '', '', (m) {
+    ('(Lv100收益) 食材個/h', '', '', (m) {
       return '';
     }),
-    ('食材能量/h', '', '', (m) {
+    ('(Lv100收益) 食材能量/h', '', '', (m) {
       return '';
     }),
-    ('次數/h', '', '', (m) {
+    ('(Lv100收益) 次數/h', '', '', (m) {
       return '';
     }),
-    ('主技能效益/h', '', '', (m) {
+    ('(Lv100收益) 主技能效益/h', '', '', (m) {
       return '';
     }),
-    ('果子機率', '', '', (m) {
+    ('(Lv100白板計算) 果子機率', '', '', (m) {
       return '';
     }),
-    ('果實預期次數/h', '', '', (m) {
+    ('(Lv100白板計算) 果實預期次數/h', '', '', (m) {
       return '';
     }),
-    ('食材機率', '', '', (m) {
+    ('(Lv100白板計算) 食材機率', '', '', (m) {
       return '';
     }),
-    ('食材預期次數/h', '', '', (m) {
+    ('(Lv100白板計算) 食材預期次數/h', '', '', (m) {
       return '';
     }),
-    ('食材1個數/h', '', '', (m) {
+    ('(Lv100白板計算) 食材1個數/h', '', '', (m) {
       return '';
     }),
-    ('食材2個數/h', '', '', (m) {
+    ('(Lv100白板計算) 食材2個數/h', '', '', (m) {
       return '';
     }),
-    ('食材3個數/h', '', '', (m) {
+    ('(Lv100白板計算) 食材3個數/h', '', '', (m) {
       return '';
     }),
-    ('樹果能量/h', '', '', (m) {
+    ('(Lv100白板收益) 樹果能量/h', '', '', (m) {
       return '';
     }),
-    ('食材個/h', '', '', (m) {
+    ('(Lv100白板收益) 食材個/h', '', '', (m) {
       return '';
     }),
-    ('食材能量/h', '', '', (m) {
+    ('(Lv100白板收益) 食材能量/h', '', '', (m) {
       return '';
     }),
-    ('次數/h', '', '', (m) {
+    ('(Lv100白板收益) 次數/h', '', '', (m) {
       return '';
     }),
-    ('主技能效益/h', '', '', (m) {
+    ('(Lv100白板收益) 主技能效益/h', '', '', (m) {
       return '';
     }),
-    ('食材1售價', '', '', (m) {
+    ('食材1售價', '', 'vv', (m) {
       return '';
     }),
-    ('食材2售價', '', '', (m) {
+    ('食材2售價', '', 'vv', (m) {
       return '';
     }),
-    ('食材3售價', '', '', (m) {
+    ('食材3售價', '', 'vv', (m) {
       return '';
     }),
-    ('食材1能量', '', '', (m) {
+    ('食材1能量', '', 'vv', (m) {
       return '';
     }),
-    ('食材2能量', '', '', (m) {
+    ('食材2能量', '', 'vv', (m) {
       return '';
     }),
-    ('食材3能量', '', '', (m) {
+    ('食材3能量', '', 'vv', (m) {
       return '';
     }),
-    ('性格編號', '', '', (m) {
+    ('性格編號', '', 'vv', (m) {
       return '';
     }),
-    ('性格增', '', '', (m) {
+    ('性格增', '', 'vv', (m) {
       return '';
     }),
-    ('性格減', '', '', (m) {
+    ('性格減', '', 'vv', (m) {
       return '';
     }),
-    ('SSk10Ix', '', '', (m) {
+    ('(當前等級) SSk10Ix', '', 'vv', (m) {
       return '';
     }),
-    ('SSk25Ix', '', '', (m) {
+    ('(當前等級) SSk25Ix', '', 'vv', (m) {
       return '';
     }),
-    ('SSk50Ix', '', '', (m) {
+    ('(當前等級) SSk50Ix', '', 'vv', (m) {
       return '';
     }),
-    ('SSk75Ix', '', '', (m) {
+    ('(當前等級) SSk75Ix', '', 'vv', (m) {
       return '';
     }),
-    ('SSk100Ix', '', '', (m) {
+    ('(當前等級) SSk100Ix', '', 'vv', (m) {
       return '';
     }),
-    ('樹果+1確認', '', 'v', (m) {
+    ('(當前等級) 樹果+1確認', '', 'vv', (m) {
       // 1. 「目前等級中」，所有的副技能有沒有樹果數量 S
       // 2. 只會有最多一個樹果數量Ｓ！（因為是最高階副技能）
 
@@ -530,9 +576,10 @@ void main() {
       //    AL7*1,
       //    0
       // ),
-      return '目前等級中，已開放的副技能，如果有數果數量 S 的副技能，則回傳 ${m.gn('AL')}，否則為零';
+      return '如果後續計算錯誤，回傳0；\n'
+          '                         公式: 如果 Lv 1~Curr 的副技能有 `${SubSkill.berryCountS._getName()}` ? `${m.gn('AL')}` : 0';
     }),
-    ('幫忙M確認', '', 'v', (m) {
+    ('(當前等級) 幫忙M確認', '', 'vv', (m) {
       //=IF(
       //    OR(
       //      $EF7=7,$EG7=7,$EH7=7,$EI7=7,$EJ7=7
@@ -540,9 +587,10 @@ void main() {
       //    0.86,
       //    1
       // )
-      return '';
+      return '如果後續計算錯誤，回傳0；\n'
+          '                       公式: 如果 Lv 1~Curr 的副技能有 `${SubSkill.helpSpeedM._getName()}` ? 0.86 : 1';
     }),
-    ('幫忙S+M確認', '', 'v', (m) {
+    ('(當前等級) 幫忙S+M確認', '', 'vv', (m) {
       // EM 幫忙S+M確認:
       // 8 => 幫忙速度S
 
@@ -551,216 +599,345 @@ void main() {
       //    IF(EL7=0.86,0.79,0.93),
       //    IF(EL7=0.86,0.86,1)
       // )
-      return '';
+      return '如果後續計算錯誤，回傳0；\n'
+          '                        公式: 1.0\n'
+          '                             - (如果 Lv 1~Curr 的副技能有 `${SubSkill.helpSpeedM._getName()}` ? 0.14 : 0)\n'
+          '                             - (如果 Lv 1~Curr 的副技能有 `${SubSkill.helpSpeedS._getName()}` ? 0.07 : 0)';
     }),
-    ('食材M確認', '', 'v', (m) {
+    ('(當前等級) 食材M確認', '', 'vv', (m) {
       // =IFERROR(IF(OR($EF7=9,$EG7=9,$EH7=9,$EI7=9,$EJ7=9),1.36,1),)
       // EN 食材M確認:
-      return '';
+      return '如果後續計算錯誤，回傳0；\n'
+          '                       公式: 如果 Lv 1~Curr 的副技能有 `${SubSkill.ingredientRateM._getName()}` ? 1.36 : 1';
     }),
-    /* EO */ ('食材S+M確認', '', 'v', (m) {
+    /* EO */ ('(當前等級) 食材S+M確認', '', 'vv', (m) {
       // IF(
       //    OR($EF7=10,$EG7=10,$EH7=10,$EI7=10,$EJ7=10),
       //    IF(EN7=1.36,1.54,1.18),
       //    IF(EN7=1.36,1.36,1)
       // ),
-      return '';
+      return '如果後續計算錯誤，回傳0；\n'
+          '                        公式: 1.0\n'
+          '                             + (如果 Lv 1~Curr 的副技能有 `${SubSkill.ingredientRateM._getName()}` ? 0.36 : 0)\n'
+          '                             + (如果 Lv 1~Curr 的副技能有 `${SubSkill.ingredientRateS._getName()}` ? 0.18 : 0)';
     }),
-    ('技能幾率M確認', '', '', (m) {
-      return '';
+    ('(當前等級) 技能幾率M確認', '', 'vv', (m) {
+      return '如果後續計算錯誤，回傳0；\n'
+          '                           如果 Lv 1~Curr 的副技能有 `${SubSkill.skillRateM._getName()}` ? 1.36 : 1';
     }),
-    ('技能幾率S+M確認', '', '', (m) {
+    ('(當前等級) 技能幾率S+M確認', '', 'vv', (m) {
       // IF(
       //      OR($EF7=18,$EG7=18,$EH7=18,$EI7=18,$EJ7=18),
       //      IF(EP7=1.36,1.54,1.18),
       //      IF(EP7=1.36,1.36,1)
       // ),
-      return '';
+      return '如果後續計算錯誤，回傳0；\n'
+          '                           公式: 1.0\n'
+          '                                + (如果 Lv 1~Curr 的副技能有 `${SubSkill.skillRateM._getName()}` ? 0.36 : 0)\n'
+          '                                + (如果 Lv 1~Curr 的副技能有 `${SubSkill.skillRateS._getName()}` ? 0.18 : 0)';
     }),
-    ('加成後主技能等級', '', '', (m) {
+    ('(當前等級) 加成後主技能等級', '', 'vv', (m) {
       // ER
       // =FW7 + IF(OR($EF7=15,$EG7=15,$EH7=15,$EI7=15,$EJ7=15),2,0)+IF(OR($EF7=16,$EG7=16,$EH7=16,$EI7=16,$EJ7=16),1,0)
+      return '公式: ${m.gn('FW')}\n'
+          '                                  + (Lv1~Curr 的副技能含有 `${SubSkill.skillLevelM._getName()}` ? 2 : 0)\n'
+          '                                  + (Lv1~Curr 的副技能含有 `${SubSkill.skillLevelS._getName()}` ? 2 : 0)\n'
+          '                                  + 3\n'
+          '                                  - (如果有錯誤，回傳3；否則回傳目前寶可夢的進化階段，可能值為 1~3)';
+    }),
+    ('(Lv50) SSk10Ix', '', 'vv', (m) {
       return '';
     }),
-    ('SSk10Ix', '', '', (m) {
+    ('(Lv50) SSk25Ix', '', 'vv', (m) {
       return '';
     }),
-    ('SSk25Ix', '', '', (m) {
+    ('(Lv50) SSk50Ix', '', 'vv', (m) {
       return '';
     }),
-    ('SSk50Ix', '', '', (m) {
+    ('(Lv50) 樹果+1確認', '', 'vv', (m) {
+      // =IF(OR($ES13=1,$ET13=1,$EU13=1,),AO13*1,0)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                         公式: 如果 Lv 1~50 的副技能有 `${SubSkill.berryCountS._getName()}` ? `${m.gn('AL')}` : 0';
+    }),
+    ('(Lv50) 幫忙M確認', '', 'vv', (m) {
+      // IF(OR($ES13=7,$ET13=7,$EU13=7,),0.86,1)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                       公式: 如果 Lv 1~50 的副技能有 `${SubSkill.helpSpeedM._getName()}` ? 0.86 : 1';
+    }),
+    ('(Lv50) 幫忙S+M確認', '', 'vv', (m) {
+      // IF(
+      //    OR($ES13=8,$ET13=8,$EU13=8),
+      //    IF(EW13=0.86,0.79,0.93),
+      //    IF(EW13=0.86,0.86,1)
+      // )
+      return '如果後續計算錯誤，回傳0；\n'
+          '                         公式: 1.0\n'
+          '                              - (如果 Lv 1~50 的副技能有 `${SubSkill.helpSpeedM._getName()}` ? 0.14 : 0)\n'
+          '                              - (如果 Lv 1~50 的副技能有 `${SubSkill.helpSpeedS._getName()}` ? 0.07 : 0)';
+    }),
+    ('(Lv50) 食材M確認', '', 'vv', (m) {
+      // =IF(OR($ES13=9,$ET13=9,$EU13=9),1.36,1)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                      公式: 如果 Lv 1~50 的副技能有 `${SubSkill.ingredientRateM._getName()}` ? 1.36 : 1';
+    }),
+    ('(Lv50) 食材S+M確認', '', 'vv', (m) {
+      // IF(OR($FD13=10,$FE13=10,$FF13=10),IF(EY13=1.36,1.54,1.18),IF(EY13=1.36,1.36,1))
+      return '如果後續計算錯誤，回傳0；\n'
+          '                         公式: 1.0\n'
+          '                              + (如果 Lv 1~50 的副技能有 `${SubSkill.ingredientRateM._getName()}` ? 0.36 : 0)\n'
+          '                              + (如果 Lv 1~50 的副技能有 `${SubSkill.ingredientRateS._getName()}` ? 0.18 : 0)';
+    }),
+    ('(Lv50) 技能幾率M確認', '', 'vv', (m) {
+      // IF(OR($ES13=17,$ET13=17,$EU13=17),1.36,1),
+      return '如果後續計算錯誤，回傳0；\n'
+          '                           如果 Lv 1~50 的副技能有 `${SubSkill.skillRateM._getName()}` ? 1.36 : 1';
+    }),
+    ('(Lv50) 技能幾率S+M確認', '', 'vv', (m) {
+      // =IF(
+      //      OR($FD13=18,$FE13=18,$FF13=18),
+      //      IF(FA13=1.36,1.54,1.18),
+      //      IF(FA13=1.36,1.36,1)
+      // )
+      return '如果後續計算錯誤，回傳0；\n'
+          '                           公式: 1.0\n'
+          '                                + (如果 Lv 1~50 的副技能有 `${SubSkill.skillRateM._getName()}` ? 0.36 : 0)\n'
+          '                                + (如果 Lv 1~50 的副技能有 `${SubSkill.skillRateS._getName()}` ? 0.18 : 0)';
+    }),
+    ('(Lv50) 加成後主技能等級', '', 'vv', (m) {
+      //=FW13
+      // +IF(OR($ES13=15,$ET13=15,$EU13=15),2,0)
+      // +IF(OR($ES13=16,$ET13=16,$EV13=16),1,0)
+      // +3
+      // -IFERROR(VLOOKUP($H13,'宝可梦'!$B$7:$Q$115,9,FALSE),3)
+      return '公式: ${m.gn('FW')}\n'
+          '                                  + (Lv1~50 的副技能含有 `${SubSkill.skillLevelM._getName()}` ? 2 : 0)\n'
+          '                                  + (Lv1~50 的副技能含有 `${SubSkill.skillLevelS._getName()}` ? 2 : 0)\n'
+          '                                  + 3\n'
+          '                                  - (如果有錯誤，回傳3；否則回傳目前寶可夢的進化階段，可能值為 1~3)';
+    }),
+    ('(Lv100) SSk10Ix', '', 'vv', (m) {
       return '';
     }),
-    ('樹果+1確認', '', '', (m) {
+    ('(Lv100) SSk25Ix', '', 'vv', (m) {
       return '';
     }),
-    ('幫忙M確認', '', '', (m) {
+    ('(Lv100) SSk50Ix', '', 'vv', (m) {
       return '';
     }),
-    ('幫忙S+M確認', '', '', (m) {
+    ('(Lv100) SSk75Ix', '', 'vv', (m) {
       return '';
     }),
-    ('食材M確認', '', '', (m) {
+    ('(Lv100) SSk100Ix', '', 'vv', (m) {
       return '';
     }),
-    ('食材S+M確認', '', '', (m) {
-      return '';
+    /* FI */('(Lv100) 樹果+1確認', '', 'vv', (m) {
+      return '如果後續計算錯誤，回傳0；\n'
+          '                         公式: 如果 Lv 1~100 的副技能有 `${SubSkill.berryCountS._getName()}` ? `${m.gn('AL')}` : 0';
     }),
-    ('技能幾率M確認', '', '', (m) {
-      return '';
+    /* FJ */('(Lv100) 幫忙M確認', '', 'vv', (m) {
+      // =IF(OR($FD13=7,$FE13=7,$FF13=7,$FG13=7,$FH13=7),0.86,1)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                       公式: 如果 Lv 1~100 的副技能有 `${SubSkill.helpSpeedM._getName()}` ? 0.86 : 1';
     }),
-    ('技能幾率S+M確認', '', '', (m) {
-      return '';
+    /* FK */('(Lv100) 幫忙S+M確認', '', 'vv', (m) {
+      // IF(
+      //      OR($FD13=8,$FE13=8,$FF13=8,$FG13=8,$FH13=8),
+      //      IF(FJ13=0.86,0.79,0.93),
+      //      IF(FJ13=0.86,0.86,1)
+      // )
+      return '如果後續計算錯誤，回傳0；\n'
+          '                        公式: 1.0\n'
+          '                             - (如果 Lv 1~100 的副技能有 `${SubSkill.helpSpeedM._getName()}` ? 0.14 : 0)\n'
+          '                             - (如果 Lv 1~100 的副技能有 `${SubSkill.helpSpeedS._getName()}` ? 0.07 : 0)';
     }),
-    ('加成後主技能等級', '', '', (m) {
-      return '';
+    /* FL */('(Lv100) 食材M確認', '', 'vv', (m) {
+      // =IF(OR($FD13=9,$FE13=9,$FF13=9,$FG13=9,$FH13=9),1.36,1)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                       公式: 如果 Lv 1~100 的副技能有 `${SubSkill.ingredientRateM._getName()}` ? 1.36 : 1';
     }),
-    ('SSk10Ix', '', '', (m) {
-      return '';
+    ('(Lv100) 食材S+M確認', '', 'vv', (m) {
+      // IF(
+      //    OR($FD13=10,$FE13=10,$FF13=10,$FG13=10,$FH13=10),
+      //    IF(FL13=1.36,1.54,1.18),
+      //    IF(FL13=1.36,1.36,1)
+      // )
+      return '如果後續計算錯誤，回傳0；\n'
+          '                        公式: 1.0\n'
+          '                             + (如果 Lv 1~100 的副技能有 `${SubSkill.ingredientRateM._getName()}` ? 0.36 : 0)\n'
+          '                             + (如果 Lv 1~100 的副技能有 `${SubSkill.ingredientRateS._getName()}` ? 0.18 : 0)';
     }),
-    ('SSk25Ix', '', '', (m) {
-      return '';
+    ('(Lv100) 技能幾率M確認', '', 'vv', (m) {
+      // =IF(OR($FD13=17,$FE13=17,$FF13=17,$FG13=17,$FH13=17),1.36,1)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                           如果 Lv 1~100 的副技能有 `${SubSkill.skillRateM._getName()}` ? 1.36 : 1';
     }),
-    ('SSk50Ix', '', '', (m) {
-      return '';
+    ('(Lv100) 技能幾率S+M確認', '', 'vv', (m) {
+      // IF(
+      //    OR($FD13=18,$FE13=18,$FF13=18,$FG13=18,$FH13=18),
+      //    IF(FN13=1.36,1.54,1.18),
+      //    IF(FN13=1.36,1.36,1)
+      // )
+      return '如果後續計算錯誤，回傳0；\n'
+          '                           公式: 1.0\n'
+          '                                + (如果 Lv 1~100 的副技能有 `${SubSkill.skillRateM._getName()}` ? 0.36 : 0)\n'
+          '                                + (如果 Lv 1~100 的副技能有 `${SubSkill.skillRateS._getName()}` ? 0.18 : 0)';
     }),
-    ('SSk75Ix', '', '', (m) {
-      return '';
+    /* FP */ ('(Lv100) 加成後主技能等級', '', 'vv', (m) {
+      // =FW13
+      // + IF(OR($FD13=15,$FE13=15,$FF13=15,$FG13=15,$FH13=15),2,0)
+      // + IF(OR($FD13=16,$FE13=16,$FF13=16,$FG13=16,$FH13=16),1,0)
+      // +3
+      // -IFERROR(VLOOKUP($H13,'宝可梦'!$B$7:$Q$115,9,FALSE),3)
+      return '公式: ${m.gn('FW')}\n'
+          '                                  + (Lv1~100 的副技能含有 `${SubSkill.skillLevelM._getName()}` ? 2 : 0)\n'
+          '                                  + (Lv1~100 的副技能含有 `${SubSkill.skillLevelS._getName()}` ? 2 : 0)\n'
+          '                                  + 3\n'
+          '                                  - (如果有錯誤，回傳3；否則回傳目前寶可夢的進化階段，可能值為 1~3)';
     }),
-    ('SSk100Ix', '', '', (m) {
-      return '';
-    }),
-    ('樹果+1確認', '', '', (m) {
-      return '';
-    }),
-    ('幫忙M確認', '', '', (m) {
-      return '';
-    }),
-    ('幫忙S+M確認', '', '', (m) {
-      return '';
-    }),
-    ('食材M確認', '', '', (m) {
-      return '';
-    }),
-    ('食材S+M確認', '', '', (m) {
-      return '';
-    }),
-    ('技能幾率M確認', '', '', (m) {
-      return '';
-    }),
-    ('技能幾率S+M確認', '', '', (m) {
-      return '';
-    }),
-    ('加成後主技能等級', '', '', (m) {
-      return '';
-    }),
-    ('名稱', '', 'v', (m) {
+    ('名稱', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('等級', '', 'v', (m) {
+    ('等級', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('食材2', '', 'v', (m) {
+    ('食材2', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('個數', '', 'v', (m) {
+    ('個數', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('食材3', '', 'v', (m) {
+    ('食材3', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('個數', '', 'v', (m) {
+    ('個數', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('主技能等級', '', 'v', (m) {
+    ('主技能等級', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('10', '10副技能', 'v', (m) {
+    ('10', '10副技能', 'vv', (m) {
       return 'user_input';
     }),
-    ('25', '25副技能', 'v', (m) {
+    ('25', '25副技能', 'vv', (m) {
       return 'user_input';
     }),
-    ('50', '50副技能', 'v', (m) {
+    ('50', '50副技能', 'vv', (m) {
       return 'user_input';
     }),
-    ('75', '75副技能', 'v', (m) {
+    ('75', '75副技能', 'vv', (m) {
       return 'user_input';
     }),
-    ('100', '100副技能', 'v', (m) {
+    ('100', '100副技能', 'vv', (m) {
       return 'user_input';
     }),
-    ('性格', '', 'v', (m) {
+    ('性格', '', 'vv', (m) {
       return 'user_input';
     }),
-    ('樹果能量/h', '', 'v', (m) {
+    ('(Lv50) 樹果能量/h', '', 'vv', (m) {
       return m.gn('CH');
     }),
-    ('食材個/h', '', 'v', (m) {
+    ('(Lv50) 食材個/h', '', 'vv', (m) {
       return m.gn('CI');
     }),
-    ('食材能量/h', '', 'v', (m) {
+    ('(Lv50) 食材能量/h', '', 'vv', (m) {
       return m.gn('CJ');
     }),
-    ('技能次數/d', '', 'v', (m) {
+    ('(Lv50) 技能次數/d', '', 'vv', (m) {
       return m.gn('CK');
     }),
-    ('主技能效益/h', '', 'v', (m) {
+    ('(Lv50) 主技能效益/h', '', 'vv', (m) {
       return m.gn('CL');
     }),
-    ('50自身收益/h', '', '', (m) {
-      return '';
+    /* GI */('(Lv50) 50自身收益/h', '', 'vv', (m) {
+      // CH13+CJ13+CL13
+      // *IF(VLOOKUP(VLOOKUP(H13,'宝可梦'!$B$7:$S$115,17,FALSE),'主技能'!$B$16:$P$28,15,FALSE)>1,0,1)
+      // +IF(OR(ES13=6,ET13=6,EU13=6),$GY$4/5,)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                          公式: ${m.gn('CH')} + ${m.gn('CJ')} \n'
+          '                                + ${m.gn('CL')} * (主技能是 `${MainSkill.vitalityAllS._getName()}` 或 `${MainSkill.vitalityS._getName()}` ? 0 : 1) \n'
+          '                                + (如果 Lv1~50 的副技能有 `${SubSkill.helperBonus._getName()}` ? ${m.gn('GY_4')} / 5 : 0)';
     }),
-    ('50輔助隊友收益/h', '', 'v', (m) {
+    ('(Lv50) 50輔助隊友收益/h', '', 'vv', (m) {
       return '${m.gn('GK')}-${m.gn('GI')}';
     }),
-    ('50收益/h', '', '', (m) {
-      return '';
+    /* GK */('(Lv50) 50收益/h', '', 'vv', (m) {
+      // =IFERROR(CH13+CJ13+CL13+IF(OR(ES13=6,ET13=6,EU13=6),$GY$4,),)
+      // CH13+CJ13+CL13+  IF(OR(ES13=6,ET13=6,EU13=6),$GY$4,)
+      return '如果後續計算出錯，回傳0；\n'
+          '                     ${m.gn('CH')} + ${m.gn('CJ')} + ${m.gn('CL')} + (如果 Lv 1~50 的副技能有 `${SubSkill.helperBonus._getName()}` ? ${m.gn('GY_4')} : 0)';
     }),
-    ('50白板/h', '', '', (m) {
-      return '';
+    /* GL */('(Lv50) 50白板/h', '', 'vv', (m) {
+      // =CT13+CV13+CX13
+      return '${m.gn('CT')}+${m.gn('CV')}+${m.gn('CX')}';
     }),
-    ('影響', '', '', (m) {
-      return '';
+    ('(Lv50) 影響', '', 'vv', (m) {
+      // =IF(B13=0,0,(GK13-GL13)/GL13)
+      return '如果 ${m.gn('B')} 等於 0，代表白板計算有問題?，會回傳0；\n'
+          '                    否則，回傳 ${m.gn('GL')} 對 ${m.gn('GK')} 增加多少百分比；\n'
+          '                    公式: (${m.gn('GK')} - ${m.gn('GL')}) / ${m.gn('GL')}';
     }),
-    ('樹果能量/h', '', '', (m) {
-      return '';
+    ('(Lv100) 樹果能量/h', '', 'vv', (m) {
+      return m.gn('DF');
     }),
-    ('食材個/h', '', '', (m) {
-      return '';
+    ('(Lv100) 食材個/h', '', 'vv', (m) {
+      return m.gn('DG');
     }),
-    ('食材能量/h', '', '', (m) {
-      return '';
+    ('(Lv100) 食材能量/h', '', 'vv', (m) {
+      return m.gn('DH');
     }),
-    ('技能次數/d', '', '', (m) {
-      return '';
+    ('(Lv100) 技能次數/d', '', 'vv', (m) {
+      return m.gn('DI');
     }),
-    ('主技能效益/h', '', '', (m) {
-      return '';
+    /* GR */('(Lv100) 主技能效益/h', '', 'vv', (m) {
+      return m.gn('DJ');
     }),
-    ('100自身收益/h', '', '', (m) {
-      return '';
+    /* GS */('(Lv100) 自身收益/h', '', 'vv', (m) {
+      // =IFERROR(DF13+DH13+DJ13*IF(VLOOKUP(VLOOKUP(H13,'宝可梦'!$B$7:$S$115,17,FALSE),'主技能'!$B$16:$P$28,15,FALSE)>1,0,1)+IF(OR(FD13=6,FE13=6,FF13=6,FG13=6,FH13=6),$HA$4/5,),)
+      // DF13+DH13+DJ13*IF(VLOOKUP(VLOOKUP(H13,'宝可梦'!$B$7:$S$115,17,FALSE),'主技能'!$B$16:$P$28,15,FALSE)>1,0,1)+IF(OR(FD13=6,FE13=6,FF13=6,FG13=6,FH13=6),$HA$4/5,)
+      return '如果後續計算錯誤，回傳0；\n'
+      // IF(VLOOKUP(VLOOKUP(H13,'宝可梦'!$B$7:$S$115,17,FALSE),'主技能'!$B$16:$P$28,15,FALSE)>1,0,1)
+      // +IF(OR(FD13=6,FE13=6,FF13=6,FG13=6,FH13=6),$HA$4/5,)
+          '                          公式: ${m.gn('DF')} + ${m.gn('DH')} \n'
+          '                               + ${m.gn('DJ')} * (主技能是 `${MainSkill.vitalityAllS._getName()}` 或 `${MainSkill.vitalityS._getName()}` ? 0 : 1) \n'
+          '                               + (如果 Lv1~100 的副技能有 `${SubSkill.helperBonus._getName()}` ? ${m.gn('HA_4')} / 5 : 0)';
     }),
-    ('100輔助隊友收益/h', '', '', (m) {
-      return '';
+    /* GT */ ('(Lv100) 輔助隊友收益/h', '', 'vv', (m) {
+      // =GU13-GS13
+      return '${m.gn('GU')} - ${m.gn('GS')}';
     }),
-    ('100收益/h', '', '', (m) {
-      return '';
+    /* GU */('(Lv100) 收益/h', '', 'vv', (m) {
+      // =IFERROR(DF14+DH14+DJ14+IF(OR(FD14=6,FE14=6,FF14=6,FG14=6,FH14=6),$HA$4,),)
+      // DF14+DH14+DJ14+IF(OR(FD14=6,FE14=6,FF14=6,FG14=6,FH14=6),$HA$4,)
+      return '如果後續計算錯誤，回傳0；\n'
+          '                      ${m.gn('DF')} + ${m.gn('DH')} + ${m.gn('DJ')} + (如果 Lv1~100 的副技能有 `${SubSkill.helperBonus._getName()}` ? ${m.gn('HA_4')} : 0)';
+      // +IF(OR(${m.gn('FD')}=6,${m.gn('FE')}=6,${m.gn('FF')}=6,${m.gn('FG')}=6,${m.gn('FH')}=6),${m.gn('HA')},)
     }),
-    ('100白板/h', '', '', (m) {
-      return '';
+    /* GV */ ('(Lv100) 白板/h', '', 'vv', (m) {
+      // =DR14+DT14+DV14
+      return '${m.gn('DR')}+${m.gn('DT')}+${m.gn('DV')}';
     }),
-    ('影響', '', '', (m) {
-      return '';
+    /* GW */ ('(Lv100) 影響', '', 'vv', (m) {
+      // =IF(B14=0,0,(GU14-GV14)/GV14)
+      return '如果 ${m.gn('B')} 等於 0，代表白板計算有問題?，會回傳0；\n'
+          '                     否則，回傳 ${m.gn('GV')} 對 ${m.gn('GU')} 增加多少百分比；\n'
+          '                     公式: (${m.gn('GU')} - ${m.gn('GV')}) / ${m.gn('GV')}';
     }),
-    ('50評級', '', '', (m) {
-      return '';
+    ('50評級', '', 'vv', (m) {
+      // =IF(B14=0,"-",
+      // IFS(GM14>=1,"S",GM14>=0.8,"A",GM14>=0.6,"B",GM14>=0.4,"C",GM14>=0.2,"D",GM14>=0,"E",GM14<0,"F"))
+      return '如果 ${m.gn('B')} 等於 0，代表白板計算有問題?；\n'
+          '               否則，根據 ${m.gn('GM')} 計算評級';
     }),
-    ('100評級', '', '', (m) {
-      return '';
+    ('100評級', '', 'vv', (m) {
+      // =IF(B14=0,"-",
+      // IFS(GW14>=1.5,"S+",GW14>=1,"S",GW14>=0.8,"A",GW14>=0.6,"B",GW14>=0.4,"C",GW14>=0.2,"D",GW14>=0,"E",GW14<0,"F"))
+      return '(與 ${m.gn('GX')} 計算公式一樣，但因為等級提高，評級的數值會更加嚴苛)';
     }),
-    ('100時收益', '', '', (m) {
-      return '';
+    /* GZ */ ('100時收益', '100時收益 (評級星數表示)', 'vv', (m) {
+      // =IFERROR(IFS(GU14>10000,"★★★★★",GU14>9000,"★★★★☆",GU14>8000,"★★★☆☆",
+      // GU14>7000,"★★☆☆☆",GU14>6000,"★☆☆☆☆",GU14>5000,"☆☆☆☆☆",GU14>4000,"☆☆☆☆",GU14>3000,"☆☆☆",
+      // GU14>2000,"☆☆",GU14>1000,"☆",GU14>0,""),"-")
+      return '根據 ${m.gn('GU')} 決定評級';
     }),
   ].mapIndexed((index, element) {
     return DataColumn(index, element.$1, element.$2, element.$3, element.$4);
@@ -772,28 +949,19 @@ void main() {
   );
 
   for (final column in columns) {
-    if (column.status == 'v') {
+    if (column.status == 'vv') {
       _successColumnCodeSet.add(column.columnCode);
     }
   }
 
   print('EF~EJ 都是跟 level 等級有關的副技能 (表上的副技能數值需要查表對應到的實際技能)');
 
-  final calcSuccess = {
-    'AX', 'DW', 'DX', 'DY', 'BQ', 'BO',  'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'D', 'T', 'EK'
-    'AL', 'AO', 'AR', 'AM', 'EF', 'EG', 'EH', 'EI', 'EJ', 'EM', 'EN', 'EK', 'EO', 'AL', 'AN', 'EV', 'AP', 'AQ', 'FI', 'AS', 'AT', 'CC',
-    'FQ', 'FR', 'FS', 'FT', 'FU', 'FV', 'FW', 'FX', 'FY', 'FZ', 'GA', 'GB', 'GC', 'CA', 'AV', 'AW', 'BB',
-  };
-
   for (final column in columns) {
-    // if (calcSuccess.contains(column.columnCode)) {
-    //   continue;
-    // }
-    // if (column.status == 'v') {
-    //   continue;
-    // }
-    // print('(${column.status}) ${column.columnCode} ${column.name}: ${column.formulaBuilder(columnCodeMapping)}');
-    print('${column.columnCode} ${column.name}');
+    if (_successColumnCodeSet.contains(column.columnCode)) {
+      continue;
+    }
+    print('(${column.status}) ${column.columnCode} ${column.name}: ${column.formulaBuilder(columnCodeMapping)}');
+    // print('${column.columnCode} ${column.name}');
   }
 
 }
@@ -835,16 +1003,76 @@ class DataColumn {
   }
 }
 
+/// 範例: 'HA_4' 代表 'HA4' 或 '$HA$4'，也就是「第 4 列的 HA 欄」
+/// `$` 代表固定欄或列，不會因不同列而改變
+final _fixedDataMapping = <String, _SpecialCell>{
+  'GY_3': _SpecialCell(
+    code: 'GY_3',
+    cellName: '(Lv50幫手) 出場平均估分 (手動計算)',
+    formulaBuilder: (m) {
+      return '選上你要上場的五隻高分寶可夢「自身收益」平均數。';
+    },
+  ),
+  'GY_4': _SpecialCell(
+    code: 'GY_4',
+    cellName: '(Lv50幫手) 幫手獎勵計算估分',
+    formulaBuilder: (m) {
+      //=HA3*5*0.05
+      return '${m.gn('GY_3')} * 5 * 0.05';
+    },
+  ),
+  'HA_3': _SpecialCell(
+    code: 'HA_3',
+    cellName: '(Lv100幫手) 出場平均估分 (手動計算)',
+    formulaBuilder: (m) {
+      return '選上你要上場的五隻高分寶可夢「自身收益」平均數。';
+    },
+  ),
+  'HA_4': _SpecialCell(
+    code: 'HA_4',
+    cellName: '(Lv100幫手) 幫手獎勵計算估分',
+    formulaBuilder: (m) {
+      //=HA3*5*0.05
+      return '${m.gn('HA_3')} * 5 * 0.05';
+    },
+  ),
+};
+
 extension _ColumnMappingX on Map<String, DataColumn> {
   /// gn = get name
   String gn(String columnCode) {
-    String text = this[columnCode]!.name;
-    if (_useTaiwanName && this[columnCode]!.tName.isNotEmpty) {
+    String? text;
+
+    // 固定欄列的資料
+    final specialCell = _fixedDataMapping[columnCode];
+    if (specialCell != null) {
+      text = specialCell.cellName;
+    }
+
+    // 結構化資料 / tName
+    if (text == null && _useTaiwanName && (this[columnCode]?.tName ?? '').isNotEmpty) {
       text = this[columnCode]!.tName;
     }
+
+    // 結構化資料 / name
+    text ??= this[columnCode]?.name;
+
+    // 結果
     final success = _successColumnCodeSet.contains(columnCode);
     return '「$text($columnCode)${success ? '*' : ''}」';
   }
+}
+
+class _SpecialCell {
+  _SpecialCell({
+    required this.code,
+    required this.cellName,
+    required this.formulaBuilder,
+  });
+
+  final String code;
+  final String cellName;
+  final SheetFormulaBuilder formulaBuilder;
 }
 
 
