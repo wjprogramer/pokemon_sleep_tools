@@ -46,7 +46,7 @@ class _VitalityInfoPageState extends State<VitalityInfoPage> {
                   Text('睡覺時，效率為 x2.2'.xTr),
 
                   // 2. 每日最多可進行2次的睡眠紀錄。遊戲以每日04:00為換日線，在此時間點之前"開始"的睡眠紀錄，都會被算在前一日的睡眠紀錄額度內 (睡眠"結束"時間不限，可超過04:00)。
-                  Text('主要睡眠和額外睡眠當天總分上限為 100'.xTr),
+                  Text('主要睡眠和額外睡眠當天總分上限為 100，例如：主要分數為 64，額外睡眠最高只會到 36'.xTr),
                   Text(''.xTr),
                   Text(''.xTr),
                   Text(''.xTr),
@@ -79,9 +79,18 @@ class _VitalityInfoPageState extends State<VitalityInfoPage> {
               ),
             ],
           ),
-          const SearchListTile(
-            titleText: '(日本語) げんき',
-            url: 'https://wikiwiki.jp/poke_sleep/%E3%81%92%E3%82%93%E3%81%8D',
+          ...ListTile.divideTiles(
+            context: context,
+            tiles: [
+              const SearchListTile(
+                titleText: '(日本語) げんき',
+                url: 'https://wikiwiki.jp/poke_sleep/%E3%81%92%E3%82%93%E3%81%8D',
+              ),
+              const SearchListTile(
+                titleText: '(中文) 攻略站',
+                url: 'https://pks.raenonx.cc/zh/energy',
+              ),
+            ],
           ),
           Gap.trailing,
         ],

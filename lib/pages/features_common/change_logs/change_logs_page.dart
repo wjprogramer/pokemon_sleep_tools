@@ -55,6 +55,14 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         date: DateTime(2023, 10, 27),
         description: null,
         items: [
+          _NormalVersionItem('[Feature] 活力曲線'),
+        ],
+      ),
+      _Version(
+        name: '1.0.6',
+        date: DateTime(2023, 10, 27),
+        description: null,
+        items: [
           _NormalVersionItem('[Feature] 可以用進化、異色、我的最愛搜尋寶可夢盒'),
           _NormalVersionItem('[Feature] 建立寶可夢時，可以篩選'),
           _NormalVersionItem('[Feature] 寶可夢可自訂登陸日期'),

@@ -9,7 +9,6 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons_custom/dev_icons_custom_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart/dev_vitality_chart_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart_2/dev_vitality_chart_page_2.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/bag/bag_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/character_list/characters_list_page.dart';
@@ -21,6 +20,7 @@ import 'package:pokemon_sleep_tools/pages/features_main/pokemon_food_menu/pokemo
 import 'package:pokemon_sleep_tools/pages/features_main/research_notes/research_notes_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sleep_faces_illustrated_book/sleep_faces_illustrated_book_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_book/sub_skills_illustrated_book_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/vitality_chart/vitality_chart_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 
@@ -216,7 +216,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                 MyOutlinedButton(
                   color: greenColor,
                   onPressed: () {
-                    DevVitalityChartPage2.go(context);
+                    VitalityChartPage.go(context);
                   },
                   iconBuilder: (color, size) {
                     return Icon(Icons.tag_faces, color: color, size: size,);
@@ -273,7 +273,7 @@ class _HomeFragmentState extends State<HomeFragment> {
                 ),
                 MyElevatedButton(
                   onPressed: () {
-                    DevVitalityChartPage2.go(context);
+                    VitalityChartPage.go(context);
                   },
                   child: const Text('活力曲線 v2'),
                 ),

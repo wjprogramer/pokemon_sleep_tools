@@ -1,4 +1,4 @@
-part of '../dev_vitality_chart_page_2.dart';
+part of '../vitality_chart_page.dart';
 
 const _chartDuration = TimeOfDay(hour: 24, minute: 0);
 
@@ -32,7 +32,7 @@ class _VitalityHelper {
         ? getSleepScore(extraSleepElapsed).clamp(0, extraMaxSleepScore) : null;
 
     // # declare / logic data
-    var sleeping = isInitVitalityWhenGetUp;
+    var sleeping = isInitVitalityWhenGetUp ? _SleepType.main : _SleepType.wakingUp;
     int? lastTooltipIndex;
 
     var preVitality = 0.0;
@@ -56,10 +56,16 @@ class _VitalityHelper {
       final time = initTime.add(minute: index * _spotStepValue);
 
       // Utils
-      double calcVitality(bool isSleeping, bool isKeyPoint) {
+      double calcVitality(_SleepType sleeping, bool isKeyPoint) {
         double res;
-        if (sleeping) {
+        if (sleeping == _SleepType.main || sleeping == _SleepType.extra) {
           res = lastKeyPointVitality + (calcTimeElapsed(lastKeyPointTime, time).toMinutes() / 510 * 100);
+          if (sleeping == _SleepType.extra) {
+            final maxVitality = lastKeyPointVitality + extraMaxSleepScore;
+            if (res > maxVitality) {
+              res = maxVitality;
+            }
+          }
         } else {
           final x = isKeyPoint ? lastKeyPointIndex + 1 : lastKeyPointIndex + 1;
           res = lastKeyPointVitality - ((index - x) * _spotStepValue) / 10;
@@ -71,16 +77,16 @@ class _VitalityHelper {
       final isSleepTimePoint = time == mainSleepTime || time == extraSleepTime;
       if (isSleepTimePoint) {
         if (index > 0) {
-          lastKeyPointVitality = calcVitality(false, true);
+          lastKeyPointVitality = calcVitality(_SleepType.wakingUp, true);
         }
-        sleeping = true;
+        sleeping = time == mainSleepTime ? _SleepType.main : _SleepType.extra;
       }
 
       // [TimePoint] Time to wake up
       final isGetUpTimePoint = time == mainGetUpTime || time == extraGetUpTime;
       if (isGetUpTimePoint) {
-        lastKeyPointVitality = calcVitality(true, true);
-        sleeping = false;
+        lastKeyPointVitality = calcVitality(sleeping, true);
+        sleeping = _SleepType.wakingUp;
       }
 
       // [TimePoint] Time to start sleeping or wake up
@@ -92,7 +98,7 @@ class _VitalityHelper {
 
       // Calculate
       final vitality = calcVitality(sleeping, false);
-      final (vitalityThreshold, vitalityColor) = isSleepTimePoint || sleeping
+      final (vitalityThreshold, vitalityColor) = isSleepTimePoint || sleeping == _SleepType.main || sleeping == _SleepType.extra
           ? (100, moodColor80)
           : MoodIcon.getVitalityThresholdAndColor(vitality);
 
@@ -212,4 +218,13 @@ class _VitalityChartResult {
   TimeOfDay? extraSleepElapsed;
   int mainSleepScore;
   int? extraSleepScore;
+}
+
+enum _SleepType {
+  /// 主要睡眠
+  main,
+  /// 額外睡眠
+  extra,
+  /// 清醒中
+  wakingUp,
 }

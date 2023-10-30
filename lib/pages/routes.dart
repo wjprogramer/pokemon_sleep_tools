@@ -12,7 +12,7 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/de
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_statics_2/dev_pokemon_statics_2_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_two_direction_table/dev_two_direction_table_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart/dev_vitality_chart_page.dart';
-import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart_2/dev_vitality_chart_page_2.dart';
+import 'package:pokemon_sleep_tools/pages/features_main/vitality_chart/vitality_chart_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/about/about_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/analysis_details/analysis_details_page.dart';
@@ -83,7 +83,6 @@ MyRoutesMapping generateRoutes() {
       DevPokemonStatics2Page.route,
       DevTwoDirectionTablePage.route,
       DevVitalityChartPage.route,
-      DevVitalityChartPage2.route,
       MyStorybookPage.route,
     ],
     // main
@@ -131,6 +130,7 @@ MyRoutesMapping generateRoutes() {
     SubSkillPickerPage.route,
     SubSkillsCharacterIllustratedBookPage.route,
     TeamAnalysisPage.route,
+    VitalityChartPage.route,
     VitalityInfoPage.route,
   ];
 

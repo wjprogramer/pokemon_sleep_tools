@@ -18,12 +18,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 part 'src/vitality_helper.dart';
 
 /// TODO: 增加放大縮小的按鈕，控制 table 寬度
-class DevVitalityChartPage2 extends StatefulWidget {
-  const DevVitalityChartPage2._();
+class VitalityChartPage extends StatefulWidget {
+  const VitalityChartPage._();
 
-  static const MyPageRoute route = ('/DevVitalityChartPage2', _builder);
+  static const MyPageRoute route = ('/VitalityChartPage', _builder);
   static Widget _builder(dynamic args) {
-    return const DevVitalityChartPage2._();
+    return const VitalityChartPage._();
   }
 
   static void go(BuildContext context) {
@@ -33,10 +33,10 @@ class DevVitalityChartPage2 extends StatefulWidget {
   }
 
   @override
-  State<DevVitalityChartPage2> createState() => _DevVitalityChartPage2State();
+  State<VitalityChartPage> createState() => _VitalityChartPageState();
 }
 
-class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
+class _VitalityChartPageState extends State<VitalityChartPage> {
 
   // Form helper
   final _vitalityHelper = _VitalityHelper();
