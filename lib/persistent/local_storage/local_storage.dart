@@ -96,6 +96,7 @@ class MyLocalStorage implements MyInjectable {
       faceStyles: await readPokemonSleepFaces(),
       teams: await readPokemonTeams(),
       fields: await readPokemonFields(),
+      foods: await readFood(),
     );
 
     if (!MyPlatform.isWindows) {
@@ -155,11 +156,14 @@ class MyLocalStorage implements MyInjectable {
     final faceStyles = result.faceStyles;
     final teams = result.teams;
     final fields = result.fields;
+    final foods = result.foods;
 
     if (profiles != null) { await writePokemonProfiles(profiles); }
     if (faceStyles != null) { await writePokemonSleepFaces(faceStyles); }
     if (teams != null) { await writePokemonTeams(teams); }
     if (fields != null) { await writePokemonFields(fields); }
+    if (foods != null) { await writeFood(foods); }
+    
     return true;
   }
   // endregion
@@ -307,12 +311,14 @@ class _LocalStoredDocumentResult {
     required this.faceStyles,
     required this.teams,
     required this.fields,
+    required this.foods,
   });
 
   StoredPokemonProfiles? profiles;
   StoredPokemonSleepFaceStyles? faceStyles;
   StoredPokemonTeams? teams;
   StoredPokemonFields? fields;
+  StoredFood? foods;
 
   factory _LocalStoredDocumentResult.fromJson(Map<String, dynamic> json) {
     return _LocalStoredDocumentResult(
@@ -320,6 +326,7 @@ class _LocalStoredDocumentResult {
       faceStyles: json['faceStyles'] == null ? null : StoredPokemonSleepFaceStyles.fromJson(json['faceStyles']),
       teams: json['teams'] == null ? null : StoredPokemonTeams.fromJson(json['teams']),
       fields: json['fields'] == null ? null : StoredPokemonFields.fromJson(json['fields']),
+      foods: json['foods'] == null ? null : StoredFood.fromJson(json['foods']),
     );
   }
 
@@ -329,6 +336,7 @@ class _LocalStoredDocumentResult {
       'faceStyles': faceStyles?.toJson(),
       'teams': teams?.toJson(),
       'fields': fields?.toJson(),
+      'foods': foods?.toJson(),
     };
   }
 
