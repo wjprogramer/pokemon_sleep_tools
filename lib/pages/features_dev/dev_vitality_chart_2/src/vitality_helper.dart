@@ -16,10 +16,20 @@ class _VitalityHelper {
     required double? initVitality,
     required bool isInitVitalityWhenGetUp,
   }) {
-    // # declare / fixed data
+    int getSleepScore(TimeOfDay elapsed) {
+      return ((elapsed.hour * 60.0 + elapsed.minute) / 510 * 100).clamp(0.0, 100.0).ceil().toInt();
+    }
+
+    // # declare / fixed data / main sleeping
     final sleepElapsed = calcTimeElapsed(mainSleepTime, mainGetUpTime);
-    final mainSleepScore = ((sleepElapsed.hour * 60.0 + sleepElapsed.minute) / 510 * 100).clamp(0.0, 100.0).ceil().toInt();
+    final mainSleepScore = getSleepScore(sleepElapsed);
+
+    // # declare / fixed data / extra sleeping
     final extraMaxSleepScore = (100 - mainSleepScore).toInt();
+    final extraSleepElapsed = extraSleepTime != null && extraGetUpTime != null
+        ? calcTimeElapsed(extraSleepTime, extraGetUpTime) : null;
+    final extraSleepScore = extraSleepElapsed != null
+        ? getSleepScore(extraSleepElapsed).clamp(0, extraMaxSleepScore) : null;
 
     // # declare / logic data
     var sleeping = isInitVitalityWhenGetUp;
@@ -151,7 +161,9 @@ class _VitalityHelper {
       stops: stops,
       colors: colors,
       sleepElapsed: sleepElapsed,
+      extraSleepElapsed: extraSleepElapsed,
       mainSleepScore: mainSleepScore,
+      extraSleepScore: extraSleepScore,
     );
   }
 
@@ -187,7 +199,9 @@ class _VitalityChartResult {
     required this.stops,
     required this.colors,
     required this.sleepElapsed,
+    required this.extraSleepElapsed,
     required this.mainSleepScore,
+    required this.extraSleepScore,
   });
 
   List<int> showingTooltipSpotIndexList;
@@ -195,5 +209,7 @@ class _VitalityChartResult {
   List<double> stops;
   List<Color> colors;
   TimeOfDay sleepElapsed;
+  TimeOfDay? extraSleepElapsed;
   int mainSleepScore;
+  int? extraSleepScore;
 }

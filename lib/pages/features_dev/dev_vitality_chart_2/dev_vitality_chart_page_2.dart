@@ -68,10 +68,11 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
   var _tableDataList = <VitalityChartData>[];
   var _showingTooltipSpotIndexList = <int>[];
   var _sleepElapsed = const TimeOfDay(hour: 0, minute: 0);
+  TimeOfDay? _extraSleepElapsed;
   /// 一睡分數
   var _mainSleepScore = 0;
   /// 二睡分數，加上一睡分數不可超過 100
-  var _extraSleepScore = 0;
+  int? _extraSleepScore;
   var _shouldExtraSleep = false;
 
   // Chart common options
@@ -148,7 +149,9 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
     _stops = res.stops;
     _colors = res.colors;
     _sleepElapsed = res.sleepElapsed;
+    _extraSleepElapsed = res.extraSleepElapsed;
     _mainSleepScore = res.mainSleepScore;
+    _extraSleepScore = res.extraSleepScore;
   }
 
   Future<TimeOfDay?> _pickTime({
@@ -606,6 +609,11 @@ class _DevVitalityChartPage2State extends State<DevVitalityChartPage2> {
                             ),
                           ),
                         ],
+                      ),
+                      Gap.sm,
+                      Text(
+                        '睡覺時間: ${MyFormatter.time(_extraSleepElapsed)} (睡眠分數 ${_extraSleepScore})',
+                        style: TextStyle(color: greyColor3),
                       ),
                     ],
                     if (kDebugMode) ...[
