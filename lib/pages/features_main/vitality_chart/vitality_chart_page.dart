@@ -346,7 +346,7 @@ class _VitalityChartPageState extends State<VitalityChartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(
-        titleText: '活力曲線 v2',
+        titleText: '活力曲線',
         actions: [
           IconButton(
             onPressed: () => _showInfoDialog(),
