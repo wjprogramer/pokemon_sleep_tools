@@ -7,12 +7,12 @@ class IngredientImage extends StatelessWidget {
   const IngredientImage({
     super.key,
     required this.ingredient,
-    this.width,
+    this.size,
     this.disableTooltip = false,
   });
 
   final Ingredient ingredient;
-  final double? width;
+  final double? size;
   final bool disableTooltip;
 
   @override
@@ -20,8 +20,16 @@ class IngredientImage extends StatelessWidget {
     Widget result = Image.asset(
       AssetsPath.ingredient(ingredient),
       errorBuilder: (_, __, ___) => Container(),
-      width: width,
+      width: size,
     );
+
+    if (size != null) {
+      result = SizedBox(
+        width: size,
+        height: size,
+        child: result,
+      );
+    }
 
     if (disableTooltip) {
       return result;

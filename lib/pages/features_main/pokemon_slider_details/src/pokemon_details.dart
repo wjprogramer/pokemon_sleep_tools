@@ -244,7 +244,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                           padding: const EdgeInsets.only(),
                           child: IngredientImage(
                             ingredient: basicProfile.ingredient1,
-                            width: 24,
+                            size: 24,
                           ),
                         ),
                       Expanded(
@@ -267,7 +267,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                           padding: const EdgeInsets.only(),
                           child: IngredientImage(
                             ingredient: widget.profile.ingredient2,
-                            width: 24,
+                            size: 24,
                           ),
                         ),
                       Expanded(
@@ -290,7 +290,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                           padding: const EdgeInsets.only(),
                           child: IngredientImage(
                             ingredient: widget.profile.ingredient3,
-                            width: 24,
+                            size: 24,
                           ),
                         ),
                       Expanded(

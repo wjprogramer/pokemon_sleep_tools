@@ -64,6 +64,7 @@ https://github.com/jeancroy/RP-fit
 
 ---
 
+- 推算每天能到達的卡比獸等級
 - 排序寶可夢
 - 搜尋幾星的睡姿
 - 比較不同寶可夢數值 （BasicProfile 或是 Profile 各項數值互相比較）

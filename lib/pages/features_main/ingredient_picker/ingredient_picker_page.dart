@@ -56,7 +56,7 @@ class _IngredientPickerPageState extends State<IngredientPickerPage> {
                 ListTile(
                   leading: !MyEnv.USE_DEBUG_IMAGE ? null : IngredientImage(
                     ingredient: ingredient,
-                    width: 24,
+                    size: 24,
                     disableTooltip: true,
                   ),
                   title: Text(

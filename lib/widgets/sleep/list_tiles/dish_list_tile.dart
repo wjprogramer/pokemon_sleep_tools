@@ -55,7 +55,7 @@ class DishListTile extends StatelessWidget {
                       children: [
                         IngredientImage(
                           ingredient: dishCount.$1,
-                          width: 20,
+                          size: 20,
                         ),
                         Gap.sm,
                         Text('x${dishCount.$2}'),

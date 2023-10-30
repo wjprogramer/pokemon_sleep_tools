@@ -502,7 +502,7 @@ class _PokemonBasicProfilePageState extends State<PokemonBasicProfilePage> {
                 padding: const EdgeInsets.only(right: 2),
                 child: IngredientImage(
                   ingredient: ingredient,
-                  width: 32,
+                  size: 32,
                   disableTooltip: true,
                 ),
               ),

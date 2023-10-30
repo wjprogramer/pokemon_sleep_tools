@@ -3,6 +3,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/extensions.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
+import 'package:pokemon_sleep_tools/persistent/persistent.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/gap.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images/images.dart';
@@ -16,22 +17,48 @@ class DishCard extends StatelessWidget {
     required this.level,
     this.energy,
     this.onTap,
+    this.storedIngredientOf,
   });
 
   final Dish dish;
   final int level;
   final int? energy;
   final VoidCallback? onTap;
+  final Map<Ingredient, StoredIngredientItem>? storedIngredientOf;
 
   static const _radiusValue = 16.0;
   static const _ingredientLabelVerticalPaddingValue = 2.0;
+
+  bool get _shouldCheckQuantity => storedIngredientOf != null;
+
+  Widget _buildQuantity(Ingredient ingredient, int requiredQuantity, TextStyle baseStyle) {
+    if (_shouldCheckQuantity) {
+      final currCount = storedIngredientOf?[ingredient]?.amount ?? 0;
+      final notEnoughCount = requiredQuantity - currCount;
+
+      if (notEnoughCount > 0) {
+        return Text(
+          '$requiredQuantity (-$notEnoughCount)',
+          style: baseStyle.copyWith(
+            color: dangerColor,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+      }
+    }
+
+    return Text(
+      requiredQuantity.toString(),
+      style: baseStyle,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final radius = BorderRadius.circular(_radiusValue);
 
-    final ingredientBaseStyle = theme.textTheme.bodySmall;
+    final ingredientBaseStyle = theme.textTheme.bodySmall ?? const TextStyle();
     final ingredientAndQuantityList = dish.getIngredients();
 
     Color labelBgColor;
@@ -190,6 +217,7 @@ class DishCard extends StatelessWidget {
                                 alignment: Alignment.bottomLeft,
                                 child: DishIconImage(
                                   dish: dish,
+                                  disableTooltip: true,
                                 ),
                               )
                             else
@@ -277,7 +305,7 @@ class DishCard extends StatelessWidget {
                                             Widget labelNameContent;
                                             if (MyEnv.USE_DEBUG_IMAGE) {
                                               labelNameContent = IngredientImage(
-                                                width: 20,
+                                                size: 20,
                                                 ingredient: ingredient,
                                               );
                                             } else {
@@ -302,10 +330,7 @@ class DishCard extends StatelessWidget {
                                                   ),
                                                   child: labelNameContent,
                                                 ),
-                                                Text(
-                                                  quantity.toString(),
-                                                  style: ingredientBaseStyle,
-                                                ),
+                                                _buildQuantity(ingredient, quantity, ingredientBaseStyle),
                                               ],
                                             );
                                           }),

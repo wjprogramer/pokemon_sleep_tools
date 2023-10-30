@@ -17,7 +17,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 part 'src/vitality_helper.dart';
 
-/// TODO: 增加放大縮小的按鈕，控制 table 寬度
+/// TODO: 增加性格、技能等影響
 class VitalityChartPage extends StatefulWidget {
   const VitalityChartPage._();
 

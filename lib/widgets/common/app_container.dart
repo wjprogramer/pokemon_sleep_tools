@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pokemon_sleep_tools/view_models/food_view_model.dart';
 import 'package:pokemon_sleep_tools/view_models/view_models.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,7 @@ class AppContainer extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FieldViewModel()),
+        ChangeNotifierProvider(create: (_) => FoodViewModel()),
         ChangeNotifierProvider(create: (_) => MainViewModel()),
         ChangeNotifierProvider(create: (_) => TeamViewModel()),
         ChangeNotifierProvider(create: (_) => SleepFaceViewModel()),

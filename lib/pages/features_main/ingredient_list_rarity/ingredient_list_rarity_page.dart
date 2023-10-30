@@ -189,7 +189,7 @@ class _IngredientListRarityPageState extends State<IngredientListRarityPage> wit
                   padding: const EdgeInsets.only(right: 8),
                   child: IngredientImage(
                     ingredient: data.ingredient,
-                    width: 32,
+                    size: 32,
                     disableTooltip: true,
                   ),
                 ),

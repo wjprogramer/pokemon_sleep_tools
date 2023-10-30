@@ -8,21 +8,29 @@ class DishIconImage extends StatelessWidget {
     super.key,
     required this.dish,
     this.width,
+    this.disableTooltip = false,
   });
 
   final Dish dish;
   final double? width;
+  final bool disableTooltip;
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: dish.nameI18nKey.xTr,
-      child: Image.asset(
-        AssetsPath.mealIcon(dish.id),
-        errorBuilder: (context, error, stackTrace) {
-          return Container();
-        },
-      ),
+    Widget result = Image.asset(
+      AssetsPath.mealIcon(dish.id),
+      errorBuilder: (context, error, stackTrace) {
+        return Container();
+      },
     );
+
+    if (!disableTooltip) {
+      result = Tooltip(
+        message: dish.nameI18nKey.xTr,
+        child: result,
+      );
+    }
+
+    return result;
   }
 }

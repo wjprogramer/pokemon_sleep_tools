@@ -650,7 +650,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
                 children: [
                   IngredientImage(
                     ingredient: ingredientCount.key,
-                    width: 32,
+                    size: 32,
                   ),
                   Text('${ingredientCount.key.nameI18nKey.xTr} x${ingredientCount.value}'),
                 ],

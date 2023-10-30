@@ -132,7 +132,7 @@ class _DishEnergyCalculatorPageState extends State<DishEnergyCalculatorPage> {
                             padding: const EdgeInsets.only(right: 8),
                             child: IngredientImage(
                               ingredient: ingredient,
-                              width: 30,
+                              size: 30,
                             ),
                           ),
                         Text(
@@ -152,7 +152,7 @@ class _DishEnergyCalculatorPageState extends State<DishEnergyCalculatorPage> {
                         padding: const EdgeInsets.only(right: 8),
                         child: IngredientImage(
                           ingredient: ingredient,
-                          width: 30,
+                          size: 30,
                         ),
                       ),
                     Expanded(
@@ -275,7 +275,7 @@ class _DishEnergyCalculatorPageState extends State<DishEnergyCalculatorPage> {
                   padding: const EdgeInsets.only(right: 8),
                   child: IngredientImage(
                     ingredient: data.ingredient,
-                    width: 30,
+                    size: 30,
                   ),
                 ),
               Text(data.ingredient.nameI18nKey.xTr),

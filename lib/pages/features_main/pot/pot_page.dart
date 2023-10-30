@@ -106,6 +106,20 @@ class _PotPageState extends State<PotPage> {
     return Scaffold(
       appBar: buildAppBar(
         titleText: 't_pot'.xTr,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () {
+              DialogUtility.text(
+                context,
+                title: Text('說明'.xTr),
+                content: Text(
+                  '1. 數字為鍋子容量\n'.xTr,
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: buildListView(
         children: [

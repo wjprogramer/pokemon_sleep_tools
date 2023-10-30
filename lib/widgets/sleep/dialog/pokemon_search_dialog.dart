@@ -375,7 +375,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                             ),
                             child: IngredientImage(
                               ingredient: ingredient,
-                              width: 30,
+                              size: 30,
                             ),
                           ),
                           if (_isIngredientChecked(searchOptions, ingredient)) Positioned(

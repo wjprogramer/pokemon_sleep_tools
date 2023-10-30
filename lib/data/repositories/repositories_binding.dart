@@ -6,6 +6,7 @@ void setupRepositoriesDependencies() {
 
   bind<EvolutionRepository>(EvolutionRepository());
   bind<FieldRepository>(FieldRepository());
+  bind<FoodRepository>(FoodRepository());
   bind<PokemonBasicProfileRepository>(PokemonBasicProfileRepository());
   bind<PokemonProfileRepository>(PokemonProfileRepository());
   bind<PokemonTeamRepository>(PokemonTeamRepository());

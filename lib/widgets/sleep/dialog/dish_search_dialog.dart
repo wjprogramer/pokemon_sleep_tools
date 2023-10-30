@@ -187,7 +187,7 @@ class _DishSearchDialogState extends State<DishSearchDialog> {
                         ),
                         child: IngredientImage(
                           ingredient: ingredient,
-                          width: 30,
+                          size: 30,
                         ),
                       ),
                       if (searchOptions.ingredientOf.contains(ingredient)) Positioned(

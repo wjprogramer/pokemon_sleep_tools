@@ -15,6 +15,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 export 'models/app_meta.dart';
 
 part 'models/base_local_file.dart';
+part 'models/stored_food.dart';
 part 'models/stored_pokemon_fields.dart';
 part 'models/stored_pokemon_profiles.dart';
 part 'models/stored_pokemon_sleep_face_styles.dart';
@@ -35,6 +36,7 @@ class MyLocalStorage implements MyInjectable {
       final res = await callback(resource);
 
       final writeFuture = switch (resource) {
+        StoredFood() => writeFood(resource),
         StoredPokemonFields() => writePokemonFields(resource),
         StoredPokemonProfiles() => writePokemonProfiles(resource),
         StoredPokemonTeams() => writePokemonTeams(resource),
@@ -57,6 +59,7 @@ class MyLocalStorage implements MyInjectable {
       //   stored = (await readPokemonTeams()) as T;
       // }
       stored = switch (T) {
+        StoredFood => (await readFood()) as T,
         StoredPokemonFields => (await readPokemonFields()) as T,
         StoredPokemonProfiles => (await readPokemonFile()) as T,
         StoredPokemonTeams => (await readPokemonTeams()) as T,
@@ -67,6 +70,7 @@ class MyLocalStorage implements MyInjectable {
       final res = await callback(stored!);
 
       final writeFuture = switch (res) {
+        StoredFood() => writeFood(res),
         StoredPokemonFields() => writePokemonFields(res),
         StoredPokemonProfiles() => writePokemonProfiles(res),
         StoredPokemonTeams() => writePokemonTeams(res),
@@ -177,6 +181,28 @@ class MyLocalStorage implements MyInjectable {
   Future writeMetaFile(String value) async {
   }
   // endregion Meta
+
+  // region Food
+  String get _foodFilePath {
+    return path.join(_parent.path, 'food.json');
+  }
+
+  Future<StoredFood> readFood() async {
+    final file = File(_foodFilePath);
+    StoredFood result;
+    if (file.notExistsSync()) {
+      result = StoredFood.empty();
+    } else {
+      result = StoredFood.fromJson(json.decode(file.readAsStringSync()));
+    }
+    return result;
+  }
+
+  Future<void> writeFood(StoredFood data) async {
+    final file = File(_foodFilePath);
+    file.writeAsStringSync(jsonEncode(data.toJson()));
+  }
+  // endregion Food
 
   // region Pokemon Profiles
   String get _pokemonProfileFilePath {

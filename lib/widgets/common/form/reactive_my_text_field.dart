@@ -79,7 +79,7 @@ class ReactiveMyTextField<T> extends StatelessWidget {
           padding: const EdgeInsets.only(right: 8),
           child: IngredientImage(
             ingredient: formControl.value as Ingredient,
-            width: 24,
+            size: 24,
             disableTooltip: true,
           ),
         );

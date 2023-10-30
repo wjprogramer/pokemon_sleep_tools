@@ -164,7 +164,7 @@ class _DishPageState extends State<DishPage> {
                   Padding(
                     padding: const EdgeInsets.only(right: 12),
                     child: IngredientImage(
-                      width: 30,
+                      size: 30,
                       ingredient: ingredient.$1,
                     ),
                   ),
@@ -260,7 +260,7 @@ class _DishPageState extends State<DishPage> {
                             padding: const EdgeInsets.only(right: 12),
                             child: IngredientImage(
                               ingredient: ingredient.$1,
-                              width: 32,
+                              size: 32,
                             ),
                           ),
                         Expanded(

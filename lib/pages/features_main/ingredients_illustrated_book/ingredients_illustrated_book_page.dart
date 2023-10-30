@@ -100,7 +100,7 @@ class _IngredientsIllustratedBookPageState extends State<IngredientsIllustratedB
                     padding: const EdgeInsets.only(right: 4),
                     child: IngredientImage(
                       ingredient: ingredient,
-                      width: 25,
+                      size: 25,
                     ),
                   ),
                 Expanded(

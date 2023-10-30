@@ -48,7 +48,7 @@ class IngredientLabel extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 4),
                       child: IngredientImage(
                         ingredient: ingredient,
-                        width: 16,
+                        size: 16,
                       ),
                     ),
                   Text(

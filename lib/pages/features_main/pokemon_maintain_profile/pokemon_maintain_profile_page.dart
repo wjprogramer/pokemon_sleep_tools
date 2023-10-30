@@ -700,7 +700,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                                 opacity: 0.5,
                                 child: IngredientImage(
                                   ingredient: ingredientAndCount.$1,
-                                  width: 24,
+                                  size: 24,
                                   disableTooltip: true,
                                 ),
                               ),

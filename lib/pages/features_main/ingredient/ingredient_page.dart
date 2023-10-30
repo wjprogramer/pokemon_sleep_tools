@@ -145,7 +145,7 @@ class _IngredientPageState extends State<IngredientPage> {
                 padding: const EdgeInsets.only(right: 4),
                 child: IngredientImage(
                   ingredient: _ingredient,
-                  width: 25,
+                  size: 25,
                 ),
               ),
             Text(_titleText),
