@@ -634,6 +634,7 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
             margin: const EdgeInsets.fromLTRB(4, 4, 4, 8),
             constraints: const BoxConstraints(
               minHeight: 50,
+              maxHeight: 50,
             ),
             decoration: BoxDecoration(
               color: isSelected ? _theme.primaryColorLight : null,
@@ -672,8 +673,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                       ),
                     ),
                   Positioned(
-                    left: 0,
-                    top: 0,
+                    left: -4,
+                    top: -4,
                     child: AnimatedOpacity(
                       opacity: basicProfile == null ? 0 : 1,
                       duration: const Duration(milliseconds: 200),
@@ -685,9 +686,8 @@ class _PokemonBoxPageState extends State<PokemonBoxPage> {
                             _indexToProfileId[index] = -1;
                           });
                         },
-                        icon: Icon(
-                          Icons.close,
-                        ),
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(Icons.close),
                       ),
                     ),
                   ),

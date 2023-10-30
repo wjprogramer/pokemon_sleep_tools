@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/pages/features_common/data_sources/data_sour
 import 'package:pokemon_sleep_tools/pages/features_common/not_found_route/not_found_route_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons_custom/dev_icons_custom_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_basic_profile_ingredients_combination/dev_pokemon_basic_profile_ingredients_combination_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_statics_2/dev_pokemon_statics_2_page.dart';
@@ -78,6 +79,7 @@ MyRoutesMapping generateRoutes() {
     if (kDebugMode) ...[
       DevIconsPage.route,
       DevIconsCustomPage.route,
+      DevPokemonBasicProfileIngredientsCombinationPage.route,
       DevPokemonBoxPage.route,
       DevPokemonEvolutionsPage.route,
       DevPokemonStatics2Page.route,

@@ -17,6 +17,11 @@ enum _Type {
 }
 
 /// 運算公式來源：「https://bbs.nga.cn/read.php?tid=37305277」
+///
+/// 原來源問題
+///
+/// - 部分主技能發動次數欄位為 `次數/h`，但實際上是 `次數/d`
+///
 class PokemonProfileStatistics2 {
   PokemonProfileStatistics2(this.profile);
 
@@ -78,7 +83,6 @@ class PokemonProfileStatistics2 {
   /* FW */ final _mainSkillLv = 3;
   /// 是否考慮幫手
   /* $Q$4 */ final q4 = 1; // 1 為考慮，反之 0 為不考慮
-
 
   // 在 sheet 上為常數
   /* $AM$4 */ final _ccc1 = 0.25;
@@ -504,6 +508,56 @@ class PokemonProfileStatistics2 {
       _Type.dev => [
         {
           'type': 'table',
+          'title': '技能加成確認',
+          'cells': [
+            [
+              '',
+              '樹果+1確認',
+              '幫忙M確認',
+              '幫忙S+M確認',
+              '食材M確認',
+              '食材S+M確認',
+              '技能幾率M確認',
+              '技能幾率S+M確認',
+              '加成後主技能等級',
+            ],
+            [
+              '當前等級',
+              Display.numDouble(fruitBonusEnergy),
+              Display.numDouble(helpSpeedMLvCurr),
+              Display.numDouble(helpSpeedSMLvCurr),
+              Display.numDouble(ingredientMLvCurr),
+              Display.numDouble(ingredientSMLvCurr),
+              Display.numDouble(skillRateMLvCurr),
+              Display.numDouble(skillRateSMLvCurr),
+              Display.numDouble(er),
+            ],
+            [
+              'Lv 50',
+              Display.numDouble(fruitBonusEnergyLv50),
+              Display.numDouble(helpSpeedMLv50),
+              Display.numDouble(helpSpeedSMLv50),
+              Display.numDouble(ingredientMLv50),
+              Display.numDouble(ingredientSMLv50),
+              Display.numDouble(skillRateMLv50),
+              Display.numDouble(skillRateSMLv50),
+              Display.numDouble(fc),
+            ],
+            [
+              'Lv 100',
+              Display.numDouble(fruitBonusEnergyLv100),
+              Display.numDouble(helpSpeedMLv100),
+              Display.numDouble(helpSpeedSMLv100),
+              Display.numDouble(ingredientMLv100),
+              Display.numDouble(ingredientSMLv100),
+              Display.numDouble(skillRateMLv100),
+              Display.numDouble(skillRateSMLv100),
+              Display.numDouble(fp),
+            ],
+          ],
+        },
+        {
+          'type': 'table',
           'title': '樹果',
           'cells': [
             [
@@ -624,12 +678,6 @@ class PokemonProfileStatistics2 {
               Display.numDouble(000000),
               Display.numDouble(000000),
             ],
-            // [
-            //   '',
-            //   Display.numDouble(000000),
-            //   Display.numDouble(000000),
-            //   Display.numDouble(000000),
-            // ],
           ],
         },
         {
@@ -671,12 +719,6 @@ class PokemonProfileStatistics2 {
               Display.numDouble(bf),
               Display.numDouble(000000),
             ],
-            // [
-            //   '',
-            //   Display.numDouble(000000),
-            //   Display.numDouble(000000),
-            //   Display.numDouble(000000),
-            // ],
           ],
         },
         {
@@ -733,16 +775,6 @@ class PokemonProfileStatistics2 {
               '食材1\n個數',
               '食材2\n個數',
               '食材3\n個數',
-            ],
-            [
-              '',
-              Display.numDouble(0),
-              Display.numDouble(0),
-              '',
-              '',
-              Display.numDouble(0),
-              Display.numDouble(0),
-              Display.numDouble(0),
             ],
             [
               '當前等級\n(加成後)',
@@ -815,18 +847,24 @@ class PokemonProfileStatistics2 {
               '樹果能量/h',
               '食材個/h',
               '食材能量/h',
-              '次數/h',
+              '主技能發動次數/d',
               '主技能效益/h',
               '食材換算成碎片/h',
+              '|',
+              '總收益/h', // = 樹果能量/h + 食材能量/h + 主技能效益/h
+              '影響', // 相較白板
             ],
             [
               '當前等級\n(加成後)',
               Display.numDouble(z),
               Display.numDouble(ai),
               Display.numDouble(aj),
-              Display.numDouble(v), // TODO: 原 sheet 是 '次數/d'，但其他都是 `/h`，可是個人感覺像是 `/d`?
+              Display.numDouble(v),
               Display.numDouble(w),
               Display.numDouble(ak),
+              '',
+              Display.numDouble(e),
+              '${c > 0 ? '+' : c < 0 ? '-' : ''}${Display.numDouble(c * 100)}%',
             ],
             [
               '當前等級\n(白板)',
@@ -835,6 +873,9 @@ class PokemonProfileStatistics2 {
               Display.numDouble(bx),
               Display.numDouble(by),
               Display.numDouble(bz),
+              '',
+              '',
+              Display.numDouble(b),
               '',
             ],
             [
@@ -845,6 +886,9 @@ class PokemonProfileStatistics2 {
               Display.numDouble(ck),
               Display.numDouble(cl),
               '',
+              '',
+              '',
+              '',
             ],
             [
               'Lv50\n(白板)',
@@ -853,6 +897,9 @@ class PokemonProfileStatistics2 {
               Display.numDouble(cv),
               Display.numDouble(cw),
               Display.numDouble(cx),
+              '',
+              '',
+              '',
               '',
             ],
             [
@@ -863,6 +910,9 @@ class PokemonProfileStatistics2 {
               Display.numDouble(di),
               Display.numDouble(dj),
               '',
+              '',
+              '',
+              '',
             ],
             [
               'Lv100\n(白板)',
@@ -872,9 +922,100 @@ class PokemonProfileStatistics2 {
               Display.numDouble(du),
               Display.numDouble(dv),
               '',
+              '',
+              '',
+              '',
             ],
           ],
-        }
+        },
+        {
+          'type': 'table',
+          'title': '結算表',
+          'cells': [
+            [
+              '',
+              '樹果能量/h',
+              '食材個/h',
+              '食材能量/h',
+              '技能次數/d',
+              '主技能效益/h',
+              '50自身收益/h',
+              '50輔助隊友收益/h',
+              '收益/h',
+              '50白板/h',
+              '影響',
+            ],
+            [
+              'Lv 50',
+              Display.numDouble(gd),
+              Display.numDouble(ge),
+              Display.numDouble(gf),
+              Display.numDouble(gg),
+              Display.numDouble(gh),
+              Display.numDouble(gi),
+              Display.numDouble(gj),
+              Display.numDouble(gk),
+              Display.numDouble(gl),
+              '${Display.numDouble(gm * 100)}%',
+            ],
+            [
+              'Lv 100',
+              Display.numDouble(gn),
+              Display.numDouble(go),
+              Display.numDouble(gp),
+              Display.numDouble(gq),
+              Display.numDouble(gr),
+              Display.numDouble(gs),
+              Display.numDouble(gt),
+              Display.numDouble(gu),
+              Display.numDouble(gv),
+              '${Display.numDouble(gw * 100)}%',
+            ],
+          ],
+        },
+        {
+          'type': 'table',
+          'subtitle': '收益',
+          'cells': [
+            [
+              '',
+              '自身收益/h',
+              '+',
+              '輔助隊友收益/h',
+              '=',
+              '理想總收益/h',
+            ],
+            [
+              '當前等級',
+              Display.numDouble(f),
+              '',
+              Display.numDouble(g),
+              '',
+              Display.numDouble(e),
+            ],
+          ],
+        },
+        {
+          'type': 'table',
+          'subtitle': '評級',
+          'cells': [
+            [
+              '',
+              '評級',
+              '收益',
+            ],
+            [
+              'Lv 50',
+              gx,
+              '',
+            ],
+            [
+              'Lv 100',
+              gy,
+              gz,
+            ],
+          ],
+        },
       ],
     };
   }

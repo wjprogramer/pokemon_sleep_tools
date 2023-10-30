@@ -3,8 +3,8 @@ import 'package:path/path.dart' as path;
 
 // ignore_for_file: avoid_print
 
-var current = Directory.current;
-var outputDirectory = path.join(current.path, 'build', 'my_output');
+Directory current = Directory.current;
+late String outputDirectory;
 
 const viewTemplate = r'''
 part of '$SNAKE_NAME$_page.dart';
@@ -75,11 +75,17 @@ String generateContent(String name, String snakeName, String template) {
 
 main(args) {
   if (args.isEmpty) {
-    print('# 指令格式為 dart .../....dart <名稱>');
+    print('# 指令格式為 dart .../....dart <feature_name> <名稱>');
     return;
   }
 
-  final name = args[0] as String;
+  final featureName = args[0] as String;
+  final name = args[1] as String;
+
+  // feature
+  outputDirectory = path.join(current.path, 'lib', 'pages', 'features_$featureName');
+
+  // check page name
   final uppercaseRegex = RegExp('[A-Z]');
   if (!uppercaseRegex.hasMatch(name[0])) {
     print('請以大寫為開頭');

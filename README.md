@@ -37,8 +37,9 @@ fvm dhttpd --path doc/api
 Generate controlled widget
 
 ```shell
-fvm dart .\scripts\develop\generated_controlled_widget.dart ____
-# example: fvm dart .\scripts\develop\generated_controlled_widget.dart FooPage
+fvm dart .\scripts\develop\generated_controlled_widget.dart __featureName__ __pageName__
+# example: fvm dart .\scripts\develop\generated_controlled_widget.dart main Foo
+# real example: fvm dart .\scripts\develop\generated_controlled_widget.dart main PokemonBasicProfile
 ```
 
 

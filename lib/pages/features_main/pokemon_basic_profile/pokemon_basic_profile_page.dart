@@ -8,6 +8,7 @@ import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_basic_profile_ingredients_combination/dev_pokemon_basic_profile_ingredients_combination_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/ingredient/ingredient_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/main_skill/main_skill_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_main/map/map_page.dart';
