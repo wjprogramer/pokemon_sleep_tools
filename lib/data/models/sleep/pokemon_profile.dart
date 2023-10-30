@@ -61,6 +61,13 @@ class PokemonProfile {
     subSkillLv100,
   ];
 
+
+  Fruit get fruit => basicProfile.fruit;
+  PokemonSpecialty get specialty => basicProfile.specialty;
+  bool get isBerrySpecialty => specialty == PokemonSpecialty.t3;
+  bool get isSkillSpecialty => specialty == PokemonSpecialty.t1;
+  bool get isIngredientSpecialty => specialty == PokemonSpecialty.t2;
+
   factory PokemonProfile.fromJson(Map<String, dynamic> json) {
     final subSkillMapping = SubSkill.values.toMap(
         (e) => e.id, (e) => e,

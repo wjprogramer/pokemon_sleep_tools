@@ -38,7 +38,6 @@ class PokemonProfileStatistics {
   Fruit get fruit => basicProfile.fruit;
   /* BB 最高進化階段基礎間隔 */ int get maxHelpInterval => basicProfile.maxHelpInterval;
   PokemonSpecialty get specialty => basicProfile.specialty;
-  /* AU 專長編號  樹果1, 食材2, 技能3 */
   bool get isBerrySpecialty => specialty == PokemonSpecialty.t3;
   bool get isSkillSpecialty => specialty == PokemonSpecialty.t1;
   bool get isIngredientSpecialty => specialty == PokemonSpecialty.t2;
@@ -114,9 +113,34 @@ class PokemonProfileStatistics {
     /* DZ 食材1能量 */ final ingredientEnergy1 = ingredient1.energy;
     /* EA 食材2能量 */ final ingredientEnergy2 = ingredient2.energy;
     /* EB 食材3能量 */ final ingredientEnergy3 = ingredient3.energy;
-    /* BQ (白板計算) 食材機率 */ const ingredientRate = 0.2; // TODO: 感覺應該根據 BasicProfile 的食材機率
+    /* BQ, CO, DM (白板計算) 食材機率 */ const ingredientRate = 0.2; // TODO: 感覺應該根據 BasicProfile 的食材機率
     /* BO (白板計算) 果子機率 */ const fruitRate = 1 - ingredientRate;
     // endregion
+
+    final statisticsLvCurr = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.levelCurr, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: _level).calc();
+    final statisticsLv50 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level50, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: 50).calc();
+    final statisticsLv100 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level100, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: 100).calc();
+
+    /* (當前等級) AL 果子/顆 */ final fruitEnergyLvCurr = statisticsLvCurr.fruitEnergy;
+    /* (Lv 50) AO 果子/顆 */ final fruitEnergyLv50 = statisticsLv50.fruitEnergy;
+    /* AR (Lv 100) 果子/顆 */ final fruitEnergyLv100 = statisticsLv100.fruitEnergy;
+
+    /* (當前等級) EK 樹果+1確認 */ final fruitBonusEnergy = statisticsLvCurr.fruitBonusEnergy;
+    /* (Lv 50) EV 樹果+1確認 */ final fruitBonusEnergyLv50 = statisticsLv50.fruitBonusEnergy;
+    /* FI (Lv 100) 樹果+1確認 */ final fruitBonusEnergyLv100 = statisticsLv100.fruitBonusEnergy;
+
+    /* (當前等級) AM 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLvCurr = statisticsLvCurr.fruitEnergyAfterSpecialtyAndSubSkill;
+    /* (Lv 50) AP 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLv50 = statisticsLv50.fruitEnergyAfterSpecialtyAndSubSkill;
+    /* AS (Lv 100) 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLv100 = statisticsLv100.fruitEnergyAfterSpecialtyAndSubSkill;
+
+    /* (當前等級) AN +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavorite = statisticsLvCurr.fruitEnergyAfterSnorlaxFavorite;
+    /* (Lv 50) AQ +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv50 = statisticsLv50.fruitEnergyAfterSnorlaxFavorite;
+    /* (Lv 100) AT +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv100 = statisticsLv100.fruitEnergyAfterSnorlaxFavorite;
+
+    /* (當前等級) EM 幫忙S+M確認: */ final helpSpeedSMLvCurr = statisticsLvCurr.helpSpeedSM;
+    /* (Lv 50) EX 幫忙S+M確認 */ final helpSpeedSMLv50 = statisticsLv50.helpSpeedSM;
+    /* FK (Lv 100) 幫忙S+M確認 */ final helpSpeedSMLv100 = statisticsLv100.helpSpeedSM;
+
 
     /* BC (進化後) 性格+活力調整 */
     final maxHelpIntervalAdjust1 = _tc(() => maxHelpInterval *
@@ -127,19 +151,12 @@ class PokemonProfileStatistics {
         ) * _transUserVitality()
     );
 
+    // 幫忙間隔 ---- 1
+    /* (當前等級) AX 等級調整 */ final helpIntervalLvCurr1 = _tc(() => helpInterval - (helpInterval * ((_level - 1) * 0.002)));
+    /* (Lv 50) BD 間隔 */ final helpIntervalLv50_1 = _tc(() => maxHelpIntervalAdjust1 - (maxHelpIntervalAdjust1 * ((50-1) * 0.002)));
+    /* BF 100間隔 */ final helpIntervalLv100_1 = _tc(() => maxHelpIntervalAdjust1 - (maxHelpIntervalAdjust1 * ((100-1) * 0.002)));
 
-    // region 當前等級
-    /* (當前等級) AL 果子/顆 */ final fruitEnergyLvCurr = _getSingleFruitEnergy(_level);
-    /* (當前等級) EK 樹果+1確認 */ final fruitBonusEnergy = _subSkillsContains(SubSkill.berryCountS, _level) ? fruitEnergyLvCurr : 0.0;
-    /* (當前等級) AM 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLvCurr = fruitEnergyLvCurr * (isBerrySpecialty ? 2 : 1) + fruitBonusEnergy;
-    /* (當前等級) AN +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavorite = fruitEnergyAfterSpecialtyAndSubSkillLvCurr * (_isSnorlaxFavorite && _shouldConsiderSnorlaxFavorite ? 2 : 1);
-    /* (當前等級) EL 幫忙M確認 */ final helpSpeedMLvCurr = _subSkillsContains(SubSkill.helpSpeedM, _level) ? 0.86 : 1.0;
-    /* (當前等級) EM 幫忙S+M確認: */ final helpSpeedSMLvCurr = _subSkillsContains(SubSkill.helpSpeedS, _level)
-        ? (helpSpeedMLvCurr == 0.86 ? 0.79 : 0.93)
-        : (helpSpeedMLvCurr == 0.86 ? 0.86 : 1.00);
-
-    // 幫忙間隔
-    /* (當前等級) AX 等級調整 */ final helpIntervalLvCurr1 = helpInterval - (helpInterval * ((_level - 1) * 0.002));
+    // 幫忙間隔 ---- 2
     /* (當前等級) AY 性格+技能調整 */ final helpIntervalLvCurr2 = _tc(() => helpIntervalLvCurr1 * helpSpeedSMLvCurr
         * (
             character.positive == '幫忙速度' ? 0.9
@@ -147,48 +164,113 @@ class PokemonProfileStatistics {
                 : 1.0
         ),
     );
+    final helpIntervalLv50_2 = helpIntervalLv50_1 * helpSpeedSMLv50;
+    final helpIntervalLv100_2 = helpIntervalLv100_1 * helpSpeedSMLv100;
+
+    // 幫忙間隔 ---- 3
     /* (當前等級) AZ 活力影響後 */ final helpIntervalLvCurr3 = helpIntervalLvCurr2 * _transUserVitality();
+
+    // 幫忙間隔 ---- 4
     /* (當前等級) BA 白板-活力影響 */ final helpIntervalPureLvCurr = _tc(() => helpIntervalLvCurr1 * _transUserVitality());
-    /* (當前等級) EN 食材M確認 */ final ingredientMLvCurr = _subSkillsContains(SubSkill.ingredientRateM, _level) ? 1.36 : 1.0;
-    /* (當前等級) EO 食材S+M確認 */ final ingredientSMLvCurr = _subSkillsContains(SubSkill.ingredientRateS, _level)
-        ? (ingredientMLvCurr == 1.36 ? 1.54 : 1.18)
-        : (ingredientMLvCurr == 1.36 ? 1.36 : 1.00);
-    /* (當前等級) EP 技能幾率M確認 */ final skillRateMLvCurr = _subSkillsContains(SubSkill.skillRateM, _level) ? 1.36 : 1.0;
-    /* (當前等級) EQ 技能幾率S+M確認 */ final skillRateSMLvCurr = _subSkillsContains(SubSkill.skillRateS, _level)
-        ? (skillRateMLvCurr == 1.36 ? 1.54 : 1.18)
-        : (skillRateMLvCurr == 1.36 ? 1.36 : 1.00);
+
+    /* (當前等級) EO 食材S+M確認 */ final ingredientSMLvCurr = statisticsLvCurr.ingredientSM;
+    /* (Lv 50) EZ 食材S+M確認 */ final ingredientSMLv50 = statisticsLv50.ingredientSM;
+    /* FM (Lv 100) 食材S+M確認 */ final ingredientSMLv100 = statisticsLv100.ingredientSM;
+
+    /* (當前等級) EQ 技能幾率S+M確認 */ final skillRateSMLvCurr = statisticsLvCurr.skillRateSM;
+    /* (Lv 50) FB 技能幾率S+M確認 */ final skillRateSMLv50 = statisticsLv50.skillRateSM;
+    /* FO (Lv 100) 技能幾率S+M確認 */ final skillRateSMLv100 = statisticsLv100.skillRateSM;
+
     /* ER 加成後主技能等級 */
     final erLvCurr = _mainSkillLv +
         (_subSkillsContains(SubSkill.skillLevelM, _level) ? 2 : 0) +
         (_subSkillsContains(SubSkill.skillLevelS, _level) ? 1 : 0);
-    /* BJ (加成後) 食材機率 */
-    final bjLvCurr = _tc(() => 0.2 * ingredientSMLvCurr
-        * (
-            character.positive == '食材發現' ? 1.2
-                : character.negative == '食材發現' ? 0.8
-                : 1.0
-        )
-    );
-    /* BH (加成後) 果子機率 */ final fruitRateLvCurr1 = 1 - bjLvCurr;
-    /* BK (加成後) 食材預期次數/h */ final ingredientCountPerHourLvCurr = _tc(() => 3600 / helpIntervalLvCurr3 * bjLvCurr);
+    /* U 主技能等級 */ final uLvCurr = erLvCurr;
+    /* (Lv 50) FC 加成後主技能等級 */
+    final fcLv50 = _mainSkillLv
+        + (_subSkillsContains(SubSkill.skillLevelM, 50) ? 2 : 0)
+        + (_subSkillsContains(SubSkill.skillLevelS, 50) ? 1 : 0)
+        + 3
+        - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3);
+    /* FP (Lv 100) 加成後主技能等級 */
+    final fpLv100 = _mainSkillLv
+        + (_subSkillsContains(SubSkill.skillLevelM, 100) ? 2 : 0)
+        + (_subSkillsContains(SubSkill.skillLevelS, 100) ? 1 : 0)
+        + 3
+        - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3);
+
+
+    /* BJ (加成後) 食材機率 */ final ingredientRateLvCurr = statisticsLvCurr.ingredientRate;
+    /* CC (50計算) 食材機率 */ final ingredientRateLv50 = statisticsLv50.ingredientRate;
+    /* DA (Lv100) 食材機率 */ final ingredientRateLv100 = statisticsLv100.ingredientRate;
+
+    /* BE 50白板活力 */ final beLv50 = _tc(() => (maxHelpInterval - (maxHelpInterval * ((50-1)*0.002)))*_transUserVitality());
+    /* BG 100白板活力 */ final maxHelpIntervalLv100 = _tc(() => (maxHelpInterval - (maxHelpInterval * ((100-1)*0.002))) * _transUserVitality());
+
+    /* BH (加成後) 果子機率 */ final fruitRateLvCurr1 = statisticsLvCurr.fruitRate;
+    /* CA (50計算) 果子機率 */ final fruitRateLv50 = statisticsLv50.fruitRate;
+    /* CY (100計算) 果子機率 */ final fruitRateLv100 = statisticsLv100.fruitRate;
+
+    /* BK (加成後) 食材預期次數/h */ final ingredientCountPerHourLvCurr = _tc(() => 3600 / helpIntervalLvCurr3 * ingredientRateLvCurr);
+    /* CP (50白板計算) 食材預期次數/h */ final cpLv50 = _tc(() => 3600 / beLv50 * ingredientRate);
+    /* DN (100白板計算) 食材預期次數/h */ final dnLv100 = _tc(() => 3600 / maxHelpIntervalLv100 * ingredientRate);
+
     /* BI (加成後) 果實預期次數/h */ final biLvCurr = _tc(() => 3600 / helpIntervalLvCurr3 * fruitRateLvCurr1);
+    /* CN (50白板計算) 果實預期次數/h */ final cnLv50 = _tc(() => 3600 / beLv50 * fruitRate);
+    /* CZ (100計算) 果實預期次數/h */ final czLv100 = _tc(() => 3600 / helpIntervalLv100_2 * fruitRateLv100);
+    /* DL (100白板計算) 果實預期次數/h */ final dlLv100 = _tc(() => 3600 / maxHelpIntervalLv100 * fruitRate);
+
+    /* BR (白板計算) 食材預期次數/h */ final brLvCurr = _tc(() => 3600/ helpIntervalPureLvCurr * ingredientRate);
+    /* CD (50計算) 食材預期次數/h */ final cdLv50 = _tc(() => 3600 / helpIntervalLv50_2 * ingredientRateLv50);
+    /* DB (100計算) 食材預期次數/h */ final dbLv100 = _tc(() => 3600 / helpIntervalLv100_2 * ingredientRateLv100);
+
+    /* BT (白板計算) 食材2個數/h */ final btLvCurr = _tc(() => (_level > 29 ? brLvCurr * ingredientCount2 : 0)) * (_level > 59 ? 1/3 : 1/2);
+    /* BM (加成後) 食材2個數/h */ final ingredient2CountPerHourAfterAdjustLvCurr = _tc(() => (_level>29 ? ingredientCountPerHourLvCurr * ingredientCount2 : 0),) * (_level > 59 ? 1/3 : 1/2);
+    /* CF (50計算) 食材2個數/h */ final cfLv50 = _tc(() => cdLv50 * ingredientCount2) / 2.0;
+    /* DD (100計算) 食材2個數/h */ final ddLv100 = _tc(() => dbLv100 * ingredientCount2) / 3.0;
+    /* CR (50白板計算) 食材2個數/h */ final crLv50 = _tc(() => cpLv50 * ingredientCount2) / 2.0;
+    /* DP (100白板計算) 食材2個數/h */ final dpLv100 = _tc(() => dnLv100 * ingredientCount2) / 3.0;
+
+    /* BU (白板計算) 食材3個數/h */ final buLvCurr = _tc(() => (_level > 59 ? brLvCurr * ingredientCount3 : 0)) / 3.0;
+    /* DE (100計算) 食材3個數/h */ final deLv100 = _tc(() => dbLv100 * ingredientCount3) / 3.0;
+    /* BN (加成後) 食材3個數/h */ final ingredient3CountPerHourAfterAdjustLvCurr = _tc(() => (_level>59 ? ingredientCountPerHourLvCurr * ingredientCount3: 0)) / 3;
+    /* CG (50計算), CS (50白板計算) 食材3個數/h */ const ingredientCount3Lv50 = 0;
+    /* DQ (100白板計算) 食材3個數/h */ final dqLv100 = _tc(() => dnLv100 * ingredientCount3) / 3.0;
+
     /* BL (加成後) 食材1個數/h */
     final ingredient1CountPerHourAfterAdjustLvCurr = _tc(() => ingredientCountPerHourLvCurr * (isIngredientSpecialty ? 2 : 1))
         * (_level > 59 ? 1/3 : (_level > 29 ? 1/2 : 1));
-    /* BM (加成後) 食材2個數/h */ final ingredient2CountPerHourAfterAdjustLvCurr = _tc(() => (_level>29 ? ingredientCountPerHourLvCurr * ingredientCount2 : 0),) * (_level > 59 ? 1/3 : 1/2);
-    /* BN (加成後) 食材3個數/h */ final ingredient3CountPerHourAfterAdjustLvCurr = _tc(() => (_level>59 ? ingredientCountPerHourLvCurr * ingredientCount3: 0)) / 3;
-    /* AJ 食材能量/h */ final ajLvCurr = _tc(() => ingredient1CountPerHourAfterAdjustLvCurr * ingredientEnergy1 + ingredient2CountPerHourAfterAdjustLvCurr * ingredientEnergy2 + ingredient3CountPerHourAfterAdjustLvCurr * ingredientEnergy3);
+    /* BS (白板計算) 食材1個數/h */ final bsLvCurr = _tc(() => brLvCurr * (isIngredientSpecialty ? 2 : 1)) * (_level > 59 ? 1/3 : (_level>29 ? 1/2 : 1));
+    /* CE (50計算) 食材1個數/h */ final ceLv50 = _tc(() => cdLv50 * (isIngredientSpecialty ? 2 : 1)) / 2.0;
+    /* CQ (50白板計算) 食材1個數/h */ final cqLv50 = _tc(() => cpLv50 * (isIngredientSpecialty ? 2 : 1)) / 2.0;
+    /* DO (100白板計算) 食材1個數/h */ final doLv100 = _tc(() => dnLv100 * (isIngredientSpecialty ? 2 : 1))/3;
+    /* DC (100計算) 食材1個數/h */ final dcLv100 = _tc(() => dbLv100 * (isIngredientSpecialty ? 2 : 1)) / 3.0;
+
     /* AI 食材個/h */ final aiLvCurr = ingredient1CountPerHourAfterAdjustLvCurr + ingredient2CountPerHourAfterAdjustLvCurr + ingredient3CountPerHourAfterAdjustLvCurr;
     /* AK 食材換算成碎片/h */ final akLvCurr = _tc(() => ingredient1CountPerHourAfterAdjustLvCurr * ingredientPrice1 + ingredient2CountPerHourAfterAdjustLvCurr * ingredientPrice2 + ingredient3CountPerHourAfterAdjustLvCurr * ingredientPrice3);
+    /* CB (50計算) 果實預期次數/h */ final cbLv50 = _tc(() => 3600 / helpIntervalLv50_2 * fruitRateLv50);
     /* BP (白板計算) 果實預期次數/h */ final bpLvCurr = _tc(() => 3600 / helpIntervalPureLvCurr * fruitRate);
 
-    /* BR (白板計算) 食材預期次數/h */ final brLvCurr = _tc(() => 3600/ helpIntervalPureLvCurr * ingredientRate);
-    /* BS (白板計算) 食材1個數/h */ final bsLvCurr = _tc(() => brLvCurr * (isIngredientSpecialty ? 2 : 1)) * (_level > 59 ? 1/3 : (_level>29 ? 1/2 : 1));
-    /* BT (白板計算) 食材2個數/h */ final btLvCurr = _tc(() => (_level > 29 ? brLvCurr * ingredientCount2 : 0)) * (_level > 59 ? 1/3 : 1/2);
-    /* BU (白板計算) 食材3個數/h */ final buLvCurr = _tc(() => (_level > 59 ? brLvCurr * ingredientCount3 : 0)) / 3.0;
     /* BV (白板收益) 樹果能量/h */ final bvLvCurr = _tc(() => fruitEnergyLvCurr * bpLvCurr * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite?2:1));
+    /* CH (50收益) 樹果能量/h, GD (Lv50Result) 樹果能量/h */ final chLv50 = _tc(() => cbLv50 * fruitEnergyAfterSnorlaxFavoriteLv50);
+    /* DF (100收益) 樹果能量/h, GN (Lv100Result) 樹果能量/h */ final dfLv100 = _tc(() => czLv100 * fruitEnergyAfterSnorlaxFavoriteLv100);
+    /* CT (50白板收益) 樹果能量/h */ final ctLv50 = _tc(() => fruitEnergyLv50 * cnLv50 * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite ? 2 : 1));
+    /* DR (100白板收益) 樹果能量/h */ final drLv100 = _tc(() => fruitEnergyLv100 * dlLv100 * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite ? 2 : 1));
+    /* Z 樹果能量/h */ final zLvCurr = _tc(() => biLvCurr * fruitEnergyAfterSnorlaxFavorite);
+
     /* BW (白板收益) 食材個/h */ final bwLvCurr = bsLvCurr + btLvCurr + buLvCurr;
+    /* CI (50收益) 食材個/h, GE (Lv50Result) 食材個/h */ final ciLv50 = ceLv50 + cfLv50 + ingredientCount3Lv50;
+    /* DG (100收益) 食材個/h, GO (Lv100Result) 食材個/h */ final dgLv100 = dcLv100 + ddLv100 + deLv100;
+    /* CU (50白板收益) 食材個/h */ final cuLv50 = cqLv50 + crLv50 + ingredientCount3Lv50;
+    /* DS (100白板收益) 食材個/h */ final dsLv100 = doLv100 + dpLv100 + dqLv100;
+
     /* BX (白板收益) 食材能量/h */ final bxLvCurr = _tc(() => bsLvCurr * ingredientEnergy1 + btLvCurr * ingredientEnergy2 + buLvCurr * ingredientEnergy3);
+    /* DH (100收益) 食材能量/h, GP (Lv100Result) */ final dhLv100 = _tc(() => dcLv100 * ingredientEnergy1 + ddLv100 * ingredientEnergy2 + deLv100 * ingredientEnergy3);
+    /* AJ 食材能量/h */ final ajLvCurr = _tc(() => ingredient1CountPerHourAfterAdjustLvCurr * ingredientEnergy1 + ingredient2CountPerHourAfterAdjustLvCurr * ingredientEnergy2 + ingredient3CountPerHourAfterAdjustLvCurr * ingredientEnergy3);
+    /* CJ (50收益) 食材能量/h, GF (Lv50Result) 食材能量/h */ final cjLv50 = _tc(() => ceLv50 * ingredientEnergy1 + cfLv50 * ingredientEnergy2 + ingredientCount3Lv50 * ingredientEnergy3);
+    /* CV (50白板收益) 食材能量/h */ final cvLv50 = _tc(() => cqLv50 * ingredientEnergy1 + crLv50 * ingredientEnergy2 + ingredientCount3Lv50 * ingredientEnergy3);
+    /* DT (100白板收益) 食材能量/h */ final dtLv100 = _tc(() => doLv100 * ingredientEnergy1 + dpLv100 * ingredientEnergy2 + dqLv100 * ingredientEnergy3);
+
     /* BY (白板收益) 次數/h */
     final byLvCurr = _tc(() {
       return 3600 / helpIntervalLvCurr1 +
@@ -196,14 +278,31 @@ class PokemonProfileStatistics {
           0.25*(_mainSkillLv-1)+
           (basicProfile.currentEvolutionStage - 2) * _ccc1;
     });
-    /* BZ (白板收益) 主技能效益/h */
-    final bzLvCurr = _tc(() {
-      return basicProfile.mainSkill == MainSkill.vitalityFillS
-          ? (bvLvCurr + bxLvCurr)* _calcMainSkillEnergyList(basicProfile.mainSkill)[_mainSkillLv - 1]
-          : _calcMainSkillEnergyList(basicProfile.mainSkill)[_mainSkillLv - 1];
-    }) * byLvCurr;
-
-    /* U 主技能等級 */ final uLvCurr = erLvCurr;
+    /* CW (50白板收益) 次數/h */
+    final cwLv50 = _tc(() =>
+    (
+        3600 / beLv50 * _transUserVitality()
+    )
+        + (isSkillSpecialty ? 0.2 : 0)
+        + _ccc2 *
+        (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)  - 1 + _ccc1),
+    );
+    /* DU (100白板) 次數/h */ final duLv100 = _tc(() => 3600/maxHelpIntervalLv100 *_transUserVitality() +
+        (isSkillSpecialty ? 0.2 : 0)+ _ccc2 * (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)-1) + _ccc1,
+    );
+    /* CK (50收益) 次數/d, GG (Lv50Result) 技能次數/d */
+    final ckLv50 = _tc(() => (
+        skillRateSMLv50 * 3600 / helpIntervalLv50_2 * _transUserVitality()
+            * (
+            character.negative == '主技能' ? 0.8
+                : character.positive == '主技能' ? 1.2
+                : 1
+        )
+    )
+        + (isSkillSpecialty ? 0.2 : 0)
+        + _ccc1 * (fcLv50 - 1)
+        + _ccc2,
+    );
     /* V 技能次數/d */
     final vLvCurr = _tc(() =>
     (skillRateSMLvCurr * 3600 / helpIntervalLvCurr2*
@@ -212,15 +311,72 @@ class PokemonProfileStatistics {
         (isSkillSpecialty ?0.5:0)+
         (basicProfile.currentEvolutionStage - 2)*_ccc1
     );
-    /* Z 樹果能量/h */
-    final zLvCurr = _tc(() => biLvCurr * fruitEnergyAfterSnorlaxFavorite);
+
     /* W 主技能效益/h */
     final wLvCurr = _tc(() =>
     (
         basicProfile.mainSkill == MainSkill.vitalityFillS
             ? (zLvCurr + ajLvCurr)* _calcMainSkillEnergyList(basicProfile.mainSkill)[uLvCurr.toInt() - 1]
             : _calcMainSkillEnergyList(basicProfile.mainSkill)[uLvCurr.toInt() - 1]
-    ))*vLvCurr;
+    )) * vLvCurr;
+    /* BZ (白板收益) 主技能效益/h */
+    final bzLvCurr = _tc(() {
+      return basicProfile.mainSkill == MainSkill.vitalityFillS
+          ? (bvLvCurr + bxLvCurr)* _calcMainSkillEnergyList(basicProfile.mainSkill)[_mainSkillLv - 1]
+          : _calcMainSkillEnergyList(basicProfile.mainSkill)[_mainSkillLv - 1];
+    }) * byLvCurr;
+    /* CL (50收益) 主技能效益/h, GH (Lv50Result) 主技能效益/h */
+    final clLv50 = _tc(() => (
+        basicProfile.mainSkill == MainSkill.vitalityFillS ?
+        (chLv50+cjLv50) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[fcLv50.toInt() - 1] :
+        _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[fcLv50.toInt() - 1]
+    )
+    ) * ckLv50;
+    /* CX (50白板收益) 主技能效益/h */
+    final cxLv50 = _tc(() => (
+        basicProfile.mainSkill == MainSkill.vitalityFillS ?
+        (ctLv50 + cvLv50) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
+
+        _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[(_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1]
+    )
+    ) * cwLv50;
+    /* DV (100白板) 主技能效益/h */
+    final dvLv100 = _tc(() => (
+        basicProfile.mainSkill == MainSkill.vitalityFillS ?
+        (drLv100+dtLv100) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
+        _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[(_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1]
+    )
+    ) * duLv100;
+    /* DI (100收益) 技能次數/d, GQ (Lv100Result) */
+    final diLv100 = _tc(() => (
+        skillRateSMLv100 * 3600 / helpIntervalLv100_2 * _transUserVitality()
+            * (character.negative == '主技能' ? 0.8 : character.positive == '主技能' ? 1.2 : 1)
+    )
+        + (isSkillSpecialty ? 0.2 : 0)
+        + 0.25 * (fpLv100 - 1) // TODO: use const
+        + 0.2, // TODO: use const
+    );
+    /* DJ (100收益) 主技能效益/h, GR (Lv100Result) */
+    final djLv100 = _tc(() =>
+    (
+        basicProfile.mainSkill == MainSkill.vitalityFillS ?
+        (dfLv100 + dhLv100) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[fpLv100.toInt() - 1] :
+        _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[fpLv100.toInt() - 1]
+    ),
+    ) * diLv100;
+    /* (Lv50Result) GI 50自身收益/h */
+    final giLv50 = _tc(() =>
+    chLv50 + cjLv50 + clLv50 *
+        (basicProfile.mainSkill == MainSkill.vitalityAllS || basicProfile.mainSkill == MainSkill.vitalityS ? 0 : 1) +
+        (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 / 5 : 0)
+    );
+    /* (Lv50Result) GK 50收益/h */ final gkLv50 = _tc(
+            () => chLv50 + cjLv50 + clLv50 + (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 : 0)
+    );
+    /* GJ (Lv50Result) 50輔助隊友收益/h */ final gjLv50 = gkLv50 - giLv50;
+
+
+
     /* B 白板收益/h */ final bLvCurr = bvLvCurr + bxLvCurr + bzLvCurr;
     /* E 理想總收益/h */
     final eLvCurr = _tc(() =>
@@ -239,188 +395,11 @@ class PokemonProfileStatistics {
     // endregion
 
 
-    // region Lv 50
-    /* (Lv 50) AO 果子/顆 */ final fruitEnergyLv50 = _getSingleFruitEnergy(50);
-    /* (Lv 50) EV 樹果+1確認 */ final fruitBonusEnergyLv50 = _subSkillsContains(SubSkill.berryCountS, 50) ? fruitEnergyLv50 : 0.0;
-    /* (Lv 50) AP 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLv50 = fruitEnergyLv50 * (isBerrySpecialty ? 2 : 1) + fruitBonusEnergyLv50;
-    /* (Lv 50) AQ +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv50 = fruitEnergyAfterSpecialtyAndSubSkillLv50 * (_isSnorlaxFavorite && _shouldConsiderSnorlaxFavorite ? 2 : 1);
-    /* (Lv 50) EW 幫忙M確認 */ final helpSpeedMLv50 = _subSkillsContains(SubSkill.helpSpeedM, 50) ? 0.86 : 1.0;
-    /* (Lv 50) EX 幫忙S+M確認 */ final helpSpeedSMLv50 = _subSkillsContains(SubSkill.helpSpeedS, 50)
-        ? (helpSpeedMLv50 == 0.86 ? 0.79 : 0.93)
-        : (helpSpeedMLv50 == 0.86 ? 0.86 : 1.00);
-    /* (Lv 50) BD 間隔 */ final bdLv50 = _tc(() => maxHelpIntervalAdjust1 - (maxHelpIntervalAdjust1 * ((50-1) * 0.002))) * helpSpeedSMLv50;
-    /* BE 50白板活力 */ final beLv50 = _tc(() => (maxHelpInterval - (maxHelpInterval * ((50-1)*0.002)))*_transUserVitality());
-    /* (Lv 50) EY 食材M確認 */ final ingredientMLv50 = _subSkillsContains(SubSkill.ingredientRateM, 50) ? 1.36 : 1.0;
-    /* (Lv 50) EZ 食材S+M確認 */ final ingredientSMLv50 = _subSkillsContains(SubSkill.ingredientRateS, 50)
-        ? (ingredientMLv50 == 1.36 ? 1.54 : 1.18)
-        : (ingredientMLv50 == 1.36 ? 1.36 : 1.00);
-    /* (Lv 50) FA 技能幾率M確認 */ final skillRateMLv50 = _subSkillsContains(SubSkill.skillRateM, 50) ? 1.36 : 1.0;
-    /* (Lv 50) FB 技能幾率S+M確認 */ final skillRateSMLv50 = _subSkillsContains(SubSkill.skillRateS, 50)
-        ? (skillRateMLv50 == 1.36 ? 1.54 : 1.18)
-        : (skillRateMLv50 == 1.36 ? 1.36 : 1.00);
-    /* (Lv 50) FC 加成後主技能等級 */
-    final fcLv50 = _mainSkillLv +
-        (_subSkillsContains(SubSkill.skillLevelM, 50) ? 2 : 0) +
-        (_subSkillsContains(SubSkill.skillLevelS, 50) ? 1 : 0) +
-        3 -
-        _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3);
-
-    /* CC (50計算) 食材機率 */ final ingredientRateLv50 = 0.2 * ingredientSMLv50 * (
-        character.positive == '食材發現' ? 1.2
-            : character.negative == '食材發現' ? 0.8
-            : 1.0
-    );
-    /* CA (50計算) 果子機率 */ final fruitRateLv50 = 1 - ingredientRateLv50;
-    /* CB (50計算) 果實預期次數/h */ final cbLv50 = _tc(() => 3600 / bdLv50 * fruitRateLv50);
-    /* CD (50計算) 食材預期次數/h */ final cdLv50 = _tc(() => 3600 / bdLv50 * ingredientRateLv50);
-    /* CE (50計算) 食材1個數/h */ final ceLv50 = _tc(() => cdLv50 * (isIngredientSpecialty ? 2 : 1)) / 2.0;
-    /* CF (50計算) 食材2個數/h */ final cfLv50 = _tc(() => cdLv50 * ingredientCount2) / 2.0;
-    /* CG (50計算), CS (50白板計算) 食材3個數/h */ const ingredientCount3Lv50 = 0;
-    /* CH (50收益) 樹果能量/h, GD (Lv50Result) 樹果能量/h */ final chLv50 = _tc(() => cbLv50 * fruitEnergyAfterSnorlaxFavoriteLv50);
-    /* CI (50收益) 食材個/h, GE (Lv50Result) 食材個/h */ final ciLv50 = ceLv50 + cfLv50 + ingredientCount3Lv50;
-    /* CJ (50收益) 食材能量/h, GF (Lv50Result) 食材能量/h */ final cjLv50 = _tc(() => ceLv50 * ingredientEnergy1 + cfLv50 * ingredientEnergy2 + ingredientCount3Lv50 * ingredientEnergy3);
-
-    /* CK (50收益) 次數/d, GG (Lv50Result) 技能次數/d */
-    final ckLv50 = _tc(() => (
-        skillRateSMLv50 * 3600 / bdLv50 * _transUserVitality()
-            * (
-            character.negative == '主技能' ? 0.8
-                : character.positive == '主技能' ? 1.2
-                : 1
-        )
-    )
-        + (isSkillSpecialty ? 0.2 : 0)
-        + _ccc1 * (fcLv50 - 1)
-        + _ccc2,
-    );
-
-    /* CL (50收益) 主技能效益/h, GH (Lv50Result) 主技能效益/h */
-    final clLv50 = _tc(() => (
-        basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (chLv50+cjLv50) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[fcLv50.toInt() - 1] :
-        _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[fcLv50.toInt() - 1]
-    )
-    ) * ckLv50;
-    
-    /* CN (50白板計算) 果實預期次數/h */ final cnLv50 = _tc(() => 3600 / beLv50 * fruitRate);
-    /* CP (50白板計算) 食材預期次數/h */ final cpLv50 = _tc(() => 3600 / beLv50 * ingredientRate);
-    /* CQ (50白板計算) 食材1個數/h */ final cqLv50 = _tc(() => cpLv50 * (isIngredientSpecialty ? 2 : 1)) / 2.0;
-    /* CR (50白板計算) 食材2個數/h */ final crLv50 = _tc(() => cpLv50 * ingredientCount2) / 2.0;
-
-    /* CT (50白板收益) 樹果能量/h */ final ctLv50 = _tc(() => fruitEnergyLv50 * cnLv50 * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite ? 2 : 1));
-    /* CU (50白板收益) 食材個/h */ final cuLv50 = cqLv50 + crLv50 + ingredientCount3Lv50;
-    /* CV (50白板收益) 食材能量/h */ final cvLv50 = _tc(() => cqLv50 * ingredientEnergy1 + crLv50 * ingredientEnergy2 + ingredientCount3Lv50 * ingredientEnergy3);
-    /* CW (50白板收益) 次數/h */
-    final cwLv50 = _tc(() =>
-    (
-        3600 / beLv50 * _transUserVitality()
-    )
-        + (isSkillSpecialty ? 0.2 : 0)
-        + _ccc2 *
-        (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)  - 1 + _ccc1),
-    );
-    /* CX (50白板收益) 主技能效益/h */
-    final cxLv50 = _tc(() => (
-        basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (ctLv50 + cvLv50) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
-
-        _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[(_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1]
-    )
-    ) * cwLv50;
-    /* (Lv50Result) GI 50自身收益/h */
-    final giLv50 = _tc(() =>
-    chLv50 + cjLv50 + clLv50 *
-        (basicProfile.mainSkill == MainSkill.vitalityAllS || basicProfile.mainSkill == MainSkill.vitalityS ? 0 : 1) +
-        (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 / 5 : 0)
-    );
-    /* (Lv50Result) GK 50收益/h */ final gkLv50 = _tc(
-            () => chLv50 + cjLv50 + clLv50 + (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 : 0)
-    );
-    /* GJ (Lv50Result) 50輔助隊友收益/h */ final gjLv50 = gkLv50 - giLv50;
     /* GL (Lv50Result) 50白板/h */ final glLv50 = ctLv50 + cvLv50 + cxLv50;
+    /* (Lv100Result) GV 100白板/h */ final gvLv100 = drLv100 + dtLv100 + dvLv100;
     /* GM (Lv50Result) 影響 */ final gmLv50 = bLvCurr == 0 ? 0 : (gkLv50 - glLv50) / glLv50;
-    // endregion
 
 
-    // region Lv 100
-    /* AR (Lv 100) 果子/顆 */ final fruitEnergyLv100 = _getSingleFruitEnergy(100);
-    /* FI (Lv 100) 樹果+1確認 */ final fruitBonusEnergyLv100 = _subSkillsContains(SubSkill.berryCountS, 100)
-        ? fruitEnergyLv100 : 0.0;
-    /* AS (Lv 100) 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLv100 = fruitEnergyLv100 * (isBerrySpecialty ? 2 : 1) + fruitBonusEnergyLv100;
-    /* AT (Lv 100) +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv100 = fruitEnergyAfterSpecialtyAndSubSkillLv100 * (_isSnorlaxFavorite && _shouldConsiderSnorlaxFavorite ? 2 : 1);
-    /* BG 100白板活力 */ final maxHelpIntervalLv100 = _tc(() => (maxHelpInterval - (maxHelpInterval * ((100-1)*0.002))) * _transUserVitality());
-    /* DU (100白板) 次數/h */ final duLv100 = _tc(() => 3600/maxHelpIntervalLv100 *_transUserVitality() +
-        (isSkillSpecialty ? 0.2 : 0)+ _ccc2 * (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)-1) + _ccc1,
-    );
-    /* FJ (Lv 100) 幫忙M確認 */ final helpSpeedMLv100 = _subSkillsContains(SubSkill.helpSpeedM, 100) ? 0.86 : 1.0;
-    /* FK (Lv 100) 幫忙S+M確認 */ final helpSpeedSMLv100 = _subSkillsContains(SubSkill.helpSpeedS, 100)
-        ? (helpSpeedMLv50 == 0.86 ? 0.79 : 0.93)
-        : (helpSpeedMLv50 == 0.86 ? 0.86 : 1.00);
-    /* FL (Lv 100) 食材M確認 */ final ingredientMLv100 = _subSkillsContains(SubSkill.ingredientRateM, 100) ? 1.36 : 1.0;
-    /* FM (Lv 100) 食材S+M確認 */ final ingredientSMLv100 = _subSkillsContains(SubSkill.ingredientRateS, 100)
-        ? (ingredientMLv100 == 1.36 ? 1.54 : 1.18)
-        : (ingredientMLv100 == 1.36 ? 1.36 : 1.00);
-    /* FN (Lv 100) 技能幾率M確認 */ final skillRateMLv100 = _subSkillsContains(SubSkill.skillRateM, 100) ? 1.36 : 1.0;
-    /* FO (Lv 100) 技能幾率S+M確認 */ final skillRateSMLv100 = _subSkillsContains(SubSkill.skillRateS, 100)
-        ? (skillRateMLv100 == 1.36 ? 1.54 : 1.18)
-        : (skillRateMLv100 == 1.36 ? 1.36 : 1.00);
-    /* FP (Lv 100) 加成後主技能等級 */
-    final fpLv100 = _mainSkillLv 
-        + (_subSkillsContains(SubSkill.skillLevelM, 100) ? 2 : 0) 
-        + (_subSkillsContains(SubSkill.skillLevelS, 100) ? 1 : 0)
-        + 3
-        - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3);
-    /* DA (Lv 100) 食材機率 */
-    final daLv100 = _tc(() => 0.2 * ingredientSMLv100
-        * (
-            character.positive == '食材發現' ? 1.2
-                : character.negative == '食材發現' ? 0.8
-                : 1.0
-        ),
-    );
-    /* CY (100計算) 果子機率 */ final cyLv100 = 1 - daLv100;
-    /* BF 100間隔 */ final bfLv100 = _tc(() => maxHelpIntervalAdjust1 - (maxHelpIntervalAdjust1 * ((100-1) * 0.002)),) * helpSpeedSMLv100;
-    /* CZ (100計算) 果實預期次數/h */ final czLv100 = _tc(() => 3600 / bfLv100 * cyLv100);
-    /* DB (100計算) 食材預期次數/h */ final dbLv100 = _tc(() => 3600 / bfLv100 * daLv100);
-    /* DC (100計算) 食材1個數/h */ final dcLv100 = _tc(() => dbLv100 * (isIngredientSpecialty ? 2 : 1)) / 3.0;
-
-    /* DD (100計算) 食材2個數/h */ final ddLv100 = _tc(() => dbLv100 * ingredientCount2) / 3.0;
-    /* DE (100計算) 食材3個數/h */ final deLv100 = _tc(() => dbLv100 * ingredientCount3) / 3.0;
-    /* DF (100收益) 樹果能量/h, GN (Lv100Result) 樹果能量/h */ final dfLv100 = _tc(() => czLv100 * fruitEnergyAfterSnorlaxFavoriteLv100);
-    /* DG (100收益) 食材個/h, GO (Lv100Result) 食材個/h */ final dgLv100 = dcLv100 + ddLv100 + deLv100;
-    /* DH (100收益) 食材能量/h, GP (Lv100Result) */ final dhLv100 = _tc(() => dcLv100 * ingredientEnergy1 + ddLv100 * ingredientEnergy2 + deLv100 * ingredientEnergy3);
-    /* DI (100收益) 技能次數/d, GQ (Lv100Result) */
-    final diLv100 = _tc(() => (
-        skillRateSMLv100 * 3600 / bfLv100 * _transUserVitality()
-            * (character.negative == '主技能' ? 0.8 : character.positive == '主技能' ? 1.2 : 1)
-    )
-        + (isSkillSpecialty ? 0.2 : 0)
-        + 0.25 * (fpLv100 - 1)
-        + 0.2,
-    );
-    /* DJ (100收益) 主技能效益/h, GR (Lv100Result) */
-    final djLv100 = _tc(() =>
-    (
-        basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (dfLv100 + dhLv100) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[fpLv100.toInt() - 1] :
-        _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[fpLv100.toInt() - 1]
-    ),
-    ) * diLv100;
-    /* DL (100白板計算) 果實預期次數/h */ final dlLv100 = _tc(() => 3600 / maxHelpIntervalLv100 * fruitRate);
-    /* DN (100白板計算) 食材預期次數/h */ final dnLv100 = _tc(() => 3600 / maxHelpIntervalLv100 * ingredientRate);
-    /* DO (100白板計算) 食材1個數/h */ final doLv100 = _tc(() => dnLv100 * (isIngredientSpecialty ? 2 : 1))/3;
-    /* DP (100白板計算) 食材2個數/h */ final dpLv100 = _tc(() => dnLv100 * ingredientCount2) / 3.0;
-    /* DQ (100白板計算) 食材3個數/h */ final dqLv100 = _tc(() => dnLv100 * ingredientCount3) / 3.0;
-    /* DR (100白板收益) 樹果能量/h */ final drLv100 = _tc(() => fruitEnergyLv100 * dlLv100 * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite ? 2 : 1));
-    /* DS (100白板收益) 食材個/h */ final dsLv100 = doLv100 + dpLv100 + dqLv100;
-    /* DT (100白板收益) 食材能量/h */ final dtLv100 = _tc(() => doLv100 * ingredientEnergy1 + dpLv100 * ingredientEnergy2 + dqLv100 * ingredientEnergy3);
-    /* DV (100白板) 主技能效益/h */
-    final dvLv100 = _tc(() => (
-        basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (drLv100+dtLv100) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
-        _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[(_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1]
-    )
-    ) * duLv100;
     /* (Lv100Result) GU 100收益/h */ final guLv100 = _tc(() =>
     dfLv100 + dhLv100 + djLv100 + (_subSkillsContains(SubSkill.helperBonus, 100) ? ha4 : 0)
     );
@@ -435,7 +414,6 @@ class PokemonProfileStatistics {
         (_subSkillsContains(SubSkill.helperBonus, 100) ? ha4/5 : 0)
     );
     /* (Lv100Result) GT 100輔助隊友收益/h */ final gtLv100 = guLv100 - gsLv100;
-    /* (Lv100Result) GV 100白板/h */ final gvLv100 = drLv100 + dtLv100 + dvLv100;
     /* (Lv100Result) GW 影響 */ final gwLv100 = bLvCurr == 0 ? 0 : (guLv100 - gvLv100) / gvLv100;
     // endregion
 
@@ -522,44 +500,32 @@ class PokemonProfileStatistics {
             [
               '',
               '樹果+1確認',
-              '幫忙M確認',
               '幫忙S+M確認',
-              '食材M確認',
               '食材S+M確認',
-              '技能幾率M確認',
               '技能幾率S+M確認',
               '加成後主技能等級',
             ],
             [
               '當前等級',
               Display.numDouble(fruitBonusEnergy),
-              Display.numDouble(helpSpeedMLvCurr),
               Display.numDouble(helpSpeedSMLvCurr),
-              Display.numDouble(ingredientMLvCurr),
               Display.numDouble(ingredientSMLvCurr),
-              Display.numDouble(skillRateMLvCurr),
               Display.numDouble(skillRateSMLvCurr),
               Display.numDouble(erLvCurr),
             ],
             [
               'Lv 50',
               Display.numDouble(fruitBonusEnergyLv50),
-              Display.numDouble(helpSpeedMLv50),
               Display.numDouble(helpSpeedSMLv50),
-              Display.numDouble(ingredientMLv50),
               Display.numDouble(ingredientSMLv50),
-              Display.numDouble(skillRateMLv50),
               Display.numDouble(skillRateSMLv50),
               Display.numDouble(fcLv50),
             ],
             [
               'Lv 100',
               Display.numDouble(fruitBonusEnergyLv100),
-              Display.numDouble(helpSpeedMLv100),
               Display.numDouble(helpSpeedSMLv100),
-              Display.numDouble(ingredientMLv100),
               Display.numDouble(ingredientSMLv100),
-              Display.numDouble(skillRateMLv100),
               Display.numDouble(skillRateSMLv100),
               Display.numDouble(fpLv100),
             ],
@@ -718,14 +684,14 @@ class PokemonProfileStatistics {
               'Lv50',
               '',
               '',
-              Display.numDouble(bdLv50),
+              Display.numDouble(helpIntervalLv50_2),
               Display.numDouble(000000),
             ],
             [
               'Lv100',
               '',
               Display.numDouble(000000),
-              Display.numDouble(bfLv100),
+              Display.numDouble(helpIntervalLv100_2),
               Display.numDouble(000000),
             ],
           ],
@@ -789,7 +755,7 @@ class PokemonProfileStatistics {
               '當前等級\n(加成後)',
               Display.numDouble(fruitRateLvCurr1),
               Display.numDouble(biLvCurr),
-              Display.numDouble(bjLvCurr),
+              Display.numDouble(ingredientRateLvCurr),
               Display.numDouble(ingredientCountPerHourLvCurr),
               Display.numDouble(ingredient1CountPerHourAfterAdjustLvCurr),
               Display.numDouble(ingredient2CountPerHourAfterAdjustLvCurr),
@@ -827,9 +793,9 @@ class PokemonProfileStatistics {
             ],
             [
               'Lv100\n(加成後)',
-              Display.numDouble(cyLv100),
+              Display.numDouble(fruitRateLv100),
               Display.numDouble(czLv100),
-              Display.numDouble(daLv100),
+              Display.numDouble(ingredientRateLv100),
               Display.numDouble(dbLv100),
               Display.numDouble(dcLv100),
               Display.numDouble(ddLv100),
@@ -1242,18 +1208,124 @@ class PokemonProfileStatistics {
         return List.generate(6, (i) => values.map((e) => e[i]).reduce((a, b) => a + b) / values.length);
     }
   }
-
-  /// [level 1~100]
-  int _getSingleFruitEnergy(int level) {
-    assert(level >= 1 && level <= 100);
-
-    if (level == 25) {
-      final a = fruit.getLevels();
-    }
-
-    return fruit.getLevels()[level - 1];
-  }
-
   // endregion Formulas
 
+}
+
+enum _StatisticsLevelType {
+  levelCurr,
+  level100,
+  level50,
+}
+
+class _PokemonProfileStatisticsAtLevel {
+  _PokemonProfileStatisticsAtLevel({
+    required this.profile,
+    required this.type,
+    required this.level,
+    required this.isSnorlaxFavorite,
+    required this.helpInterval,
+  });
+
+  final PokemonProfile profile;
+  final _StatisticsLevelType type;
+  final int level;
+  final bool isSnorlaxFavorite;
+  final int helpInterval;
+
+  _PokemonProfileStatisticsAtLevelResult calc() {
+    final fruitEnergy = _getSingleFruitEnergy(level);
+    final fruitBonusEnergy = _subSkillsContains(SubSkill.berryCountS, level) ? fruitEnergy : 0.0;
+    final fruitEnergyAfterSpecialtyAndSubSkill = fruitEnergy * (profile.isBerrySpecialty ? 2 : 1) + fruitBonusEnergy;
+    final fruitEnergyAfterSnorlaxFavorite = fruitEnergyAfterSpecialtyAndSubSkill * (isSnorlaxFavorite ? 2 : 1);
+    final helpSpeedSM = 1.0
+        - (_subSkillsContains(SubSkill.helpSpeedS, level) ? 0.07: 0)
+        - (_subSkillsContains(SubSkill.helpSpeedM, level) ? 0.14: 0);
+    final ingredientSM = 1.0
+        + (_subSkillsContains(SubSkill.ingredientRateS, level) ? 0.18 : 0)
+        + (_subSkillsContains(SubSkill.ingredientRateM, level) ? 0.36 : 0);
+    final skillRateSM = 1.0
+        + (_subSkillsContains(SubSkill.skillRateM, level) ? 0.36 : 0)
+        + (_subSkillsContains(SubSkill.skillRateS, level) ? 0.18 : 0);
+    final ingredientRate = _tc(() => 0.2 * ingredientSM
+        * (
+            profile.character.positive == '食材發現' ? 1.2
+                : profile.character.negative == '食材發現' ? 0.8
+                : 1.0
+        ),
+    );
+    final fruitRate = 1 - ingredientRate;
+
+    // 幫忙間隔，一系列計算
+
+
+
+    return _PokemonProfileStatisticsAtLevelResult(
+      fruitEnergy: fruitEnergy,
+      fruitBonusEnergy: fruitBonusEnergy,
+      fruitEnergyAfterSpecialtyAndSubSkill: fruitEnergyAfterSpecialtyAndSubSkill,
+      fruitEnergyAfterSnorlaxFavorite: fruitEnergyAfterSnorlaxFavorite,
+      helpSpeedSM: helpSpeedSM,
+      ingredientSM: ingredientSM,
+      skillRateSM: skillRateSM,
+      ingredientRate: ingredientRate,
+      fruitRate: fruitRate,
+    );
+  }
+
+  /// tryCatch calculating or return 0
+  double _tc(num Function() callback, {
+    double defaultValue = 0,
+  }) {
+    try {
+      return callback().toDouble();
+    } catch (e) {
+      return defaultValue;
+    }
+  }
+
+  /// [level] is 1 ~ 100
+  int _getSingleFruitEnergy(int level) {
+    assert(level >= 1 && level <= 100);
+    return profile.fruit.getLevels()[level - 1];
+  }
+
+  bool _subSkillsContains(SubSkill subSkill, int level) {
+    return _getSubSkillsByLevel(level).contains(subSkill);
+  }
+
+  List<SubSkill> _getSubSkillsByLevel(int level) {
+    final count = level >= 100 ? 5
+        : level >= 75 ? 4
+        : level >= 50 ? 3
+        : level >= 25 ? 2
+        : level >= 10 ? 1
+        : 0;
+    return profile.subSkills.take(count).toList();
+  }
+
+}
+
+class _PokemonProfileStatisticsAtLevelResult {
+  _PokemonProfileStatisticsAtLevelResult({
+    required this.fruitEnergy,
+    required this.fruitBonusEnergy,
+    required this.fruitEnergyAfterSpecialtyAndSubSkill,
+    required this.fruitEnergyAfterSnorlaxFavorite,
+    required this.helpSpeedSM,
+    required this.ingredientSM,
+    required this.skillRateSM,
+    required this.ingredientRate,
+    required this.fruitRate,
+  });
+
+  final int fruitEnergy;
+  final num fruitBonusEnergy;
+  final num fruitEnergyAfterSpecialtyAndSubSkill;
+  final num fruitEnergyAfterSnorlaxFavorite;
+  final double helpSpeedSM;
+  final double ingredientSM;
+  final double skillRateSM;
+  final double ingredientRate;
+  final double fruitRate;
 }
