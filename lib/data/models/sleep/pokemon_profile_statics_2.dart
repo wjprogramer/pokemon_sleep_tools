@@ -84,8 +84,8 @@ class PokemonProfileStatistics {
   /* $Q$4 */ final q4 = 1; // 1 為考慮，反之 0 為不考慮
 
   // 在 sheet 上為常數
-  /* $AM$4 */ final _ccc1 = 0.25;
-  /* $AL$4 */ final _ccc2 = 0.25;
+  /* $AM$4 */ final _AM_4 = 0.2;
+  /* $AL$4 */ final _AL_4 = 0.25;
 
   List<dynamic> calcForDev() {
     return _calc(_Type.dev);
@@ -106,230 +106,77 @@ class PokemonProfileStatistics {
     // 帮手计算估分
     /* $O$4 */ final o4 = _helperAvgScore * 5 * 0.05 * q4;
 
+
     // region 無關等級
     /* DW 食材1售價 */ final ingredientPrice1 = _getIngredientPrice(ingredient1);
     /* DX 食材2售價 */ final ingredientPrice2 = _getIngredientPrice(ingredient2);
     /* DY 食材3售價 */ final ingredientPrice3 = _getIngredientPrice(ingredient3);
-    /* DZ 食材1能量 */ final ingredientEnergy1 = ingredient1.energy;
-    /* EA 食材2能量 */ final ingredientEnergy2 = ingredient2.energy;
-    /* EB 食材3能量 */ final ingredientEnergy3 = ingredient3.energy;
     /* BQ, CO, DM (白板計算) 食材機率 */ const ingredientRate = 0.2; // TODO: 感覺應該根據 BasicProfile 的食材機率
     /* BO (白板計算) 果子機率 */ const fruitRate = 1 - ingredientRate;
     // endregion
 
+
     // NOTES:
-    // - Lv 50 與 Lv 100 假設為進化到最終階段
+    // - Lv 50 與 Lv 100 的狀況下都是假設進化到最終階段
 
-    final statisticsLvCurr = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.levelCurr, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: _level).calc();
-    final statisticsLv50 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level50, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: 50).calc();
-    final statisticsLv100 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level100, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, helpInterval: 0000000, level: 100).calc();
+    final statisticsLvCurr = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.levelCurr, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, vitality: _userVitality, baseHelpInterval: helpInterval, mainSkillLv: _mainSkillLv, level: _level).calc();
+    final statisticsLv50 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level50, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, vitality: _userVitality, baseHelpInterval: maxHelpInterval, mainSkillLv: _mainSkillLv, level: 50).calc();
+    final statisticsLv100 = _PokemonProfileStatisticsAtLevel(profile: profile, type: _StatisticsLevelType.level100, isSnorlaxFavorite: _shouldConsiderSnorlaxFavorite && _isSnorlaxFavorite, vitality: _userVitality, baseHelpInterval: maxHelpInterval, mainSkillLv: _mainSkillLv, level: 100).calc();
 
-    /* (當前等級) AL 果子/顆 */ final fruitEnergyLvCurr = statisticsLvCurr.fruitEnergy;
-    /* (Lv 50) AO 果子/顆 */ final fruitEnergyLv50 = statisticsLv50.fruitEnergy;
-    /* AR (Lv 100) 果子/顆 */ final fruitEnergyLv100 = statisticsLv100.fruitEnergy;
-
-    /* (當前等級) EK 樹果+1確認 */ final fruitBonusEnergy = statisticsLvCurr.fruitBonusEnergy;
-    /* (Lv 50) EV 樹果+1確認 */ final fruitBonusEnergyLv50 = statisticsLv50.fruitBonusEnergy;
-    /* FI (Lv 100) 樹果+1確認 */ final fruitBonusEnergyLv100 = statisticsLv100.fruitBonusEnergy;
-
-    /* (當前等級) AM 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLvCurr = statisticsLvCurr.fruitEnergyAfterSpecialtyAndSubSkill;
-    /* (Lv 50) AP 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLv50 = statisticsLv50.fruitEnergyAfterSpecialtyAndSubSkill;
-    /* AS (Lv 100) 類型與技能加成/顆 */ final fruitEnergyAfterSpecialtyAndSubSkillLv100 = statisticsLv100.fruitEnergyAfterSpecialtyAndSubSkill;
-
-    /* (當前等級) AN +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavorite = statisticsLvCurr.fruitEnergyAfterSnorlaxFavorite;
-    /* (Lv 50) AQ +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv50 = statisticsLv50.fruitEnergyAfterSnorlaxFavorite;
-    /* (Lv 100) AT +喜愛加成/顆 */ final fruitEnergyAfterSnorlaxFavoriteLv100 = statisticsLv100.fruitEnergyAfterSnorlaxFavorite;
-
-    /* (當前等級) EM 幫忙S+M確認: */ final helpSpeedSMLvCurr = statisticsLvCurr.helpSpeedSM;
-    /* (Lv 50) EX 幫忙S+M確認 */ final helpSpeedSMLv50 = statisticsLv50.helpSpeedSM;
-    /* FK (Lv 100) 幫忙S+M確認 */ final helpSpeedSMLv100 = statisticsLv100.helpSpeedSM;
+    /* AK 食材換算成碎片/h */ final akLvCurr = statisticsLvCurr.ingredientCount1PerHour * ingredientPrice1
+        + statisticsLvCurr.ingredientCount2PerHour * ingredientPrice2
+        + statisticsLvCurr.ingredientCount3PerHour * ingredientPrice3;
 
 
 
-    // 幫忙間隔 ---- 1
-    /* (當前等級) AX 等級調整 */ final helpIntervalLvCurr1 = _tc(() => helpInterval - (helpInterval * ((_level - 1) * 0.002)));
-    /* (Lv 50) BD 間隔 */ final helpIntervalLv50_1 = _tc(() => maxHelpInterval - (maxHelpInterval * ((50-1) * 0.002)));
-    /* BF 100間隔 */ final helpIntervalLv100_1 = _tc(() => maxHelpInterval - (maxHelpInterval * ((100-1) * 0.002)));
-
-    // 幫忙間隔 ---- 2
-    final xxx = character.positive == '幫忙速度' ? 0.9
-        : character.negative == '幫忙速度' ? 1.1
-        : 1.0;
-
-    /* (當前等級) AY 性格+技能調整 */ final helpIntervalLvCurr2 = _tc(() => helpIntervalLvCurr1 * helpSpeedSMLvCurr * xxx);
-    final helpIntervalLv50_2 = _tc(() => helpIntervalLv50_1 * helpSpeedSMLv50 * xxx);
-    final helpIntervalLv100_2 = _tc(() => helpIntervalLv100_1 * helpSpeedSMLv100 * xxx);
-
-    // 幫忙間隔 ---- 3
-    /* (當前等級) AZ 活力影響後 */ final helpIntervalLvCurr3 = helpIntervalLvCurr2 * _transUserVitality();
-    final helpIntervalLv50_3 = helpIntervalLv50_2 * _transUserVitality();
-    final helpIntervalLv100_3 = helpIntervalLv100_2 * _transUserVitality();
-
-    // 幫忙間隔 ---- 4
-    /* (當前等級) BA 白板-活力影響 */ final helpIntervalPureLvCurr = _tc(() => helpIntervalLvCurr1 * _transUserVitality());
-
-    /* (當前等級) EO 食材S+M確認 */ final ingredientSMLvCurr = statisticsLvCurr.ingredientSM;
-    /* (Lv 50) EZ 食材S+M確認 */ final ingredientSMLv50 = statisticsLv50.ingredientSM;
-    /* FM (Lv 100) 食材S+M確認 */ final ingredientSMLv100 = statisticsLv100.ingredientSM;
-
-    /* (當前等級) EQ 技能幾率S+M確認 */ final skillRateSMLvCurr = statisticsLvCurr.skillRateSM;
-    /* (Lv 50) FB 技能幾率S+M確認 */ final skillRateSMLv50 = statisticsLv50.skillRateSM;
-    /* FO (Lv 100) 技能幾率S+M確認 */ final skillRateSMLv100 = statisticsLv100.skillRateSM;
-
-    /* ER, U 加成後主技能等級 */
-    final erLvCurr = _mainSkillLv +
-        (_subSkillsContains(SubSkill.skillLevelM, _level) ? 2 : 0) +
-        (_subSkillsContains(SubSkill.skillLevelS, _level) ? 1 : 0);
-    /* (Lv 50) FC 加成後主技能等級 */
-    final fcLv50 = _mainSkillLv
-        + (_subSkillsContains(SubSkill.skillLevelM, 50) ? 2 : 0)
-        + (_subSkillsContains(SubSkill.skillLevelS, 50) ? 1 : 0)
-        + 3
-        - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3);
-    /* FP (Lv 100) 加成後主技能等級 */
-    final fpLv100 = _mainSkillLv
-        + (_subSkillsContains(SubSkill.skillLevelM, 100) ? 2 : 0)
-        + (_subSkillsContains(SubSkill.skillLevelS, 100) ? 1 : 0)
-        + 3
-        - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3);
-
-
-    /* BJ (加成後) 食材機率 */ final ingredientRateLvCurr = statisticsLvCurr.ingredientRate;
-    /* CC (50計算) 食材機率 */ final ingredientRateLv50 = statisticsLv50.ingredientRate;
-    /* DA (Lv100) 食材機率 */ final ingredientRateLv100 = statisticsLv100.ingredientRate;
-
-    /* BE 50白板活力 */ final beLv50 = _tc(() => (maxHelpInterval - (maxHelpInterval * ((50-1)*0.002)))*_transUserVitality());
-    /* BG 100白板活力 */ final maxHelpIntervalLv100 = _tc(() => (maxHelpInterval - (maxHelpInterval * ((100-1)*0.002))) * _transUserVitality());
-
-    /* BH (加成後) 果子機率 */ final fruitRateLvCurr1 = statisticsLvCurr.fruitRate;
-    /* CA (50計算) 果子機率 */ final fruitRateLv50 = statisticsLv50.fruitRate;
-    /* CY (100計算) 果子機率 */ final fruitRateLv100 = statisticsLv100.fruitRate;
-
-    /* BK (加成後) 食材預期次數/h */ final ingredientCountPerHourLvCurr = _tc(() => 3600 / helpIntervalLvCurr3 * ingredientRateLvCurr);
-    /* CP (50白板計算) 食材預期次數/h */ final cpLv50 = _tc(() => 3600 / beLv50 * ingredientRate);
-    /* DN (100白板計算) 食材預期次數/h */ final dnLv100 = _tc(() => 3600 / maxHelpIntervalLv100 * ingredientRate);
-
-    /* BI (加成後) 果實預期次數/h */ final biLvCurr = _tc(() => 3600 / helpIntervalLvCurr3 * fruitRateLvCurr1);
-    /* CN (50白板計算) 果實預期次數/h */ final cnLv50 = _tc(() => 3600 / beLv50 * fruitRate);
-    /* CZ (100計算) 果實預期次數/h */ final czLv100 = _tc(() => 3600 / helpIntervalLv100_2 * fruitRateLv100);
-    /* DL (100白板計算) 果實預期次數/h */ final dlLv100 = _tc(() => 3600 / maxHelpIntervalLv100 * fruitRate);
-
-    /* BR (白板計算) 食材預期次數/h */ final brLvCurr = _tc(() => 3600/ helpIntervalPureLvCurr * ingredientRate);
-    /* CD (50計算) 食材預期次數/h */ final cdLv50 = _tc(() => 3600 / helpIntervalLv50_2 * ingredientRateLv50);
-    /* DB (100計算) 食材預期次數/h */ final dbLv100 = _tc(() => 3600 / helpIntervalLv100_2 * ingredientRateLv100);
-
-    /* BT (白板計算) 食材2個數/h */ final btLvCurr = _tc(() => (_level > 29 ? brLvCurr * ingredientCount2 : 0)) * (_level > 59 ? 1/3 : 1/2);
-    /* BM (加成後) 食材2個數/h */ final ingredient2CountPerHourAfterAdjustLvCurr = _tc(() => (_level>29 ? ingredientCountPerHourLvCurr * ingredientCount2 : 0),) * (_level > 59 ? 1/3 : 1/2);
-    /* CF (50計算) 食材2個數/h */ final cfLv50 = _tc(() => cdLv50 * ingredientCount2) / 2.0;
-    /* DD (100計算) 食材2個數/h */ final ddLv100 = _tc(() => dbLv100 * ingredientCount2) / 3.0;
-    /* CR (50白板計算) 食材2個數/h */ final crLv50 = _tc(() => cpLv50 * ingredientCount2) / 2.0;
-    /* DP (100白板計算) 食材2個數/h */ final dpLv100 = _tc(() => dnLv100 * ingredientCount2) / 3.0;
-
-    /* BU (白板計算) 食材3個數/h */ final buLvCurr = _tc(() => (_level > 59 ? brLvCurr * ingredientCount3 : 0)) / 3.0;
-    /* DE (100計算) 食材3個數/h */ final deLv100 = _tc(() => dbLv100 * ingredientCount3) / 3.0;
-    /* BN (加成後) 食材3個數/h */ final ingredient3CountPerHourAfterAdjustLvCurr = _tc(() => (_level>59 ? ingredientCountPerHourLvCurr * ingredientCount3: 0)) / 3;
-    /* CG (50計算), CS (50白板計算) 食材3個數/h */ const ingredientCount3Lv50 = 0;
-    /* DQ (100白板計算) 食材3個數/h */ final dqLv100 = _tc(() => dnLv100 * ingredientCount3) / 3.0;
-
-    /* BL (加成後) 食材1個數/h */
-    final ingredient1CountPerHourAfterAdjustLvCurr = _tc(() => ingredientCountPerHourLvCurr * (isIngredientSpecialty ? 2 : 1))
-        * (_level > 59 ? 1/3 : (_level > 29 ? 1/2 : 1));
-    /* BS (白板計算) 食材1個數/h */ final bsLvCurr = _tc(() => brLvCurr * (isIngredientSpecialty ? 2 : 1)) * (_level > 59 ? 1/3 : (_level>29 ? 1/2 : 1));
-    /* CE (50計算) 食材1個數/h */ final ceLv50 = _tc(() => cdLv50 * (isIngredientSpecialty ? 2 : 1)) / 2.0;
-    /* CQ (50白板計算) 食材1個數/h */ final cqLv50 = _tc(() => cpLv50 * (isIngredientSpecialty ? 2 : 1)) / 2.0;
-    /* DO (100白板計算) 食材1個數/h */ final doLv100 = _tc(() => dnLv100 * (isIngredientSpecialty ? 2 : 1))/3;
-    /* DC (100計算) 食材1個數/h */ final dcLv100 = _tc(() => dbLv100 * (isIngredientSpecialty ? 2 : 1)) / 3.0;
-
-    /* AI 食材個/h */ final aiLvCurr = ingredient1CountPerHourAfterAdjustLvCurr + ingredient2CountPerHourAfterAdjustLvCurr + ingredient3CountPerHourAfterAdjustLvCurr;
-    /* AK 食材換算成碎片/h */ final akLvCurr = _tc(() => ingredient1CountPerHourAfterAdjustLvCurr * ingredientPrice1 + ingredient2CountPerHourAfterAdjustLvCurr * ingredientPrice2 + ingredient3CountPerHourAfterAdjustLvCurr * ingredientPrice3);
-    /* CB (50計算) 果實預期次數/h */ final cbLv50 = _tc(() => 3600 / helpIntervalLv50_2 * fruitRateLv50);
-    /* BP (白板計算) 果實預期次數/h */ final bpLvCurr = _tc(() => 3600 / helpIntervalPureLvCurr * fruitRate);
-
-    /* BV (白板收益) 樹果能量/h */ final bvLvCurr = _tc(() => fruitEnergyLvCurr * bpLvCurr * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite?2:1));
-    /* CH (50收益) 樹果能量/h, GD (Lv50Result) 樹果能量/h */ final chLv50 = _tc(() => cbLv50 * fruitEnergyAfterSnorlaxFavoriteLv50);
-    /* DF (100收益) 樹果能量/h, GN (Lv100Result) 樹果能量/h */ final dfLv100 = _tc(() => czLv100 * fruitEnergyAfterSnorlaxFavoriteLv100);
-    /* CT (50白板收益) 樹果能量/h */ final ctLv50 = _tc(() => fruitEnergyLv50 * cnLv50 * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite ? 2 : 1));
-    /* DR (100白板收益) 樹果能量/h */ final drLv100 = _tc(() => fruitEnergyLv100 * dlLv100 * (isBerrySpecialty ? 2 : 1) * (_isSnorlaxFavorite ? 2 : 1));
-    /* Z 樹果能量/h */ final zLvCurr = _tc(() => biLvCurr * fruitEnergyAfterSnorlaxFavorite);
-
-    /* BW (白板收益) 食材個/h */ final bwLvCurr = bsLvCurr + btLvCurr + buLvCurr;
-    /* CI (50收益) 食材個/h, GE (Lv50Result) 食材個/h */ final ciLv50 = ceLv50 + cfLv50 + ingredientCount3Lv50;
-    /* DG (100收益) 食材個/h, GO (Lv100Result) 食材個/h */ final dgLv100 = dcLv100 + ddLv100 + deLv100;
-    /* CU (50白板收益) 食材個/h */ final cuLv50 = cqLv50 + crLv50 + ingredientCount3Lv50;
-    /* DS (100白板收益) 食材個/h */ final dsLv100 = doLv100 + dpLv100 + dqLv100;
-
-    /* BX (白板收益) 食材能量/h */ final bxLvCurr = _tc(() => bsLvCurr * ingredientEnergy1 + btLvCurr * ingredientEnergy2 + buLvCurr * ingredientEnergy3);
-    /* DH (100收益) 食材能量/h, GP (Lv100Result) */ final dhLv100 = _tc(() => dcLv100 * ingredientEnergy1 + ddLv100 * ingredientEnergy2 + deLv100 * ingredientEnergy3);
-    /* AJ 食材能量/h */ final ajLvCurr = _tc(() => ingredient1CountPerHourAfterAdjustLvCurr * ingredientEnergy1 + ingredient2CountPerHourAfterAdjustLvCurr * ingredientEnergy2 + ingredient3CountPerHourAfterAdjustLvCurr * ingredientEnergy3);
-    /* CJ (50收益) 食材能量/h, GF (Lv50Result) 食材能量/h */ final cjLv50 = _tc(() => ceLv50 * ingredientEnergy1 + cfLv50 * ingredientEnergy2 + ingredientCount3Lv50 * ingredientEnergy3);
-    /* CV (50白板收益) 食材能量/h */ final cvLv50 = _tc(() => cqLv50 * ingredientEnergy1 + crLv50 * ingredientEnergy2 + ingredientCount3Lv50 * ingredientEnergy3);
-    /* DT (100白板收益) 食材能量/h */ final dtLv100 = _tc(() => doLv100 * ingredientEnergy1 + dpLv100 * ingredientEnergy2 + dqLv100 * ingredientEnergy3);
 
     /* BY (白板收益) 次數/h */
     final byLvCurr = _tc(() {
-      return 3600 / helpIntervalLvCurr1 +
-          (isSkillSpecialty ? 0.2 : 0.0)+
-          0.25*(_mainSkillLv-1)+
-          (basicProfile.currentEvolutionStage - 2) * _ccc1;
+      return 3600 / statisticsLvCurr.helpIntervalWithLevel
+          + (isSkillSpecialty ? 0.2 : 0.0)
+          + 0.25 * (_mainSkillLv-1)
+          + _AM_4 * (basicProfile.currentEvolutionStage - 2);
     });
     /* CW (50白板收益) 次數/h */
     final cwLv50 = _tc(() =>
-    (
-        3600 / beLv50 * _transUserVitality()
-    )
+        3600 / statisticsLv50.pureHelpIntervalWithLevelVitality * _transUserVitality()
         + (isSkillSpecialty ? 0.2 : 0)
-        + _ccc2 *
-        (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)  - 1 + _ccc1),
+        + _AL_4 * (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)  - 1 + _AM_4),
     );
-    /* DU (100白板) 次數/h */ final duLv100 = _tc(() => 3600/maxHelpIntervalLv100 *_transUserVitality() +
-        (isSkillSpecialty ? 0.2 : 0)+ _ccc2 * (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)-1) + _ccc1,
-    );
-    /* CK (50收益) 次數/d, GG (Lv50Result) 技能次數/d */
-    final ckLv50 = _tc(() => (
-        skillRateSMLv50 * 3600 / helpIntervalLv50_2 * _transUserVitality()
-            * (
-            character.negative == '主技能' ? 0.8
-                : character.positive == '主技能' ? 1.2
-                : 1
-        )
-    )
+    /* DU (100白板) 次數/h */ final duLv100 = _tc(() =>
+        3600 / statisticsLv100.pureHelpIntervalWithLevelVitality * _transUserVitality()
         + (isSkillSpecialty ? 0.2 : 0)
-        + _ccc1 * (fcLv50 - 1)
-        + _ccc2,
-    );
-    /* V 技能次數/d */
-    final vLvCurr = _tc(() =>
-    (skillRateSMLvCurr * 3600 / helpIntervalLvCurr2*
-        (character.negative == '主技能' ?  0.8 : character.positive == '主技能' ? 1.2 : 1))+
-        _ccc2 * (erLvCurr - 1)+
-        (isSkillSpecialty ?0.5:0)+
-        (basicProfile.currentEvolutionStage - 2)*_ccc1
+        + _AL_4 * (_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3) - 1) + _AM_4,
     );
 
-    /* W 主技能效益/h */
+
+
+
+
+    /* W (當前等及) 主技能效益/h */
     final wLvCurr = _tc(() =>
     (
         basicProfile.mainSkill == MainSkill.vitalityFillS
-            ? (zLvCurr + ajLvCurr)* _calcMainSkillEnergyList(basicProfile.mainSkill)[erLvCurr.toInt() - 1]
-            : _calcMainSkillEnergyList(basicProfile.mainSkill)[erLvCurr.toInt() - 1]
-    )) * vLvCurr;
+            ? (statisticsLvCurr.fruitEnergyPerHour + statisticsLvCurr.totalIngredientEnergyPerHour)* _calcMainSkillEnergyList(basicProfile.mainSkill)[statisticsLvCurr.finalMainSkillLevel.toInt() - 1]
+            : _calcMainSkillEnergyList(basicProfile.mainSkill)[statisticsLvCurr.finalMainSkillLevel.toInt() - 1]
+    )) * statisticsLvCurr.skillActivateCountPerDay;
     /* BZ (白板收益) 主技能效益/h */
     final bzLvCurr = _tc(() {
       return basicProfile.mainSkill == MainSkill.vitalityFillS
-          ? (bvLvCurr + bxLvCurr)* _calcMainSkillEnergyList(basicProfile.mainSkill)[_mainSkillLv - 1]
+          ? (statisticsLvCurr.pureFruitEnergyPerHour + statisticsLvCurr.pureIngredientEnergyPerHour)* _calcMainSkillEnergyList(basicProfile.mainSkill)[_mainSkillLv - 1]
           : _calcMainSkillEnergyList(basicProfile.mainSkill)[_mainSkillLv - 1];
     }) * byLvCurr;
     /* CL (50收益) 主技能效益/h, GH (Lv50Result) 主技能效益/h */
     final clLv50 = _tc(() => (
         basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (chLv50+cjLv50) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[fcLv50.toInt() - 1] :
-        _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[fcLv50.toInt() - 1]
+        (statisticsLv50.fruitEnergyPerHour + statisticsLv50.totalIngredientEnergyPerHour) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[statisticsLv50.finalMainSkillLevel.toInt() - 1] :
+        _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[statisticsLv50.finalMainSkillLevel.toInt() - 1]
     )
-    ) * ckLv50;
+    ) * statisticsLv50.skillActivateCountPerDay;
     /* CX (50白板收益) 主技能效益/h */
     final cxLv50 = _tc(() => (
         basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (ctLv50 + cvLv50) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
+        (statisticsLv50.pureFruitEnergyPerHour + statisticsLv50.pureIngredientEnergyPerHour) * _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
 
         _calcMainSkillEnergyListLv50(basicProfile.mainSkill)[(_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1]
     )
@@ -337,69 +184,61 @@ class PokemonProfileStatistics {
     /* DV (100白板) 主技能效益/h */
     final dvLv100 = _tc(() => (
         basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (drLv100+dtLv100) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
+        (statisticsLv100.pureFruitEnergyPerHour + statisticsLv100.pureIngredientEnergyPerHour) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[(_mainSkillLv + 3-_tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1] :
         _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[(_mainSkillLv + 3 - _tc(() => basicProfile.currentEvolutionStage, defaultValue: 3)).toInt() - 1]
     )
     ) * duLv100;
-    /* DI (100收益) 技能次數/d, GQ (Lv100Result) */
-    final diLv100 = _tc(() => (
-        skillRateSMLv100 * 3600 / helpIntervalLv100_2 * _transUserVitality()
-            * (character.negative == '主技能' ? 0.8 : character.positive == '主技能' ? 1.2 : 1)
-    )
-        + (isSkillSpecialty ? 0.2 : 0)
-        + 0.25 * (fpLv100 - 1) // TODO: use const
-        + 0.2, // TODO: use const
-    );
     /* DJ (100收益) 主技能效益/h, GR (Lv100Result) */
     final djLv100 = _tc(() =>
     (
         basicProfile.mainSkill == MainSkill.vitalityFillS ?
-        (dfLv100 + dhLv100) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[fpLv100.toInt() - 1] :
-        _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[fpLv100.toInt() - 1]
+        (statisticsLv100.fruitEnergyPerHour + statisticsLv100.totalIngredientEnergyPerHour) * _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[statisticsLv100.finalMainSkillLevel.toInt() - 1] :
+        _calcMainSkillEnergyListLv100(basicProfile.mainSkill)[statisticsLv100.finalMainSkillLevel.toInt() - 1]
     ),
-    ) * diLv100;
+    ) * statisticsLv100.skillActivateCountPerDay;
+    
+    
+    
+
     /* (Lv50Result) GI 50自身收益/h */
     final giLv50 = _tc(() =>
-    chLv50 + cjLv50 + clLv50 *
+    statisticsLv50.fruitEnergyPerHour + statisticsLv50.totalIngredientEnergyPerHour + clLv50 *
         (basicProfile.mainSkill == MainSkill.vitalityAllS || basicProfile.mainSkill == MainSkill.vitalityS ? 0 : 1) +
         (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 / 5 : 0)
     );
     /* (Lv50Result) GK 50收益/h */ final gkLv50 = _tc(
-            () => chLv50 + cjLv50 + clLv50 + (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 : 0)
+            () => statisticsLv50.fruitEnergyPerHour + statisticsLv50.totalIngredientEnergyPerHour + clLv50 + (_subSkillsContains(SubSkill.helperBonus, 50) ? gy4 : 0)
     );
     /* GJ (Lv50Result) 50輔助隊友收益/h */ final gjLv50 = gkLv50 - giLv50;
 
 
 
-    /* B 白板收益/h */ final bLvCurr = bvLvCurr + bxLvCurr + bzLvCurr;
+    /* B 白板收益/h */ final bLvCurr = statisticsLvCurr.pureFruitEnergyPerHour + statisticsLvCurr.pureIngredientEnergyPerHour + bzLvCurr;
     /* E 理想總收益/h */
     final eLvCurr = _tc(() =>
-    zLvCurr + ajLvCurr + wLvCurr + (_subSkillsContains(SubSkill.helperBonus, _level) ? o4 : 0)
+    statisticsLvCurr.fruitEnergyPerHour + statisticsLvCurr.totalIngredientEnergyPerHour + wLvCurr + (_subSkillsContains(SubSkill.helperBonus, _level) ? o4 : 0)
     );
     /* C 性格技能影響 */ final cLvCurr = bLvCurr == 0 ? 0 : (eLvCurr - bLvCurr) / bLvCurr;
     /* F 自身收益/h */
-    // =IFERROR(
-    // Z7+AJ7+(W7+IF(OR(EF7=6,EG7=6,EH7=6,EI7=6,EJ7=6),$O$4/5,))*IF(VLOOKUP(VLOOKUP(H7,'宝可梦'!$B$7:$S$115,17,FALSE),'主技能'!$B$1:$P$13,15,FALSE)>1,0,1),)
     final fLvCurr = _tc(() =>
-    zLvCurr + ajLvCurr + (wLvCurr + (_subSkillsContains(SubSkill.helperBonus, _level) ? o4 / 5 : 0)) *
+    statisticsLvCurr.fruitEnergyPerHour + statisticsLvCurr.totalIngredientEnergyPerHour + (wLvCurr + (_subSkillsContains(SubSkill.helperBonus, _level) ? o4 / 5 : 0)) *
         (basicProfile.mainSkill == MainSkill.vitalityAllS || basicProfile.mainSkill == MainSkill.vitalityS ? 0 : 1)
     );
     /* G 輔助隊友收益/h */
     final gLvCurr = eLvCurr - fLvCurr;
-    // endregion
 
 
-    /* GL (Lv50Result) 50白板/h */ final glLv50 = ctLv50 + cvLv50 + cxLv50;
-    /* (Lv100Result) GV 100白板/h */ final gvLv100 = drLv100 + dtLv100 + dvLv100;
+    /* GL (Lv50Result) 50白板/h */ final glLv50 = statisticsLv50.pureFruitEnergyPerHour + statisticsLv50.pureIngredientEnergyPerHour + cxLv50;
+    /* (Lv100Result) GV 100白板/h */ final gvLv100 = statisticsLv100.pureFruitEnergyPerHour + statisticsLv100.pureIngredientEnergyPerHour + dvLv100;
     /* GM (Lv50Result) 影響 */ final gmLv50 = bLvCurr == 0 ? 0 : (gkLv50 - glLv50) / glLv50;
 
 
     /* (Lv100Result) GU 100收益/h */ final guLv100 = _tc(() =>
-    dfLv100 + dhLv100 + djLv100 + (_subSkillsContains(SubSkill.helperBonus, 100) ? ha4 : 0)
+    statisticsLv100.fruitEnergyPerHour + statisticsLv100.totalIngredientEnergyPerHour + djLv100 + (_subSkillsContains(SubSkill.helperBonus, 100) ? ha4 : 0)
     );
     /* GS (Lv100Result) 100自身收益/h */
     final gsLv100 = _tc(() =>
-    dfLv100+dhLv100+djLv100*
+    statisticsLv100.fruitEnergyPerHour+statisticsLv100.totalIngredientEnergyPerHour+djLv100*
         (
             basicProfile.mainSkill == MainSkill.vitalityAllS || basicProfile.mainSkill == MainSkill.vitalityS?
             0 :
@@ -409,8 +248,6 @@ class PokemonProfileStatistics {
     );
     /* (Lv100Result) GT 100輔助隊友收益/h */ final gtLv100 = guLv100 - gsLv100;
     /* (Lv100Result) GW 影響 */ final gwLv100 = bLvCurr == 0 ? 0 : (guLv100 - gvLv100) / gvLv100;
-    // endregion
-
 
 
 
@@ -501,27 +338,27 @@ class PokemonProfileStatistics {
             ],
             [
               '當前等級',
-              Display.numDouble(fruitBonusEnergy),
-              Display.numDouble(helpSpeedSMLvCurr),
-              Display.numDouble(ingredientSMLvCurr),
-              Display.numDouble(skillRateSMLvCurr),
-              Display.numDouble(erLvCurr),
+              Display.numDouble(statisticsLvCurr.fruitBonusEnergy),
+              Display.numDouble(statisticsLvCurr.helpSpeedSM),
+              Display.numDouble(statisticsLvCurr.ingredientSM),
+              Display.numDouble(statisticsLvCurr.skillRateSM),
+              Display.numDouble(statisticsLvCurr.finalMainSkillLevel),
             ],
             [
               'Lv 50',
-              Display.numDouble(fruitBonusEnergyLv50),
-              Display.numDouble(helpSpeedSMLv50),
-              Display.numDouble(ingredientSMLv50),
-              Display.numDouble(skillRateSMLv50),
-              Display.numDouble(fcLv50),
+              Display.numDouble(statisticsLv50.fruitBonusEnergy),
+              Display.numDouble(statisticsLv50.helpSpeedSM),
+              Display.numDouble(statisticsLv50.ingredientSM),
+              Display.numDouble(statisticsLv50.skillRateSM),
+              Display.numDouble(statisticsLv50.finalMainSkillLevel),
             ],
             [
               'Lv 100',
-              Display.numDouble(fruitBonusEnergyLv100),
-              Display.numDouble(helpSpeedSMLv100),
-              Display.numDouble(ingredientSMLv100),
-              Display.numDouble(skillRateSMLv100),
-              Display.numDouble(fpLv100),
+              Display.numDouble(statisticsLv100.fruitBonusEnergy),
+              Display.numDouble(statisticsLv100.helpSpeedSM),
+              Display.numDouble(statisticsLv100.ingredientSM),
+              Display.numDouble(statisticsLv100.skillRateSM),
+              Display.numDouble(statisticsLv100.finalMainSkillLevel),
             ],
           ],
         },
@@ -537,21 +374,21 @@ class PokemonProfileStatistics {
             ],
             [
               '當前等級',
-              Display.numDouble(fruitEnergyLvCurr),
-              Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLvCurr),
-              Display.numDouble(fruitEnergyAfterSnorlaxFavorite),
+              Display.numDouble(statisticsLvCurr.fruitEnergy),
+              Display.numDouble(statisticsLvCurr.fruitEnergyAfterSpecialtyAndSubSkill),
+              Display.numDouble(statisticsLvCurr.fruitEnergyAfterSnorlaxFavorite),
             ],
             [
               'Lv50',
-              Display.numDouble(fruitEnergyLv50),
-              Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLv50),
-              Display.numDouble(fruitEnergyAfterSnorlaxFavoriteLv50),
+              Display.numDouble(statisticsLv50.fruitEnergy),
+              Display.numDouble(statisticsLv50.fruitEnergyAfterSpecialtyAndSubSkill),
+              Display.numDouble(statisticsLv50.fruitEnergyAfterSnorlaxFavorite),
             ],
             [
               'Lv100',
-              Display.numDouble(fruitEnergyLv100),
-              Display.numDouble(fruitEnergyAfterSpecialtyAndSubSkillLv100),
-              Display.numDouble(fruitEnergyAfterSnorlaxFavoriteLv100),
+              Display.numDouble(statisticsLv100.fruitEnergy),
+              Display.numDouble(statisticsLv100.fruitEnergyAfterSpecialtyAndSubSkill),
+              Display.numDouble(statisticsLv100.fruitEnergyAfterSnorlaxFavorite),
             ],
             // [
             //   Display.numDouble(000000),
@@ -582,9 +419,9 @@ class PokemonProfileStatistics {
             [
               '當前等級',
               '',
-              Display.numDouble(helpIntervalLvCurr1),
-              Display.numDouble(helpIntervalLvCurr2),
-              Display.numDouble(helpIntervalLvCurr3),
+              Display.numDouble(statisticsLvCurr.helpIntervalWithLevel),
+              Display.numDouble(statisticsLvCurr.helpIntervalWithLevelCharacterSkill),
+              Display.numDouble(statisticsLvCurr.finalHelpInterval),
             ],
             [
               'Lv50',
@@ -629,8 +466,8 @@ class PokemonProfileStatistics {
             [
               '當前等級',
               '',
-              Display.numDouble(helpIntervalLvCurr1),
-              Display.numDouble(helpIntervalPureLvCurr),
+              Display.numDouble(statisticsLvCurr.helpIntervalWithLevel),
+              Display.numDouble(statisticsLvCurr.pureHelpIntervalWithLevelVitality),
               Display.numDouble(0),
             ],
             [
@@ -678,14 +515,14 @@ class PokemonProfileStatistics {
               'Lv50',
               '',
               '',
-              Display.numDouble(helpIntervalLv50_2),
+              Display.numDouble(statisticsLv50.helpIntervalWithLevelCharacterSkill),
               Display.numDouble(000000),
             ],
             [
               'Lv100',
               '',
               Display.numDouble(000000),
-              Display.numDouble(helpIntervalLv100_2),
+              Display.numDouble(statisticsLv100.helpIntervalWithLevelCharacterSkill),
               Display.numDouble(000000),
             ],
           ],
@@ -718,14 +555,14 @@ class PokemonProfileStatistics {
             [
               'Lv50',
               '',
-              Display.numDouble(beLv50),
+              Display.numDouble(statisticsLv50.pureHelpIntervalWithLevelVitality),
               '',
               Display.numDouble(000000),
             ],
             [
               'Lv100',
               '',
-              Display.numDouble(maxHelpIntervalLv100),
+              Display.numDouble(statisticsLv100.pureHelpIntervalWithLevelVitality),
               Display.numDouble(000000),
               Display.numDouble(000000),
             ],
@@ -747,63 +584,63 @@ class PokemonProfileStatistics {
             ],
             [
               '當前等級\n(加成後)',
-              Display.numDouble(fruitRateLvCurr1),
-              Display.numDouble(biLvCurr),
-              Display.numDouble(ingredientRateLvCurr),
-              Display.numDouble(ingredientCountPerHourLvCurr),
-              Display.numDouble(ingredient1CountPerHourAfterAdjustLvCurr),
-              Display.numDouble(ingredient2CountPerHourAfterAdjustLvCurr),
-              Display.numDouble(ingredient3CountPerHourAfterAdjustLvCurr),
+              Display.numDouble(statisticsLvCurr.fruitRate),
+              Display.numDouble(statisticsLvCurr.fruitCountPerHour),
+              Display.numDouble(statisticsLvCurr.ingredientRate),
+              Display.numDouble(statisticsLvCurr.ingredientCountPerHour),
+              Display.numDouble(statisticsLvCurr.ingredientCount1PerHour),
+              Display.numDouble(statisticsLvCurr.ingredientCount2PerHour),
+              Display.numDouble(statisticsLvCurr.ingredientCount3PerHour),
             ],
             [
               '當前等級\n(白板)',
               Display.numDouble(fruitRate),
-              Display.numDouble(bpLvCurr),
+              Display.numDouble(statisticsLvCurr.pureFruitCountPerHour),
               Display.numDouble(ingredientRate),
-              Display.numDouble(brLvCurr),
-              Display.numDouble(bsLvCurr),
-              Display.numDouble(btLvCurr),
-              Display.numDouble(buLvCurr),
+              Display.numDouble(statisticsLvCurr.pureIngredientCountPerHour),
+              Display.numDouble(statisticsLvCurr.pureIngredientCount1PerHour),
+              Display.numDouble(statisticsLvCurr.pureIngredientCount2PerHour),
+              Display.numDouble(statisticsLvCurr.pureIngredientCount3PerHour),
             ],
             [
               'Lv50\n(加成後)',
-              Display.numDouble(fruitRateLv50),
-              Display.numDouble(cbLv50),
-              Display.numDouble(ingredientRateLv50),
-              Display.numDouble(cdLv50),
-              Display.numDouble(ceLv50),
-              Display.numDouble(cfLv50),
-              Display.numDouble(ingredientCount3Lv50),
+              Display.numDouble(statisticsLv50.fruitRate),
+              Display.numDouble(statisticsLv50.fruitCountPerHour),
+              Display.numDouble(statisticsLv50.ingredientRate),
+              Display.numDouble(statisticsLv50.ingredientCountPerHour),
+              Display.numDouble(statisticsLv50.ingredientCount1PerHour),
+              Display.numDouble(statisticsLv50.ingredientCount2PerHour),
+              Display.numDouble(statisticsLv50.ingredientCount3PerHour),
             ],
             [
               'Lv50\n(白板)',
               Display.numDouble(fruitRate),
-              Display.numDouble(cnLv50),
+              Display.numDouble(statisticsLv50.pureFruitCountPerHour),
               Display.numDouble(ingredientRate),
-              Display.numDouble(cpLv50),
-              Display.numDouble(cqLv50),
-              Display.numDouble(crLv50),
-              Display.numDouble(ingredientCount3Lv50),
+              Display.numDouble(statisticsLv50.pureIngredientCountPerHour),
+              Display.numDouble(statisticsLv50.pureIngredientCount1PerHour),
+              Display.numDouble(statisticsLv50.pureIngredientCount2PerHour),
+              Display.numDouble(statisticsLv50.ingredientCount3PerHour),
             ],
             [
               'Lv100\n(加成後)',
-              Display.numDouble(fruitRateLv100),
-              Display.numDouble(czLv100),
-              Display.numDouble(ingredientRateLv100),
-              Display.numDouble(dbLv100),
-              Display.numDouble(dcLv100),
-              Display.numDouble(ddLv100),
-              Display.numDouble(deLv100),
+              Display.numDouble(statisticsLv100.fruitRate),
+              Display.numDouble(statisticsLv100.fruitCountPerHour),
+              Display.numDouble(statisticsLv100.ingredientRate),
+              Display.numDouble(statisticsLv100.ingredientCountPerHour),
+              Display.numDouble(statisticsLv100.ingredientCount1PerHour),
+              Display.numDouble(statisticsLv100.ingredientCount2PerHour),
+              Display.numDouble(statisticsLv100.ingredientCount3PerHour),
             ],
             [
               'Lv100\n(白板)',
               Display.numDouble(fruitRate),
-              Display.numDouble(dlLv100),
+              Display.numDouble(statisticsLv100.pureFruitCountPerHour),
               Display.numDouble(ingredientRate),
-              Display.numDouble(dnLv100),
-              Display.numDouble(doLv100),
-              Display.numDouble(dpLv100),
-              Display.numDouble(dqLv100),
+              Display.numDouble(statisticsLv100.pureIngredientCountPerHour),
+              Display.numDouble(statisticsLv100.pureIngredientCount1PerHour),
+              Display.numDouble(statisticsLv100.pureIngredientCount2PerHour),
+              Display.numDouble(statisticsLv100.pureIngredientCount3PerHour),
             ],
           ],
         },
@@ -825,10 +662,10 @@ class PokemonProfileStatistics {
             ],
             [
               '當前等級\n(加成後)',
-              Display.numDouble(zLvCurr),
-              Display.numDouble(aiLvCurr),
-              Display.numDouble(ajLvCurr),
-              Display.numDouble(vLvCurr),
+              Display.numDouble(statisticsLvCurr.fruitEnergyPerHour),
+              Display.numDouble(statisticsLvCurr.totalIngredientCountPerHour),
+              Display.numDouble(statisticsLvCurr.totalIngredientEnergyPerHour),
+              Display.numDouble(statisticsLvCurr.skillActivateCountPerDay),
               Display.numDouble(wLvCurr),
               Display.numDouble(akLvCurr),
               '',
@@ -837,9 +674,9 @@ class PokemonProfileStatistics {
             ],
             [
               '當前等級\n(白板)',
-              Display.numDouble(bvLvCurr),
-              Display.numDouble(bwLvCurr),
-              Display.numDouble(bxLvCurr),
+              Display.numDouble(statisticsLvCurr.pureFruitEnergyPerHour),
+              Display.numDouble(statisticsLvCurr.pureTotalIngredientCountPerHour),
+              Display.numDouble(statisticsLvCurr.pureIngredientEnergyPerHour),
               Display.numDouble(byLvCurr),
               Display.numDouble(bzLvCurr),
               '',
@@ -849,10 +686,10 @@ class PokemonProfileStatistics {
             ],
             [
               'Lv50\n(加成後)',
-              Display.numDouble(chLv50),
-              Display.numDouble(ciLv50),
-              Display.numDouble(cjLv50),
-              Display.numDouble(ckLv50),
+              Display.numDouble(statisticsLv50.fruitEnergyPerHour),
+              Display.numDouble(statisticsLv50.totalIngredientCountPerHour),
+              Display.numDouble(statisticsLv50.totalIngredientEnergyPerHour),
+              Display.numDouble(statisticsLv50.skillActivateCountPerDay),
               Display.numDouble(clLv50),
               '',
               '',
@@ -861,9 +698,9 @@ class PokemonProfileStatistics {
             ],
             [
               'Lv50\n(白板)',
-              Display.numDouble(ctLv50),
-              Display.numDouble(cuLv50),
-              Display.numDouble(cvLv50),
+              Display.numDouble(statisticsLv50.pureFruitEnergyPerHour),
+              Display.numDouble(statisticsLv50.pureTotalIngredientCountPerHour),
+              Display.numDouble(statisticsLv50.pureIngredientEnergyPerHour),
               Display.numDouble(cwLv50),
               Display.numDouble(cxLv50),
               '',
@@ -873,10 +710,10 @@ class PokemonProfileStatistics {
             ],
             [
               'Lv100\n(加成後)',
-              Display.numDouble(dfLv100),
-              Display.numDouble(dgLv100),
-              Display.numDouble(dhLv100),
-              Display.numDouble(diLv100),
+              Display.numDouble(statisticsLv100.fruitEnergyPerHour),
+              Display.numDouble(statisticsLv100.totalIngredientCountPerHour),
+              Display.numDouble(statisticsLv100.totalIngredientEnergyPerHour),
+              Display.numDouble(statisticsLv100.skillActivateCountPerDay),
               Display.numDouble(djLv100),
               '',
               '',
@@ -885,9 +722,9 @@ class PokemonProfileStatistics {
             ],
             [
               'Lv100\n(白板)',
-              Display.numDouble(drLv100),
-              Display.numDouble(dsLv100),
-              Display.numDouble(dtLv100),
+              Display.numDouble(statisticsLv100.pureFruitEnergyPerHour),
+              Display.numDouble(statisticsLv100.pureTotalIngredientCountPerHour),
+              Display.numDouble(statisticsLv100.pureIngredientEnergyPerHour),
               Display.numDouble(duLv100),
               Display.numDouble(dvLv100),
               '',
@@ -916,10 +753,10 @@ class PokemonProfileStatistics {
             ],
             [
               'Lv 50',
-              Display.numDouble(chLv50),
-              Display.numDouble(ciLv50),
-              Display.numDouble(cjLv50),
-              Display.numDouble(ckLv50),
+              Display.numDouble(statisticsLv50.fruitEnergyPerHour),
+              Display.numDouble(statisticsLv50.totalIngredientCountPerHour),
+              Display.numDouble(statisticsLv50.totalIngredientEnergyPerHour),
+              Display.numDouble(statisticsLv50.skillActivateCountPerDay),
               Display.numDouble(clLv50),
               Display.numDouble(giLv50),
               Display.numDouble(gjLv50),
@@ -929,10 +766,10 @@ class PokemonProfileStatistics {
             ],
             [
               'Lv 100',
-              Display.numDouble(dfLv100),
-              Display.numDouble(dgLv100),
-              Display.numDouble(dhLv100),
-              Display.numDouble(diLv100),
+              Display.numDouble(statisticsLv100.fruitEnergyPerHour),
+              Display.numDouble(statisticsLv100.totalIngredientCountPerHour),
+              Display.numDouble(statisticsLv100.totalIngredientEnergyPerHour),
+              Display.numDouble(statisticsLv100.skillActivateCountPerDay),
               Display.numDouble(djLv100),
               Display.numDouble(gsLv100),
               Display.numDouble(gtLv100),
@@ -1218,29 +1055,47 @@ class _PokemonProfileStatisticsAtLevel {
     required this.type,
     required this.level,
     required this.isSnorlaxFavorite,
-    required this.helpInterval,
+    required this.baseHelpInterval,
+    required this.mainSkillLv,
+    required this.vitality,
   });
 
   final PokemonProfile profile;
   final _StatisticsLevelType type;
   final int level;
   final bool isSnorlaxFavorite;
-  final int helpInterval;
+  /// 帳面上的幫忙間隔
+  final int baseHelpInterval;
+  final int mainSkillLv;
+  final int vitality;
+
+  // 在 sheet 上為常數
+  /* $AM$4 */ static const _AM_4 = 0.2;
+  /* $AL$4 */ static final _AL_4 = 0.25;
 
   _PokemonProfileStatisticsAtLevelResult calc() {
+    // 樹果能量/顆
     final fruitEnergy = _getSingleFruitEnergy(level);
+    // 樹果能量/顆: +副技能加成
     final fruitBonusEnergy = _subSkillsContains(SubSkill.berryCountS, level) ? fruitEnergy : 0.0;
+    // 樹果能量/顆: +專長、技能加成
     final fruitEnergyAfterSpecialtyAndSubSkill = fruitEnergy * (profile.isBerrySpecialty ? 2 : 1) + fruitBonusEnergy;
+    // 樹果能量/顆: +卡比獸喜愛加成
     final fruitEnergyAfterSnorlaxFavorite = fruitEnergyAfterSpecialtyAndSubSkill * (isSnorlaxFavorite ? 2 : 1);
+
+    // 副技能: 幫忙速度 S+M
     final helpSpeedSM = 1.0
         - (_subSkillsContains(SubSkill.helpSpeedS, level) ? 0.07: 0)
         - (_subSkillsContains(SubSkill.helpSpeedM, level) ? 0.14: 0);
+    // 副技能: 食材機率 S+M
     final ingredientSM = 1.0
         + (_subSkillsContains(SubSkill.ingredientRateS, level) ? 0.18 : 0)
         + (_subSkillsContains(SubSkill.ingredientRateM, level) ? 0.36 : 0);
+    // 副技能: 技能機率 S+M
     final skillRateSM = 1.0
         + (_subSkillsContains(SubSkill.skillRateM, level) ? 0.36 : 0)
         + (_subSkillsContains(SubSkill.skillRateS, level) ? 0.18 : 0);
+    // 食材機率
     final ingredientRate = _tc(() => 0.2 * ingredientSM
         * (
             profile.character.positive == '食材發現' ? 1.2
@@ -1248,9 +1103,120 @@ class _PokemonProfileStatisticsAtLevel {
                 : 1.0
         ),
     );
+    // 樹果機率
     final fruitRate = 1 - ingredientRate;
+    // 加成後的主技能等級
+    final finalMainSkillLevel = mainSkillLv
+        + (_subSkillsContains(SubSkill.skillLevelM, level) ? 2 : 0)
+        + (_subSkillsContains(SubSkill.skillLevelS, level) ? 1 : 0)
+        + (type == _StatisticsLevelType.levelCurr ? 0 : (
+            3 - _tc(() => profile.basicProfile.currentEvolutionStage, defaultValue: 3)
+        ));
 
-    // 幫忙間隔，一系列計算
+    // ## 幫忙間隔
+    // 等級調整
+    final helpIntervalWithLevel = _tc(() => baseHelpInterval - (baseHelpInterval * ((level - 1) * 0.002)));
+    // 等級+性格+技能調整
+    final helpIntervalWithLevelCharacterSkill = helpIntervalWithLevel * helpSpeedSM * (
+        profile.character.positive == '幫忙速度' ? 0.9
+            : profile.character.negative == '幫忙速度' ? 1.1
+            : 1.0
+    );
+    // 等級+性格+技能+活力調整
+    final finalHelpInterval = helpIntervalWithLevelCharacterSkill * _transUserVitality();
+    // (白板) 等級+活力調整
+    final pureHelpIntervalWithLevelVitality = helpIntervalWithLevel * _transUserVitality();
+
+    /* (加成後) 果實預期次數/h */ final fruitCountPerHour = _tc(() => 3600 / finalHelpInterval * fruitRate);
+    /* (白板計算) 果實預期次數/h */ final pureFruitCountPerHour = _tc(() => 3600 / pureHelpIntervalWithLevelVitality * fruitRate);
+
+    /* (加成後) 食材預期次數/h */ final ingredientCountPerHour = _tc(() => 3600/ finalHelpInterval * ingredientRate);
+    /* (白板計算) 食材預期次數/h */ final pureIngredientCountPerHour = _tc(() => 3600/ pureHelpIntervalWithLevelVitality * ingredientRate);
+
+    final useIngredientCount = (level > 59 ? 3 : (level > 29 ? 2 : 1));
+    /* (加成後) 食材1個數/h */ final ingredientCount1PerHour =
+        ingredientCountPerHour * (profile.isIngredientSpecialty ? 2 : 1)
+            / useIngredientCount;
+    /* (白板) 食材1個數/h */ final pureIngredientCount1PerHour =
+        pureIngredientCountPerHour * (profile.isIngredientSpecialty ? 2 : 1)
+            / useIngredientCount;
+
+    /* (加成後) 食材2個數/h */ final ingredientCount2PerHour = level < 30 ? 0.0 : (
+        ingredientCountPerHour * profile.ingredientCount2
+            / useIngredientCount
+    );
+    /* (白板) 食材2個數/h */
+    final pureIngredientCount2PerHour = level < 30 ? 0.0 : (
+        pureIngredientCountPerHour * profile.ingredientCount2
+            / useIngredientCount
+    );
+
+    /* (加成後) 食材3個數/h */
+    final ingredientCount3PerHour = level < 60 ? 0.0 : (
+        ingredientCountPerHour * profile.ingredientCount3
+            / useIngredientCount
+    );
+    /* (白板) 食材3個數/h */
+    final pureIngredientCount3PerHour = level < 60 ? 0.0 : (
+        pureIngredientCountPerHour * profile.ingredientCount3
+            / useIngredientCount
+    );
+
+    /* (收益) 食材個/h */
+    final totalIngredientCountPerHour = ingredientCount1PerHour + ingredientCount2PerHour + ingredientCount3PerHour;
+    /* (白板收益) 食材個/h */
+    final pureTotalIngredientCountPerHour = pureIngredientCount1PerHour + pureIngredientCount2PerHour + pureIngredientCount3PerHour;
+
+    // (收益) 樹果能量/h
+    final fruitEnergyPerHour = fruitCountPerHour * fruitEnergyAfterSnorlaxFavorite;
+
+    // (收益) 食材能量/h
+    final totalIngredientEnergyPerHour =
+        ingredientCount1PerHour * profile.ingredient1.energy
+            + ingredientCount2PerHour * profile.ingredient2.energy
+            + ingredientCount3PerHour * profile.ingredient3.energy;
+
+    // (白板收益) 樹果能量/h
+    final pureFruitEnergyPerHour = fruitEnergy
+        * pureFruitCountPerHour
+        * (profile.isBerrySpecialty ? 2 : 1)
+        * (isSnorlaxFavorite ? 2 : 1);
+
+    // (白板收益) 食材能量/h
+    final pureIngredientEnergyPerHour =
+        pureIngredientCount1PerHour * profile.ingredient1.energy
+            + pureIngredientCount2PerHour * profile.ingredient2.energy
+            + pureIngredientCount3PerHour * profile.ingredient3.energy;
+
+    // (收益) 技能次數/d
+    // 原有欄位是 V、CK、DI，確認了很多次，「當前等級」和「Lv50,Lv100」的算法不同
+    //
+    // 包含
+    //
+    // - 前者不參考活力
+    // - 專長影響程度不同
+    // - AM4 前者用乘法後者用加法
+    final skillActivateCountPerDay = _tc(() {
+      final xxx = profile.character.negative == '主技能' ? 0.8
+          : profile.character.positive == '主技能' ? 1.2
+          : 1;
+
+      switch (type) {
+        case _StatisticsLevelType.levelCurr:
+          return skillRateSM * 3600 / helpIntervalWithLevelCharacterSkill * xxx
+              + (profile.isSkillSpecialty ? 0.5 : 0)
+              + _AL_4 * (finalMainSkillLevel - 1)
+              + (profile.basicProfile.currentEvolutionStage - 2) * _AM_4;
+        case _StatisticsLevelType.level100:
+        case _StatisticsLevelType.level50:
+          return skillRateSM * 3600 / helpIntervalWithLevelCharacterSkill * _transUserVitality() * xxx
+              + (profile.isSkillSpecialty ? 0.2 : 0)
+              + _AL_4 * (finalMainSkillLevel - 1)
+              + _AM_4;
+      }
+    });
+
+    // (白板收益) 次數/h
 
 
 
@@ -1264,6 +1230,28 @@ class _PokemonProfileStatisticsAtLevel {
       skillRateSM: skillRateSM,
       ingredientRate: ingredientRate,
       fruitRate: fruitRate,
+      finalMainSkillLevel: finalMainSkillLevel.toInt(),
+      helpIntervalWithLevel: helpIntervalWithLevel,
+      helpIntervalWithLevelCharacterSkill: helpIntervalWithLevelCharacterSkill,
+      finalHelpInterval: finalHelpInterval,
+      pureHelpIntervalWithLevelVitality: pureHelpIntervalWithLevelVitality,
+      fruitCountPerHour: fruitCountPerHour,
+      pureFruitCountPerHour: pureFruitCountPerHour,
+      ingredientCountPerHour: ingredientCountPerHour,
+      pureIngredientCountPerHour: pureIngredientCountPerHour,
+      ingredientCount1PerHour: ingredientCount1PerHour,
+      pureIngredientCount1PerHour: pureIngredientCount1PerHour,
+      ingredientCount2PerHour: ingredientCount2PerHour,
+      pureIngredientCount2PerHour: pureIngredientCount2PerHour,
+      ingredientCount3PerHour: ingredientCount3PerHour,
+      pureIngredientCount3PerHour: pureIngredientCount3PerHour,
+      totalIngredientCountPerHour: totalIngredientCountPerHour,
+      pureTotalIngredientCountPerHour: pureTotalIngredientCountPerHour,
+      fruitEnergyPerHour: fruitEnergyPerHour,
+      totalIngredientEnergyPerHour: totalIngredientEnergyPerHour,
+      pureFruitEnergyPerHour: pureFruitEnergyPerHour,
+      pureIngredientEnergyPerHour: pureIngredientEnergyPerHour,
+      skillActivateCountPerDay: skillActivateCountPerDay,
     );
   }
 
@@ -1298,6 +1286,15 @@ class _PokemonProfileStatisticsAtLevel {
     return profile.subSkills.take(count).toList();
   }
 
+  double _transUserVitality() {
+    return vitality == 5 ? 0.4
+        : vitality == 4 ? 0.5
+        : vitality == 3 ? 0.6
+        : vitality == 2 ? 0.8
+        : vitality == 1 ? 1.0
+        : 1.0;
+  }
+
 }
 
 class _PokemonProfileStatisticsAtLevelResult {
@@ -1311,6 +1308,28 @@ class _PokemonProfileStatisticsAtLevelResult {
     required this.skillRateSM,
     required this.ingredientRate,
     required this.fruitRate,
+    required this.finalMainSkillLevel,
+    required this.helpIntervalWithLevel,
+    required this.helpIntervalWithLevelCharacterSkill,
+    required this.finalHelpInterval,
+    required this.pureHelpIntervalWithLevelVitality,
+    required this.fruitCountPerHour,
+    required this.pureFruitCountPerHour,
+    required this.ingredientCountPerHour,
+    required this.pureIngredientCountPerHour,
+    required this.ingredientCount1PerHour,
+    required this.pureIngredientCount1PerHour,
+    required this.ingredientCount2PerHour,
+    required this.pureIngredientCount2PerHour,
+    required this.ingredientCount3PerHour,
+    required this.pureIngredientCount3PerHour,
+    required this.totalIngredientCountPerHour,
+    required this.pureTotalIngredientCountPerHour,
+    required this.fruitEnergyPerHour,
+    required this.totalIngredientEnergyPerHour,
+    required this.pureFruitEnergyPerHour,
+    required this.pureIngredientEnergyPerHour,
+    required this.skillActivateCountPerDay,
   });
 
   final int fruitEnergy;
@@ -1322,4 +1341,27 @@ class _PokemonProfileStatisticsAtLevelResult {
   final double skillRateSM;
   final double ingredientRate;
   final double fruitRate;
+  final int finalMainSkillLevel;
+  final double helpIntervalWithLevel;
+  final double helpIntervalWithLevelCharacterSkill;
+  final double finalHelpInterval;
+  final double pureHelpIntervalWithLevelVitality;
+  final double fruitCountPerHour;
+  final double pureFruitCountPerHour;
+  final double ingredientCountPerHour;
+  final double pureIngredientCountPerHour;
+  final double ingredientCount1PerHour;
+  final double pureIngredientCount1PerHour;
+  final double ingredientCount2PerHour;
+  final double pureIngredientCount2PerHour;
+  final double ingredientCount3PerHour;
+  final double pureIngredientCount3PerHour;
+  final double totalIngredientCountPerHour;
+  final double pureTotalIngredientCountPerHour;
+  final double fruitEnergyPerHour;
+  final double totalIngredientEnergyPerHour;
+  final double pureFruitEnergyPerHour;
+  final double pureIngredientEnergyPerHour;
+  final double skillActivateCountPerDay;
+
 }

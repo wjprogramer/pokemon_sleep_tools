@@ -60,6 +60,8 @@ extension _MainSkillX on MainSkill {
 
 // note: sheet IFERROR => 如果沒給錯誤的值，發生錯誤時，預設會給予零
 void main() {
+  // CK, DI 原本 sheet 上會有活力加成，但 V 卻沒有
+
   final columns = <(String, String, String, SheetFormulaBuilder)>[
     /* A */ ('評級', '', 'vv', (m) {
       // =IF(B7=0,"-",IFS(C7>=0.3,"S",C7>=0.24,"A",C7>=0.18,"B",C7>=0.12,"C",C7>=0.06,"D",C7>=0,"E",C7<0,"F")&GX7&GY7&CHAR(10)&GZ7)
