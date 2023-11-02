@@ -138,7 +138,4 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
     }
     return null;
   }
-
 }
-
-
