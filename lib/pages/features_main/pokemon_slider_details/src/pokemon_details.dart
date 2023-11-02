@@ -192,8 +192,8 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             titleText: 't_review'.xTr,
           ),
           Gap.xl,
-          Text('${'Lv 50 評價'.xTr}: ${statistics?.result?.rankLv50}\n'
-              '${'Lv 100 評價'.xTr}: ${statistics?.result?.rankLv100}'),
+          Text('${'Lv 50 評價'.xTr}: ${statistics?.results?.firstOrNull?.rankLv50}\n'
+              '${'Lv 100 評價'.xTr}: ${statistics?.results?.firstOrNull?.rankLv100}'),
           Gap.xl,
           MySubHeader(
             titleText: 't_help_ability'.xTr,

@@ -40,6 +40,8 @@ extension IterableX<T> on Iterable<T> {
     }
     return result!;
   }
+
+  // T? get xFirstOrNull => isEmpty ? null : first;
 }
 
 extension ListX<E> on List<E> {

@@ -193,7 +193,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   void _updateProfileStatistics() {
     for (final profile in _profiles) {
-      _cache[profile.id] = PokemonProfileStatistics(profile)..calcForUser();
+      _cache[profile.id] = PokemonProfileStatistics([ profile ])..calcForUser();
     }
   }
 

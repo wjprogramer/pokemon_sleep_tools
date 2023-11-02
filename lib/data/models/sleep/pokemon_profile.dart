@@ -61,12 +61,14 @@ class PokemonProfile {
     subSkillLv100,
   ];
 
-
+  // BasicProfile properties
   Fruit get fruit => basicProfile.fruit;
   PokemonSpecialty get specialty => basicProfile.specialty;
   bool get isBerrySpecialty => specialty == PokemonSpecialty.t3;
   bool get isSkillSpecialty => specialty == PokemonSpecialty.t1;
   bool get isIngredientSpecialty => specialty == PokemonSpecialty.t2;
+  int get helpInterval => basicProfile.helpInterval;
+  int get helpIntervalAtMaxStage => basicProfile.maxHelpInterval;
 
   factory PokemonProfile.fromJson(Map<String, dynamic> json) {
     final subSkillMapping = SubSkill.values.toMap(
@@ -209,5 +211,19 @@ class PokemonProfile {
   }
 
   bool get isLarvitarChain => basicProfile.isLarvitarChain;
+
+  List<SubSkill> getSubSkillsByLevel(int level) {
+    final count = level >= 100 ? 5
+        : level >= 75 ? 4
+        : level >= 50 ? 3
+        : level >= 25 ? 2
+        : level >= 10 ? 1
+        : 0;
+    return subSkills.take(count).toList();
+  }
+
+  bool hasSubSkillAtLevel(SubSkill subSkill, int level) {
+    return getSubSkillsByLevel(level).contains(subSkill);
+  }
 
 }

@@ -560,7 +560,7 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
       final profile = profiles[profileIndex];
       final statistics = profile == null
           ? null
-          : PokemonProfileStatistics(profile);
+          : PokemonProfileStatistics([ profile ]);
       _statistics[profileIndex] = statistics;
       statistics?.calcForUser();
     }
@@ -669,8 +669,8 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
   }
 
   Widget _buildRanks(PokemonProfileStatistics statistics) {
-    final rankLv50 = statistics.result?.rankLv50;
-    final rankLv100 = statistics.result?.rankLv100;
+    final rankLv50 = statistics.results?.firstOrNull?.rankLv50;
+    final rankLv100 = statistics.results?.firstOrNull?.rankLv100;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

@@ -47,7 +47,7 @@ class _DevPokemonStatics2PageState extends State<DevPokemonStatics2Page> {
   @override
   void initState() {
     super.initState();
-    _statistics2 = PokemonProfileStatistics(_profile);
+    _statistics2 = PokemonProfileStatistics([ _profile ]);
 
     scheduleMicrotask(() {
       _statisticsResults = _statistics2.calcForDev();
