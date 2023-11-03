@@ -3,13 +3,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 part 'utils.dart';
 part 'types.dart';
 
-class ProfileStatisticsResult {
-  ProfileStatisticsResult(this.profile, this.rankLv50, this.rankLv100);
-
-  final String rankLv50;
-  final String rankLv100;
-  final PokemonProfile profile;
-}
+// xx_ 開頭：需參考幫手、主技能
 
 /// 運算公式來源：「https://bbs.nga.cn/read.php?tid=37305277」
 ///
@@ -66,12 +60,16 @@ class PokemonProfileStatistics {
   dynamic _calc(_Type type) {
     // NOTES:
     // - Lv 50 與 Lv 100 的狀況下都是假設進化到最終階段
+    if (profiles.isEmpty) {
+      return;
+    }
 
     final statistics = profiles.map((profile) => _PokemonProfileStatisticsAtLevel(
       profile: profile,
       isSnorlaxFavorite: useSnorlaxFavorite && isSnorlaxFavorite,
       vitality: _userVitality,
-      baseHelpInterval: level >= 50 ? profile.helpIntervalAtMaxStage : profile.helpInterval,
+      baseHelpInterval: level >= 50
+          ? profile.helpIntervalAtMaxStage : profile.helpInterval,
       mainSkillLv: _mainSkillLv,
       level: level,
     )).toList();
@@ -80,6 +78,17 @@ class PokemonProfileStatistics {
     final baseResults = statistics
         .map((statistic) => statistic.calc1())
         .toList();
+
+    // Step2
+    final helperTotalScore = baseResults
+        .map((e) => e.xxx_totalSelfBenefitPerHour)
+        .reduce((value, element) => value + element);
+    final xResults = List.generate(profiles.length, (index) =>
+        statistics[index].calc2(
+          baseResults[index],
+          helperAvgScore: helperTotalScore / profiles.length,
+        ),
+    );
 
     _isInitialized = true;
 
@@ -136,17 +145,6 @@ class _PokemonProfileStatisticsAtLevel {
     /// (幫手計算) 出场平均估分，試算表上說
     /// 手動計算「选上你要上场的五只高分宝可梦「自身收益」平均数。」
     /// TODO: 在隊伍分析頁面中，使用自動計算
-
-    // 出場平均估分
-    final _helperAvgScore = 226.0;
-    final _helperAvgScoreLv50 = 815.0;
-    final _helperAvgScoreLv100 = 2333.0;
-
-    // 幫手計算估分
-    final gy4 = _helperAvgScoreLv50 * 5 * 0.05;
-    final ha4 = _helperAvgScoreLv100 * 5 * 0.05;
-    final o4 = _helperAvgScore * 5 * 0.05 * (useHelper ? 1 : 0);
-    // endregion
 
     // 樹果能量/顆
     final fruitEnergy = _getSingleFruitEnergy(level);
@@ -316,7 +314,7 @@ class _PokemonProfileStatisticsAtLevel {
     });
 
     // (加成後) 主技能效益/h
-    final mainSkillBenefitPerHour = (() {
+    final xxx_mainSkillBenefitPerHour = (() {
       return _tc(() {
         final xx = _calcMainSkillEnergyList(profile.basicProfile.mainSkill, helperAvgScore: 0)[finalMainSkillLevel.toInt() - 1];
 
@@ -327,7 +325,7 @@ class _PokemonProfileStatisticsAtLevel {
     })();
 
     // (白板) 主技能效益/h
-    final pureMainSkillBenefitPerHour = (() {
+    final xxx_pureMainSkillBenefitPerHour = (() {
       final xx = _calcMainSkillEnergyList(basicProfile.mainSkill, helperAvgScore: 0);
 
       switch (type) {
@@ -358,18 +356,6 @@ class _PokemonProfileStatisticsAtLevel {
       }
     })();
 
-    // (加成後) 自身收益/h
-    final totalSelfBenefitPerHour = (() {
-      final xxy = basicProfile.mainSkill == MainSkill.vitalityAllS ||
-          basicProfile.mainSkill == MainSkill.vitalityS;
-
-      return _tc(() => fruitEnergyPerHour
-          + totalIngredientEnergyPerHour
-          + mainSkillBenefitPerHour * (xxy ? 0 : 1)
-          + (profile.hasSubSkillAtLevel(SubSkill.helperBonus, level) ? o4 / 5 : 0)
-      );
-    })();
-
     // 食材換算成碎片/h
     final ingredientShardsPerHour = ingredientCount1PerHour * _getIngredientPrice(profile.ingredient1)
         + ingredientCount2PerHour * _getIngredientPrice(profile.ingredient2)
@@ -378,62 +364,20 @@ class _PokemonProfileStatisticsAtLevel {
     // 白板收益/h
     final pureTotalBenefitPerHour = pureFruitEnergyPerHour
         + pureIngredientEnergyPerHour
-        + pureMainSkillBenefitPerHour;
+        + xxx_pureMainSkillBenefitPerHour;
 
-    final xy = switch (type) {
-      _StatisticsLevelType.levelCustom => o4,
-      _StatisticsLevelType.level100 => gy4,
-      _StatisticsLevelType.level50 => ha4,
-    };
+    // (加成後) (不參考幫手效益) 自身收益/h
+    final xxx_totalSelfBenefitPerHour = (() {
+      // final xxy = basicProfile.mainSkill == MainSkill.vitalityAllS ||
+      //     basicProfile.mainSkill == MainSkill.vitalityS;
+      final xxy = basicProfile.mainSkill.isCalcWithHelperScore;
 
-    // 理想總收益/h
-    final idealTotalBenefit = _tc(() =>
-    fruitEnergyPerHour
-        + totalIngredientEnergyPerHour
-        + mainSkillBenefitPerHour
-        + (profile.hasSubSkillAtLevel(SubSkill.helperBonus, level) ? xy : 0)
-    );
-
-    // 輔助隊友收益/h
-    final helpTeammateBenefitPerHour = idealTotalBenefit - totalSelfBenefitPerHour;
-
-    // 性格技能影響
-    final diffEffectTotalBenefit = pureTotalBenefitPerHour == 0
-        ? 0.0
-        : (idealTotalBenefit - pureTotalBenefitPerHour) / pureTotalBenefitPerHour;
-
-    // 評級, Rank
-    String rank;
-    if (pureTotalBenefitPerHour == 0) {
-      rank = '-';
-    } else {
-      if (level < 50) {
-        rank = pureTotalBenefitPerHour >= 0.3 ? 'S' :
-        pureTotalBenefitPerHour >= 0.24 ? 'A' :
-        pureTotalBenefitPerHour >= 0.18 ? 'B' :
-        pureTotalBenefitPerHour >= 0.12 ? 'C' :
-        pureTotalBenefitPerHour >= 0.06 ? 'D' :
-        pureTotalBenefitPerHour >= 0 ? 'E' :
-        pureTotalBenefitPerHour < 0 ? 'F' : '-';
-      } else if (level < 100) {
-        rank = pureTotalBenefitPerHour >= 1 ? 'S' :
-        pureTotalBenefitPerHour >= 0.8 ? 'A' :
-        pureTotalBenefitPerHour >= 0.6 ? 'B' :
-        pureTotalBenefitPerHour >= 0.4 ? 'C' :
-        pureTotalBenefitPerHour >= 0.2 ? 'D' :
-        pureTotalBenefitPerHour >= 0 ? 'E' :
-        pureTotalBenefitPerHour < 0 ? 'F' : '-';
-      } else {
-        rank =  pureTotalBenefitPerHour >= 1.5 ? 'S+' :
-        pureTotalBenefitPerHour >= 1 ? 'S' :
-        pureTotalBenefitPerHour >= 0.8 ? 'A' :
-        pureTotalBenefitPerHour >= 0.6 ? 'B' :
-        pureTotalBenefitPerHour >= 0.4 ? 'C' :
-        pureTotalBenefitPerHour >= 0.2 ? 'D' :
-        pureTotalBenefitPerHour >= 0 ? 'E' :
-        pureTotalBenefitPerHour < 0 ? 'F' : '-';
-      }
-    }
+      return _tc(() => fruitEnergyPerHour
+          + totalIngredientEnergyPerHour
+          + xxx_mainSkillBenefitPerHour * (xxy ? 0 : 1)
+          // + (profile.hasSubSkillAtLevel(SubSkill.helperBonus, level) ? o4 / 5 : 0)
+      );
+    })();
 
     return StatisticsResultBase(
       fruitEnergy: fruitEnergy,
@@ -469,21 +413,32 @@ class _PokemonProfileStatisticsAtLevel {
       skillActivateCountPerDay: skillActivateCountPerDay,
       pureSkillActivateCountPerHour: pureSkillActivateCountPerHour,
       ingredientShardsPerHour: ingredientShardsPerHour,
-      mainSkillBenefitPerHour: mainSkillBenefitPerHour,
-      pureMainSkillBenefitPerHour: pureMainSkillBenefitPerHour,
-      totalBenefitPerHour: totalSelfBenefitPerHour,
+      xxx_mainSkillBenefitPerHour: xxx_mainSkillBenefitPerHour,
+      xxx_pureMainSkillBenefitPerHour: xxx_pureMainSkillBenefitPerHour,
       pureTotalBenefitPerHour: pureTotalBenefitPerHour,
-      idealTotalBenefit: idealTotalBenefit,
-      helpTeammateBenefitPerHour: helpTeammateBenefitPerHour,
-      diffEffectTotalBenefit: diffEffectTotalBenefit,
-      rank: rank,
+      xxx_totalSelfBenefitPerHour: xxx_totalSelfBenefitPerHour,
     );
   }
 
+  /// [helperAvgScore]: 出場平均估分
   StatisticsResultWithHelpers calc2(StatisticsResultBase baseResult, {
     required double helperAvgScore,
   }) {
+    // 幫手計算估分
     final helperScore = helperAvgScore * 5 * 0.05 * (useHelper ? 1 : 0);
+
+    // (加成後) ('參考'幫手效益) 自身收益/h From Step1
+    final totalSelfBenefitPerHour = (() {
+      // final xxy = basicProfile.mainSkill == MainSkill.vitalityAllS ||
+      //     basicProfile.mainSkill == MainSkill.vitalityS;
+      final xxy = basicProfile.mainSkill.isCalcWithHelperScore;
+
+      return _tc(() => baseResult.fruitEnergyPerHour
+          + baseResult.totalIngredientEnergyPerHour
+          + baseResult.xxx_mainSkillBenefitPerHour * (xxy ? 0 : 1)
+        + (profile.hasSubSkillAtLevel(SubSkill.helperBonus, level) ? helperScore / 5 : 0)
+      );
+    })();
 
     return StatisticsResultWithHelpers();
   }
@@ -550,7 +505,6 @@ class _PokemonProfileStatisticsAtLevel {
   }
 
   List<double> _calcMainSkillEnergyList(MainSkill mainSkill, {
-    // _helperAvgScore
     required double helperAvgScore,
   }) {
     if (level > 99) {
@@ -563,7 +517,6 @@ class _PokemonProfileStatisticsAtLevel {
   }
 
   List<double> _calcMainSkillEnergyListLv1(MainSkill mainSkill, {
-    // _helperAvgScore
     required double helperAvgScore,
   }) {
     // _ingredientAvg
@@ -668,7 +621,6 @@ class _PokemonProfileStatisticsAtLevel {
   }
 
   List<double> _calcMainSkillEnergyListLv100(MainSkill mainSkill, {
-    // _helperAvgScoreLv100
     required double helperAvgScore,
   }) {
     //果子估平均
@@ -722,7 +674,3 @@ class _PokemonProfileStatisticsAtLevel {
   }
 
 }
-
-
-
-

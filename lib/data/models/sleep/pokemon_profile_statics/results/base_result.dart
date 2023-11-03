@@ -34,14 +34,10 @@ class StatisticsResultBase {
     required this.skillActivateCountPerDay,
     required this.pureSkillActivateCountPerHour,
     required this.ingredientShardsPerHour,
-    required this.mainSkillBenefitPerHour,
-    required this.pureMainSkillBenefitPerHour,
-    required this.totalBenefitPerHour,
+    required this.xxx_mainSkillBenefitPerHour,
+    required this.xxx_pureMainSkillBenefitPerHour,
     required this.pureTotalBenefitPerHour,
-    required this.idealTotalBenefit,
-    required this.helpTeammateBenefitPerHour,
-    required this.diffEffectTotalBenefit,
-    required this.rank,
+    required this.xxx_totalSelfBenefitPerHour,
   });
 
   final int fruitEnergy;
@@ -77,12 +73,8 @@ class StatisticsResultBase {
   final double skillActivateCountPerDay;
   final double pureSkillActivateCountPerHour;
   final double ingredientShardsPerHour;
-  final double mainSkillBenefitPerHour;
-  final double pureMainSkillBenefitPerHour;
-  final double totalBenefitPerHour;
+  final double xxx_mainSkillBenefitPerHour;
+  final double xxx_pureMainSkillBenefitPerHour;
   final double pureTotalBenefitPerHour;
-  final double idealTotalBenefit;
-  final double helpTeammateBenefitPerHour;
-  final double diffEffectTotalBenefit;
-  final String rank;
+  final double xxx_totalSelfBenefitPerHour;
 }

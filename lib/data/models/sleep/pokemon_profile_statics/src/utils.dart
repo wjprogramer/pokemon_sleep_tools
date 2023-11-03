@@ -1,7 +1,7 @@
 part of 'statics.dart';
 
 extension _MainSkillX on MainSkill {
-  bool get calculateWithHelperScore {
+  bool get isCalcWithHelperScore {
     return switch (this) {
       MainSkill.energyFillS => false,
       MainSkill.energyFillM => false,
