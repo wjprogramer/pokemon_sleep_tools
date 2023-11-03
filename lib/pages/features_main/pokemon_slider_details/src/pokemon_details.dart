@@ -70,6 +70,8 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
     const subSkillItemSpacing = 24.0;
     const subSkillParentExtraMarginValue = 4.0;
     final subSkillWidth = (mainWidth - 2 * subSkillParentExtraMarginValue - subSkillItemSpacing) / 2;
+    final ingredient2 = widget.profile.ingredient2;
+    final ingredient3 = widget.profile.ingredient3;
 
     Widget image = const SizedBox(height: 100);
     if (MyEnv.USE_DEBUG_IMAGE) {
@@ -256,22 +258,24 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                 ),
                 InkWell(
                   onTap: () {
-                    IngredientPage.go(context, widget.profile.ingredient2);
+                    if (ingredient2 != null) {
+                      IngredientPage.go(context, ingredient2);
+                    }
                   },
                   child: Row(
                     children: [
                       buildIngredientLevelLabel(30),
                       Gap.md,
-                      if (MyEnv.USE_DEBUG_IMAGE)
+                      if (MyEnv.USE_DEBUG_IMAGE && ingredient2 != null)
                         Padding(
                           padding: const EdgeInsets.only(),
                           child: IngredientImage(
-                            ingredient: widget.profile.ingredient2,
+                            ingredient: ingredient2,
                             size: 24,
                           ),
                         ),
                       Expanded(
-                        child: Text(widget.profile.ingredient2.nameI18nKey.xTr),
+                        child: Text(Display.text(widget.profile.ingredient2?.nameI18nKey.xTr)),
                       ),
                       Text('x${widget.profile.ingredientCount2}'),
                     ],
@@ -279,22 +283,26 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                 ),
                 InkWell(
                   onTap: () {
-                    IngredientPage.go(context, widget.profile.ingredient3);
+                    if (ingredient3 != null) {
+                      IngredientPage.go(context, ingredient3);
+                    }
                   },
                   child: Row(
                     children: [
                       buildIngredientLevelLabel(60),
                       Gap.md,
-                      if (MyEnv.USE_DEBUG_IMAGE)
+                      if (MyEnv.USE_DEBUG_IMAGE && ingredient3 != null)
                         Padding(
                           padding: const EdgeInsets.only(),
                           child: IngredientImage(
-                            ingredient: widget.profile.ingredient3,
+                            ingredient: ingredient3,
                             size: 24,
                           ),
                         ),
                       Expanded(
-                        child: Text(widget.profile.ingredient3.nameI18nKey.xTr),
+                        child: Text(
+                          Display.text(widget.profile.ingredient3?.nameI18nKey.xTr),
+                        ),
                       ),
                       Text('x${widget.profile.ingredientCount3}'),
                     ],

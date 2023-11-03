@@ -529,8 +529,10 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
     final profiles = profileIdList.map((e) => _profileOf[e]).toList();
     final profilesNotNull = profiles.whereNotNull().toList();
 
-    addIngredientCount(Map<Ingredient, int> mapping, Ingredient ingredient, int count) {
-      mapping[ingredient] = (mapping[ingredient] ?? 0) + count;
+    addIngredientCount(Map<Ingredient, int> mapping, Ingredient? ingredient, int count) {
+      if (ingredient != null) {
+        mapping[ingredient] = (mapping[ingredient] ?? 0) + count;
+      }
     }
     _fruitMapping = {};
     _ingredientsMapLv1.clear();

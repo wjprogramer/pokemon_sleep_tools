@@ -1,5 +1,4 @@
 import 'package:pokemon_sleep_tools/all_in_one/all_in_one.dart';
-import 'package:pokemon_sleep_tools/all_in_one/extensions/extensions.dart';
 import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
@@ -48,9 +47,9 @@ class PokemonProfile {
 
   Ingredient get ingredient1 => basicProfile.ingredient1;
   int get ingredientCount1 => basicProfile.ingredientCount1;
-  final Ingredient ingredient2;
+  final Ingredient? ingredient2;
   final int ingredientCount2;
-  final Ingredient ingredient3;
+  final Ingredient? ingredient3;
   final int ingredientCount3;
 
   List<SubSkill> get subSkills => [
@@ -172,9 +171,9 @@ class PokemonProfile {
       'customDate': customDate == null ? null : MyFormatter.date(customDate!),
       'id': id,
       'subSkillIds': subSkills.map((e) => e.id).toList(),
-      'ingredient2Id': ingredient2.id,
+      'ingredient2Id': ingredient2?.id,
       'ingredientCount2': ingredientCount2,
-      'ingredient3Id': ingredient3.id,
+      'ingredient3Id': ingredient3?.id,
       'ingredientCount3': ingredientCount3,
     };
   }

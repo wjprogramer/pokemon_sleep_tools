@@ -28,9 +28,9 @@ class CreatePokemonProfilePayload {
   final bool? isFavorite;
   final bool? isShiny;
   final DateTime? customDate;
-  final Ingredient ingredient2;
+  final Ingredient? ingredient2;
   final int ingredientCount2;
-  final Ingredient ingredient3;
+  final Ingredient? ingredient3;
   final int ingredientCount3;
 
 }

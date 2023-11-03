@@ -79,11 +79,11 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
           ..._pokemonList.map((pokemon) {
             final character = pokemon.character.nameI18nKey.xTr;
             final subSkills = pokemon.subSkills.mapIndexed((i, e) => 'Lv. ${SubSkill.levelList[i]}: ${e.nameI18nKey.xTr}').join('\n');
-            final ingredients = <(Ingredient, int)>[
+            final ingredients = <(Ingredient?, int)>[
               (pokemon.ingredient1, pokemon.ingredientCount1),
               (pokemon.ingredient2, pokemon.ingredientCount2),
               (pokemon.ingredient3, pokemon.ingredientCount3),
-            ].mapIndexed((index, ingredient) => '${index + 1}. ${ingredient.$1.nameI18nKey.xTr} x${ingredient.$2}').join('\n');
+            ].mapIndexed((index, ingredient) => '${index + 1}. ${ingredient.$1?.nameI18nKey.xTr} x${ingredient.$2}').join('\n');
             final statistics = _statisticsOf[pokemon.id]!;
 
             return ListTile(

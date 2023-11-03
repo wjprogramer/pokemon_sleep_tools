@@ -53,6 +53,8 @@ class PokemonProfileStatistics {
   }
 
   List<ProfileStatisticsResult> calcForUser() {
+    return [];
+    // TODO:
     _results = _calc(_Type.userView);
     return _results as List<ProfileStatisticsResult>;
   }
@@ -253,8 +255,8 @@ class _PokemonProfileStatisticsAtLevel {
     // (收益) 食材能量/h
     final totalIngredientEnergyPerHour =
         ingredientCount1PerHour * profile.ingredient1.energy
-            + ingredientCount2PerHour * profile.ingredient2.energy
-            + ingredientCount3PerHour * profile.ingredient3.energy;
+            + ingredientCount2PerHour * (profile.ingredient2?.energy ?? 0)
+            + ingredientCount3PerHour * (profile.ingredient3?.energy ?? 0);
 
     // (白板收益) 樹果能量/h
     final pureFruitEnergyPerHour = fruitEnergy
@@ -265,8 +267,8 @@ class _PokemonProfileStatisticsAtLevel {
     // (白板收益) 食材能量/h
     final pureIngredientEnergyPerHour =
         pureIngredientCount1PerHour * profile.ingredient1.energy
-            + pureIngredientCount2PerHour * profile.ingredient2.energy
-            + pureIngredientCount3PerHour * profile.ingredient3.energy;
+            + pureIngredientCount2PerHour * (profile.ingredient2?.energy ?? 0)
+            + pureIngredientCount3PerHour * (profile.ingredient3?.energy ?? 0);
 
     // (收益) 技能次數/d
     // 原有欄位是 V、CK、DI，確認了很多次，「當前等級」和「Lv50,Lv100」的算法不同
@@ -443,7 +445,11 @@ class _PokemonProfileStatisticsAtLevel {
     return StatisticsResultWithHelpers();
   }
 
-  int _getIngredientPrice(Ingredient ingredient) {
+  int _getIngredientPrice(Ingredient? ingredient) {
+    if (ingredient == null) {
+      return 0;
+    }
+
     // TODO: NGA 的值如何產的？（他是寫死的）
     return switch (ingredient) {
       Ingredient.i1 => 7,
