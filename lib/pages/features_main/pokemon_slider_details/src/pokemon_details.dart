@@ -13,7 +13,7 @@ class _PokemonDetails extends StatefulWidget {
   });
 
   final PokemonProfile profile;
-  final PokemonProfileStatistics? statistics;
+  final ProfileStatisticsResult? statistics;
   final Function() onDeletedSuccess;
   final double initialOffset;
   final ValueChanged<double> onScroll;
@@ -63,7 +63,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
   ScrollController get _scrollController => s._scrollController;
   ThemeData get _theme => s._theme;
 
-  List<Widget> _buildListItems(BuildContext context, PokemonProfileStatistics? statistics, {
+  List<Widget> _buildListItems(BuildContext context, ProfileStatisticsResult? statistics, {
     required double leadingWidth,
     required double mainWidth,
   }) {
@@ -194,8 +194,8 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
             titleText: 't_review'.xTr,
           ),
           Gap.xl,
-          Text('${'Lv 50 評價'.xTr}: ${statistics?.results?.firstOrNull?.rankLv50}\n'
-              '${'Lv 100 評價'.xTr}: ${statistics?.results?.firstOrNull?.rankLv100}'),
+          Text('${'Lv 50 評價'.xTr}: ${statistics?.rankLv50}\n'
+              '${'Lv 100 評價'.xTr}: ${statistics?.rankLv100}'),
           Gap.xl,
           MySubHeader(
             titleText: 't_help_ability'.xTr,
@@ -357,7 +357,7 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
               runSpacing: subSkillItemSpacing,
               children: [
                 ...widget.profile.subSkills.mapIndexed((subSkillIndex, subSkill) => Tooltip(
-                  message: subSkill.intro,
+                  message: subSkill?.intro ?? '',
                   child: Container(
                     constraints: BoxConstraints.tightFor(
                       width: subSkillWidth,
@@ -372,13 +372,15 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
                           ),
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: subSkill.bgColor,
+                              color: subSkill?.bgColor ?? greyColor3,
                               width: 2,
                             ),
-                            color: subSkill.bgColor.withOpacity(.6),
+                            color: subSkill?.bgColor.withOpacity(.6),
                           ),
                           child: Center(
-                            child: Text(subSkill.nameI18nKey.xTr),
+                            child: Text(
+                              Display.text(subSkill?.nameI18nKey.xTr),
+                            ),
                           ),
                         ),
                         Positioned(

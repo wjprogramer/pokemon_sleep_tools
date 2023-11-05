@@ -419,18 +419,20 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
               MySubHeader(
                 titleText: '其他'.xTr,
               ),
+              Gap.sm,
               MyElevatedButton(
                 onPressed: s._getViewPokedexCallback(),
                 child: Text('查看寶可夢盒'.xTr),
               ),
+              Gap.sm,
+              MyElevatedButton(
+                onPressed: () {
+                  DevPokemonBasicProfileIngredientsCombinationPage.go(context, _basicProfile);
+                },
+                child: const Text('食材組合'),
+              ),
               if (kDebugMode) ...[
                 const MySubHeader(titleText: '測試用', color: positiveColor),
-                MyElevatedButton(
-                  onPressed: () {
-                    DevPokemonBasicProfileIngredientsCombinationPage.go(context, _basicProfile);
-                  },
-                  child: const Text('食材組合'),
-                ),
               ],
               Gap.trailing,
             ],

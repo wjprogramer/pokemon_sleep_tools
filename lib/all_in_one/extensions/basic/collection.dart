@@ -42,6 +42,20 @@ extension IterableX<T> on Iterable<T> {
   }
 
   // T? get xFirstOrNull => isEmpty ? null : first;
+
+  T? compareWhere(bool Function(T a, T b) test) {
+    T? result;
+    for (final e in this) {
+      if (result == null) {
+        result = e;
+      } else {
+        if (test(e, result)) {
+          result = e;
+        }
+      }
+    }
+    return result;
+  }
 }
 
 extension ListX<E> on List<E> {

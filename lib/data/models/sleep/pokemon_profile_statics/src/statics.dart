@@ -47,6 +47,10 @@ class PokemonProfileStatistics {
   // FW
   final _mainSkillLv = 3;
 
+  List<StatisticsResults> calc() {
+    return _calc();
+  }
+
   List<dynamic> calcForDev() {
     return [];
     // return _calc(_Type.dev);
@@ -55,15 +59,15 @@ class PokemonProfileStatistics {
   List<ProfileStatisticsResult> calcForUser() {
     return [];
     // TODO:
-    _results = _calc(_Type.userView);
-    return _results as List<ProfileStatisticsResult>;
+    // _results = _calc(_Type.userView);
+    // return _results as List<ProfileStatisticsResult>;
   }
 
-  dynamic _calc(_Type type) {
+  List<StatisticsResults> _calc() {
     // NOTES:
     // - Lv 50 與 Lv 100 的狀況下都是假設進化到最終階段
     if (profiles.isEmpty) {
-      return;
+      return [];
     }
 
     final statistics = profiles.map((profile) => _PokemonProfileStatisticsAtLevel(
@@ -85,7 +89,7 @@ class PokemonProfileStatistics {
     final helperTotalScore = baseResults
         .map((e) => e.xxx_totalSelfBenefitPerHour)
         .reduce((value, element) => value + element);
-    final xResults = List.generate(profiles.length, (index) =>
+    final resultsWithHelpers = List.generate(profiles.length, (index) =>
         statistics[index].calc2(
           baseResults[index],
           helperAvgScore: helperTotalScore / profiles.length,
@@ -94,7 +98,11 @@ class PokemonProfileStatistics {
 
     _isInitialized = true;
 
-    return;
+    return List.generate(profiles.length, (index) => StatisticsResults(
+      profile: profiles[index],
+      baseResult: baseResults[index],
+      resultWithHelpers: resultsWithHelpers[index],
+    ));
   }
 
 }
@@ -426,6 +434,8 @@ class _PokemonProfileStatisticsAtLevel {
   StatisticsResultWithHelpers calc2(StatisticsResultBase baseResult, {
     required double helperAvgScore,
   }) {
+    final pureTotalBenefitPerHour = baseResult.pureTotalBenefitPerHour;
+
     // 幫手計算估分
     final helperScore = helperAvgScore * 5 * 0.05 * (useHelper ? 1 : 0);
 
@@ -442,7 +452,42 @@ class _PokemonProfileStatisticsAtLevel {
       );
     })();
 
-    return StatisticsResultWithHelpers();
+    // 評級, Rank
+    String rank;
+    if (pureTotalBenefitPerHour == 0) {
+      rank = '-';
+    } else {
+      if (level < 50) {
+        rank = pureTotalBenefitPerHour >= 0.3 ? 'S' :
+        pureTotalBenefitPerHour >= 0.24 ? 'A' :
+        pureTotalBenefitPerHour >= 0.18 ? 'B' :
+        pureTotalBenefitPerHour >= 0.12 ? 'C' :
+        pureTotalBenefitPerHour >= 0.06 ? 'D' :
+        pureTotalBenefitPerHour >= 0 ? 'E' :
+        pureTotalBenefitPerHour < 0 ? 'F' : '-';
+      } else if (level < 100) {
+        rank = pureTotalBenefitPerHour >= 1 ? 'S' :
+        pureTotalBenefitPerHour >= 0.8 ? 'A' :
+        pureTotalBenefitPerHour >= 0.6 ? 'B' :
+        pureTotalBenefitPerHour >= 0.4 ? 'C' :
+        pureTotalBenefitPerHour >= 0.2 ? 'D' :
+        pureTotalBenefitPerHour >= 0 ? 'E' :
+        pureTotalBenefitPerHour < 0 ? 'F' : '-';
+      } else {
+        rank =  pureTotalBenefitPerHour >= 1.5 ? 'SS' :
+        pureTotalBenefitPerHour >= 1 ? 'S' :
+        pureTotalBenefitPerHour >= 0.8 ? 'A' :
+        pureTotalBenefitPerHour >= 0.6 ? 'B' :
+        pureTotalBenefitPerHour >= 0.4 ? 'C' :
+        pureTotalBenefitPerHour >= 0.2 ? 'D' :
+        pureTotalBenefitPerHour >= 0 ? 'E' :
+        pureTotalBenefitPerHour < 0 ? 'F' : '-';
+      }
+    }
+
+    return StatisticsResultWithHelpers(
+      rank: rank,
+    );
   }
 
   int _getIngredientPrice(Ingredient? ingredient) {
@@ -491,7 +536,7 @@ class _PokemonProfileStatisticsAtLevel {
     return _getSubSkillsByLevel(level).contains(subSkill);
   }
 
-  List<SubSkill> _getSubSkillsByLevel(int level) {
+  List<SubSkill?> _getSubSkillsByLevel(int level) {
     final count = level >= 100 ? 5
         : level >= 75 ? 4
         : level >= 50 ? 3
@@ -573,7 +618,6 @@ class _PokemonProfileStatisticsAtLevel {
   }
 
   List<double> _calcMainSkillEnergyListLv50(MainSkill mainSkill, {
-    // helperAvgScoreLv50
     required double helperAvgScore,
   }) {
     // 果子估平均
@@ -679,4 +723,16 @@ class _PokemonProfileStatisticsAtLevel {
     }
   }
 
+}
+
+class StatisticsResults {
+  StatisticsResults({
+    required this.profile,
+    required this.baseResult,
+    required this.resultWithHelpers,
+  });
+
+  final PokemonProfile profile;
+  final StatisticsResultBase baseResult;
+  final StatisticsResultWithHelpers resultWithHelpers;
 }

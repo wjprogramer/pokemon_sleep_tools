@@ -23,6 +23,8 @@ import 'package:pokemon_sleep_tools/pages/features_main/sub_skills_illustrated_b
 import 'package:pokemon_sleep_tools/pages/features_main/vitality_chart/vitality_chart_page.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/fruit_menu_icon.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/images/ingredient_menu_icon.dart';
 
 class HomeFragment extends StatefulWidget {
   const HomeFragment({super.key});
@@ -170,7 +172,10 @@ class _HomeFragmentState extends State<HomeFragment> {
                   IngredientsIllustratedBookPage.go(context);
                 },
                 iconBuilder: (color, size) {
-                  return Iconify(GameIcons.sliced_mushroom, color: color, size: size,);
+                  return IngredientMenuIcon(
+                    color: color, size: size,
+                    disableTooltip: true,
+                  );
                 },
                 builder: MyOutlinedButton.builderUnboundWidth,
                 child: Text('t_ingredients'.xTr),
@@ -181,7 +186,10 @@ class _HomeFragmentState extends State<HomeFragment> {
                   FruitsPage.go(context);
                 },
                 iconBuilder: (color, size) {
-                  return Iconify(Bi.apple, color: color, size: size,);
+                  return FruitMenuIcon(
+                    color: color, size: size,
+                    disableTooltip: true,
+                  );
                 },
                 builder: MyOutlinedButton.builderUnboundWidth,
                 child: Text('t_fruits'.xTr),

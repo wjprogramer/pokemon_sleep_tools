@@ -95,7 +95,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   // final _cache = ListQueue<PokemonProfileStatistics2>(10);
   /// [PokemonProfile.id] to statistics
-  final _cache = <int, PokemonProfileStatistics>{};
+  final _cache = <int, ProfileStatisticsResult>{};
 
   var _previousPage = 0;
   var _currIndex = 0;
@@ -193,7 +193,13 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   void _updateProfileStatistics() {
     for (final profile in _profiles) {
-      _cache[profile.id] = PokemonProfileStatistics([ profile ])..calcForUser();
+      final resultLv50 = PokemonProfileStatistics([ profile ], level: 50).calc()[0].resultWithHelpers;
+      final resultLv100 = PokemonProfileStatistics([ profile ], level: 100).calc()[0].resultWithHelpers;
+
+      final resultView = ProfileStatisticsResult(
+        profile, resultLv50.rank, resultLv100.rank,
+      );
+      _cache[profile.id] = resultView;
     }
   }
 
@@ -342,8 +348,8 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     //     (profiles.length + index + delta) % profiles.length
     // );
     //
-    // PokemonProfileStatistics2? currentStatistics;
-    // PokemonProfileStatistics2? preloadStatistics;
+    // PokemonProfileStatistics? currentStatistics;
+    // PokemonProfileStatistics? preloadStatistics;
     //
     // for (final data in [..._cache]) {
     //   if (data.profile.id == profiles[index].id) {
@@ -375,7 +381,7 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
     // setState(() { });
   }
 
-  PokemonProfileStatistics? _getStatistics(PokemonProfile profile) {
+  ProfileStatisticsResult? _getStatistics(PokemonProfile profile) {
     return _cache[profile.id];
     // return _cache.firstWhereOrNull((e) => e.profile.id == profile.id);
   }

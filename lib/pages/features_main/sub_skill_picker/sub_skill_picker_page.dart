@@ -10,7 +10,7 @@ class SubSkillPickerPageArgs {
     this.initialValue,
   });
 
-  final List<SubSkill>? initialValue;
+  final List<SubSkill?>? initialValue;
 }
 
 class SubSkillPickerPage extends StatefulWidget {
@@ -22,14 +22,14 @@ class SubSkillPickerPage extends StatefulWidget {
     return SubSkillPickerPage(args: args);
   }
 
-  static Future<List<SubSkill>?> go(BuildContext context, {
-    List<SubSkill>? initialValue,
+  static Future<List<SubSkill?>?> go(BuildContext context, {
+    List<SubSkill?>? initialValue,
   }) async {
     final res = await context.nav.push(
       SubSkillPickerPage.route,
       arguments: SubSkillPickerPageArgs(initialValue: initialValue),
     );
-    return res as List<SubSkill>?;
+    return res as List<SubSkill?>?;
   }
 
   void _popResult(BuildContext context, List<SubSkill>? subSkills) {

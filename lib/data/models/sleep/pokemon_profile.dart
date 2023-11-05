@@ -39,11 +39,11 @@ class PokemonProfile {
   /// 使用者可以填寫個人筆記
   final String? customNote;
 
-  final SubSkill subSkillLv10;
-  final SubSkill subSkillLv25;
-  final SubSkill subSkillLv50;
-  final SubSkill subSkillLv75;
-  final SubSkill subSkillLv100;
+  final SubSkill? subSkillLv10;
+  final SubSkill? subSkillLv25;
+  final SubSkill? subSkillLv50;
+  final SubSkill? subSkillLv75;
+  final SubSkill? subSkillLv100;
 
   Ingredient get ingredient1 => basicProfile.ingredient1;
   int get ingredientCount1 => basicProfile.ingredientCount1;
@@ -52,7 +52,7 @@ class PokemonProfile {
   final Ingredient? ingredient3;
   final int ingredientCount3;
 
-  List<SubSkill> get subSkills => [
+  List<SubSkill?> get subSkills => [
     subSkillLv10,
     subSkillLv25,
     subSkillLv50,
@@ -170,7 +170,7 @@ class PokemonProfile {
       'isShiny': isShiny,
       'customDate': customDate == null ? null : MyFormatter.date(customDate!),
       'id': id,
-      'subSkillIds': subSkills.map((e) => e.id).toList(),
+      'subSkillIds': subSkills.map((e) => e?.id).toList(),
       'ingredient2Id': ingredient2?.id,
       'ingredientCount2': ingredientCount2,
       'ingredient3Id': ingredient3?.id,
@@ -211,7 +211,7 @@ class PokemonProfile {
 
   bool get isLarvitarChain => basicProfile.isLarvitarChain;
 
-  List<SubSkill> getSubSkillsByLevel(int level) {
+  List<SubSkill?> getSubSkillsByLevel(int level) {
     final count = level >= 100 ? 5
         : level >= 75 ? 4
         : level >= 50 ? 3

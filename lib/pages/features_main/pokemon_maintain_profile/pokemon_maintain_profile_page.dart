@@ -98,7 +98,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
   late FormControl<PokemonCharacter> _characterField;
   late FormControl<String?> _customNameField;
   late FormControl<bool> _shinyField;
-  late FormControl<List<SubSkill>> _subSkillsField;
+  late FormControl<List<SubSkill?>> _subSkillsField;
   late FormControl<DateTime> _customDateField;
 
   late FormControl<Ingredient> _ingredient1Field;
@@ -341,7 +341,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                       )
                   ),
                   Gap.xl,
-                  ReactiveMyTextField<List<SubSkill>>(
+                  ReactiveMyTextField<List<SubSkill?>>(
                     label: 't_sub_skills'.xTr,
                     formControl: _subSkillsField,
                     fieldWidget: ReactiveValueListenableBuilder(

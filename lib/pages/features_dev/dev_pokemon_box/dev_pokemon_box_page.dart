@@ -78,7 +78,7 @@ class _DevPokemonBoxPageState extends State<DevPokemonBoxPage> {
           Gap.xl,
           ..._pokemonList.map((pokemon) {
             final character = pokemon.character.nameI18nKey.xTr;
-            final subSkills = pokemon.subSkills.mapIndexed((i, e) => 'Lv. ${SubSkill.levelList[i]}: ${e.nameI18nKey.xTr}').join('\n');
+            final subSkills = pokemon.subSkills.mapIndexed((i, e) => 'Lv. ${SubSkill.levelList[i]}: ${e?.nameI18nKey.xTr}').join('\n');
             final ingredients = <(Ingredient?, int)>[
               (pokemon.ingredient1, pokemon.ingredientCount1),
               (pokemon.ingredient2, pokemon.ingredientCount2),

@@ -21,7 +21,7 @@ class CreatePokemonProfilePayload {
   /// [subSkills]
   /// - Length fixed to 5
   /// - Lv. 10, 25, 50, 75, 100
-  final List<SubSkill> subSkills;
+  final List<SubSkill?> subSkills;
   final PokemonCharacter character;
   final String? customName;
   final String? customNote;
