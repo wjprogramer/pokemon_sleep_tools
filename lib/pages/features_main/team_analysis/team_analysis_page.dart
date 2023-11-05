@@ -579,7 +579,6 @@ class _TeamAnalysisPageState extends State<TeamAnalysisPage> {
           ? null
           : PokemonProfileStatistics([ profile ]);
       _statistics[profileIndex] = statistics;
-      statistics?.calcForUser();
     }
 
     Map<Dish, List<Ingredient>> initDishAndRemainIngredients(List<Dish> dishes) {

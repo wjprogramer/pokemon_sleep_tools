@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 
 part 'utils.dart';
@@ -44,7 +45,6 @@ class PokemonProfileStatistics {
   // D 活力檔位
   final _userVitality = 4;
   /// 主技能等級
-  // FW
   final _mainSkillLv = 3;
 
   List<StatisticsResults?> calc() {
@@ -54,13 +54,6 @@ class PokemonProfileStatistics {
   List<dynamic> calcForDev() {
     return [];
     // return _calc(_Type.dev);
-  }
-
-  List<ProfileStatisticsResult> calcForUser() {
-    return [];
-    // TODO:
-    // _results = _calc(_Type.userView);
-    // return _results as List<ProfileStatisticsResult>;
   }
 
   List<StatisticsResults?> _calc() {
@@ -87,7 +80,7 @@ class PokemonProfileStatistics {
 
     // Step2
     final helperTotalScore = baseResults
-        .map((e) => e?.xxx_totalSelfBenefitPerHour ?? 0.0)
+        .map((e) => e?.totalSelfBenefitPerHourWithoutHelpers ?? 0.0)
         .reduce((value, element) => value + element);
     final resultsWithHelpers = List.generate(profiles.length, (index) {
       final baseResult = baseResults[index];
@@ -96,7 +89,7 @@ class PokemonProfileStatistics {
       }
       return statistics[index]?.calc2(
         baseResult,
-        helperAvgScore: helperTotalScore / profiles.length,
+        helperAvgScore: helperTotalScore / profiles.whereNotNull().length,
       );
     });
 
@@ -334,8 +327,8 @@ class _PokemonProfileStatisticsAtLevel {
       }
     });
 
-    // (加成後) 主技能效益/h
-    final xxx_mainSkillBenefitPerHour = (() {
+    // (加成後) (不參考其他幫手) 主技能效益/h
+    final mainSkillBenefitPerHourWithoutHelpers = (() {
       return _tc(() {
         final xx = _calcMainSkillEnergyList(profile.basicProfile.mainSkill, helperAvgScore: 0)[finalMainSkillLevel.toInt() - 1];
 
@@ -345,36 +338,20 @@ class _PokemonProfileStatisticsAtLevel {
       }) * skillActivateCountPerDay;
     })();
 
-    // (白板) 主技能效益/h
-    final xxx_pureMainSkillBenefitPerHour = (() {
+    // (白板) (不參考其他幫手) 主技能效益/h
+    final xxx_pureMainSkillBenefitPerHourWithoutHelpers = (() {
       final xx = _calcMainSkillEnergyList(basicProfile.mainSkill, helperAvgScore: 0);
 
-      switch (type) {
-        case _StatisticsLevelType.levelCustom:
-          return _tc(() {
-            final yy = xx[mainSkillLv - 1];
+      final yy123 = switch (type) {
+        _StatisticsLevelType.levelCustom => xx[mainSkillLv - 1],
+        _StatisticsLevelType.level100 => xx[(mainSkillLv + 3 - basicProfile.currentEvolutionStage).toInt() - 1],
+        _StatisticsLevelType.level50 => xx[(mainSkillLv + 3 - basicProfile.currentEvolutionStage).toInt() - 1],
+      };
 
-            return basicProfile.mainSkill == MainSkill.vitalityFillS
-                ? yy * (pureFruitEnergyPerHour + pureIngredientEnergyPerHour)
-                : yy;
-          }) * pureSkillActivateCountPerHour;
-        case _StatisticsLevelType.level50:
-          return _tc(() {
-            final yy = xx[(mainSkillLv + 3 - basicProfile.currentEvolutionStage).toInt() - 1];
-
-            return basicProfile.mainSkill == MainSkill.vitalityFillS
-                ? yy * (pureFruitEnergyPerHour + pureIngredientEnergyPerHour)
-                : yy;
-          }) * pureSkillActivateCountPerHour;
-        case _StatisticsLevelType.level100:
-          return _tc(() {
-            final yy = xx[(mainSkillLv + 3 - basicProfile.currentEvolutionStage).toInt() - 1];
-
-            return basicProfile.mainSkill == MainSkill.vitalityFillS
-                ? yy * (pureFruitEnergyPerHour + pureIngredientEnergyPerHour)
-                : yy;
-          }) * pureSkillActivateCountPerHour;
-      }
+      return _tc(() {
+        return basicProfile.mainSkill == MainSkill.vitalityFillS
+            ? yy123 * (pureFruitEnergyPerHour + pureIngredientEnergyPerHour) : yy123;
+      }) * pureSkillActivateCountPerHour;
     })();
 
     // 食材換算成碎片/h
@@ -382,21 +359,19 @@ class _PokemonProfileStatisticsAtLevel {
         + ingredientCount2PerHour * _getIngredientPrice(profile.ingredient2)
         + ingredientCount3PerHour * _getIngredientPrice(profile.ingredient3);
 
-    // 白板收益/h
-    final pureTotalBenefitPerHour = pureFruitEnergyPerHour
+    // (不參考其他幫手效益) 白板收益/h
+    final pureTotalBenefitPerHourWithoutHelpers = pureFruitEnergyPerHour
         + pureIngredientEnergyPerHour
-        + xxx_pureMainSkillBenefitPerHour;
+        + xxx_pureMainSkillBenefitPerHourWithoutHelpers;
 
-    // (加成後) (不參考幫手效益) 自身收益/h
-    final xxx_totalSelfBenefitPerHour = (() {
-      // final xxy = basicProfile.mainSkill == MainSkill.vitalityAllS ||
-      //     basicProfile.mainSkill == MainSkill.vitalityS;
-      final xxy = basicProfile.mainSkill.isCalcWithHelperScore;
+    // (加成後) ('不參考' 幫手效益) 自身收益/h
+    final totalSelfBenefitPerHourWithoutHelpers = (() {
+      final xxy = basicProfile.mainSkill == MainSkill.vitalityAllS ||
+          basicProfile.mainSkill == MainSkill.vitalityS;
 
       return _tc(() => fruitEnergyPerHour
           + totalIngredientEnergyPerHour
-          + xxx_mainSkillBenefitPerHour * (xxy ? 0 : 1)
-          // + (profile.hasSubSkillAtLevel(SubSkill.helperBonus, level) ? o4 / 5 : 0)
+          + mainSkillBenefitPerHourWithoutHelpers * (xxy ? 0 : 1)
       );
     })();
 
@@ -434,10 +409,10 @@ class _PokemonProfileStatisticsAtLevel {
       skillActivateCountPerDay: skillActivateCountPerDay,
       pureSkillActivateCountPerHour: pureSkillActivateCountPerHour,
       ingredientShardsPerHour: ingredientShardsPerHour,
-      xxx_mainSkillBenefitPerHour: xxx_mainSkillBenefitPerHour,
-      xxx_pureMainSkillBenefitPerHour: xxx_pureMainSkillBenefitPerHour,
-      pureTotalBenefitPerHour: pureTotalBenefitPerHour,
-      xxx_totalSelfBenefitPerHour: xxx_totalSelfBenefitPerHour,
+      xxx_mainSkillBenefitPerHour: mainSkillBenefitPerHourWithoutHelpers,
+      xxx_pureMainSkillBenefitPerHour: xxx_pureMainSkillBenefitPerHourWithoutHelpers,
+      pureTotalBenefitPerHour: pureTotalBenefitPerHourWithoutHelpers,
+      totalSelfBenefitPerHourWithoutHelpers: totalSelfBenefitPerHourWithoutHelpers,
     );
   }
 
@@ -450,21 +425,33 @@ class _PokemonProfileStatisticsAtLevel {
     // 幫手計算估分
     final helperScore = helperAvgScore * 5 * 0.05 * (useHelper ? 1 : 0);
 
+    // (加成後) (參考其他幫手) 主技能效益/h
+    final mainSkillBenefitPerHour = (() {
+      return _tc(() {
+        final xx = _calcMainSkillEnergyList(
+            profile.basicProfile.mainSkill, helperAvgScore: helperAvgScore)[baseResult.finalMainSkillLevel.toInt() - 1];
+
+        return profile.basicProfile.mainSkill == MainSkill.vitalityFillS
+            ? xx * (baseResult.fruitEnergyPerHour + baseResult.totalIngredientEnergyPerHour)
+            : xx;
+      }) * baseResult.skillActivateCountPerDay;
+    })();
+
     // (加成後) ('參考'幫手效益) 自身收益/h From Step1
     final totalSelfBenefitPerHour = (() {
-      // final xxy = basicProfile.mainSkill == MainSkill.vitalityAllS ||
-      //     basicProfile.mainSkill == MainSkill.vitalityS;
-      final xxy = basicProfile.mainSkill.isCalcWithHelperScore;
+      // final xxy = basicProfile.mainSkill.isCalcWithHelperScore;
+      final xxy = basicProfile.mainSkill == MainSkill.vitalityAllS ||
+          basicProfile.mainSkill == MainSkill.vitalityS;
 
       return _tc(() => baseResult.fruitEnergyPerHour
           + baseResult.totalIngredientEnergyPerHour
-          + baseResult.xxx_mainSkillBenefitPerHour * (xxy ? 0 : 1)
-        + (profile.hasSubSkillAtLevel(SubSkill.helperBonus, level) ? helperScore / 5 : 0)
+          + mainSkillBenefitPerHour * (xxy ? 0 : 1)
+          + (profile.hasSubSkillAtLevel(SubSkill.helperBonus, level) ? helperScore / 5 : 0)
       );
     })();
 
-    final effect = baseResult.xxx_totalSelfBenefitPerHour == 0 ? 0
-        : (baseResult.xxx_totalSelfBenefitPerHour - pureTotalBenefitPerHour) / pureTotalBenefitPerHour;
+    final effect = totalSelfBenefitPerHour == 0 ? 0
+        : (totalSelfBenefitPerHour - pureTotalBenefitPerHour) / pureTotalBenefitPerHour;
 
     // 評級, Rank
     String rank;
@@ -501,6 +488,7 @@ class _PokemonProfileStatisticsAtLevel {
 
     return StatisticsResultWithHelpers(
       rank: rank,
+      totalSelfBenefitPerHour: totalSelfBenefitPerHour,
     );
   }
 

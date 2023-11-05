@@ -37,7 +37,7 @@ class StatisticsResultBase {
     required this.xxx_mainSkillBenefitPerHour,
     required this.xxx_pureMainSkillBenefitPerHour,
     required this.pureTotalBenefitPerHour,
-    required this.xxx_totalSelfBenefitPerHour,
+    required this.totalSelfBenefitPerHourWithoutHelpers,
   });
 
   final int fruitEnergy;
@@ -76,5 +76,5 @@ class StatisticsResultBase {
   final double xxx_mainSkillBenefitPerHour;
   final double xxx_pureMainSkillBenefitPerHour;
   final double pureTotalBenefitPerHour;
-  final double xxx_totalSelfBenefitPerHour;
+  final double totalSelfBenefitPerHourWithoutHelpers;
 }

@@ -2,9 +2,11 @@
 class StatisticsResultWithHelpers {
   StatisticsResultWithHelpers({
     required this.rank,
+    required this.totalSelfBenefitPerHour,
   });
 
   final String rank;
+  final double totalSelfBenefitPerHour;
 }
 
 // // 出場平均估分

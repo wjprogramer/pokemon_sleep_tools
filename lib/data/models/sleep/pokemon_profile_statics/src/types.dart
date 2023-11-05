@@ -25,4 +25,3 @@ class ProfileStatisticsResult {
 // final double diffEffectTotalBenefit;
 // final double totalBenefitPerHour;
 // final String rank;
-
