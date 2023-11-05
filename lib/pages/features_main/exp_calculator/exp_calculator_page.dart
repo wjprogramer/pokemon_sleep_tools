@@ -274,16 +274,16 @@ class _ExpCalculatorPageState extends State<ExpCalculatorPage> {
                     itemBuilder: (item, onItemTap) {
                       Color? color;
 
-                      if (item.positive == 'EXP') {
+                      if (item.positiveEffect == CharacterEffect.exp) {
                         color = positiveColor;
-                      } else if (item.negative == 'EXP') {
+                      } else if (item.negativeEffect == CharacterEffect.exp) {
                         color = dangerColor;
                       }
 
                       return ListTile(
                         title: Text(item.nameI18nKey.xTr),
                         subtitle: Text(
-                          '+ ${Display.text(item.positive)}, - ${Display.text(item.negative)}',
+                          '+ ${Display.text(item.positiveEffect.nameI18nKey.xTr)}, - ${Display.text(item.negativeEffect.nameI18nKey.xTr)}',
                           style: TextStyle(
                             color: color,
                             fontWeight: color != null ? FontWeight.bold : null,

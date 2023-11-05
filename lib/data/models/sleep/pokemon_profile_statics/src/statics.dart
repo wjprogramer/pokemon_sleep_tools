@@ -185,8 +185,8 @@ class _PokemonProfileStatisticsAtLevel {
     const baseIngredientRate = 0.2; // TODO: 感覺應該根據 BasicProfile 的食材機率
     final ingredientRate = _tc(() => baseIngredientRate * ingredientSM
         * (
-            profile.character.positive == '食材發現' ? 1.2
-                : profile.character.negative == '食材發現' ? 0.8
+            profile.character.positiveEffect == CharacterEffect.ingredientDiscovery ? 1.2
+                : profile.character.negativeEffect == CharacterEffect.ingredientDiscovery ? 0.8
                 : 1.0
         ),
     );
@@ -205,8 +205,8 @@ class _PokemonProfileStatisticsAtLevel {
     final helpIntervalWithLevel = _tc(() => baseHelpInterval - (baseHelpInterval * ((level - 1) * 0.002)));
     // 等級+性格+技能調整
     final helpIntervalWithLevelCharacterSkill = helpIntervalWithLevel * helpSpeedSM * (
-        profile.character.positive == '幫忙速度' ? 0.9
-            : profile.character.negative == '幫忙速度' ? 1.1
+        profile.character.positiveEffect == CharacterEffect.helpSpeed ? 0.9
+            : profile.character.negativeEffect == CharacterEffect.helpSpeed ? 1.1
             : 1.0
     );
     // 等級+性格+技能+活力調整
@@ -291,8 +291,8 @@ class _PokemonProfileStatisticsAtLevel {
     // - 專長影響程度不同
     // - AM4 前者用乘法後者用加法
     final skillActivateCountPerDay = _tc(() {
-      final xxx = profile.character.negative == '主技能' ? 0.8
-          : profile.character.positive == '主技能' ? 1.2
+      final xxx = profile.character.negativeEffect == CharacterEffect.mainSkill ? 0.8
+          : profile.character.positiveEffect == CharacterEffect.mainSkill ? 1.2
           : 1;
 
       switch (type) {

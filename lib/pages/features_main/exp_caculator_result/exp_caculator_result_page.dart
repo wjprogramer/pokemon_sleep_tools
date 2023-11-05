@@ -131,9 +131,9 @@ class _ExpCalculatorResultPageState extends State<ExpCalculatorResultPage> {
     // TODO: 需詳細確認數字
     // https://pks.raenonx.cc/info/nature 顯示 1.18 and 0.82，
     // 但實際算，好像是用 1.2 and 0.8 ?
-    if (character?.positive == 'EXP') {
+    if (character?.positiveEffect == CharacterEffect.exp) {
       candyExpEffect = 1.2; // TODO: 1.18 or 1.2?
-    } else if (character?.negative == 'EXP') {
+    } else if (character?.negativeEffect == CharacterEffect.exp) {
       candyExpEffect = 0.8; // TODO: 0.82 or 0.8?
     }
 

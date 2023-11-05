@@ -558,8 +558,8 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
   }
 
   Widget _buildCharacterInfo(PokemonCharacter character) {
-    final positive = character.positive;
-    final negative = character.negative;
+    final positiveEffect = character.positiveEffect;
+    final negativeEffect = character.negativeEffect;
 
     return Text.rich(
       TextSpan(
@@ -567,27 +567,27 @@ class __PokemonDetailsView extends WidgetView<_PokemonDetails, __PokemonDetailsC
           color: greyColor3,
         ),
         children: [
-          if (positive == null && negative == null)
+          if (positiveEffect == CharacterEffect.none && negativeEffect == CharacterEffect.none)
             TextSpan(
               text: '沒有因性格帶來的特色'.xTr,
               style: TextStyle(color: _theme.disabledColor),
             )
           else ...[
-            if (positive != null) ...[
+            if (positiveEffect != CharacterEffect.none) ...[
               TextSpan(
-                text: positive,
+                text: positiveEffect.nameI18nKey.xTr,
               ),
               const WidgetSpan(
                 child: Icon(Icons.keyboard_arrow_up, color: dangerColor, size: 14,),
               ),
             ],
-            if (negative != null) ...[
-              if (positive != null)
+            if (negativeEffect != CharacterEffect.none) ...[
+              if (positiveEffect != CharacterEffect.none)
                 TextSpan(
                   text: 't_separator'.xTr,
                 ),
               TextSpan(
-                text: negative,
+                text: negativeEffect.nameI18nKey.xTr,
               ),
               const WidgetSpan(
                 child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),

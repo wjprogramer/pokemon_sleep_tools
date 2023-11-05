@@ -68,7 +68,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
   double _characterSpacing = 0;
 
   // Data
-  var _charactersGroupByPositive = <String?, List<PokemonCharacter>>{};
+  var _charactersGroupByPositive = <CharacterEffect, List<PokemonCharacter>>{};
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
 
     scheduleMicrotask(() {
       _charactersGroupByPositive = groupBy(
-        PokemonCharacter.values, (character) => character.positive,
+        PokemonCharacter.values, (character) => character.positiveEffect,
       );
       for (final positiveToCharacters in _charactersGroupByPositive.entries) {
         final characters = positiveToCharacters.value;
@@ -99,7 +99,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
     _characterWidth = menuItemWidthResults.childWidth;
     _characterSpacing = menuItemWidthResults.spacing;
 
-    final groupedCharactersEntries = _charactersGroupByPositive.entries.sorted((a, b) => a.key == null ? -1 : 1);
+    final groupedCharactersEntries = _charactersGroupByPositive.entries.sorted((a, b) => a.key == CharacterEffect.none ? -1 : 1);
 
     return Scaffold(
       appBar: buildAppBar(
@@ -111,22 +111,19 @@ class _CharacterListPageState extends State<CharacterListPage> {
         ),
         children: [
           ...groupedCharactersEntries.map((e) {
-            final positiveName = e.key;
+            final positiveEffect = e.key;
             final characters = e.value;
-            String? positiveEffectText;
-            if (positiveName != null) {
-              positiveEffectText = _getCharacterEffectTrailing(positiveName, true);
-            }
+            String? positiveEffectText = _getCharacterEffectTrailing(positiveEffect, true);
 
             return <Widget>[
               MySubHeader(
-                color: positiveName == null ? warningColor : null,
+                color: positiveEffect == CharacterEffect.none ? warningColor : null,
                 title: Row(
                   children: [
                     Expanded(
                       child: Text(
                         Display.text(
-                          positiveName,
+                          positiveEffect.nameI18nKey.xTr,
                           emptyText: '沒有因性格帶來的特色',
                         ),
                       ),
@@ -193,7 +190,7 @@ class _CharacterListPageState extends State<CharacterListPage> {
               style: _theme.textTheme.bodyLarge,
             ),
             _buildDescription(
-              effectName: character.negative,
+              characterEffect: character.negativeEffect,
               positive: false,
             ),
           ],
@@ -203,15 +200,16 @@ class _CharacterListPageState extends State<CharacterListPage> {
   }
 
   Widget _buildDescription({
-    required String? effectName,
+    required CharacterEffect characterEffect,
     required bool positive,
   }) {
     final style = _theme.textTheme.bodySmall?.copyWith(
       color: greyColor3,
     );
     final prefix = '';// positive ? '+ ' : '- ';
+    final effectName = characterEffect.nameI18nKey.xTr;
 
-    if (effectName == null) {
+    if (characterEffect == CharacterEffect.none) {
       return Text(
         prefix + Display.text(effectName),
         style: style,
@@ -230,12 +228,12 @@ class _CharacterListPageState extends State<CharacterListPage> {
               children: [
                 if (!positive) ...[
                   TextSpan(
-                    text: ' (${_getCharacterEffectTrailing(effectName, positive)}) ',
+                    text: ' (${_getCharacterEffectTrailing(characterEffect, positive)}) ',
                     style: style?.copyWith(
                       fontSize: 10,
                     ),
                   ),
-                  WidgetSpan(
+                  const WidgetSpan(
                     child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),
                   ),
                 ],
@@ -253,14 +251,14 @@ class _CharacterListPageState extends State<CharacterListPage> {
     );
   }
 
-  String _getCharacterEffectTrailing(String effectName, bool positive) {
+  String? _getCharacterEffectTrailing(CharacterEffect effectName, bool positive) {
     final res = switch (effectName) {
-      '主技能' => '_x',
-      '幫忙速度' => positive ? '0.9x' : '1.1x',
-      '食材發現' => positive ? '1.2x' : '0.8x',
-      'EXP' => positive ? '1.18x' : '0.82x',
-      '活力回復' => positive ? '1.2x' : '0.8x',
-      String() => '',
+      CharacterEffect.mainSkill => '_x',
+      CharacterEffect.helpSpeed => positive ? '0.9x' : '1.1x',
+      CharacterEffect.ingredientDiscovery => positive ? '1.2x' : '0.8x',
+      CharacterEffect.exp => positive ? '1.18x' : '0.82x',
+      CharacterEffect.energyRecovery => positive ? '1.2x' : '0.8x',
+      CharacterEffect.none => null,
     };
     return res;
   }

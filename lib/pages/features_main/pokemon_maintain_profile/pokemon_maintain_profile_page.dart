@@ -295,7 +295,7 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                                 BoxShadow(
                                   blurRadius: 15,
                                   color: _theme.shadowColor.withOpacity(.05),
-                                  offset: Offset(0, 5),
+                                  offset: const Offset(0, 5),
                                 ),
                               ],
                             ),
@@ -451,9 +451,9 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                         return Container();
                       }
 
-                      final positive = character.positive;
-                      final negative = character.negative;
-                      if (positive == null && negative == null) {
+                      final positiveEffect = character.positiveEffect;
+                      final negativeEffect = character.negativeEffect;
+                      if (positiveEffect == CharacterEffect.none && negativeEffect == CharacterEffect.none) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
@@ -470,23 +470,23 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                               color: greyColor3,
                             ),
                             children: [
-                              if (positive != null) ...[
+                              if (positiveEffect != CharacterEffect.none) ...[
                                 TextSpan(
-                                  text: positive,
+                                  text: positiveEffect.nameI18nKey.xTr,
                                 ),
-                                WidgetSpan(
+                                const WidgetSpan(
                                   child: Icon(Icons.keyboard_arrow_up, color: dangerColor, size: 14,),
                                 ),
                               ],
-                              if (negative != null) ...[
-                                if (positive != null)
+                              if (negativeEffect != CharacterEffect.none) ...[
+                                if (positiveEffect != CharacterEffect.none)
                                   TextSpan(
-                                    text: '、',
+                                    text: '、'.xTr,
                                   ),
                                 TextSpan(
-                                  text: negative,
+                                  text: negativeEffect.nameI18nKey.xTr,
                                 ),
-                                WidgetSpan(
+                                const WidgetSpan(
                                   child: Icon(Icons.keyboard_arrow_down, color: positiveColor, size: 14,),
                                 ),
                               ],
@@ -518,8 +518,8 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                   label: '登錄日期'.xTr,
                   formControl: _customDateField,
                   valueAccessor: MyDateTimeValueAccessor(DateFormatType.date),
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.calendar_today),
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.calendar_today),
                   ),
                   wrapFieldBuilder: (context, fieldWidget) {
                     return Row(
@@ -680,40 +680,39 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
                     ),
                   ],
                 ),
-                if (ingredientOptions != null)
-                  ...ingredientOptions.map((ingredientAndCount) => InkWell(
-                    onTap: () {
-                      ingredientField?.value = ingredientAndCount.$1;
-                      countField.value = ingredientAndCount.$2;
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      color: countField.value == ingredientAndCount.$2 && ingredientField?.value == ingredientAndCount.$1
-                          ? primaryColor.withOpacity(.09)
-                          : null,
-                      child: Row(
-                        children: [
-                          if (MyEnv.USE_DEBUG_IMAGE)
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: Opacity(
-                                opacity: 0.5,
-                                child: IngredientImage(
-                                  ingredient: ingredientAndCount.$1,
-                                  size: 24,
-                                  disableTooltip: true,
-                                ),
+                ...ingredientOptions.map((ingredientAndCount) => InkWell(
+                  onTap: () {
+                    ingredientField?.value = ingredientAndCount.$1;
+                    countField.value = ingredientAndCount.$2;
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    color: countField.value == ingredientAndCount.$2 && ingredientField?.value == ingredientAndCount.$1
+                        ? primaryColor.withOpacity(.09)
+                        : null,
+                    child: Row(
+                      children: [
+                        if (MyEnv.USE_DEBUG_IMAGE)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: Opacity(
+                              opacity: 0.5,
+                              child: IngredientImage(
+                                ingredient: ingredientAndCount.$1,
+                                size: 24,
+                                disableTooltip: true,
                               ),
                             ),
-                          Expanded(
-                            child: Text(
-                              '${ingredientAndCount.$1.nameI18nKey.xTr} x${ingredientAndCount.$2}',
-                            ),
                           ),
-                        ],
-                      ),
+                        Expanded(
+                          child: Text(
+                            '${ingredientAndCount.$1.nameI18nKey.xTr} x${ingredientAndCount.$2}',
+                          ),
+                        ),
+                      ],
                     ),
-                  )),
+                  ),
+                )),
               ],
             ),
           ),

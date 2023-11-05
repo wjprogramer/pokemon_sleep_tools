@@ -1,4 +1,5 @@
 export 'pokemon_profile_statics/pokemon_profile_statics.dart';
+export 'character_effect.dart';
 export 'dish.dart';
 export 'dish_level_info.dart';
 export 'dish_type.dart';
