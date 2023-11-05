@@ -18,6 +18,8 @@ class PokemonProfileRepository implements MyInjectable {
       isFavorite: payload.isFavorite ?? false,
       isShiny: payload.isShiny ?? false,
       customDate: payload.customDate,
+      evolveCount: payload.evolveCount,
+      useGoldSeedCount: payload.useGoldSeedCount,
       subSkillLv10: payload.subSkills[0],
       subSkillLv25: payload.subSkills[1],
       subSkillLv50: payload.subSkills[2],

@@ -12,6 +12,8 @@ class PokemonProfile {
     this.isFavorite = false,
     this.isShiny = false,
     this.customDate,
+    this.evolveCount,
+    this.useGoldSeedCount,
     required this.subSkillLv10,
     required this.subSkillLv25,
     required this.subSkillLv50,
@@ -35,6 +37,10 @@ class PokemonProfile {
   final bool isShiny;
   /// 使用者自訂的登錄日期 (遊戲內日期)
   final DateTime? customDate;
+  /// 進化次數
+  final int? evolveCount;
+  /// 使用金色種子次數
+  final int? useGoldSeedCount;
 
   /// 使用者可以填寫個人筆記
   final String? customNote;
@@ -88,6 +94,8 @@ class PokemonProfile {
       isFavorite: json['isFavorite'] ?? false,
       isShiny: json['isShiny'] ?? false,
       customDate: json['customDate'] == null ? null : MyTimezone.tryParseZero(json['customDate']),
+      evolveCount: json['evolveCount'],
+      useGoldSeedCount: json['useGoldSeedCount'],
       subSkillLv10: subSkillMapping[json['subSkillIds'][0]]!,
       subSkillLv25: subSkillMapping[json['subSkillIds'][1]]!,
       subSkillLv50: subSkillMapping[json['subSkillIds'][2]]!,
@@ -110,6 +118,8 @@ class PokemonProfile {
       isFavorite: isFavorite,
       isShiny: isShiny,
       customDate: customDate,
+      evolveCount: evolveCount,
+      useGoldSeedCount: useGoldSeedCount,
       subSkillLv10: subSkillLv10,
       subSkillLv25: subSkillLv25,
       subSkillLv50: subSkillLv50,
@@ -129,6 +139,8 @@ class PokemonProfile {
     bool? isFavorite,
     bool? isShiny,
     DateTime? customDate,
+    int? evolveCount,
+    int? useGoldSeedCount,
     SubSkill? subSkillLv10,
     SubSkill? subSkillLv25,
     SubSkill? subSkillLv50,
@@ -148,6 +160,8 @@ class PokemonProfile {
       isFavorite: isFavorite ?? this.isFavorite,
       isShiny: isShiny ?? this.isShiny,
       customDate: customDate ?? this.customDate,
+      evolveCount: evolveCount ?? this.evolveCount,
+      useGoldSeedCount: useGoldSeedCount ?? this.useGoldSeedCount,
       subSkillLv10: subSkillLv10 ?? this.subSkillLv10,
       subSkillLv25: subSkillLv25 ?? this.subSkillLv25,
       subSkillLv50: subSkillLv50 ?? this.subSkillLv50,
@@ -169,6 +183,8 @@ class PokemonProfile {
       'isFavorite': isFavorite,
       'isShiny': isShiny,
       'customDate': customDate == null ? null : MyFormatter.date(customDate!),
+      'evolveCount': evolveCount,
+      'useGoldSeedCount': useGoldSeedCount,
       'id': id,
       'subSkillIds': subSkills.map((e) => e?.id).toList(),
       'ingredient2Id': ingredient2?.id,
@@ -189,6 +205,8 @@ class PokemonProfile {
           '   isFavorite: $isFavorite, \n'
           '   isShiny: $isShiny, \n'
           '   customDate: $customDate, \n'
+          '   evolveCount: $evolveCount, \n'
+          '   useGoldSeedCount: $useGoldSeedCount, \n'
           '   subSkillLv10: $subSkillLv10,\n'
           '   subSkillLv25: $subSkillLv25,\n'
           '   subSkillLv50: $subSkillLv50,\n'

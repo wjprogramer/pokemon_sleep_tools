@@ -10,6 +10,8 @@ class CreatePokemonProfilePayload {
     required this.isFavorite,
     required this.isShiny,
     required this.customDate,
+    this.evolveCount,
+    this.useGoldSeedCount,
     required this.ingredient2,
     required this.ingredientCount2,
     required this.ingredient3,
@@ -28,6 +30,8 @@ class CreatePokemonProfilePayload {
   final bool? isFavorite;
   final bool? isShiny;
   final DateTime? customDate;
+  final int? evolveCount;
+  final int? useGoldSeedCount;
   final Ingredient? ingredient2;
   final int ingredientCount2;
   final Ingredient? ingredient3;

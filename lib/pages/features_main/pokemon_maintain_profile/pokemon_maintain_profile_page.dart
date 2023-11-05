@@ -750,6 +750,8 @@ class _PokemonMaintainProfilePageState extends State<PokemonMaintainProfilePage>
         isFavorite: false, // TODO:
         isShiny: _shinyField.value ?? false,
         customDate: _customDateField.value,
+        evolveCount: 0, // TODO:
+        useGoldSeedCount: 0, // TODO:
         subSkills: _subSkillsField.value!,
         ingredient2: _ingredient2Field.value!,
         ingredientCount2: _ingredient2CountField.value!,
