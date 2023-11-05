@@ -4,7 +4,7 @@ class _DevPokemonBasicProfileIngredientsCombinationView extends WidgetView<DevPo
   const _DevPokemonBasicProfileIngredientsCombinationView(_DevPokemonBasicProfileIngredientsCombinationLogic state) : super(state);
 
   PokemonBasicProfile get _basicProfile => widget._args.basicProfile;
-  List<StatisticsResults> get _profileResults => s._profileResults;
+  List<StatisticsResults?> get _profileResults => s._profileResults;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class _DevPokemonBasicProfileIngredientsCombinationView extends WidgetView<DevPo
       ),
       body: buildListView(
         children: [
-          ..._profileResults.map((e) => _buildStatisticsResults(e))
+          ..._profileResults.whereNotNull().map((e) => _buildStatisticsResults(e))
               .map((e) => Hp(child: Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: e,
@@ -30,13 +30,15 @@ class _DevPokemonBasicProfileIngredientsCombinationView extends WidgetView<DevPo
     final ingredient2 = results.profile.ingredient2;
     final ingredient3 = results.profile.ingredient3;
 
-    final totalEnergyPerHour = results.baseResult.totalIngredientEnergyPerHour
-        + results.baseResult.fruitEnergyPerHour;
+    final totalIngredientEnergyPerHour = results.baseResult?.totalIngredientEnergyPerHour ?? 0;
 
-    final totalIngredientEnergyFlex = (results.baseResult.totalIngredientEnergyPerHour / totalEnergyPerHour * 1000).toInt();
+    final totalEnergyPerHour = totalIngredientEnergyPerHour
+        + (results.baseResult?.fruitEnergyPerHour ?? 0);
+
+    final totalIngredientEnergyFlex = (totalIngredientEnergyPerHour / totalEnergyPerHour * 1000).toInt();
     final totalFruitEnergyFlex = 1000 - totalIngredientEnergyFlex;
 
-    final totalIngredientEnergyPerHourPercentage = 100 - results.baseResult.totalIngredientEnergyPerHour / totalEnergyPerHour * 100;
+    final totalIngredientEnergyPerHourPercentage = 100 - totalIngredientEnergyPerHour / totalEnergyPerHour * 100;
     final longestText = _Label.values.map((e) => e.text.xTr).compareWhere((a, b) {
       return a.length > b.length;
     }) ?? '';
@@ -105,7 +107,7 @@ class _DevPokemonBasicProfileIngredientsCombinationView extends WidgetView<DevPo
               Expanded(
                 flex: totalFruitEnergyFlex,
                 child: Tooltip(
-                  message: '${results.baseResult.fruitEnergyPerHour.toStringAsFixed(2)} (${totalIngredientEnergyPerHourPercentage.toStringAsFixed(2)}%)',
+                  message: '${results.baseResult?.fruitEnergyPerHour.toStringAsFixed(2)} (${totalIngredientEnergyPerHourPercentage.toStringAsFixed(2)}%)',
                   child: Container(
                     height: 8,
                     decoration: BoxDecoration(
@@ -136,7 +138,7 @@ class _DevPokemonBasicProfileIngredientsCombinationView extends WidgetView<DevPo
               Expanded(
                 flex: totalIngredientEnergyFlex,
                 child: Tooltip(
-                  message: '${results.baseResult.totalIngredientEnergyPerHour.toStringAsFixed(2)} (${(results.baseResult.totalIngredientEnergyPerHour / totalEnergyPerHour * 100).toStringAsFixed(2)}%)',
+                  message: '${results.baseResult?.totalIngredientEnergyPerHour.toStringAsFixed(2)} (${((results.baseResult?.totalIngredientEnergyPerHour ?? 0.0) / totalEnergyPerHour * 100).toStringAsFixed(2)}%)',
                   child: Container(
                     height: 8,
                     decoration: BoxDecoration(

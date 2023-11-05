@@ -193,11 +193,11 @@ class _PokemonSliderDetailsPageState extends State<PokemonSliderDetailsPage> {
 
   void _updateProfileStatistics() {
     for (final profile in _profiles) {
-      final resultLv50 = PokemonProfileStatistics([ profile ], level: 50).calc()[0].resultWithHelpers;
-      final resultLv100 = PokemonProfileStatistics([ profile ], level: 100).calc()[0].resultWithHelpers;
+      final resultLv50 = PokemonProfileStatistics([ profile ], level: 50).calc()[0]?.resultWithHelpers;
+      final resultLv100 = PokemonProfileStatistics([ profile ], level: 100).calc()[0]?.resultWithHelpers;
 
       final resultView = ProfileStatisticsResult(
-        profile, resultLv50.rank, resultLv100.rank,
+        profile, resultLv50?.rank ?? '', resultLv100?.rank ?? '',
       );
       _cache[profile.id] = resultView;
     }

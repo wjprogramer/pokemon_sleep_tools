@@ -25,7 +25,7 @@ class PokemonProfileStatistics {
   List<ProfileStatisticsResult>? get results => _results;
 
   // Profile properties
-  final List<PokemonProfile> profiles;
+  final List<PokemonProfile?> profiles;
 
   /// 全部 profile 會用同樣等級
   final int level;
@@ -47,7 +47,7 @@ class PokemonProfileStatistics {
   // FW
   final _mainSkillLv = 3;
 
-  List<StatisticsResults> calc() {
+  List<StatisticsResults?> calc() {
     return _calc();
   }
 
@@ -63,14 +63,14 @@ class PokemonProfileStatistics {
     // return _results as List<ProfileStatisticsResult>;
   }
 
-  List<StatisticsResults> _calc() {
+  List<StatisticsResults?> _calc() {
     // NOTES:
     // - Lv 50 與 Lv 100 的狀況下都是假設進化到最終階段
     if (profiles.isEmpty) {
       return [];
     }
 
-    final statistics = profiles.map((profile) => _PokemonProfileStatisticsAtLevel(
+    final statistics = profiles.map((profile) =>  profile == null ? null : _PokemonProfileStatisticsAtLevel(
       profile: profile,
       isSnorlaxFavorite: useSnorlaxFavorite && isSnorlaxFavorite,
       vitality: _userVitality,
@@ -82,27 +82,38 @@ class PokemonProfileStatistics {
 
     // Step1
     final baseResults = statistics
-        .map((statistic) => statistic.calc1())
+        .map((statistic) => statistic?.calc1())
         .toList();
 
     // Step2
     final helperTotalScore = baseResults
-        .map((e) => e.xxx_totalSelfBenefitPerHour)
+        .map((e) => e?.xxx_totalSelfBenefitPerHour ?? 0.0)
         .reduce((value, element) => value + element);
-    final resultsWithHelpers = List.generate(profiles.length, (index) =>
-        statistics[index].calc2(
-          baseResults[index],
-          helperAvgScore: helperTotalScore / profiles.length,
-        ),
-    );
+    final resultsWithHelpers = List.generate(profiles.length, (index) {
+      final baseResult = baseResults[index];
+      if (baseResult == null) {
+        return null;
+      }
+      return statistics[index]?.calc2(
+        baseResult,
+        helperAvgScore: helperTotalScore / profiles.length,
+      );
+    });
 
     _isInitialized = true;
 
-    return List.generate(profiles.length, (index) => StatisticsResults(
-      profile: profiles[index],
-      baseResult: baseResults[index],
-      resultWithHelpers: resultsWithHelpers[index],
-    ));
+    return List.generate(profiles.length, (index) {
+      final profile = profiles[index];
+      if (profile == null) {
+        return null;
+      }
+
+      return StatisticsResults(
+        profile: profile,
+        baseResult: baseResults[index],
+        resultWithHelpers: resultsWithHelpers[index],
+      );
+    });
   }
 
 }
@@ -452,36 +463,39 @@ class _PokemonProfileStatisticsAtLevel {
       );
     })();
 
+    final effect = baseResult.xxx_totalSelfBenefitPerHour == 0 ? 0
+        : (baseResult.xxx_totalSelfBenefitPerHour - pureTotalBenefitPerHour) / pureTotalBenefitPerHour;
+
     // 評級, Rank
     String rank;
     if (pureTotalBenefitPerHour == 0) {
       rank = '-';
     } else {
       if (level < 50) {
-        rank = pureTotalBenefitPerHour >= 0.3 ? 'S' :
-        pureTotalBenefitPerHour >= 0.24 ? 'A' :
-        pureTotalBenefitPerHour >= 0.18 ? 'B' :
-        pureTotalBenefitPerHour >= 0.12 ? 'C' :
-        pureTotalBenefitPerHour >= 0.06 ? 'D' :
-        pureTotalBenefitPerHour >= 0 ? 'E' :
-        pureTotalBenefitPerHour < 0 ? 'F' : '-';
+        rank = effect >= 0.3 ? 'S' :
+        effect >= 0.24 ? 'A' :
+        effect >= 0.18 ? 'B' :
+        effect >= 0.12 ? 'C' :
+        effect >= 0.06 ? 'D' :
+        effect >= 0 ? 'E' :
+        effect < 0 ? 'F' : '-';
       } else if (level < 100) {
-        rank = pureTotalBenefitPerHour >= 1 ? 'S' :
-        pureTotalBenefitPerHour >= 0.8 ? 'A' :
-        pureTotalBenefitPerHour >= 0.6 ? 'B' :
-        pureTotalBenefitPerHour >= 0.4 ? 'C' :
-        pureTotalBenefitPerHour >= 0.2 ? 'D' :
-        pureTotalBenefitPerHour >= 0 ? 'E' :
-        pureTotalBenefitPerHour < 0 ? 'F' : '-';
+        rank = effect >= 1 ? 'S' :
+        effect >= 0.8 ? 'A' :
+        effect >= 0.6 ? 'B' :
+        effect >= 0.4 ? 'C' :
+        effect >= 0.2 ? 'D' :
+        effect >= 0 ? 'E' :
+        effect < 0 ? 'F' : '-';
       } else {
-        rank =  pureTotalBenefitPerHour >= 1.5 ? 'SS' :
-        pureTotalBenefitPerHour >= 1 ? 'S' :
-        pureTotalBenefitPerHour >= 0.8 ? 'A' :
-        pureTotalBenefitPerHour >= 0.6 ? 'B' :
-        pureTotalBenefitPerHour >= 0.4 ? 'C' :
-        pureTotalBenefitPerHour >= 0.2 ? 'D' :
-        pureTotalBenefitPerHour >= 0 ? 'E' :
-        pureTotalBenefitPerHour < 0 ? 'F' : '-';
+        rank = effect >= 1.5 ? 'SS' :
+        effect >= 1 ? 'S' :
+        effect >= 0.8 ? 'A' :
+        effect >= 0.6 ? 'B' :
+        effect >= 0.4 ? 'C' :
+        effect >= 0.2 ? 'D' :
+        effect >= 0 ? 'E' :
+        effect < 0 ? 'F' : '-';
       }
     }
 
@@ -733,6 +747,6 @@ class StatisticsResults {
   });
 
   final PokemonProfile profile;
-  final StatisticsResultBase baseResult;
-  final StatisticsResultWithHelpers resultWithHelpers;
+  final StatisticsResultBase? baseResult;
+  final StatisticsResultWithHelpers? resultWithHelpers;
 }

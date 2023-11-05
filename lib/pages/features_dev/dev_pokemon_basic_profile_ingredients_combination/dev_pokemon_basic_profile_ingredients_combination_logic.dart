@@ -5,7 +5,7 @@ class _DevPokemonBasicProfileIngredientsCombinationLogic extends State<DevPokemo
   PokemonBasicProfile get _basicProfile => widget._args.basicProfile;
 
   // Data
-  var _profileResults = <StatisticsResults>[];
+  var _profileResults = <StatisticsResults?>[];
   var _level = 60;
 
   @override
@@ -14,7 +14,7 @@ class _DevPokemonBasicProfileIngredientsCombinationLogic extends State<DevPokemo
 
     scheduleMicrotask(() {
       final ingredientsOptions = _getIngredientsOptions();
-      final newProfilesStaticsResults = <StatisticsResults>[];
+      final newProfilesStaticsResults = <StatisticsResults?>[];
 
       for (final ingredientsOption in ingredientsOptions) {
         final ingredient2 = ingredientsOption.length >= 2 ? ingredientsOption[1] : null;
@@ -43,8 +43,8 @@ class _DevPokemonBasicProfileIngredientsCombinationLogic extends State<DevPokemo
       }
 
       newProfilesStaticsResults.sort((a, b) {
-        final totalA = a.baseResult.totalIngredientEnergyPerHour + a.baseResult.fruitEnergyPerHour;
-        final totalB = b.baseResult.totalIngredientEnergyPerHour + b.baseResult.fruitEnergyPerHour;
+        final totalA = (a?.baseResult?.totalIngredientEnergyPerHour ?? 0.0) + (a?.baseResult?.fruitEnergyPerHour ?? 0.0);
+        final totalB = (b?.baseResult?.totalIngredientEnergyPerHour ?? 0.0) + (b?.baseResult?.fruitEnergyPerHour ?? 0.0);
         return totalA - totalB > 0 ? -1 : 1;
       });
 
