@@ -24,7 +24,6 @@ class SleepFace {
   final int style;
   final SleepFaceRewards rewards;
   final PokemonField field;
-
 }
 
 class SleepFaceRewards {

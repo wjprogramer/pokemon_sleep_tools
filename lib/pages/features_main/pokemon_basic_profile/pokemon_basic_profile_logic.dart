@@ -20,6 +20,7 @@ class _PokemonBasicProfileLogic extends State<PokemonBasicProfilePage> {
 
   // Data
   final _sleepFacesOfField = <PokemonField, List<SleepFace>>{};
+  var _allSleepStyles = <int>[];
 
   /// [SleepFace.style] to its nama
   var _sleepNamesOfBasicProfile = <int, String>{};
@@ -67,9 +68,18 @@ class _PokemonBasicProfileLogic extends State<PokemonBasicProfilePage> {
     final allSleepNames = await _sleepFaceRepo.findAllNames();
     _sleepNamesOfBasicProfile = allSleepNames[_basicProfile.id] ?? {};
 
+    final allSleepStylesSet = <int>{};
     for (final sleepFace in sleepFaces) {
       _sleepFacesOfField[sleepFace.field]?.add(sleepFace);
+      allSleepStylesSet.add(sleepFace.style);
     }
+
+    _allSleepStyles = [...allSleepStylesSet];
+    _allSleepStyles.sort((a, b) {
+      final as = a == -1 ? 4 : a;
+      final bs = b == -1 ? 4 : b;
+      return as.compareTo(bs);
+    });
 
     final sleepFacesGroupByField = await _sleepFaceRepo.findAllGroupByField();
     final basicIdSetGroupByField = sleepFacesGroupByField.toMap(

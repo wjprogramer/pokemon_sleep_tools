@@ -53,6 +53,14 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
     super.initState();
     _versions = [
       _Version(
+        name: '1.0.8',
+        date: DateTime(2023, 11, 18),
+        description: null,
+        items: [
+          _NormalVersionItem('[] '),
+        ],
+      ),
+      _Version(
         name: '1.0.7',
         date: DateTime(2023, 10, 30),
         description: null,

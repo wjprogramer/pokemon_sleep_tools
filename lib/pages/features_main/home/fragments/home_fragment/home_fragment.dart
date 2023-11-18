@@ -7,6 +7,7 @@ import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/data/repositories/repositories.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons_custom/dev_icons_custom_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_data_sources/dev_pokemon_data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_vitality_chart/dev_vitality_chart_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/storybook/storybook_page.dart';
@@ -234,7 +235,33 @@ class _HomeFragmentState extends State<HomeFragment> {
             ],
           ),
         ),
-        if (kDebugMode) ...[
+        if(kDebugMode) ...[
+          const MainMenuSubtitle(
+            icon: Icon(Icons.bug_report_outlined, size: 16,),
+            title: Text(
+              '開發用 (增刪寶可夢資料相關)',
+            ),
+          ),
+          Wrap(
+            spacing: _menuButtonSpacing,
+            runSpacing: _menuButtonSpacing,
+            children: _wrapMenuItems(
+              children: [
+                MyElevatedButton(
+                  onPressed: () async {
+                    DevPokemonEvolutionsPage.go(context);
+                  },
+                  child: const Text('進化 & 糖果'),
+                ),
+                MyElevatedButton(
+                  onPressed: () {
+                    DevPokemonDataSourcesPage.go(context);
+                  },
+                  child: const Text('資料來源 (驗證)'),
+                ),
+              ],
+            ),
+          ),
           MainMenuSubtitle(
             icon: const Icon(Icons.bug_report_outlined, size: 16,),
             title: Text(
@@ -264,12 +291,6 @@ class _HomeFragmentState extends State<HomeFragment> {
                     teamRepo.findAll();
                   },
                   child: const Text('Temp'),
-                ),
-                MyElevatedButton(
-                  onPressed: () async {
-                    DevPokemonEvolutionsPage.go(context);
-                  },
-                  child: const Text('進化'),
                 ),
                 MyElevatedButton(
                   onPressed: () {

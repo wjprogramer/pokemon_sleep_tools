@@ -123,11 +123,24 @@ flutter:
     - assets/debug/images/pokemon/portrait/
     - assets/debug/images/pokemon/portrait/shiny/
     - assets/debug/images/rank/
+    # Sleep faces
     - assets/debug/images/sleep/
     - assets/debug/images/sleep/1/
     - assets/debug/images/sleep/1/shiny/
     - assets/debug/images/sleep/2/
     - assets/debug/images/sleep/2/shiny/
+    - assets/debug/images/sleep/3/
+    - assets/debug/images/sleep/3/shiny/
+    - assets/debug/images/sleep/5/
+    - assets/debug/images/sleep/5/shiny/
+    - assets/debug/images/sleep/6/
+    - assets/debug/images/sleep/6/shiny/
+    - assets/debug/images/sleep/7/
+    - assets/debug/images/sleep/7/shiny/
+    - assets/debug/images/sleep/8/
+    - assets/debug/images/sleep/8/shiny/
+    - assets/debug/images/sleep/onSnorlax/
+    - assets/debug/images/sleep/onSnorlax/shiny/
     - assets/debug/images/sleepType/
     - assets/debug/images/subSkill/
     - assets/debug/images/theme/

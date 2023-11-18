@@ -5,16 +5,36 @@ class AssetsPath {
 
   static const _prefix = 'assets/debug/images';
 
+  static String _convertPokemonId(int boxNo, int basicProfileId) {
+    return boxNo.toString();
+  }
+
   static String pokemonPortrait(int boxNo) {
-    return '$_prefix/pokemon/portrait/$boxNo.png';
+    final pId = _convertPokemonId(boxNo, -1);
+    return '$_prefix/pokemon/portrait/$pId.png';
   }
 
-  static String pokemonPortraitShiny(int boxNo) {
-    return '$_prefix/pokemon/portrait/shiny/$boxNo.png';
+  static String pokemonPortraitShiny(int boxNo, {
+    int? basicProfileId,
+  }) {
+    final pId = _convertPokemonId(boxNo, basicProfileId ?? -1);
+    return '$_prefix/pokemon/portrait/shiny/$pId.png';
   }
 
-  static String pokemonIcon(int boxNo) {
-    return '$_prefix/pokemon/icons/$boxNo.png';
+  static String pokemonIcon(int boxNo, {
+    int? basicProfileId,
+  }) {
+    final pId = _convertPokemonId(boxNo, basicProfileId ?? -1);
+    return '$_prefix/pokemon/icons/$pId.png';
+  }
+
+  static String pokemonSleepFace(int boxNo, int style, {
+    int? basicProfileId,
+  }) {
+    final pId = _convertPokemonId(boxNo, basicProfileId ?? -1);
+    final styleFolder = style == -1 ? 'onSnorlax' : style.toString();
+    print('$_prefix/sleep/$styleFolder/$pId.png');
+    return '$_prefix/sleep/$styleFolder/$pId.png';
   }
 
   static pokemonType(PokemonType pokemonType) {

@@ -9,6 +9,7 @@ import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons/dev_icons_page.
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_icons_custom/dev_icons_custom_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_basic_profile_ingredients_combination/dev_pokemon_basic_profile_ingredients_combination_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_box/dev_pokemon_box_page.dart';
+import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_data_sources/dev_pokemon_data_sources_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_evolutions/dev_pokemon_evolutions_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_pokemon_statics_2/dev_pokemon_statics_2_page.dart';
 import 'package:pokemon_sleep_tools/pages/features_dev/dev_two_direction_table/dev_two_direction_table_page.dart';
@@ -86,6 +87,7 @@ MyRoutesMapping generateRoutes() {
       DevTwoDirectionTablePage.route,
       DevVitalityChartPage.route,
       MyStorybookPage.route,
+      DevPokemonDataSourcesPage.route,
     ],
     // main
     AboutPage.route,

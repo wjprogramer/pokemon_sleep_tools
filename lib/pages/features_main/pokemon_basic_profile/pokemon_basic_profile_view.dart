@@ -416,6 +416,30 @@ class _PokemonBasicProfileView extends WidgetView<PokemonBasicProfilePage, _Poke
                   ],
                 );
               }),
+              Gap.md,
+              if (MyEnv.USE_DEBUG_IMAGE) ...[
+                MySubHeader(
+                  titleText: '睡姿 (總覽)'.xTr,
+                ),
+                Gap.md,
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    ...s._allSleepStyles.map((e) =>
+                        Image.asset(
+                          AssetsPath.pokemonSleepFace(_basicProfile.boxNo, e, basicProfileId: _basicProfile.id),
+                          width: 64,
+                          height: 64,
+                          errorBuilder: (_, __, ___) {
+                            return Container();
+                          },
+                        ),
+                    ),
+                  ],
+                ),
+                Gap.md,
+              ],
               MySubHeader(
                 titleText: '其他'.xTr,
               ),
