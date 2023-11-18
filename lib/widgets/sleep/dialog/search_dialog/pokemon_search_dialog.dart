@@ -10,6 +10,8 @@ import 'package:pokemon_sleep_tools/widgets/common/common.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/sleep.dart';
 import 'package:provider/provider.dart';
 
+import '../base/sleep_search_dialog_base_content.dart';
+
 Future<PokemonSearchOptions?> showPokemonSearchDialog(BuildContext context, {
   required String titleText,
   required PokemonSearchOptions initialSearchOptions,
@@ -76,7 +78,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
   @override
   Widget build(BuildContext context) {
     final screenSize = context.mediaQuery.size;
-    final mainWidth = screenSize.width - 2 * (sleepStyleSearchDialogHorizontalListViewPaddingValue / 2 + sleepStyleSearchDialogHorizontalMarginValue);
+    final mainWidth = screenSize.width - 2 * (sleepStyleSearchDialogHorizontalListViewPaddingValue / 2 + sleepStyleDialogHorizontalMarginValue);
 
     const mainSkillBaseItemWidth = 140.0;
     const mainSkillSpacing = 0.0;
@@ -149,7 +151,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                         searchOptions.setKeywordWithoutListen('');
                         search();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.clear,
                       ),
                     ),
@@ -179,7 +181,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                       icon: Stack(
                         children: [
                           Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: whiteColor,
                               shape: BoxShape.circle,
                             ),
@@ -188,18 +190,19 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                               width: 30,
                             ),
                           ),
-                          if (searchOptions.typeof.contains(pokemonType)) Positioned(
-                            right: 5,
-                            bottom: 5,
-                            child: Container(
-                              width: 10,
-                              height: 10,
-                              child: Icon(
-                                Icons.check,
-                                color: primaryColor,
+                          if (searchOptions.typeof.contains(pokemonType))
+                            const Positioned(
+                              right: 5,
+                              bottom: 5,
+                              child: SizedBox(
+                                width: 10,
+                                height: 10,
+                                child: Icon(
+                                  Icons.check,
+                                  color: primaryColor,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ))
@@ -381,7 +384,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                           if (_isIngredientChecked(searchOptions, ingredient)) Positioned(
                             right: 5,
                             bottom: 5,
-                            child: Container(
+                            child: SizedBox(
                               width: 10,
                               height: 10,
                               child: Icon(
@@ -498,7 +501,7 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                     ),
                     Tooltip(
                       message: '寶可夢可在哪些島嶼上發現'.xTr,
-                      child: Icon(
+                      child: const Icon(
                         Icons.info_outline,
                       ),
                     ),
@@ -777,26 +780,26 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
                 decoration: const BoxDecoration(shape: BoxShape.circle),
                 child: Container(
                   padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: greyColor2,
+                    shape: BoxShape.circle,
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(2.0),
                     child: Text(
                       number.toString(),
                     ),
                   ),
-                  decoration: BoxDecoration(
-                    color: greyColor2,
-                    shape: BoxShape.circle,
-                  ),
                 )
               ),
             ),
           ),
         ),
-        if (checked) Positioned(
-          right: 0,
-          bottom: 5,
-          child: IgnorePointer(
-            child: Container(
+        if (checked)
+          const Positioned(
+            right: 0,
+            bottom: 5,
+            child: IgnorePointer(
               child: Icon(
                 Icons.check,
                 color: primaryColor,
@@ -804,7 +807,6 @@ class _PokemonSearchDialogState extends State<PokemonSearchDialog> {
               ),
             ),
           ),
-        ),
       ],
     );
   }

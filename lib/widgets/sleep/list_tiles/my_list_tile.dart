@@ -11,9 +11,10 @@ class MyListTile extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.leading,
+    this.onTap,
     this.checked,
     this.onCheckedChanged,
-    this.onTap,
+    this.isCheckboxRight = true,
   });
 
   final Widget title;
@@ -24,6 +25,7 @@ class MyListTile extends StatelessWidget {
   // Checkbox properties
   final bool? checked;
   final ValueChanged<bool?>? onCheckedChanged;
+  final bool isCheckboxRight;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,11 @@ class MyListTile extends StatelessWidget {
             Gap.h,
             if (leading != null)
               leading!,
+            if (onCheckedChanged != null && !isCheckboxRight)
+              Padding(
+                padding: const EdgeInsets.only(right: Gap.mdV),
+                child: _buildCheckbox(),
+              ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -74,17 +81,8 @@ class MyListTile extends StatelessWidget {
                 ],
               ),
             ),
-            if (onCheckedChanged != null)
-              SizedBox(
-                height: CHECKBOX_SIZE,
-                child: IgnorePointer(
-                  child: Checkbox(
-                    value: checked,
-                    onChanged: onCheckedChanged!,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                ),
-              ),
+            if (onCheckedChanged != null && isCheckboxRight)
+              _buildCheckbox(),
             Gap.h,
           ],
         ),
@@ -97,6 +95,19 @@ class MyListTile extends StatelessWidget {
       return () => onCheckedChanged?.call(!(checked ?? false));
     }
     return onTap;
+  }
+
+  Widget _buildCheckbox() {
+    return SizedBox(
+      height: CHECKBOX_SIZE,
+      child: IgnorePointer(
+        child: Checkbox(
+          value: checked,
+          onChanged: onCheckedChanged ?? (_) {},
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+      ),
+    );
   }
 
 }

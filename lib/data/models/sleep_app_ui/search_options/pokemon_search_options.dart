@@ -110,9 +110,9 @@ class PokemonSearchOptions implements BaseSearchOptions {
   @override
   bool isEmptyOptions() {
     return !(keyword.trim().isNotEmpty ||
-        !isFavorite ||
-        !canEvolution ||
-        !isShiny ||
+        isFavorite ||
+        canEvolution ||
+        isShiny ||
         fruitOf.isNotEmpty ||
         typeof.isNotEmpty ||
         mainSkillOf.isNotEmpty ||

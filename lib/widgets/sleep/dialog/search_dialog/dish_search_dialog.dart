@@ -5,6 +5,7 @@ import 'package:pokemon_sleep_tools/all_in_one/i18n/i18n.dart';
 import 'package:pokemon_sleep_tools/data/models/models.dart';
 import 'package:pokemon_sleep_tools/styles/colors/colors.dart';
 import 'package:pokemon_sleep_tools/widgets/common/common.dart';
+import 'package:pokemon_sleep_tools/widgets/sleep/dialog/base/sleep_search_dialog_base_content.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/base_dialog.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/dialog/dialog_data.dart';
 import 'package:pokemon_sleep_tools/widgets/sleep/images_private/ingredient_image.dart';
@@ -47,7 +48,7 @@ class _DishSearchDialogState extends State<DishSearchDialog> {
   @override
   Widget build(BuildContext context) {
     final screenSize = context.mediaQuery.size;
-    final mainWidth = screenSize.width - 2 * (sleepStyleSearchDialogHorizontalListViewPaddingValue / 2 + sleepStyleSearchDialogHorizontalMarginValue);
+    final mainWidth = screenSize.width - 2 * (sleepStyleSearchDialogHorizontalListViewPaddingValue / 2 + sleepStyleDialogHorizontalMarginValue);
 
     const potBaseItemWidth = 40.0;
     const potSpacing = 12.0;

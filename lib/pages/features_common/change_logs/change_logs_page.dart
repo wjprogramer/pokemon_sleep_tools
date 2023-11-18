@@ -57,7 +57,7 @@ class _ChangeLogsPageState extends State<ChangeLogsPage> {
         date: DateTime(2023, 11, 18),
         description: null,
         items: [
-          _NormalVersionItem('[] '),
+          _NormalVersionItem('[Feature] 排序寶可夢盒'),
         ],
       ),
       _Version(

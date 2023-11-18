@@ -16,20 +16,31 @@ class BottomBarWithActions extends StatelessWidget {
     this.isVisible,
   });
 
+  // UI
+  static const _iconSize = 16.0;
+  static const _textSize = 12.0;
+
+  // Search
   final Function()? onSearch;
   final bool? isSearchOn;
+
+  // Sort
   final Function()? onSort;
   final String? sortText;
   final ValueChanged<bool>? onAscendingChanged;
   final bool isAscending;
+
+  // Visible
   final ValueChanged<bool>? onVisibleChanged;
   final bool? isVisible;
 
+  // Others
   final List<Widget>? suffixActions;
 
   @override
   Widget build(BuildContext context) {
     const spacing = Gap.mdV;
+    const buttonHorizontalSpacing = Gap.md;
 
     return SafeArea(
       child: Container(
@@ -62,34 +73,69 @@ class BottomBarWithActions extends StatelessWidget {
               if (onSearch != null)
                 Padding(
                   padding: const EdgeInsets.only(right: spacing),
-                  child: MyOutlinedButton2(
+                  child: MyOutlinedButton2.compact(
                     onPressed: () => onSearch?.call(),
                     child: Row(
                       children: [
-                        const Icon(Icons.search),
+                        buttonHorizontalSpacing,
+                        const Icon(
+                          Icons.search,
+                          size: _iconSize,
+                        ),
                         if (isSearchOn != null)
                           Padding(
-                            padding: const EdgeInsets.only(left: Gap.mdV),
-                            child: Text(isSearchOn ?? false ? 'On' : 'Off'),
+                            padding: const EdgeInsets.only(
+                              left: Gap.smV,
+                            ),
+                            child: Text(
+                              isSearchOn ?? false ? 'On' : 'Off',
+                              style: const TextStyle(fontSize: _textSize),
+                            ),
                           ),
+                        buttonHorizontalSpacing,
                       ],
                     ),
                   ),
                 ),
-              // TODO:
-              // if (onSort != null)
-              //   Padding(
-              //     padding: const EdgeInsets.only(right: spacing),
-              //     child: MyOutlinedButton2(
-              //       onPressed: () => onSort?.call(),
-              //       child: Row(
-              //         children: [
-              //           Icon(Icons.sort),
-              //           Text(sortText ?? ''),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
+              if (onSort != null) ...[
+                Padding(
+                  padding: const EdgeInsets.only(right: spacing),
+                  child: MyOutlinedButton2.compact(
+                    onPressed: () => onSort?.call(),
+                    child: Row(
+                      children: [
+                        buttonHorizontalSpacing,
+                        const Icon(
+                          Icons.sort,
+                          size: _iconSize,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: (sortText ?? '').isEmpty ? 0 : Gap.smV,
+                          ),
+                          child: Text(
+                            sortText ?? '',
+                            style: const TextStyle(fontSize: _textSize),
+                          ),
+                        ),
+                        buttonHorizontalSpacing,
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: spacing),
+                  child: MyOutlinedButton2.compact(
+                    onPressed: () => onAscendingChanged?.call(!isAscending),
+                    child: Icon(
+                      isAscending
+                          ? Icons.arrow_upward
+                          : Icons.arrow_downward,
+                      size: _iconSize,
+                    ),
+                  ),
+                ),
+              ],
               ...?suffixActions,
               // Padding(
               //   padding: const EdgeInsets.only(right: spacing),
